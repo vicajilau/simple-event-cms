@@ -1,4 +1,4 @@
-package com.example.s_e_c
+package com.example.sec
 
 import io.flutter.embedding.android.FlutterActivity
 
