@@ -1,6 +1,4 @@
 {
     "files.associations": {
-        "*.maso": "maso",
-        "*.quiz": "quiz"
     }
 }
