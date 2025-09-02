@@ -1,0 +1,129 @@
+{
+  "@@locale": "en",
+  "loadingAgenda": "Loading agenda...",
+  "@loadingAgenda": {
+    "description": "Loading message for agenda screen"
+  },
+  "errorLoadingAgenda": "Error loading agenda: {error}",
+  "@errorLoadingAgenda": {
+    "description": "Error message when agenda fails to load",
+    "placeholders": {
+      "error": {
+        "type": "String",
+        "description": "The error message"
+      }
+    }
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button text to retry an operation"
+  },
+  "noEventsScheduled": "No events scheduled",
+  "@noEventsScheduled": {
+    "description": "Message when no events are available"
+  },
+  "loadingSpeakers": "Loading speakers...",
+  "@loadingSpeakers": {
+    "description": "Loading message for speakers screen"
+  },
+  "errorLoadingSpeakers": "Error loading speakers",
+  "@errorLoadingSpeakers": {
+    "description": "Error message when speakers fail to load"
+  },
+  "noSpeakersRegistered": "No speakers registered",
+  "@noSpeakersRegistered": {
+    "description": "Message when no speakers are available"
+  },
+  "loadingSponsors": "Loading sponsors...",
+  "@loadingSponsors": {
+    "description": "Loading message for sponsors screen"
+  },
+  "errorLoadingSponsors": "Error loading sponsors",
+  "@errorLoadingSponsors": {
+    "description": "Error message when sponsors fail to load"
+  },
+  "noSponsorsRegistered": "No sponsors registered",
+  "@noSponsorsRegistered": {
+    "description": "Message when no sponsors are available"
+  },
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Generic loading message"
+  },
+  "errorLoadingImage": "Error loading image",
+  "@errorLoadingImage": {
+    "description": "Error message when image fails to load"
+  },
+  "keynote": "KEYNOTE",
+  "@keynote": {
+    "description": "Label for keynote sessions"
+  },
+  "talk": "TALK",
+  "@talk": {
+    "description": "Label for talk sessions"
+  },
+  "workshop": "WORKSHOP",
+  "@workshop": {
+    "description": "Label for workshop sessions"
+  },
+  "sessionBreak": "BREAK",
+  "@sessionBreak": {
+    "description": "Label for break sessions"
+  },
+  "agenda": "Agenda",
+  "@agenda": {
+    "description": "Navigation tab label for agenda"
+  },
+  "speakers": "Speakers",
+  "@speakers": {
+    "description": "Navigation tab label for speakers"
+  },
+  "sponsors": "Sponsors",
+  "@sponsors": {
+    "description": "Navigation tab label for sponsors"
+  },
+  "eventInfo": "Event Information",
+  "@eventInfo": {
+    "description": "Title for event information dialog"
+  },
+  "eventDates": "Event Dates",
+  "@eventDates": {
+    "description": "Label for event dates section"
+  },
+  "venue": "Venue",
+  "@venue": {
+    "description": "Label for venue section"
+  },
+  "description": "Description",
+  "@description": {
+    "description": "Label for description section"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Button text to close a dialog"
+  },
+  "twitter": "Twitter/X",
+  "@twitter": {
+    "description": "Tooltip for Twitter/X social icon"
+  },
+  "linkedin": "LinkedIn",
+  "@linkedin": {
+    "description": "Tooltip for LinkedIn social icon"
+  },
+  "github": "GitHub",
+  "@github": {
+    "description": "Tooltip for GitHub social icon"
+  },
+  "website": "Website",
+  "@website": {
+    "description": "Tooltip for website social icon"
+  },
+  "openUrl": "Open URL",
+  "@openUrl": {
+    "description": "Tooltip for opening external links"
+  },
+  "changeLanguage": "Change Language",
+  "@changeLanguage": {
+    "description": "Tooltip for language selector"
+  }
+}

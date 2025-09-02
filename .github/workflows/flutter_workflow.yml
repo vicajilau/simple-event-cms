@@ -1,0 +1,41 @@
+name: Flutter CI
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  flutter_ci:
+    name: Run flutter test and analyze
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "12"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+      - run: flutter pub get
+      - run: flutter analyze
+      - run: flutter test
+      - name: Generate localizations
+        run: flutter gen-l10n
+      - name: Check for untranslated messages
+        run: |
+          content=$(cat untranslated_messages.json)
+          if [ "$content" = "{}" ]; then
+            echo "✅ All translations are complete!"
+            exit 0
+          else
+            echo "❌ Found untranslated messages:"
+            cat untranslated_messages.json
+            echo ""
+            echo "Please add the missing translations to the corresponding .arb files"
+            exit 1
+          fi
