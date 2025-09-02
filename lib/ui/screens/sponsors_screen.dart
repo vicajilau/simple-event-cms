@@ -84,17 +84,17 @@ class SponsorsScreen extends StatelessWidget {
                   child: Text(
                     type,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                   ),
                 ),
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.5,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 250,
+                    childAspectRatio: 1.2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
@@ -114,10 +114,10 @@ class SponsorsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Container(
+                                  padding: const EdgeInsets.all(8),
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white,
                                     border: Border.all(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -156,7 +156,9 @@ class SponsorsScreen extends StatelessWidget {
                               const SizedBox(height: 8),
                               Text(
                                 sponsor.name,
-                                style: Theme.of(context).textTheme.titleSmall
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
