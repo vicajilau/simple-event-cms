@@ -161,38 +161,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     trailing: IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Delete Event"),
-                              content: const Text(
-                                "Are you sure you want to delete this event?",
-                              ),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text("Cancel"),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                TextButton(
-                                  child: const Text("Delete"),
-                                  onPressed: () async {
-                                    Navigator.of(context).pop();
-                                    setState(() {
-                                      events.remove(item);
-                                      widget.dataLoader.config.remove(item);
-                                    });
-                                    await _saveConfigToJson(
-                                      widget.dataLoader.config,
-                                    );
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
+                      // code to edit the event
                       },
                     ),
                   ),
