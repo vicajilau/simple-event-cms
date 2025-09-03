@@ -84,9 +84,9 @@ class SponsorsScreen extends StatelessWidget {
                   child: Text(
                     type,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
                 ),
                 GridView.builder(
@@ -156,9 +156,7 @@ class SponsorsScreen extends StatelessWidget {
                               const SizedBox(height: 8),
                               Text(
                                 sponsor.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
+                                style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
@@ -180,4 +178,3 @@ class SponsorsScreen extends StatelessWidget {
     );
   }
 }
-
