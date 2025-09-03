@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
 import '../../core/models/organization.dart';
-import '../widgets/language_selector.dart';
 import 'screens.dart';
 
 /// Main home screen widget that displays the event information and navigation
@@ -84,15 +83,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.organization.organizationName),
-        actions: [
-          LanguageSelector(
-            currentLocale: widget.locale,
-            onLanguageChanged: widget.localeChanged,
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(widget.organization.organizationName)),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
         itemCount: events.length,
@@ -176,6 +167,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Acción al presionar el botón
+        },
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
