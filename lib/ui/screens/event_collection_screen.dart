@@ -142,11 +142,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       Icons.event,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0,
+                    ),
                     title: Text(
                       item.eventName,
-                      style: Theme.of(context).textTheme.titleMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -161,7 +165,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     trailing: IconButton(
                       icon: const Icon(Icons.edit),
                       onPressed: () {
-                      // code to edit the event
+                        // code to edit the event
                       },
                     ),
                   ),
