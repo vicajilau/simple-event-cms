@@ -102,12 +102,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             key: Key(item.eventName),
             direction: DismissDirection.endToStart,
             onDismissed: (direction) async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
               setState(() {
                 events.removeAt(index);
                 widget.dataLoader.config.remove(item);
               });
               await _saveConfigToJson(widget.dataLoader.config);
-              ScaffoldMessenger.of(context).showSnackBar(
+              scaffoldMessenger.showSnackBar(
                 SnackBar(content: Text("${item.eventName} eliminado")),
               );
             },
