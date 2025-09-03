@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
@@ -19,26 +20,26 @@ class SpeakersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<dynamic>>(
-      future: dataLoader.loadSpeakers(),
-      builder: (context, snapshot) {
-        if (speakers.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.people_outline, size: 64, color: Colors.grey),
-                const SizedBox(height: 16),
-                Text(AppLocalizations.of(context)!.noSpeakersRegistered),
-              ],
-            ),
-          );
-        }
+    if (speakers.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.people_outline, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(AppLocalizations.of(context)!.noSpeakersRegistered),
+          ],
+        ),
+      );
+    }
 
+    return LayoutBuilder(
+      builder: (context, constraints) {
         return GridView.builder(
           padding: const EdgeInsets.all(16),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            mainAxisExtent: kIsWeb ? 400 : 350,
+            crossAxisCount: (constraints.maxWidth / 250).floor(),
             childAspectRatio: 0.75,
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
@@ -65,7 +66,7 @@ class SpeakersScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
                                   speaker.image!,
-                                  fit: BoxFit.cover,
+                                  fit: BoxFit.fill,
                                   loadingBuilder: (context, child, loadingProgress) {
                                     if (loadingProgress == null) return child;
                                     return Container(
@@ -160,7 +161,7 @@ class SpeakersScreen extends StatelessWidget {
                               ),
                       ),
                     ),
-                    const SizedBox(height: 12 ),
+                    const SizedBox(height: 12),
                     Text(
                       speaker.name,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
