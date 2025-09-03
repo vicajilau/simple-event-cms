@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/dialogs/dialogs.dart';
-import 'package:sec/ui/screens/speakers_screen.dart';
-import 'package:sec/ui/screens/sponsors_screen.dart';
 
 import '../../core/models/agenda.dart';
 import '../../core/models/site_config.dart';
@@ -9,7 +6,8 @@ import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import 'agenda_screen.dart';
+import '../dialogs/dialogs.dart';
+import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
@@ -95,18 +93,13 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         child: FloatingActionButton(
           onPressed: () {
             if (_selectedIndex == 0) {
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: EventFormDialog(
-                      speakers: ['Fran', 'Ting Mei'],
-                      rooms: [],
-                      days: ['3 de Septiembre', '4 de Septiembre'],
-                      talkTypes: [],
-                    ),
-                  );
-                },
+              navigateTo(
+                EventFormScreen(
+                  speakers: ['Fran', 'Ting Mei'],
+                  rooms: [],
+                  days: ['3 de Septiembre', '4 de Septiembre'],
+                  talkTypes: [],
+                ),
               );
             }
           },
@@ -117,6 +110,10 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         ),
       ),
     );
+  }
+
+  void navigateTo(Widget screen) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   /// Handles tab selection changes
