@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/dialogs/dialogs.dart';
 import 'package:sec/ui/screens/speakers_screen.dart';
 import 'package:sec/ui/screens/sponsors_screen.dart';
 
@@ -93,7 +94,21 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         height: 60,
         child: FloatingActionButton(
           onPressed: () {
-            // TODO: hacer acciones del botón en función de la vista mostrada actual
+            if (_selectedIndex == 0) {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: EventFormDialog(
+                      speakers: ['Fran', 'Ting Mei'],
+                      rooms: [],
+                      days: ['3 de Septiembre', '4 de Septiembre'],
+                      talkTypes: [],
+                    ),
+                  );
+                },
+              );
+            }
           },
           elevation: 16,
           backgroundColor: Theme.of(context).colorScheme.primary,
