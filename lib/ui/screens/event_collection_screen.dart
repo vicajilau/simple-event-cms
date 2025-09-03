@@ -83,7 +83,17 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.organization.organizationName)),
+      appBar: AppBar(
+        title: Text(widget.organization.organizationName),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.filter_list_alt),
+            onPressed: () {
+              // Acción para el filtro
+            },
+          ),
+        ],
+      ),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
         itemCount: events.length,
