@@ -25,12 +25,8 @@ class EventFormScreen extends StatefulWidget {
 
 class _EventFormScreenState extends State<EventFormScreen> {
   TimeOfDay? _initSessionTime, _endSessionTime;
-  String _selectedDay = '',
-      _selectedRoom = '',
-      _title = '',
-      _selectedSpeaker = '',
-      _description = '',
-      _selectedTalkType = '';
+  final String _selectedRoom = '', _title = '', _description = '';
+  String _selectedDay = '', _selectedSpeaker = '', _selectedTalkType = '';
   final _formKey = GlobalKey<FormState>();
 
   @override

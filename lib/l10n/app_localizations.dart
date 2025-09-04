@@ -289,6 +289,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Language'**
   String get changeLanguage;
+
+  /// Title for the speaker submission form
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker Form'**
+  String get speakerForm;
+
+  /// Label for the name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Name*'**
+  String get nameLabel;
+
+  /// Error hint when the name field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get nameErrorHint;
+
+  /// Label for the biography input field
+  ///
+  /// In en, this message translates to:
+  /// **'Biography*'**
+  String get bioLabel;
+
+  /// Error hint when the biography field is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your biography'**
+  String get bioErrorHint;
+
+  /// Label for the image URL input field
+  ///
+  /// In en, this message translates to:
+  /// **'Image URL'**
+  String get imageUrlLabel;
+
+  /// Hint text for the name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the speaker\'s name'**
+  String get nameHint;
+
+  /// Hint text for the biography input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the speaker\'s biography'**
+  String get bioHint;
+
+  /// Hint text for the image URL input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the speaker\'s image URL'**
+  String get imageUrlHint;
+
+  /// Hint text for the Twitter input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Twitter URL'**
+  String get twitterHint;
+
+  /// Hint text for the GitHub input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the GitHub URL'**
+  String get githubHint;
+
+  /// Hint text for the LinkedIn input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the LinkedIn URL'**
+  String get linkedinHint;
+
+  /// Hint text for the website input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the website URL'**
+  String get websiteHint;
+
+  /// Button text to save the speaker form
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveButton;
 }
 
 class _AppLocalizationsDelegate

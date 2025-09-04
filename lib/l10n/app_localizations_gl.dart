@@ -99,4 +99,46 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Cambiar Idioma';
+
+  @override
+  String get speakerForm => 'Formulario de Relator';
+
+  @override
+  String get nameLabel => 'Nome*';
+
+  @override
+  String get nameErrorHint => 'Por favor, introduce o teu nome';
+
+  @override
+  String get bioLabel => 'Biografía*';
+
+  @override
+  String get bioErrorHint => 'Por favor, introduce a túa biografía';
+
+  @override
+  String get imageUrlLabel => 'URL da Imaxe';
+
+  @override
+  String get nameHint => 'Introduce o nome do relator';
+
+  @override
+  String get bioHint => 'Introduce a biografía do relator';
+
+  @override
+  String get imageUrlHint => 'Introduce a URL da imaxe do relator';
+
+  @override
+  String get twitterHint => 'Introduce a URL de Twitter';
+
+  @override
+  String get githubHint => 'Introduce a URL de GitHub';
+
+  @override
+  String get linkedinHint => 'Introduce a URL de LinkedIn';
+
+  @override
+  String get websiteHint => 'Introduce a URL da páxina web';
+
+  @override
+  String get saveButton => 'Gardar';
 }

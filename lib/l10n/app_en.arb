@@ -125,5 +125,61 @@
   "changeLanguage": "Change Language",
   "@changeLanguage": {
     "description": "Tooltip for language selector"
+  },
+  "speakerForm": "Speaker Form",
+  "@speakerForm": {
+    "description": "Title for the speaker submission form"
+  },
+  "nameLabel": "Name*",
+  "@nameLabel": {
+    "description": "Label for the name input field"
+  },
+  "nameErrorHint": "Please enter your name",
+  "@nameErrorHint": {
+    "description": "Error hint when the name field is empty"
+  },
+  "bioLabel": "Biography*",
+  "@bioLabel": {
+    "description": "Label for the biography input field"
+  },
+  "bioErrorHint": "Please enter your biography",
+  "@bioErrorHint": {
+    "description": "Error hint when the biography field is empty"
+  },
+  "imageUrlLabel": "Image URL",
+  "@imageUrlLabel": {
+    "description": "Label for the image URL input field"
+  },
+  "nameHint": "Enter the speaker's name",
+  "@nameHint": {
+    "description": "Hint text for the name input field"
+  },
+  "bioHint": "Enter the speaker's biography",
+  "@bioHint": {
+    "description": "Hint text for the biography input field"
+  },
+  "imageUrlHint": "Enter the speaker's image URL",
+  "@imageUrlHint": {
+    "description": "Hint text for the image URL input field"
+  },
+  "twitterHint": "Enter the Twitter URL",
+  "@twitterHint": {
+    "description": "Hint text for the Twitter input field"
+  },
+  "githubHint": "Enter the GitHub URL",
+  "@githubHint": {
+    "description": "Hint text for the GitHub input field"
+  },
+  "linkedinHint": "Enter the LinkedIn URL",
+  "@linkedinHint": {
+    "description": "Hint text for the LinkedIn input field"
+  },
+  "websiteHint": "Enter the website URL",
+  "@websiteHint": {
+    "description": "Hint text for the website input field"
+  },
+  "saveButton": "Save",
+  "@saveButton": {
+    "description": "Button text to save the speaker form"
   }
 }
