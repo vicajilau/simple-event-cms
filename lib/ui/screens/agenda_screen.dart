@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/dialogs/delete_dialog.dart';
 
 import '../../core/models/models.dart';
 import '../../core/utils/date_utils.dart';
@@ -14,8 +15,15 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
+  final void Function(Session) editSession;
+  final void Function(Session) removeSession;
 
-  const AgendaScreen({super.key, required this.agendaDays});
+  const AgendaScreen({
+    super.key,
+    required this.agendaDays,
+    required this.editSession,
+    required this.removeSession,
+  });
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -137,6 +145,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
+            editSession: widget.editSession,
+            removeSession: widget.removeSession,
           ),
         ],
       ),
@@ -156,12 +166,16 @@ class CustomTabBarView extends StatefulWidget {
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
+  final void Function(Session) editSession;
+  final void Function(Session) removeSession;
 
   CustomTabBarView({
     super.key,
     required this.tracks,
     required this.currentIndex,
     required this.onIndexChanged,
+    required this.editSession,
+    required this.removeSession,
   });
 
   @override
@@ -175,7 +189,11 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
   void initState() {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
-      return SessionCards(sessions: widget.tracks[index].sessions);
+      return SessionCards(
+        sessions: widget.tracks[index].sessions,
+        editSession: widget.editSession,
+        removeSession: widget.removeSession,
+      );
     });
   }
 
@@ -199,32 +217,71 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 
 class SessionCards extends StatelessWidget {
   final List<Session> sessions;
+  final void Function(Session) editSession;
+  final void Function(Session) removeSession;
 
-  const SessionCards({super.key, required this.sessions});
+  const SessionCards({
+    super.key,
+    required this.sessions,
+    required this.editSession,
+    required this.removeSession,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        children: List.generate(sessions.length, (index) {
-          final session = sessions[index];
-          return _buildSessionCard(
-            context,
-            Session(
-              title: session.title,
-              time: session.time,
-              speaker: session.speaker,
-              description: session.description,
-              type: session.type,
-            ),
-          );
-        }),
+        children: sessions.isEmpty
+            ? [
+                SizedBox(
+                  height: 150,
+                  child: Center(child: const Text('No hay sesiones')),
+                ),
+              ]
+            : List.generate(sessions.length, (index) {
+                final session = sessions[index];
+                return GestureDetector(
+                  onTap: () {
+                    editSession(sessions[index]);
+                  },
+                  child: _buildSessionCard(
+                    context,
+                    Session(
+                      title: session.title,
+                      time: session.time,
+                      speaker: session.speaker,
+                      description: session.description,
+                      type: session.type,
+                      uid: session.uid,
+                    ),
+                    onDeleteTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DeleteDialog(
+                            title: 'Borrar sesión',
+                            message:
+                                '¿Estás seguro de que deseas borrar la sesión??',
+                            onDeletePressed: () {
+                              removeSession(sessions[index]);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
       ),
     );
   }
 
-  Widget _buildSessionCard(BuildContext context, Session session) {
+  Widget _buildSessionCard(
+    BuildContext context,
+    Session session, {
+    required Function() onDeleteTap,
+  }) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -317,6 +374,13 @@ class SessionCards extends StatelessWidget {
                 ),
               ),
             ],
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: onDeleteTap,
+                icon: Icon(Icons.delete),
+              ),
+            ),
           ],
         ),
       ),

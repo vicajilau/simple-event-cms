@@ -75,6 +75,9 @@ class Track {
 /// Represents an individual session within a track
 /// Contains all the details about a specific presentation, talk, or activity
 class Session {
+  /// UID of the session
+  final String uid;
+
   /// The title of the session
   final String title;
 
@@ -92,6 +95,7 @@ class Session {
 
   /// Creates a new Session instance
   Session({
+    required this.uid,
     required this.title,
     required this.time,
     required this.speaker,
@@ -103,6 +107,7 @@ class Session {
   /// All fields are required and must be present in the JSON
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
+      uid: json['UID'],
       title: json['title'],
       time: json['time'],
       speaker: json['speaker'],

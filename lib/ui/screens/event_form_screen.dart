@@ -10,6 +10,7 @@ class EventFormScreen extends StatefulWidget {
   final List<String> days;
   final List<String> speakers;
   final List<String> sessionTypes;
+  final Session? data;
 
   const EventFormScreen({
     super.key,
@@ -17,6 +18,7 @@ class EventFormScreen extends StatefulWidget {
     required this.rooms,
     required this.speakers,
     required this.sessionTypes,
+    required this.data,
   });
 
   @override
@@ -226,6 +228,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
               speaker: _selectedSpeaker,
               description: _description,
               type: _selectedTalkType,
+              uid: DateTime.now().toString(),
             );
             Track track = Track(
               name: _selectedRoom,
