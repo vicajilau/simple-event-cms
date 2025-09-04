@@ -36,7 +36,6 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
             SectionInputForm(
               label: AppLocalizations.of(context)?.nameLabel ?? '',
               childInput: TextFormField(
-                maxLines: 1,
                 decoration: AppDecorations.textfieldDecoration.copyWith(
                   hintText: AppLocalizations.of(context)?.nameHint ?? '',
                 ),
