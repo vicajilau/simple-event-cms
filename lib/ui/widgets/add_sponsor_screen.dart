@@ -112,29 +112,16 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                   }
                 },
               ),
-              const SizedBox(height: 32),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
+                  FilledButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
                         Navigator.pop(context);
-                      },
-                      child: const Text('Cancelar'),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {},
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                        side: const BorderSide(color: Colors.blue),
-                      ),
-                      child: const Text('Aceptar'),
-                    ),
+                      }
+                    },
+                    child: const Text('Guardar'),
                   ),
                 ],
               ),
