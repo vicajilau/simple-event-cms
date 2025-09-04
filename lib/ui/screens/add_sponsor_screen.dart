@@ -6,7 +6,8 @@ import 'package:sec/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/ui/widgets/section_input_form.dart';
 
 class AddSponsorScreen extends StatefulWidget {
-  const AddSponsorScreen({super.key});
+  final Sponsor? sponsor; 
+  const AddSponsorScreen({super.key, this.sponsor});
 
   @override
   State<AddSponsorScreen> createState() => _AddSponsorScreenState();
@@ -14,10 +15,10 @@ class AddSponsorScreen extends StatefulWidget {
 
 class _AddSponsorScreenState extends State<AddSponsorScreen> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _logoController = TextEditingController();
-  final TextEditingController _websiteController = TextEditingController();
-  String _selectedCategory = 'Patrocinador Principal';
+  late final TextEditingController _nameController;
+  late final TextEditingController _logoController;
+  late final TextEditingController _websiteController;
+  late String _selectedCategory;
 
   final List<String> _categories = [
     'Patrocinador Principal',
@@ -25,6 +26,17 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
     'Patrocinador Silver',
     'Patrocinador Bronze',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController = TextEditingController(text: widget.sponsor?.name ?? '');
+    _logoController = TextEditingController(text: widget.sponsor?.logo ?? '');
+    _websiteController = TextEditingController(
+      text: widget.sponsor?.website ?? '',
+    );
+    _selectedCategory = widget.sponsor?.type ?? _categories.first;
+  }
 
   @override
   void dispose() {
@@ -36,8 +48,10 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.sponsor != null;
+
     return FormScreenWrapper(
-      pageTitle: 'Creación evento',
+      pageTitle: isEditing ? 'Editar Sponsor' : 'Crear Sponsor',
       widgetFormChild: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -46,66 +60,43 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: 16,
             children: [
-              Text('Creando Sponsor', style: AppFonts.titleHeadingForm),
+              Text(
+                isEditing ? 'Editando Sponsor' : 'Creando Sponsor',
+                style: AppFonts.titleHeadingForm,
+              ),
               SectionInputForm(
                 label: 'Nombre*',
                 childInput: TextFormField(
                   controller: _nameController,
-                  maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce el nombre del Sponsor',
                   ),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Nombre';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Nombre' : null,
                 ),
               ),
-
               SectionInputForm(
                 label: 'Logo*',
                 childInput: TextFormField(
                   controller: _logoController,
-                  maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce la URL del logo',
                   ),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Logo';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Logo' : null,
                 ),
               ),
-
               SectionInputForm(
                 label: 'Web*',
                 childInput: TextFormField(
                   controller: _websiteController,
-                  maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce la URL de la web',
                   ),
-                  // The validator receives the text that the user has entered.
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Web';
-                    }
-                    return null;
-                  },
+                  validator: (value) =>
+                      value == null || value.isEmpty ? 'Web' : null,
                 ),
               ),
-
-              Text(
-                'Categoria',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-              const SizedBox(height: 8),
               DropdownButtonFormField<String>(
                 initialValue: _selectedCategory,
                 items: _categories
@@ -113,13 +104,8 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                       (cat) => DropdownMenuItem(value: cat, child: Text(cat)),
                     )
                     .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() {
-                      _selectedCategory = value;
-                    });
-                  }
-                },
+                onChanged: (value) =>
+                    setState(() => _selectedCategory = value!),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -127,21 +113,19 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                   FilledButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        final newSponsor = Sponsor(
-                          uid: DateTime.now().millisecondsSinceEpoch.toString(), //todo: use a library to create uid?
+                        final sponsor = Sponsor(
+                          uid:
+                              widget.sponsor?.uid ??
+                              DateTime.now().millisecondsSinceEpoch.toString(),
                           name: _nameController.text,
                           type: _selectedCategory,
                           logo: _logoController.text,
                           website: _websiteController.text,
                         );
-
-                        Navigator.pop(
-                          context,
-                          newSponsor,
-                        ); 
+                        Navigator.pop(context, sponsor);
                       }
                     },
-                    child: const Text('Guardar'),
+                    child: Text(isEditing ? 'Actualizar' : 'Guardar'),
                   ),
                 ],
               ),

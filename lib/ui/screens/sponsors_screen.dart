@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/screens/add_sponsor_screen.dart';
 
 import '../../core/core.dart';
 import '../../l10n/app_localizations.dart';
@@ -149,10 +150,29 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit, size: 20),
-                              onPressed: () {
-                                // Acción editar
+                              onPressed: () async {
+                                final updatedSponsor = await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        AddSponsorScreen(sponsor: sponsor),
+                                  ),
+                                );
+
+                                if (updatedSponsor != null &&
+                                    updatedSponsor is Sponsor) {
+                                  setState(() {
+                                    final index = widget.sponsors.indexWhere(
+                                      (s) => s.uid == sponsor.uid,
+                                    );
+                                    if (index != -1) {
+                                      widget.sponsors[index] = updatedSponsor;
+                                    }
+                                  });
+                                }
                               },
                             ),
+
                             IconButton(
                               icon: const Icon(Icons.delete, size: 20),
                               onPressed: () {
