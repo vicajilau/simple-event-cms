@@ -101,44 +101,44 @@ class AppLocalizationsPt extends AppLocalizations {
   String get changeLanguage => 'Alterar Idioma';
 
   @override
-  String get speakerForm => 'Speaker Form';
+  String get speakerForm => 'Formulário do Palestrante';
 
   @override
-  String get nameLabel => 'Name*';
+  String get nameLabel => 'Nome*';
 
   @override
-  String get nameErrorHint => 'Please enter your name';
+  String get nameErrorHint => 'Por favor, insira o seu nome';
 
   @override
-  String get bioLabel => 'Biography*';
+  String get bioLabel => 'Biografia*';
 
   @override
-  String get bioErrorHint => 'Please enter your biography';
+  String get bioErrorHint => 'Por favor, insira a sua biografia';
 
   @override
-  String get imageUrlLabel => 'Image URL';
+  String get imageUrlLabel => 'URL da Imagem';
 
   @override
-  String get nameHint => 'Enter the speaker\'s name';
+  String get nameHint => 'Insira o nome do palestrante';
 
   @override
-  String get bioHint => 'Enter the speaker\'s biography';
+  String get bioHint => 'Insira a biografia do palestrante';
 
   @override
-  String get imageUrlHint => 'Enter the speaker\'s image URL';
+  String get imageUrlHint => 'Insira a URL da imagem do palestrante';
 
   @override
-  String get twitterHint => 'Enter the Twitter URL';
+  String get twitterHint => 'Insira a URL do Twitter';
 
   @override
-  String get githubHint => 'Enter the GitHub URL';
+  String get githubHint => 'Insira a URL do GitHub';
 
   @override
-  String get linkedinHint => 'Enter the LinkedIn URL';
+  String get linkedinHint => 'Insira a URL do LinkedIn';
 
   @override
-  String get websiteHint => 'Enter the website URL';
+  String get websiteHint => 'Insira a URL do site';
 
   @override
-  String get saveButton => 'Save';
+  String get saveButton => 'Salvar';
 }
