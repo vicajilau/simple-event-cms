@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/screens/event_form_screen.dart';
+import 'package:sec/ui/screens/speaker_form_screen.dart';
 
 import '../../core/models/agenda.dart';
 import '../../core/models/site_config.dart';
@@ -6,7 +8,6 @@ import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import '../dialogs/dialogs.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -101,6 +102,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                   talkTypes: [],
                 ),
               );
+            } else if (_selectedIndex == 1) {
+              navigateTo(const SpeakerFormScreen());
             }
           },
           elevation: 16,
