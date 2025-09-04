@@ -71,8 +71,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                       speaker.image!,
                                       fit: BoxFit.fill,
                                       loadingBuilder: (context, child, loadingProgress) {
-                                        if (loadingProgress == null)
+                                        if (loadingProgress == null) {
                                           return child;
+                                        }
                                         return Container(
                                           width: double.infinity,
                                           height: double.infinity,
