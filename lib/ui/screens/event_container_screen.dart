@@ -58,7 +58,15 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       dataLoader: widget.dataLoader,
       speakers: _speakers,
     ),
-    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
+    SponsorsScreen(
+      key: UniqueKey(),
+      sponsors: widget.sponsors,
+      onDeleteSponsor: (sponsorToDelete) {
+        setState(() {
+          widget.sponsors.removeWhere((s) => s.uid == sponsorToDelete.uid);
+        });
+      },
+    ),
   ];
 
   @override
@@ -122,7 +130,19 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
 
               if (newSponsor != null && newSponsor is Sponsor) {
                 setState(() {
-                  _sponsors.add(newSponsor);
+                  setState(() {
+                    widget.sponsors.add(newSponsor);
+                    _screens[2] = SponsorsScreen(
+                      sponsors: widget.sponsors,
+                      onDeleteSponsor: (sponsorToDelete) {
+                        setState(() {
+                          widget.sponsors.removeWhere(
+                            (s) => s.uid == sponsorToDelete.uid,
+                          );
+                        });
+                      },
+                    );
+                  });
                 });
               }
             }
