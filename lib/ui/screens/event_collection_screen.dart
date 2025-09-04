@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
 import '../../core/models/organization.dart';
-import '../widgets/language_selector.dart';
 import 'screens.dart';
 
 /// Main home screen widget that displays the event information and navigation
@@ -86,117 +85,105 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
-        actions: [
-          LanguageSelector(
-            currentLocale: widget.locale,
-            onLanguageChanged: widget.localeChanged,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.filter_list_alt),
+            onPressed: () {
+              // Acción para el filtro
+            },
           ),
         ],
       ),
-      body: GridView.builder(
+      body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
         itemCount: events.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.crossAxisCount,
-          childAspectRatio: 1.5,
-        ),
         itemBuilder: (BuildContext context, int index) {
           var item = events[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventContainerScreen(
-                    config: widget.config,
-                    dataLoader: widget.dataLoader,
-                    locale: widget.locale,
-                    localeChanged: widget.localeChanged,
-                    agendaDays: item.agenda?.days ?? [],
-                    speakers: item.speakers ?? [],
-                    sponsors: item.sponsors ?? [],
-                  ),
-                ),
+          return Dismissible(
+            key: Key(item.eventName),
+            direction: DismissDirection.endToStart,
+            onDismissed: (direction) async {
+              final scaffoldMessenger = ScaffoldMessenger.of(context);
+              setState(() {
+                events.removeAt(index);
+                widget.dataLoader.config.remove(item);
+              });
+              await _saveConfigToJson(widget.dataLoader.config);
+              scaffoldMessenger.showSnackBar(
+                SnackBar(content: Text("${item.eventName} eliminado")),
               );
             },
-            child: Card(
-              color: Colors.blue.withAlpha(67),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Delete Event"),
-                                content: const Text(
-                                  "Are you sure you want to delete this event?",
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: const Text("Delete"),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        events.remove(item);
-                                        widget.dataLoader.config.remove(item);
-                                      });
-                                      await _saveConfigToJson(
-                                        widget.dataLoader.config,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            item.eventName,
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
-                            style: Theme.of(context).textTheme.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventContainerScreen(
+                      config: widget.config,
+                      dataLoader: widget.dataLoader,
+                      locale: widget.locale,
+                      localeChanged: widget.localeChanged,
+                      agendaDays: item.agenda?.days ?? [],
+                      speakers: item.speakers ?? [],
+                      sponsors: item.sponsors ?? [],
                     ),
                   ),
-                ],
+                );
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
+                child: Card(
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.event,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0,
+                      horizontal: 16.0,
+                    ),
+                    title: Text(
+                      item.eventName,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
+                        style: Theme.of(context).textTheme.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        // code to edit the event
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
           );
         },
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Acción al presionar el botón
+        },
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
+import '../widgets/add_sponsor_screen.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -104,6 +105,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                 ),
               );
               _addAgendaData(agendaDay: newAgendaDay);
+            } else if (_selectedIndex == 2) {
+              _navigateTo(AddSponsorScreen());
             }
           },
           elevation: 16,

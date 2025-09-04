@@ -92,9 +92,9 @@ class SponsorsScreen extends StatelessWidget {
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.5,
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 250,
+                    childAspectRatio: 1.2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
                   ),
@@ -114,10 +114,10 @@ class SponsorsScreen extends StatelessWidget {
                             children: [
                               Expanded(
                                 child: Container(
+                                  padding: const EdgeInsets.all(8),
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Colors.white,
                                     border: Border.all(
                                       color: Theme.of(context)
                                           .colorScheme
