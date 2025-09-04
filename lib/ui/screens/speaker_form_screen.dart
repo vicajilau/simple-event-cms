@@ -6,7 +6,8 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
-  const SpeakerFormScreen({super.key});
+  final Speaker? speaker;
+  const SpeakerFormScreen({super.key, this.speaker});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -21,6 +22,21 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _githubController = TextEditingController();
   final _linkedinController = TextEditingController();
   final _websiteController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final speaker = widget.speaker;
+    if (speaker != null) {
+      _nameController.text = speaker.name;
+      _imageUrlController.text = speaker.image ?? '';
+      _bioController.text = speaker.bio;
+      _twitterController.text = speaker.social.twitter ?? '';
+      _githubController.text = speaker.social.github ?? '';
+      _linkedinController.text = speaker.social.linkedin ?? '';
+      _websiteController.text = speaker.social.website ?? '';
+    }
+  }
 
   @override
   void dispose() {
@@ -144,8 +160,10 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                         Navigator.pop(
                           context,
                           Speaker(
-                            uid: DateTime.now().microsecondsSinceEpoch
-                                .toString(),
+                            uid:
+                                widget.speaker?.uid ??
+                                DateTime.now().microsecondsSinceEpoch
+                                    .toString(),
                             name: _nameController.text,
                             image: _imageUrlController.text,
                             bio: _bioController.text,

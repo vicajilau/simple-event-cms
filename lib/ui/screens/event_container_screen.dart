@@ -109,7 +109,6 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                 ),
               );
             } else if (_selectedIndex == 1) {
-              // navigateTo(const SpeakerFormScreen());
               _addSpeaker();
             } else if (_selectedIndex == 2) {
               navigateTo(AddSponsorScreen());
