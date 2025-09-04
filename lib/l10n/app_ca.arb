@@ -29,5 +29,19 @@
   "github": "GitHub",
   "website": "Lloc Web",
   "openUrl": "Obrir URL",
-  "changeLanguage": "Canviar Idioma"
+  "changeLanguage": "Canviar Idioma",
+  "speakerForm": "Formulari de Ponent",
+  "nameLabel": "Nom*",
+  "nameErrorHint": "Si us plau, introdueix el teu nom",
+  "bioLabel": "Biografia*",
+  "bioErrorHint": "Si us plau, introdueix la teva biografia",
+  "imageUrlLabel": "URL de la Imatge",
+  "nameHint": "Introdueix el nom del ponent",
+  "bioHint": "Introdueix la biografia del ponent",
+  "imageUrlHint": "Introdueix la URL de la imatge del ponent",
+  "twitterHint": "Introdueix la URL de Twitter",
+  "githubHint": "Introdueix la URL de GitHub",
+  "linkedinHint": "Introdueix la URL de LinkedIn",
+  "websiteHint": "Introdueix la URL del lloc web",
+  "saveButton": "Desa"
 }

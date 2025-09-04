@@ -100,4 +100,46 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Changer la Langue';
+
+  @override
+  String get speakerForm => 'Formulaire d\'intervenant';
+
+  @override
+  String get nameLabel => 'Nom*';
+
+  @override
+  String get nameErrorHint => 'Veuillez entrer votre nom';
+
+  @override
+  String get bioLabel => 'Biographie*';
+
+  @override
+  String get bioErrorHint => 'Veuillez entrer votre biographie';
+
+  @override
+  String get imageUrlLabel => 'URL de l\'image';
+
+  @override
+  String get nameHint => 'Entrez le nom de l\'intervenant';
+
+  @override
+  String get bioHint => 'Entrez la biographie de l\'intervenant';
+
+  @override
+  String get imageUrlHint => 'Entrez l\'URL de l\'image de l\'intervenant';
+
+  @override
+  String get twitterHint => 'Entrez l\'URL de Twitter';
+
+  @override
+  String get githubHint => 'Entrez l\'URL de GitHub';
+
+  @override
+  String get linkedinHint => 'Entrez l\'URL de LinkedIn';
+
+  @override
+  String get websiteHint => 'Entrez l\'URL du site web';
+
+  @override
+  String get saveButton => 'Enregistrer';
 }

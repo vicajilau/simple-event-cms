@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/screens/event_form_screen.dart';
+import 'package:sec/ui/screens/speaker_form_screen.dart';
 import 'package:sec/ui/widgets/add_sponsor_screen.dart';
 
 import '../../core/models/agenda.dart';
@@ -101,7 +103,18 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         height: 60,
         child: FloatingActionButton(
           onPressed: () async {
-            if (_selectedIndex == 2) {
+            if (_selectedIndex == 0) {
+              navigateTo(
+                EventFormScreen(
+                  speakers: ['Fran', 'Ting Mei'],
+                  rooms: [],
+                  days: ['3 de Septiembre', '4 de Septiembre'],
+                  talkTypes: [],
+                ),
+              );
+            } else if (_selectedIndex == 1) {
+              navigateTo(const SpeakerFormScreen());
+            } else if (_selectedIndex == 2) {
               final newSponsor = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const AddSponsorScreen()),

@@ -29,5 +29,19 @@
   "github": "GitHub",
   "website": "Webgunea",
   "openUrl": "URL ireki",
-  "changeLanguage": "Hizkuntza aldatu"
+  "changeLanguage": "Hizkuntza aldatu",
+  "speakerForm": "Hizlariaren Inprimakia",
+  "nameLabel": "Izena*",
+  "nameErrorHint": "Mesedez, sartu zure izena",
+  "bioLabel": "Biografia*",
+  "bioErrorHint": "Mesedez, sartu zure biografia",
+  "imageUrlLabel": "Irudiaren URLa",
+  "nameHint": "Sartu hizlariaren izena",
+  "bioHint": "Sartu hizlariaren biografia",
+  "imageUrlHint": "Sartu hizlariaren irudiaren URLa",
+  "twitterHint": "Sartu Twitter URLa",
+  "githubHint": "Sartu GitHub URLa",
+  "linkedinHint": "Sartu LinkedIn URLa",
+  "websiteHint": "Sartu webgunearen URLa",
+  "saveButton": "Gorde"
 }

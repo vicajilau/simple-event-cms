@@ -99,4 +99,46 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Canviar Idioma';
+
+  @override
+  String get speakerForm => 'Formulari de Ponent';
+
+  @override
+  String get nameLabel => 'Nom*';
+
+  @override
+  String get nameErrorHint => 'Si us plau, introdueix el teu nom';
+
+  @override
+  String get bioLabel => 'Biografia*';
+
+  @override
+  String get bioErrorHint => 'Si us plau, introdueix la teva biografia';
+
+  @override
+  String get imageUrlLabel => 'URL de la Imatge';
+
+  @override
+  String get nameHint => 'Introdueix el nom del ponent';
+
+  @override
+  String get bioHint => 'Introdueix la biografia del ponent';
+
+  @override
+  String get imageUrlHint => 'Introdueix la URL de la imatge del ponent';
+
+  @override
+  String get twitterHint => 'Introdueix la URL de Twitter';
+
+  @override
+  String get githubHint => 'Introdueix la URL de GitHub';
+
+  @override
+  String get linkedinHint => 'Introdueix la URL de LinkedIn';
+
+  @override
+  String get websiteHint => 'Introdueix la URL del lloc web';
+
+  @override
+  String get saveButton => 'Desa';
 }
