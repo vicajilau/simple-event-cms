@@ -46,18 +46,23 @@ class EventContainerScreen extends StatefulWidget {
 class _EventContainerScreenState extends State<EventContainerScreen> {
   /// Currently selected tab index
   int _selectedIndex = 0;
+  List<AgendaDay> _agendaDays = [];
+  List<Speaker> _speakers = [];
+  List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
-  late final List<Widget> _screens;
+  List<Widget> get _screens => [
+    AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
+    SpeakersScreen(key: UniqueKey(), speakers: _speakers),
+    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _screens = [
-      AgendaScreen(agendaDays: widget.agendaDays),
-      SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
-      SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
-    ];
+    _agendaDays = [...widget.agendaDays];
+    _speakers = [...widget.speakers];
+    _sponsors = [...widget.sponsors];
   }
 
   @override
@@ -104,7 +109,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                 ),
               );
             } else if (_selectedIndex == 1) {
-              navigateTo(const SpeakerFormScreen());
+              // navigateTo(const SpeakerFormScreen());
+              _addSpeaker();
             } else if (_selectedIndex == 2) {
               navigateTo(AddSponsorScreen());
             }
@@ -127,5 +133,19 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _addSpeaker() async {
+    final newSpeaker = await Navigator.push<Speaker>(
+      context,
+      MaterialPageRoute(builder: (context) => const SpeakerFormScreen()),
+    );
+
+    if (newSpeaker != null) {
+      setState(() {
+        _speakers.add(newSpeaker);
+        _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });
+    }
   }
 }

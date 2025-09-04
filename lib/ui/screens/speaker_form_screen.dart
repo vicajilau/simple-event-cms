@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
+import 'package:sec/core/models/speaker.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/ui/widgets/widgets.dart';
 
@@ -13,6 +14,25 @@ class SpeakerFormScreen extends StatefulWidget {
 
 class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _imageUrlController = TextEditingController();
+  final _bioController = TextEditingController();
+  final _twitterController = TextEditingController();
+  final _githubController = TextEditingController();
+  final _linkedinController = TextEditingController();
+  final _websiteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _imageUrlController.dispose();
+    _bioController.dispose();
+    _twitterController.dispose();
+    _githubController.dispose();
+    _linkedinController.dispose();
+    _websiteController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +58,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.nameLabel ?? '',
                 childInput: TextFormField(
+                  controller: _nameController,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.nameHint ?? '',
                   ),
@@ -52,6 +73,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.imageUrlLabel ?? '',
                 childInput: TextFormField(
+                  controller: _imageUrlController,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.imageUrlHint ?? '',
                   ),
@@ -60,6 +82,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.bioLabel ?? '',
                 childInput: TextFormField(
+                  controller: _bioController,
                   maxLines: 5,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.bioHint ?? '',
@@ -75,6 +98,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.twitter ?? '',
                 childInput: TextFormField(
+                  controller: _twitterController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: AppLocalizations.of(context)?.twitterHint ?? '',
@@ -84,6 +108,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.github ?? '',
                 childInput: TextFormField(
+                  controller: _githubController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: AppLocalizations.of(context)?.githubHint ?? '',
@@ -93,6 +118,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.linkedin ?? '',
                 childInput: TextFormField(
+                  controller: _linkedinController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: AppLocalizations.of(context)?.linkedinHint ?? '',
@@ -102,6 +128,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               SectionInputForm(
                 label: AppLocalizations.of(context)?.website ?? '',
                 childInput: TextFormField(
+                  controller: _websiteController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: AppLocalizations.of(context)?.websiteHint ?? '',
@@ -114,7 +141,22 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                   FilledButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.pop(context);
+                        Navigator.pop(
+                          context,
+                          Speaker(
+                            uid: DateTime.now().microsecondsSinceEpoch
+                                .toString(),
+                            name: _nameController.text,
+                            image: _imageUrlController.text,
+                            bio: _bioController.text,
+                            social: Social(
+                              twitter: _twitterController.text,
+                              github: _githubController.text,
+                              linkedin: _linkedinController.text,
+                              website: _websiteController.text,
+                            ),
+                          ),
+                        );
                       }
                     },
                     child: Text(AppLocalizations.of(context)?.saveButton ?? ''),

@@ -8,18 +8,13 @@ import '../widgets/widgets.dart';
 /// Fetches sponsor data and displays logos with clickable links
 class SponsorsScreen extends StatelessWidget {
   /// Data loader for fetching sponsor information
-  final DataLoader dataLoader;
   final List<Sponsor> sponsors;
 
-  const SponsorsScreen({
-    super.key,
-    required this.dataLoader,
-    required this.sponsors,
-  });
+  const SponsorsScreen({super.key, required this.sponsors});
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<dynamic>>(
-      future: dataLoader.loadSponsors(),
+      future: Future.value(sponsors),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(

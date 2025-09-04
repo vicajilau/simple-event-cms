@@ -7,20 +7,20 @@ import '../widgets/widgets.dart';
 
 /// Screen that displays a grid of speakers with their information and social links
 /// Fetches speaker data from the configured data source and displays it in cards
-class SpeakersScreen extends StatelessWidget {
+class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
-  final DataLoader dataLoader;
   final List<Speaker> speakers;
 
-  const SpeakersScreen({
-    super.key,
-    required this.dataLoader,
-    required this.speakers,
-  });
+  const SpeakersScreen({super.key, required this.speakers});
 
   @override
+  State<SpeakersScreen> createState() => _SpeakersScreenState();
+}
+
+class _SpeakersScreenState extends State<SpeakersScreen> {
+  @override
   Widget build(BuildContext context) {
-    if (speakers.isEmpty) {
+    if (widget.speakers.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,9 +44,9 @@ class SpeakersScreen extends StatelessWidget {
             crossAxisSpacing: 16,
             mainAxisSpacing: 16,
           ),
-          itemCount: speakers.length,
+          itemCount: widget.speakers.length,
           itemBuilder: (context, index) {
-            final speaker = speakers[index];
+            final speaker = widget.speakers[index];
             return Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
