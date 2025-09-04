@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/models/agenda.dart';
-import '../../core/models/site_config.dart';
-import '../../core/models/speaker.dart';
-import '../../core/models/sponsor.dart';
+import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import '../dialogs/dialogs.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -44,6 +40,9 @@ class EventContainerScreen extends StatefulWidget {
 class _EventContainerScreenState extends State<EventContainerScreen> {
   /// Currently selected tab index
   int _selectedIndex = 0;
+  List<AgendaDay> _agendaDays = [];
+  List<Speaker> _speakers = [];
+  List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
   late final List<Widget> _screens;
@@ -51,8 +50,11 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   @override
   void initState() {
     super.initState();
+    _agendaDays = [...widget.agendaDays];
+    _speakers = [...widget.speakers];
+    _sponsors = [...widget.sponsors];
     _screens = [
-      AgendaScreen(agendaDays: widget.agendaDays),
+      AgendaScreen(agendaDays: _agendaDays),
       SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
       SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
     ];
@@ -91,16 +93,17 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         width: 60,
         height: 60,
         child: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             if (_selectedIndex == 0) {
-              navigateTo(
+              var newAgendaDay = await _navigateTo(
                 EventFormScreen(
-                  speakers: ['Fran', 'Ting Mei'],
-                  rooms: [],
-                  days: ['3 de Septiembre', '4 de Septiembre'],
-                  talkTypes: [],
+                  speakers: _getSpeakers(),
+                  rooms: _getRoomNames(),
+                  days: _getAgendaDays(),
+                  sessionTypes: SessionTypes.allLabels(context),
                 ),
               );
+              _addAgendaData(agendaDay: newAgendaDay);
             }
           },
           elevation: 16,
@@ -112,8 +115,30 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  void navigateTo(Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  Future<dynamic> _navigateTo(Widget screen) async {
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
+  List<String> _getAgendaDays() {
+    return _agendaDays.map((agendaDay) {
+      return agendaDay.date;
+    }).toList();
+  }
+
+  List<String> _getRoomNames() {
+    return _agendaDays
+        .expand((agendaDay) => agendaDay.tracks.map((track) => track.name))
+        .toSet()
+        .toList();
+  }
+
+  List<String> _getSpeakers() {
+    return _speakers.map((speaker) {
+      return speaker.name;
+    }).toList();
   }
 
   /// Handles tab selection changes
@@ -121,5 +146,36 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _addAgendaData({dynamic agendaDay}) {
+    if (agendaDay is! AgendaDay) {
+      return;
+    }
+
+    final AgendaDay newAgendaDay = agendaDay;
+    final dateForNewSession = newAgendaDay.date;
+    final trackNameForNewSession = newAgendaDay.tracks.first.name;
+    final newSession = newAgendaDay.tracks.first.sessions.first;
+
+    _agendaDays = _agendaDays.map((agendaDay) {
+      if (agendaDay.date == dateForNewSession) {
+        final updatedTracks = agendaDay.tracks.map((track) {
+          if (track.name == trackNameForNewSession) {
+            return Track(
+              name: track.name,
+              color: '',
+              sessions: [...track.sessions, newSession],
+            );
+          }
+          return track;
+        }).toList();
+        return AgendaDay(date: agendaDay.date, tracks: updatedTracks);
+      }
+      return agendaDay;
+    }).toList();
+    print('Agenda recargada: $_agendaDays');
+    _screens[0] = AgendaScreen(agendaDays: _agendaDays);
+    setState(() {});
   }
 }

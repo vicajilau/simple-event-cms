@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../core/models/agenda.dart';
+import '../../core/models/models.dart';
 import '../../core/utils/date_utils.dart';
-import '../../l10n/app_localizations.dart';
 
 class ExpansionTileState {
   final bool isExpanded;
@@ -240,13 +239,19 @@ class SessionCards extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: _getSessionTypeColor(context, session.type),
+                    color: SessionTypes.getSessionTypeColor(
+                      context,
+                      session.type,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     session.time,
                     style: TextStyle(
-                      color: _getSessionTypeTextColor(context, session.type),
+                      color: SessionTypes.getSessionTypeTextColor(
+                        context,
+                        session.type,
+                      ),
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -266,7 +271,7 @@ class SessionCards extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      _getSessionTypeLabel(context, session.type),
+                      SessionTypes.getSessionTypeLabel(context, session.type),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 10,
@@ -316,53 +321,5 @@ class SessionCards extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Color _getSessionTypeColor(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return Colors.purple.shade100;
-      case 'talk':
-        return Theme.of(context).colorScheme.primaryContainer;
-      case 'workshop':
-        return Colors.green.shade100;
-      case 'break':
-        return Colors.orange.shade100;
-      default:
-        return Theme.of(context).colorScheme.surfaceContainerHighest;
-    }
-  }
-
-  Color _getSessionTypeTextColor(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return Colors.purple.shade800;
-      case 'talk':
-        return Theme.of(context).colorScheme.onPrimaryContainer;
-      case 'workshop':
-        return Colors.green.shade800;
-      case 'break':
-        return Colors.orange.shade800;
-      default:
-        return Theme.of(context).colorScheme.onSurfaceVariant;
-    }
-  }
-
-  /// Returns the localized label for the given session type
-  String _getSessionTypeLabel(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return AppLocalizations.of(context)!.keynote;
-      case 'talk':
-        return AppLocalizations.of(context)!.talk;
-      case 'workshop':
-        return AppLocalizations.of(context)!.workshop;
-      case 'break':
-        return AppLocalizations.of(context)!.sessionBreak;
-      case 'panel':
-        return 'PANEL';
-      default:
-        return 'EVENTO';
-    }
   }
 }
