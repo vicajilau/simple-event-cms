@@ -29,5 +29,19 @@
   "github": "GitHub",
   "website": "Site",
   "openUrl": "Abrir URL",
-  "changeLanguage": "Alterar Idioma"
+  "changeLanguage": "Alterar Idioma",
+  "speakerForm": "Formulário do Palestrante",
+  "nameLabel": "Nome*",
+  "nameErrorHint": "Por favor, insira o seu nome",
+  "bioLabel": "Biografia*",
+  "bioErrorHint": "Por favor, insira a sua biografia",
+  "imageUrlLabel": "URL da Imagem",
+  "nameHint": "Insira o nome do palestrante",
+  "bioHint": "Insira a biografia do palestrante",
+  "imageUrlHint": "Insira a URL da imagem do palestrante",
+  "twitterHint": "Insira a URL do Twitter",
+  "githubHint": "Insira a URL do GitHub",
+  "linkedinHint": "Insira a URL do LinkedIn",
+  "websiteHint": "Insira a URL do site",
+  "saveButton": "Salvar"
 }
