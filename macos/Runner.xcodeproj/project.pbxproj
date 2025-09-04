@@ -124,9 +124,9 @@
 			isa = PBXGroup;
 			children = (
 				33FAB671232836740065AC1E /* Runner */,
+				33CEB47122A05771004F2AC0 /* Flutter */,
 				331C80D6294CF71000263BE5 /* RunnerTests */,
 				33CC10EE2044A3C60003C045 /* Products */,
-				D73912EC22F37F3D000D13A0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
