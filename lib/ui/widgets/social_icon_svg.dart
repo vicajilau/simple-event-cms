@@ -145,8 +145,10 @@ class SocialIconsRow extends StatelessWidget {
 
     if (socialIcons.isEmpty) return const SizedBox.shrink();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      spacing: spacing,
+      runSpacing: spacing,
       children: socialIcons
           .map(
             (icon) => Padding(

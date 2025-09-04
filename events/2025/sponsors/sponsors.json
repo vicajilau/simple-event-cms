@@ -3,14 +3,14 @@
     "UID": "456546456",
     "name": "Google",
     "type": "Patrocinador Principal",
-    "logo": "https://logo.clearbit.com/google.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/google-1-1.svg",
     "website": "https://google.com"
   },
   {
     "UID": "654564564",
     "name": "Microsoft",
     "type": "Patrocinador Principal",
-    "logo": "https://logo.clearbit.com/microsoft.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/microsoft-5.svg",
     "website": "https://microsoft.com"
   },
   {
@@ -31,56 +31,56 @@
     "UID": "364973197",
     "name": "GitHub",
     "type": "Patrocinador Gold",
-    "logo": "https://logo.clearbit.com/github.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/github-icon-1.svg",
     "website": "https://github.com"
   },
   {
     "UID": "726612689",
     "name": "JetBrains",
     "type": "Patrocinador Silver",
-    "logo": "https://logo.clearbit.com/jetbrains.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/jetbrains-1.svg",
     "website": "https://jetbrains.com"
   },
   {
     "UID": "14575333",
     "name": "Spotify",
     "type": "Patrocinador Silver",
-    "logo": "https://logo.clearbit.com/spotify.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/spotify-2.svg",
     "website": "https://spotify.com"
   },
   {
     "UID": "8sad8asdasd",
     "name": "Adobe",
     "type": "Patrocinador Silver",
-    "logo": "https://logo.clearbit.com/adobe.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/adobe-2.svg",
     "website": "https://adobe.com"
   },
   {
     "UID": "w8asd9ww8aw",
     "name": "Atlassian",
     "type": "Patrocinador Bronze",
-    "logo": "https://logo.clearbit.com/atlassian.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/atlassian-1.svg",
     "website": "https://atlassian.com"
   },
   {
     "UID": "bn5e8qewerdd",
     "name": "Figma",
     "type": "Patrocinador Bronze",
-    "logo": "https://logo.clearbit.com/figma.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/figma-icon.svg",
     "website": "https://figma.com"
   },
   {
     "UID": "1ad33dzfdff",
     "name": "Vercel",
     "type": "Patrocinador Bronze",
-    "logo": "https://logo.clearbit.com/vercel.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/vercel.svg",
     "website": "https://vercel.com"
   },
   {
     "UID": "lapw52524669",
     "name": "Stripe",
     "type": "Patrocinador Bronze",
-    "logo": "https://logo.clearbit.com/stripe.com",
+    "logo": "https://cdn.worldvectorlogo.com/logos/stripe-2.svg",
     "website": "https://stripe.com"
   }
 ]

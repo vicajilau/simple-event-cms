@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
+import '../widgets/add_sponsor_screen.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -54,12 +55,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     _speakers = [...widget.speakers];
     _sponsors = [...widget.sponsors];
     _screens = [
-      AgendaScreen(
-        agendaDays: _agendaDays,
-        key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
-      ),
+      AgendaScreen(agendaDays: _agendaDays),
       SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
       SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
     ];
@@ -100,10 +96,17 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         child: FloatingActionButton(
           onPressed: () async {
             if (_selectedIndex == 0) {
-              AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
-                _eventFormScreen(),
+              var newAgendaDay = await _navigateTo(
+                EventFormScreen(
+                  speakers: _getSpeakers(),
+                  rooms: _getRoomNames(),
+                  days: _getAgendaDays(),
+                  sessionTypes: SessionTypes.allLabels(context),
+                ),
               );
-              _addAgendaData(newAgendaDay: newAgendaDay);
+              _addAgendaData(agendaDay: newAgendaDay);
+            } else if (_selectedIndex == 2) {
+              _navigateTo(AddSponsorScreen());
             }
           },
           elevation: 16,
@@ -115,18 +118,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  EventFormScreen _eventFormScreen({Session? session}) {
-    return EventFormScreen(
-      speakers: _getSpeakers(),
-      rooms: _getRoomNames(),
-      days: _getAgendaDays(),
-      sessionTypes: SessionTypes.allLabels(context),
-      data: session,
-    );
-  }
-
-  Future<T?> _navigateTo<T>(Widget screen) async {
-    return await Navigator.push<T>(
+  Future<dynamic> _navigateTo(Widget screen) async {
+    return await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => screen),
     );
@@ -158,31 +151,13 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     });
   }
 
-  void _onAgendaCardTapped(Session sessionToEdit) async {
-    AgendaDay editedSession = await _navigateTo(
-      _eventFormScreen(session: sessionToEdit),
-    );
-
-    _refreshAgendaState();
-  }
-
-  void _onAgendaCardDeleted(Session sessionToDelete) {
-    for (var agendaDay in _agendaDays) {
-      for (var track in agendaDay.tracks) {
-        track.sessions.removeWhere(
-          (session) => session.uid == sessionToDelete.uid,
-        );
-      }
-    }
-    _refreshAgendaState();
-  }
-
-  void _addAgendaData({AgendaDay? newAgendaDay}) {
-    if (newAgendaDay != null) {
+  void _addAgendaData({dynamic agendaDay}) {
+    if (agendaDay is! AgendaDay) {
       return;
     }
 
-    final dateForNewSession = newAgendaDay!.date;
+    final AgendaDay newAgendaDay = agendaDay;
+    final dateForNewSession = newAgendaDay.date;
     final trackNameForNewSession = newAgendaDay.tracks.first.name;
     final newSession = newAgendaDay.tracks.first.sessions.first;
 
@@ -202,20 +177,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       }
       return agendaDay;
     }).toList();
-
-    setState(() {
-      _refreshAgendaState();
-    });
-  }
-
-  void _refreshAgendaState() {
-    setState(() {
-      _screens[0] = AgendaScreen(
-        agendaDays: _agendaDays,
-        key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
-      );
-    });
+    print('Agenda recargada: $_agendaDays');
+    _screens[0] = AgendaScreen(agendaDays: _agendaDays);
+    setState(() {});
   }
 }
