@@ -45,7 +45,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                 label: 'Nombre*',
                 childInput: TextFormField(
                   maxLines: 1,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce el nombre del Sponsor',
                   ),
                   // The validator receives the text that the user has entered.
@@ -62,7 +62,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                 label: 'Logo*',
                 childInput: TextFormField(
                   maxLines: 1,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce la URL del logo',
                   ),
                   // The validator receives the text that the user has entered.
@@ -79,7 +79,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                 label: 'Web*',
                 childInput: TextFormField(
                   maxLines: 1,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce la URL de la web',
                   ),
                   // The validator receives the text that the user has entered.

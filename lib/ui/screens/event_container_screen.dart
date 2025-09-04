@@ -55,7 +55,12 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     _speakers = [...widget.speakers];
     _sponsors = [...widget.sponsors];
     _screens = [
-      AgendaScreen(agendaDays: _agendaDays),
+      AgendaScreen(
+        agendaDays: _agendaDays,
+        key: UniqueKey(),
+        editSession: _onAgendaCardTapped,
+        removeSession: _onAgendaCardDeleted,
+      ),
       SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
       SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
     ];
@@ -96,15 +101,10 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         child: FloatingActionButton(
           onPressed: () async {
             if (_selectedIndex == 0) {
-              var newAgendaDay = await _navigateTo(
-                EventFormScreen(
-                  speakers: _getSpeakers(),
-                  rooms: _getRoomNames(),
-                  days: _getAgendaDays(),
-                  sessionTypes: SessionTypes.allLabels(context),
-                ),
+              AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
+                _eventFormScreen(),
               );
-              _addAgendaData(agendaDay: newAgendaDay);
+              _addAgendaData(newAgendaDay: newAgendaDay);
             } else if (_selectedIndex == 2) {
               _navigateTo(AddSponsorScreen());
             }
@@ -118,8 +118,18 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  Future<dynamic> _navigateTo(Widget screen) async {
-    return await Navigator.push(
+  EventFormScreen _eventFormScreen({Session? session}) {
+    return EventFormScreen(
+      speakers: _getSpeakers(),
+      rooms: _getRoomNames(),
+      days: _getAgendaDays(),
+      sessionTypes: SessionTypes.allLabels(context),
+      data: session,
+    );
+  }
+
+  Future<T?> _navigateTo<T>(Widget screen) async {
+    return await Navigator.push<T>(
       context,
       MaterialPageRoute(builder: (context) => screen),
     );
@@ -151,13 +161,31 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     });
   }
 
-  void _addAgendaData({dynamic agendaDay}) {
-    if (agendaDay is! AgendaDay) {
+  void _onAgendaCardTapped(Session sessionToEdit) async {
+    AgendaDay editedSession = await _navigateTo(
+      _eventFormScreen(session: sessionToEdit),
+    );
+
+    _refreshAgendaState();
+  }
+
+  void _onAgendaCardDeleted(Session sessionToDelete) {
+    for (var agendaDay in _agendaDays) {
+      for (var track in agendaDay.tracks) {
+        track.sessions.removeWhere(
+          (session) => session.uid == sessionToDelete.uid,
+        );
+      }
+    }
+    _refreshAgendaState();
+  }
+
+  void _addAgendaData({AgendaDay? newAgendaDay}) {
+    if (newAgendaDay != null) {
       return;
     }
 
-    final AgendaDay newAgendaDay = agendaDay;
-    final dateForNewSession = newAgendaDay.date;
+    final dateForNewSession = newAgendaDay!.date;
     final trackNameForNewSession = newAgendaDay.tracks.first.name;
     final newSession = newAgendaDay.tracks.first.sessions.first;
 
@@ -177,8 +205,20 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       }
       return agendaDay;
     }).toList();
-    print('Agenda recargada: $_agendaDays');
-    _screens[0] = AgendaScreen(agendaDays: _agendaDays);
-    setState(() {});
+
+    setState(() {
+      _refreshAgendaState();
+    });
+  }
+
+  void _refreshAgendaState() {
+    setState(() {
+      _screens[0] = AgendaScreen(
+        agendaDays: _agendaDays,
+        key: UniqueKey(),
+        editSession: _onAgendaCardTapped,
+        removeSession: _onAgendaCardDeleted,
+      );
+    });
   }
 }
