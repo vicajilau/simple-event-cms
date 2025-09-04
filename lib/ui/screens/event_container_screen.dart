@@ -7,7 +7,6 @@ import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import '../dialogs/dialogs.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -45,18 +44,27 @@ class EventContainerScreen extends StatefulWidget {
 class _EventContainerScreenState extends State<EventContainerScreen> {
   /// Currently selected tab index
   int _selectedIndex = 0;
+  List<AgendaDay> _agendaDays = [];
+  List<Speaker> _speakers = [];
+  List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
-  late final List<Widget> _screens;
+  List<Widget> get _screens => [
+    AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
+    SpeakersScreen(
+      key: UniqueKey(),
+      dataLoader: widget.dataLoader,
+      speakers: _speakers,
+    ),
+    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
+  ];
 
   @override
   void initState() {
     super.initState();
-    _screens = [
-      AgendaScreen(agendaDays: widget.agendaDays),
-      SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
-      SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
-    ];
+    _agendaDays = [...widget.agendaDays];
+    _speakers = [...widget.speakers];
+    _sponsors = [...widget.sponsors];
   }
 
   @override
@@ -92,24 +100,24 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         width: 60,
         height: 60,
         child: FloatingActionButton(
-          onPressed: () {
-            if (_selectedIndex == 0) {
-              navigateTo(
-                EventFormScreen(
-                  speakers: ['Fran', 'Ting Mei'],
-                  rooms: [],
-                  days: ['3 de Septiembre', '4 de Septiembre'],
-                  talkTypes: [],
-                ),
+          onPressed: () async {
+            if (_selectedIndex == 2) {
+              final newSponsor = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
               );
-            } else if (_selectedIndex == 2) {
-              navigateTo(AddSponsorScreen());
+
+              if (newSponsor != null && newSponsor is Sponsor) {
+                setState(() {
+                  _sponsors.add(newSponsor);
+                });
+              }
             }
           },
           elevation: 16,
           backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );

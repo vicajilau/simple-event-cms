@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/models/sponsor.dart';
 import 'package:sec/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/ui/widgets/section_input_form.dart';
 
@@ -16,9 +17,14 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _logoController = TextEditingController();
   final TextEditingController _websiteController = TextEditingController();
-  String _selectedCategory = 'Principal';
+  String _selectedCategory = 'Patrocinador Principal';
 
-  final List<String> _categories = ['Principal', 'Gold', 'Silver', 'Bronze'];
+  final List<String> _categories = [
+    'Patrocinador Principal',
+    'Patrocinador Gold',
+    'Patrocinador Silver',
+    'Patrocinador Bronze',
+  ];
 
   @override
   void dispose() {
@@ -44,6 +50,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
               SectionInputForm(
                 label: 'Nombre*',
                 childInput: TextFormField(
+                  controller: _nameController,
                   maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce el nombre del Sponsor',
@@ -61,6 +68,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
               SectionInputForm(
                 label: 'Logo*',
                 childInput: TextFormField(
+                  controller: _logoController,
                   maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce la URL del logo',
@@ -78,6 +86,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
               SectionInputForm(
                 label: 'Web*',
                 childInput: TextFormField(
+                  controller: _websiteController,
                   maxLines: 1,
                   decoration: AppDecorations.textfieldDecoration.copyWith(
                     hintText: 'Introduce la URL de la web',
@@ -118,7 +127,18 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                   FilledButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        Navigator.pop(context);
+                        final newSponsor = Sponsor(
+                          uid: DateTime.now().millisecondsSinceEpoch.toString(), //todo: use a library to create uid?
+                          name: _nameController.text,
+                          type: _selectedCategory,
+                          logo: _logoController.text,
+                          website: _websiteController.text,
+                        );
+
+                        Navigator.pop(
+                          context,
+                          newSponsor,
+                        ); 
                       }
                     },
                     child: const Text('Guardar'),
