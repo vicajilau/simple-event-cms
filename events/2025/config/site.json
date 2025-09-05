@@ -21,7 +21,8 @@
       "speakersUID": [
         {"UID": "123456"},
         {"UID": "123457"},
-        {"UID": "123458"}
+        {"UID": "123458"},
+        {"UID": "alfa11212"}
       ],
       "sponsorsUID": [
         {"UID": "456546456"},
@@ -53,7 +54,8 @@
       "agendaUID": "871674",
       "speakersUID": [
         {"UID": "123459"},
-        {"UID": "123460"}
+        {"UID": "123460"},
+        {"UID": "alfa11212"}
       ],
       "sponsorsUID": [
         {"UID": "8sad8asdasd"},

@@ -15,7 +15,7 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
-  final void Function(Session) editSession;
+  final void Function(String, String, Session) editSession;
   final void Function(Session) removeSession;
 
   const AgendaScreen({
@@ -55,6 +55,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             _expansionTilesStates[date]?.isExpanded ?? false;
         final int tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
         return ExpansionTile(
+          shape: const Border(),
           initiallyExpanded: isExpanded,
           showTrailingIcon: false,
           onExpansionChanged: (value) {
@@ -132,6 +133,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             }),
           ),
           CustomTabBarView(
+            date: date,
             tracks: tracks,
             currentIndex: tabBarIndex,
             onIndexChanged: (value) {
@@ -163,10 +165,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
 // ignore: must_be_immutable
 class CustomTabBarView extends StatefulWidget {
+  final String date;
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final void Function(Session) editSession;
+  final void Function(String, String, Session) editSession;
   final void Function(Session) removeSession;
 
   CustomTabBarView({
@@ -176,6 +179,7 @@ class CustomTabBarView extends StatefulWidget {
     required this.onIndexChanged,
     required this.editSession,
     required this.removeSession,
+    required this.date,
   });
 
   @override
@@ -193,6 +197,8 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
         sessions: widget.tracks[index].sessions,
         editSession: widget.editSession,
         removeSession: widget.removeSession,
+        date: widget.date,
+        track: widget.tracks[index].name,
       );
     });
   }
@@ -216,8 +222,9 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 }
 
 class SessionCards extends StatelessWidget {
+  final String date, track;
   final List<Session> sessions;
-  final void Function(Session) editSession;
+  final void Function(String, String, Session) editSession;
   final void Function(Session) removeSession;
 
   const SessionCards({
@@ -225,6 +232,8 @@ class SessionCards extends StatelessWidget {
     required this.sessions,
     required this.editSession,
     required this.removeSession,
+    required this.date,
+    required this.track,
   });
 
   @override
@@ -243,7 +252,7 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    editSession(sessions[index]);
+                    editSession(date, track, sessions[index]);
                   },
                   child: _buildSessionCard(
                     context,

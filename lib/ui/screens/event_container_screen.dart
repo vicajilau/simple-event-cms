@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/utils/time_utils.dart';
 
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
@@ -43,7 +44,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   int _selectedIndex = 0;
   List<AgendaDay> _agendaDays = [];
   List<Speaker> _speakers = [];
-  List<Sponsor> _sponsors = [];
+  //List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
   late final List<Widget> _screens;
@@ -52,14 +53,20 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   void initState() {
     super.initState();
     _agendaDays = [...widget.agendaDays];
+    _sortAgendaDaysByDate();
+    for (var agendaDay in _agendaDays) {
+      for (var track in agendaDay.tracks) {
+        _sortSessionsByStartTime(track);
+      }
+    }
     _speakers = [...widget.speakers];
-    _sponsors = [...widget.sponsors];
+    //_sponsors = [...widget.sponsors];
     _screens = [
       AgendaScreen(
         agendaDays: _agendaDays,
         key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
+        editSession: _editSession,
+        removeSession: _deleteSession,
       ),
       SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
       SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
@@ -104,7 +111,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
               AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
                 _eventFormScreen(),
               );
-              _addAgendaData(newAgendaDay: newAgendaDay);
+              _addNewSession(newAgendaDay: newAgendaDay);
             } else if (_selectedIndex == 2) {
               _navigateTo(AddSponsorScreen());
             }
@@ -118,13 +125,21 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  EventFormScreen _eventFormScreen({Session? session}) {
+  EventFormScreen _eventFormScreen({
+    String? day,
+    String? track,
+    Session? session,
+  }) {
     return EventFormScreen(
-      speakers: _getSpeakers(),
-      rooms: _getRoomNames(),
-      days: _getAgendaDays(),
-      sessionTypes: SessionTypes.allLabels(context),
-      data: session,
+      data: EventFormData(
+        speakers: _getSpeakers(),
+        rooms: _getRoomNames(),
+        days: _getAgendaDays(),
+        sessionTypes: SessionTypes.allLabels(context),
+        session: session,
+        track: track ?? '',
+        day: day ?? '',
+      ),
     );
   }
 
@@ -161,50 +176,86 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     });
   }
 
-  void _onAgendaCardTapped(Session sessionToEdit) async {
-    AgendaDay editedSession = await _navigateTo(
-      _eventFormScreen(session: sessionToEdit),
+  void _editSession(
+    String date,
+    String trackName,
+    Session sessionToEdit,
+  ) async {
+    AgendaDay agendaDayEdited = await _navigateTo(
+      _eventFormScreen(day: date, track: trackName, session: sessionToEdit),
     );
 
+    _removeSessionFromAgenda(agendaDayEdited.tracks.first.sessions.first);
+    _insertSessionToAgenda(agendaDayEdited);
+
     _refreshAgendaState();
   }
 
-  void _onAgendaCardDeleted(Session sessionToDelete) {
+  void _insertSessionToAgenda(AgendaDay agendaDay) {
+    final Session editedSession = agendaDay.tracks.first.sessions.first;
+
+    AgendaDay? targetDay = _agendaDays.firstWhere(
+      (d) => d.date == agendaDay.date,
+      orElse: () => AgendaDay(date: agendaDay.date, tracks: []),
+    );
+
+    Track? targetTrack = targetDay.tracks.firstWhere(
+      (t) => t.name == agendaDay.tracks.first.name,
+      orElse: () {
+        final newTrack = Track(
+          color: '',
+          name: agendaDay.tracks.first.name,
+          sessions: [],
+        );
+        targetDay.tracks.add(newTrack);
+        return newTrack;
+      },
+    );
+
+    targetTrack.sessions.add(editedSession);
+    _sortSessionsByStartTime(targetTrack);
+
+    if (!_agendaDays.any((d) => d.date == targetDay.date)) {
+      _agendaDays.add(targetDay);
+    }
+    _sortAgendaDaysByDate();
+  }
+
+  void _sortSessionsByStartTime(Track track) {
+    track.sessions.sort((a, b) {
+      final aMinutes = TimeUtils.parseStartTimeToMinutes(a.time);
+      final bMinutes = TimeUtils.parseStartTimeToMinutes(b.time);
+      return aMinutes.compareTo(bMinutes);
+    });
+  }
+
+  void _sortAgendaDaysByDate() {
+    _agendaDays.sort((a, b) {
+      final aDate = DateTime.parse(a.date);
+      final bDate = DateTime.parse(b.date);
+      return aDate.compareTo(bDate);
+    });
+  }
+
+  void _removeSessionFromAgenda(Session sessionToRemove) {
     for (var agendaDay in _agendaDays) {
       for (var track in agendaDay.tracks) {
-        track.sessions.removeWhere(
-          (session) => session.uid == sessionToDelete.uid,
-        );
+        track.sessions.removeWhere((s) => s.uid == sessionToRemove.uid);
       }
     }
+  }
+
+  void _deleteSession(Session sessionToDelete) {
+    _removeSessionFromAgenda(sessionToDelete);
     _refreshAgendaState();
   }
 
-  void _addAgendaData({AgendaDay? newAgendaDay}) {
-    if (newAgendaDay != null) {
+  void _addNewSession({AgendaDay? newAgendaDay}) {
+    if (newAgendaDay == null) {
       return;
     }
 
-    final dateForNewSession = newAgendaDay!.date;
-    final trackNameForNewSession = newAgendaDay.tracks.first.name;
-    final newSession = newAgendaDay.tracks.first.sessions.first;
-
-    _agendaDays = _agendaDays.map((agendaDay) {
-      if (agendaDay.date == dateForNewSession) {
-        final updatedTracks = agendaDay.tracks.map((track) {
-          if (track.name == trackNameForNewSession) {
-            return Track(
-              name: track.name,
-              color: '',
-              sessions: [...track.sessions, newSession],
-            );
-          }
-          return track;
-        }).toList();
-        return AgendaDay(date: agendaDay.date, tracks: updatedTracks);
-      }
-      return agendaDay;
-    }).toList();
+    _insertSessionToAgenda(newAgendaDay);
 
     setState(() {
       _refreshAgendaState();
@@ -216,8 +267,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       _screens[0] = AgendaScreen(
         agendaDays: _agendaDays,
         key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
+        editSession: _editSession,
+        removeSession: _deleteSession,
       );
     });
   }
