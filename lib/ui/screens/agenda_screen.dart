@@ -55,6 +55,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             _expansionTilesStates[date]?.isExpanded ?? false;
         final int tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
         return ExpansionTile(
+          shape: const Border(),
           initiallyExpanded: isExpanded,
           showTrailingIcon: false,
           onExpansionChanged: (value) {

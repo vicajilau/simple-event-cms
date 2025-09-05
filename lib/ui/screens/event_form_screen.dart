@@ -270,10 +270,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
       children: [
         FilledButton(
           onPressed: () {
+            final initTime = _initSessionTime?.format(context) ?? '00:00';
+            final finalTime = _endSessionTime?.format(context) ?? '00:00';
             Session session = Session(
               title: _titleController.text,
-              time:
-                  '${_initSessionTime.toString()} - ${_endSessionTime.toString()}',
+              time: '$initTime - $finalTime',
               speaker: _selectedSpeaker,
               description: _descriptionController.text,
               type: _selectedSessionType,

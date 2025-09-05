@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/utils/time_utils.dart';
 
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
@@ -52,6 +53,12 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   void initState() {
     super.initState();
     _agendaDays = [...widget.agendaDays];
+    _sortAgendaDaysByDate();
+    for (var agendaDay in _agendaDays) {
+      for (var track in agendaDay.tracks) {
+        _sortSessionsByStartTime(track);
+      }
+    }
     _speakers = [...widget.speakers];
     //_sponsors = [...widget.sponsors];
     _screens = [
@@ -187,13 +194,11 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   void _insertSessionToAgenda(AgendaDay agendaDay) {
     final Session editedSession = agendaDay.tracks.first.sessions.first;
 
-    // Buscar el día editado en la agenda
     AgendaDay? targetDay = _agendaDays.firstWhere(
       (d) => d.date == agendaDay.date,
       orElse: () => AgendaDay(date: agendaDay.date, tracks: []),
     );
 
-    // Buscar el track editado en ese día
     Track? targetTrack = targetDay.tracks.firstWhere(
       (t) => t.name == agendaDay.tracks.first.name,
       orElse: () {
@@ -207,13 +212,29 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       },
     );
 
-    // Agregar la sesión editada
     targetTrack.sessions.add(editedSession);
+    _sortSessionsByStartTime(targetTrack);
 
-    // Si el día no existía, lo agregamos a la agenda
     if (!_agendaDays.any((d) => d.date == targetDay.date)) {
       _agendaDays.add(targetDay);
     }
+    _sortAgendaDaysByDate();
+  }
+
+  void _sortSessionsByStartTime(Track track) {
+    track.sessions.sort((a, b) {
+      final aMinutes = TimeUtils.parseStartTimeToMinutes(a.time);
+      final bMinutes = TimeUtils.parseStartTimeToMinutes(b.time);
+      return aMinutes.compareTo(bMinutes);
+    });
+  }
+
+  void _sortAgendaDaysByDate() {
+    _agendaDays.sort((a, b) {
+      final aDate = DateTime.parse(a.date);
+      final bDate = DateTime.parse(b.date);
+      return aDate.compareTo(bDate);
+    });
   }
 
   void _removeSessionFromAgenda(Session sessionToRemove) {
@@ -234,26 +255,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       return;
     }
 
-    final dateForNewSession = newAgendaDay.date;
-    final trackNameForNewSession = newAgendaDay.tracks.first.name;
-    final newSession = newAgendaDay.tracks.first.sessions.first;
-
-    _agendaDays = _agendaDays.map((agendaDay) {
-      if (agendaDay.date == dateForNewSession) {
-        final updatedTracks = agendaDay.tracks.map((track) {
-          if (track.name == trackNameForNewSession) {
-            return Track(
-              name: track.name,
-              color: '',
-              sessions: [...track.sessions, newSession],
-            );
-          }
-          return track;
-        }).toList();
-        return AgendaDay(date: agendaDay.date, tracks: updatedTracks);
-      }
-      return agendaDay;
-    }).toList();
+    _insertSessionToAgenda(newAgendaDay);
 
     setState(() {
       _refreshAgendaState();

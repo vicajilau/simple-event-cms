@@ -3,20 +3,12 @@
       "UID": "4564645",
       "days": [
         {
-          "date": "2025-03-15",
+          "date": "2025-03-18",
           "tracks": [
             {
               "name": "Sala Principal",
               "color": "#4285F4",
               "sessions": [
-                {
-                  "UID": "123233333",
-                  "title": "Apertura y Keynote",
-                  "time": "09:00 - 09:30",
-                  "speaker": "Equipo organizador",
-                  "description": "Bienvenida al DevFest 2025",
-                  "type": "KEYNOTE"
-                },
                 {
                   "UID": "123233334",
                   "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
@@ -48,6 +40,14 @@
                   "speaker": "Victor Carreras",
                   "description": "Integración completa de Firebase en aplicaciones Flutter",
                   "type": "TALK"
+                },
+                {
+                  "UID": "123233333",
+                  "title": "Apertura y Keynote",
+                  "time": "09:00 - 09:30",
+                  "speaker": "Equipo organizador",
+                  "description": "Bienvenida al DevFest 2025",
+                  "type": "KEYNOTE"
                 },
                 {
                   "UID": "6767677411",

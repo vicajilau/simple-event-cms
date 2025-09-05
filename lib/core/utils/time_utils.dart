@@ -10,4 +10,10 @@ class TimeUtils {
     if (hour == null || minute == null) return null;
     return TimeOfDay(hour: hour, minute: minute);
   }
+
+  static int parseStartTimeToMinutes(String timeRange) {
+    final start = timeRange.split(' - ').first.trim();
+    final parts = start.split(':');
+    return int.parse(parts[0]) * 60 + int.parse(parts[1]);
+  }
 }
