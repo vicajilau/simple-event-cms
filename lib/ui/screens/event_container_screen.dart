@@ -58,8 +58,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       AgendaScreen(
         agendaDays: _agendaDays,
         key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
+        editSession: _editSession,
+        removeSession: _deleteSession,
       ),
       SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
       SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
@@ -104,7 +104,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
               AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
                 _eventFormScreen(),
               );
-              _addAgendaData(newAgendaDay: newAgendaDay);
+              _addNewSession(newAgendaDay: newAgendaDay);
             } else if (_selectedIndex == 2) {
               _navigateTo(AddSponsorScreen());
             }
@@ -118,13 +118,21 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  EventFormScreen _eventFormScreen({Session? session}) {
+  EventFormScreen _eventFormScreen({
+    String? day,
+    String? track,
+    Session? session,
+  }) {
     return EventFormScreen(
-      speakers: _getSpeakers(),
-      rooms: _getRoomNames(),
-      days: _getAgendaDays(),
-      sessionTypes: SessionTypes.allLabels(context),
-      data: session,
+      data: EventFormData(
+        speakers: _getSpeakers(),
+        rooms: _getRoomNames(),
+        days: _getAgendaDays(),
+        sessionTypes: SessionTypes.allLabels(context),
+        session: session,
+        track: track ?? '',
+        day: day ?? '',
+      ),
     );
   }
 
@@ -161,27 +169,74 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     });
   }
 
-  void _onAgendaCardTapped(Session sessionToEdit) async {
-    AgendaDay editedSession = await _navigateTo(
-      _eventFormScreen(session: sessionToEdit),
+  void _editSession(
+    String date,
+    String trackName,
+    Session sessionToEdit,
+  ) async {
+    // Navegar al formulario de edición
+    AgendaDay agendaDayEdited = await _navigateTo(
+      _eventFormScreen(day: date, track: trackName, session: sessionToEdit),
     );
 
+    Session editedSession = agendaDayEdited.tracks.first.sessions.first;
+
+    _removeSessionFromAgenda(editedSession);
+
+    // Buscar el día editado en la agenda
+    _insertSessionToAgenda(agendaDayEdited, editedSession);
+
     _refreshAgendaState();
   }
 
-  void _onAgendaCardDeleted(Session sessionToDelete) {
+  void _insertSessionToAgenda(
+    AgendaDay agendaDayEdited,
+    Session editedSession,
+  ) {
+    // Buscar el día editado en la agenda
+    AgendaDay? targetDay = _agendaDays.firstWhere(
+      (d) => d.date == agendaDayEdited.date,
+      orElse: () => AgendaDay(date: agendaDayEdited.date, tracks: []),
+    );
+
+    // Buscar el track editado en ese día
+    Track? targetTrack = targetDay.tracks.firstWhere(
+      (t) => t.name == agendaDayEdited.tracks.first.name,
+      orElse: () {
+        final newTrack = Track(
+          color: '',
+          name: agendaDayEdited.tracks.first.name,
+          sessions: [],
+        );
+        targetDay.tracks.add(newTrack);
+        return newTrack;
+      },
+    );
+
+    // Agregar la sesión editada
+    targetTrack.sessions.add(editedSession);
+
+    // Si el día no existía, lo agregamos a la agenda
+    if (!_agendaDays.any((d) => d.date == targetDay.date)) {
+      _agendaDays.add(targetDay);
+    }
+  }
+
+  void _removeSessionFromAgenda(Session sessionToRemove) {
     for (var agendaDay in _agendaDays) {
       for (var track in agendaDay.tracks) {
-        track.sessions.removeWhere(
-          (session) => session.uid == sessionToDelete.uid,
-        );
+        track.sessions.removeWhere((s) => s.uid == sessionToRemove.uid);
       }
     }
+  }
+
+  void _deleteSession(Session sessionToDelete) {
+    _removeSessionFromAgenda(sessionToDelete);
     _refreshAgendaState();
   }
 
-  void _addAgendaData({AgendaDay? newAgendaDay}) {
-    if (newAgendaDay != null) {
+  void _addNewSession({AgendaDay? newAgendaDay}) {
+    if (newAgendaDay == null) {
       return;
     }
 
@@ -216,8 +271,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       _screens[0] = AgendaScreen(
         agendaDays: _agendaDays,
         key: UniqueKey(),
-        editSession: _onAgendaCardTapped,
-        removeSession: _onAgendaCardDeleted,
+        editSession: _editSession,
+        removeSession: _deleteSession,
       );
     });
   }
