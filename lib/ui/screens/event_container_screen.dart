@@ -7,7 +7,7 @@ import '../../core/models/agenda.dart';
 import '../../core/models/site_config.dart';
 import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
-import '../../core/services/data_loader.dart';
+import '../../core/services/load/data_loader.dart';
 import '../../l10n/app_localizations.dart';
 import 'screens.dart';
 

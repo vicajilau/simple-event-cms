@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
-import '../config/config_loader.dart';
-import '../models/models.dart';
-import '../models/organization.dart';
+import '../../config/config_loader.dart';
+import '../../models/models.dart';
+import '../../models/organization.dart';
 
 /// Service class responsible for loading event data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
@@ -25,7 +25,7 @@ class DataLoader {
   /// [path] The relative path to the data file
   /// Returns a Future containing the parsed JSON data as a dynamic list
   /// Throws an Exception if the data cannot be loaded
-  Future<List<dynamic>> _loadData(String path) async {
+  Future<List<dynamic>> loadData(String path) async {
     String content = '';
     if (ConfigLoader.appEnv != 'dev' &&
         organization.baseUrlOrganization.startsWith('http')) {
@@ -47,7 +47,7 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<List<Speaker>> loadSpeakers() async {
-    List<dynamic> jsonList = await _loadData('speakers/speakers.json');
+    List<dynamic> jsonList = await loadData('speakers/speakers.json');
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
@@ -56,14 +56,14 @@ class DataLoader {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<List<Agenda>> loadAgenda() async {
-    var jsonList = await _loadData('config/agenda.json');
+    var jsonList = await loadData('config/agenda.json');
     return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<List<Sponsor>> loadSponsors() async {
-    List<dynamic> jsonList = await _loadData('sponsors/sponsors.json');
+    List<dynamic> jsonList = await loadData('sponsors/sponsors.json');
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 }
