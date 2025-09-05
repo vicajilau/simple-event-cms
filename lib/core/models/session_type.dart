@@ -6,7 +6,7 @@ enum SessionType { keynote, talk, workshop, sessionBreak, panel, other }
 
 abstract class SessionTypes {
   static Color getSessionTypeColor(BuildContext context, String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'keynote':
         return Colors.purple.shade100;
       case 'talk':
@@ -21,7 +21,7 @@ abstract class SessionTypes {
   }
 
   static Color getSessionTypeTextColor(BuildContext context, String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'keynote':
         return Colors.purple.shade800;
       case 'talk':
@@ -36,7 +36,7 @@ abstract class SessionTypes {
   }
 
   static String getSessionTypeLabel(BuildContext context, String type) {
-    switch (type) {
+    switch (type.toLowerCase()) {
       case 'keynote':
         return AppLocalizations.of(context)!.keynote;
       case 'talk':

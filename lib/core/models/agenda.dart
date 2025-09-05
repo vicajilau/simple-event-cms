@@ -88,7 +88,7 @@ class Session {
   final String speaker;
 
   /// A detailed description of the session content
-  final String description;
+  final String? description;
 
   /// The type of session (e.g., "keynote", "talk", "workshop", "break")
   final String type;
@@ -99,7 +99,7 @@ class Session {
     required this.title,
     required this.time,
     required this.speaker,
-    required this.description,
+    this.description,
     required this.type,
   });
 
