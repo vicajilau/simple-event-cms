@@ -89,7 +89,7 @@ class SocialIconsRow extends StatelessWidget {
     final List<Widget> socialIcons = [];
 
     // Twitter/X using SVG
-    if (social.twitter != null) {
+    if (social.twitter != null && social.twitter!.isNotEmpty) {
       socialIcons.add(
         SocialIconSvg(
           svgPath: 'assets/X_icon.svg',
@@ -100,10 +100,12 @@ class SocialIconsRow extends StatelessWidget {
           iconSize: iconSize,
         ),
       );
+    } else {
+      SizedBox.shrink();
     }
 
     // LinkedIn using SVG
-    if (social.linkedin != null) {
+    if (social.linkedin != null && social.linkedin!.isNotEmpty) {
       socialIcons.add(
         SocialIconSvg(
           svgPath: 'assets/LinkedIn_icon.svg',
@@ -113,10 +115,12 @@ class SocialIconsRow extends StatelessWidget {
           iconSize: iconSize,
         ),
       );
+    } else {
+      SizedBox.shrink();
     }
 
     // GitHub using SVG
-    if (social.github != null) {
+    if (social.github != null && social.github!.isNotEmpty) {
       socialIcons.add(
         SocialIconSvg(
           svgPath: 'assets/GitHub_icon.svg',
@@ -127,10 +131,12 @@ class SocialIconsRow extends StatelessWidget {
           iconSize: iconSize,
         ),
       );
+    } else {
+      SizedBox.shrink();
     }
 
     // Website using SVG
-    if (social.website != null) {
+    if (social.website != null && social.website!.isNotEmpty) {
       socialIcons.add(
         SocialIconSvg(
           svgPath: 'assets/Website_icon.svg',
@@ -141,6 +147,8 @@ class SocialIconsRow extends StatelessWidget {
           iconSize: iconSize,
         ),
       );
+    } else {
+      SizedBox.shrink();
     }
 
     if (socialIcons.isEmpty) return const SizedBox.shrink();

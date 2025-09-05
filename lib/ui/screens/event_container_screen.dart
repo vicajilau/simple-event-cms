@@ -53,11 +53,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   /// List of screens to display in the IndexedStack
   List<Widget> get _screens => [
     AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
-    SpeakersScreen(
-      key: UniqueKey(),
-      dataLoader: widget.dataLoader,
-      speakers: _speakers,
-    ),
+    SpeakersScreen(key: UniqueKey(), speakers: _speakers),
     SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
   ];
 
@@ -113,7 +109,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                 ),
               );
             } else if (_selectedIndex == 1) {
-              navigateTo(const SpeakerFormScreen());
+              _addSpeaker();
             } else if (_selectedIndex == 2) {
               final newSponsor = await Navigator.push(
                 context,
@@ -148,5 +144,19 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _addSpeaker() async {
+    final newSpeaker = await Navigator.push<Speaker>(
+      context,
+      MaterialPageRoute(builder: (context) => const SpeakerFormScreen()),
+    );
+
+    if (newSpeaker != null) {
+      setState(() {
+        _speakers.add(newSpeaker);
+        _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });
+    }
   }
 }
