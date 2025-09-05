@@ -177,11 +177,16 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Acción al presionar el botón
-        },
-        child: const Icon(Icons.add),
+      floatingActionButton: SizedBox(
+        width: 60,
+        height: 60,
+        child: FloatingActionButton(
+          onPressed: () async {},
+          elevation: 16,
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, color: Colors.white),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
