@@ -365,10 +365,10 @@ class SessionCards extends StatelessWidget {
                 ],
               ),
             ],
-            if (session.description.isNotEmpty) ...[
+            if (session.description?.isNotEmpty ?? false) ...[
               const SizedBox(height: 8),
               Text(
-                session.description,
+                session.description!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
