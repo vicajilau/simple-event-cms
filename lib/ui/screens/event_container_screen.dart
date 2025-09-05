@@ -111,19 +111,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
             } else if (_selectedIndex == 1) {
               _addSpeaker();
             } else if (_selectedIndex == 2) {
-              final newSponsor = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
-              );
-
-              if (newSponsor != null && newSponsor is Sponsor) {
-                setState(() {
-                  setState(() {
-                    widget.sponsors.add(newSponsor);
-                    _screens[2] = SponsorsScreen(sponsors: widget.sponsors);
-                  });
-                });
-              }
+              _addSponsor();
             }
           },
           elevation: 16,
@@ -156,6 +144,20 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       setState(() {
         _speakers.add(newSpeaker);
         _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });
+    }
+  }
+
+  Future<void> _addSponsor() async {
+    final newSponsor = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+    );
+
+    if (newSponsor != null && newSponsor is Sponsor) {
+      setState(() {
+        _sponsors.add(newSponsor);
+        _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
       });
     }
   }
