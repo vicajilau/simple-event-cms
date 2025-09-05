@@ -43,7 +43,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   int _selectedIndex = 0;
   List<AgendaDay> _agendaDays = [];
   List<Speaker> _speakers = [];
-  List<Sponsor> _sponsors = [];
+  //List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
   late final List<Widget> _screens;
@@ -53,7 +53,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     super.initState();
     _agendaDays = [...widget.agendaDays];
     _speakers = [...widget.speakers];
-    _sponsors = [...widget.sponsors];
+    //_sponsors = [...widget.sponsors];
     _screens = [
       AgendaScreen(
         agendaDays: _agendaDays,
@@ -174,38 +174,32 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     String trackName,
     Session sessionToEdit,
   ) async {
-    // Navegar al formulario de edición
     AgendaDay agendaDayEdited = await _navigateTo(
       _eventFormScreen(day: date, track: trackName, session: sessionToEdit),
     );
 
-    Session editedSession = agendaDayEdited.tracks.first.sessions.first;
-
-    _removeSessionFromAgenda(editedSession);
-
-    // Buscar el día editado en la agenda
-    _insertSessionToAgenda(agendaDayEdited, editedSession);
+    _removeSessionFromAgenda(agendaDayEdited.tracks.first.sessions.first);
+    _insertSessionToAgenda(agendaDayEdited);
 
     _refreshAgendaState();
   }
 
-  void _insertSessionToAgenda(
-    AgendaDay agendaDayEdited,
-    Session editedSession,
-  ) {
+  void _insertSessionToAgenda(AgendaDay agendaDay) {
+    final Session editedSession = agendaDay.tracks.first.sessions.first;
+
     // Buscar el día editado en la agenda
     AgendaDay? targetDay = _agendaDays.firstWhere(
-      (d) => d.date == agendaDayEdited.date,
-      orElse: () => AgendaDay(date: agendaDayEdited.date, tracks: []),
+      (d) => d.date == agendaDay.date,
+      orElse: () => AgendaDay(date: agendaDay.date, tracks: []),
     );
 
     // Buscar el track editado en ese día
     Track? targetTrack = targetDay.tracks.firstWhere(
-      (t) => t.name == agendaDayEdited.tracks.first.name,
+      (t) => t.name == agendaDay.tracks.first.name,
       orElse: () {
         final newTrack = Track(
           color: '',
-          name: agendaDayEdited.tracks.first.name,
+          name: agendaDay.tracks.first.name,
           sessions: [],
         );
         targetDay.tracks.add(newTrack);
@@ -240,7 +234,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       return;
     }
 
-    final dateForNewSession = newAgendaDay!.date;
+    final dateForNewSession = newAgendaDay.date;
     final trackNameForNewSession = newAgendaDay.tracks.first.name;
     final newSession = newAgendaDay.tracks.first.sessions.first;
 
