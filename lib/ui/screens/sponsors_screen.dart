@@ -10,13 +10,8 @@ import '../widgets/widgets.dart';
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
   final List<Sponsor> sponsors;
-  final ValueChanged<Sponsor> onDeleteSponsor;
 
-  const SponsorsScreen({
-    super.key,
-    required this.sponsors,
-    required this.onDeleteSponsor,
-  });
+  const SponsorsScreen({super.key, required this.sponsors});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -176,7 +171,11 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                             IconButton(
                               icon: const Icon(Icons.delete, size: 20),
                               onPressed: () {
-                                widget.onDeleteSponsor(sponsor);
+                                setState(() {
+                                  widget.sponsors.removeWhere(
+                                    (s) => s.uid == sponsor.uid,
+                                  );
+                                });
                               },
                             ),
                           ],

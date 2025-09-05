@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/screens/add_sponsor_screen.dart';
 import 'package:sec/ui/screens/event_form_screen.dart';
 import 'package:sec/ui/screens/speaker_form_screen.dart';
-import 'package:sec/ui/screens/add_sponsor_screen.dart';
 
 import '../../core/models/agenda.dart';
 import '../../core/models/site_config.dart';
@@ -58,15 +58,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       dataLoader: widget.dataLoader,
       speakers: _speakers,
     ),
-    SponsorsScreen(
-      key: UniqueKey(),
-      sponsors: widget.sponsors,
-      onDeleteSponsor: (sponsorToDelete) {
-        setState(() {
-          widget.sponsors.removeWhere((s) => s.uid == sponsorToDelete.uid);
-        });
-      },
-    ),
+    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
   ];
 
   @override
@@ -132,16 +124,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
                 setState(() {
                   setState(() {
                     widget.sponsors.add(newSponsor);
-                    _screens[2] = SponsorsScreen(
-                      sponsors: widget.sponsors,
-                      onDeleteSponsor: (sponsorToDelete) {
-                        setState(() {
-                          widget.sponsors.removeWhere(
-                            (s) => s.uid == sponsorToDelete.uid,
-                          );
-                        });
-                      },
-                    );
+                    _screens[2] = SponsorsScreen(sponsors: widget.sponsors);
                   });
                 });
               }
