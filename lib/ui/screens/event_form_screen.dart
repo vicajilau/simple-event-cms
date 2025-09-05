@@ -51,7 +51,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
             children: [
               _buildTitle(),
               SectionInputForm(
-                label: '*Título',
+                label: 'Título*',
                 childInput: TextFormField(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   maxLines: 1,
@@ -68,10 +68,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 ),
               ),
               Row(
+                spacing: spacingForRowDropdown,
                 children: [
                   Expanded(
                     child: SectionInputForm(
-                      label: '*Día del evento',
+                      label: 'Día del evento*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedDay.isEmpty
@@ -88,8 +89,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                               ),
                             )
                             .toList(),
-                        onChanged: (day) =>
-                            setState(() => _selectedDay = day ?? ''),
+                        onChanged: (day) => _selectedDay = day ?? '',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, selecciona un día';
@@ -99,10 +99,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: spacingForRowDropdown),
                   Expanded(
                     child: SectionInputForm(
-                      label: '*Sala',
+                      label: 'Sala*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedRoom.isEmpty
@@ -119,8 +118,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                               ),
                             )
                             .toList(),
-                        onChanged: (room) =>
-                            setState(() => _selectedRoom = room ?? ''),
+                        onChanged: (room) => _selectedRoom = room ?? '',
                         validator: (value) {
                           return value == null || value.isEmpty
                               ? 'Por favor, selecciona una sala'
@@ -138,7 +136,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     spacing: spacingForRowTime,
                     children: [
                       _timeSelector(
-                        label: '*Hora de inicio:\t\t',
+                        label: 'Hora de inicio:\t\t',
                         currentTime: _initSessionTime,
                         onIndexChanged: (value) {
                           setState(() {
@@ -148,7 +146,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         isStartTime: true,
                       ),
                       _timeSelector(
-                        label: '*Hora final:\t\t',
+                        label: 'Hora final:\t\t',
                         currentTime: _endSessionTime,
                         onIndexChanged: (value) {
                           setState(() {
@@ -170,10 +168,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 ],
               ),
               Row(
+                spacing: spacingForRowDropdown,
                 children: [
                   Expanded(
                     child: SectionInputForm(
-                      label: '*Speaker',
+                      label: 'Speaker*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedSpeaker.isEmpty
@@ -191,7 +190,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                             )
                             .toList(),
                         onChanged: (speaker) =>
-                            setState(() => _selectedSpeaker = speaker ?? ''),
+                            _selectedSpeaker = speaker ?? '',
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Por favor, selecciona un speaker';
@@ -201,10 +200,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       ),
                     ),
                   ),
-                  SizedBox(width: spacingForRowDropdown),
                   Expanded(
                     child: SectionInputForm(
-                      label: '*Tipo de charla',
+                      label: 'Tipo de charla*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedTalkType.isEmpty
@@ -221,8 +219,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                               ),
                             )
                             .toList(),
-                        onChanged: (type) =>
-                            setState(() => _selectedTalkType = type ?? ''),
+                        onChanged: (type) => _selectedTalkType = type ?? '',
                         validator: (value) {
                           return value == null || value.isEmpty
                               ? 'Por favor, selecciona el tipo de charla'
@@ -236,7 +233,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
               SectionInputForm(
                 label: 'Descripción',
                 childInput: TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   maxLines: 4,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce la descripción...',
@@ -268,13 +264,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      'La hora de inicio debe ser anterior a la hora final',
-                    ),
-                  ),
-                );
                 return;
               }
               Session session = Session(
