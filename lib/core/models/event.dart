@@ -1,13 +1,15 @@
+import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/models/sponsor.dart';
 
+import '../config/paths_github.dart';
 import 'agenda.dart';
 import 'event_dates.dart';
 
 /// Main configuration class for the event site
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
-class SiteConfig {
+class Event extends GitHubModel{
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
 
@@ -41,7 +43,7 @@ class SiteConfig {
   List<Sponsor>? sponsors;
 
   /// Creates a new SiteConfig instance
-  SiteConfig({
+  Event({
     required this.eventName,
     required this.year,
     required this.baseUrl,
@@ -53,6 +55,7 @@ class SiteConfig {
     this.eventDates,
     this.venue,
     this.description,
+    super.pathUrl = PathsGithub.EVENT_PATH,
   });
 
   /// Creates a SiteConfig from JSON data with additional parameters
@@ -62,7 +65,7 @@ class SiteConfig {
   /// The [year] parameter identifies which event year this configuration represents
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
-  factory SiteConfig.fromJson(
+  factory Event.fromJson(
     Map<String, dynamic> json, {
     required String baseUrl,
     required String year,
@@ -82,7 +85,7 @@ class SiteConfig {
               .toList()
         : [];
     var agendaUID = json['agendaUID'];
-    return SiteConfig(
+    return Event(
       eventName: json['eventName'],
       year: year,
       baseUrl: baseUrl,
@@ -93,21 +96,21 @@ class SiteConfig {
       description: json['description'],
       agendaUID: agendaUID,
       speakersUID: speakers,
-      sponsorsUID: sponsors,
+      sponsorsUID: sponsors
     );
   }
 
   /// Converts the SiteConfig instance to a JSON object
-  Map<String, dynamic> toJson(SiteConfig siteConfig) {
+  Map<String, dynamic> toJson() {
     return {
-      'eventName': siteConfig.eventName,
-      'year': siteConfig.year,
-      'baseUrl': siteConfig.baseUrl,
-      'primaryColor': siteConfig.primaryColor,
-      'secondaryColor': siteConfig.secondaryColor,
-      'eventDates': siteConfig.eventDates?.toJson(),
-      'venue': siteConfig.venue?.toJson(),
-      'description': siteConfig.description,
+      'eventName': eventName,
+      'year': year,
+      'baseUrl': baseUrl,
+      'primaryColor': primaryColor,
+      'secondaryColor': secondaryColor,
+      'eventDates': eventDates?.toJson(),
+      'venue': venue?.toJson(),
+      'description': description,
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),

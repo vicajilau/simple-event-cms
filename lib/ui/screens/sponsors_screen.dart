@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../core/core.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/widgets.dart';
+import '../../core/models/models.dart';
 
 /// Screen that displays event sponsors in a responsive grid layout
 /// Fetches sponsor data and displays logos with clickable links

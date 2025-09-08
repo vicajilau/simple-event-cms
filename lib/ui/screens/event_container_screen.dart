@@ -4,7 +4,7 @@ import 'package:sec/ui/screens/speaker_form_screen.dart';
 import 'package:sec/ui/widgets/add_sponsor_screen.dart';
 
 import '../../core/models/agenda.dart';
-import '../../core/models/site_config.dart';
+import '../../core/models/event.dart';
 import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/load/data_loader.dart';
@@ -13,7 +13,7 @@ import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
-  final List<SiteConfig> config;
+  final List<Event> config;
 
   /// Data loader for fetching content from various sources
   final DataLoader dataLoader;

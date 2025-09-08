@@ -1,4 +1,8 @@
-class Sponsor {
+import 'package:sec/core/models/github/github_model.dart';
+
+import '../config/paths_github.dart';
+
+class Sponsor extends GitHubModel {
   /// Unique identifier of the sponsor
   final String uid;
 
@@ -21,6 +25,7 @@ class Sponsor {
     required this.type,
     required this.logo,
     required this.website,
+    super.pathUrl = PathsGithub.SPONSOR_PATH,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) => Sponsor(

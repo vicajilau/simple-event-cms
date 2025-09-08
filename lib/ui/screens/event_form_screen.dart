@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/core.dart';
 
+import '../../core/models/agenda.dart';
 import '../widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {

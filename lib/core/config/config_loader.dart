@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import '../models/models.dart';
+import '../models/event.dart';
 import '../models/organization.dart';
 
 class ConfigLoader {
@@ -79,7 +79,7 @@ class ConfigLoader {
     return Organization.fromJson(jsonData);
   }
 
-  static Future<List<SiteConfig>> loadConfig() async {
+  static Future<List<Event>> loadConfig() async {
     String configContent;
     String baseUrl;
 
@@ -131,10 +131,10 @@ class ConfigLoader {
     }
 
     final jsonData = json.decode(configContent);
-    List<SiteConfig> listEventsItems = [];
+    List<Event> listEventsItems = [];
     var listEvents = jsonData['events'];
     listEvents.forEach((event) {
-      listEventsItems.add(SiteConfig.fromJson(event, baseUrl: baseUrl, year: year));
+      listEventsItems.add(Event.fromJson(event, baseUrl: baseUrl, year: year));
     });
 
     // Pasamos la baseUrl construida para que el modelo la tenga.

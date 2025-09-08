@@ -1,20 +1,23 @@
-class Organization {
+import 'package:sec/core/models/github/github_model.dart';
+
+import '../config/paths_github.dart';
+
+class Organization extends GitHubModel {
   final String organizationName;
   final String primaryColorOrganization;
   final String secondaryColorOrganization;
-  final String baseUrlOrganization;
 
   Organization({
     required this.organizationName,
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
-    required this.baseUrlOrganization,
+    super.pathUrl = PathsGithub.ORGANIZATION_PATH,
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) => Organization(
         organizationName: json["organizationName"],
         primaryColorOrganization: json["primaryColorOrganization"],
         secondaryColorOrganization: json["secondaryColorOrganization"],
-        baseUrlOrganization: json["baseUrlOrganization"],
+        pathUrl: json["baseUrlOrganization"],
       );
 }

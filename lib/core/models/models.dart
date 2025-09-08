@@ -3,6 +3,7 @@
 
 export 'agenda.dart';
 export 'event_dates.dart';
-export 'site_config.dart';
+export 'event.dart';
 export 'speaker.dart';
 export 'sponsor.dart';
+export 'organization.dart';

@@ -1,4 +1,7 @@
-class Speaker {
+import '../config/paths_github.dart';
+import 'github/github_model.dart';
+
+class Speaker extends GitHubModel{
   /// Unique identifier of the speaker
   final String uid;
 
@@ -21,6 +24,7 @@ class Speaker {
     required this.bio,
     required this.image,
     required this.social,
+    super.pathUrl = PathsGithub.SPEAKER_PATH,
   });
 
   factory Speaker.fromJson(Map<String, dynamic> json) => Speaker(
@@ -28,7 +32,7 @@ class Speaker {
     name: json["name"],
     bio: json["bio"],
     image: json["image"],
-    social: Social.fromJson(json["social"]),
+    social: Social.fromJson(json["social"])
   );
 
   Map<String, dynamic> toJson() => {
