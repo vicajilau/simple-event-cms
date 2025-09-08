@@ -1,4 +1,4 @@
-class PathsGithub{
+class PathsGithub {
   static const String AGENDA_PATH = 'config/agenda.json';
   static const String EVENT_PATH = 'config/site.json';
   static const String ORGANIZATION_PATH = 'config/organization.json';

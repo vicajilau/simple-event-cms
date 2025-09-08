@@ -15,9 +15,9 @@ class Organization extends GitHubModel {
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) => Organization(
-        organizationName: json["organizationName"],
-        primaryColorOrganization: json["primaryColorOrganization"],
-        secondaryColorOrganization: json["secondaryColorOrganization"],
-        pathUrl: json["baseUrlOrganization"],
-      );
+    organizationName: json["organizationName"],
+    primaryColorOrganization: json["primaryColorOrganization"],
+    secondaryColorOrganization: json["secondaryColorOrganization"],
+    pathUrl: json["baseUrlOrganization"],
+  );
 }

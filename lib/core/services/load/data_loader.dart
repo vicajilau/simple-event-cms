@@ -25,7 +25,7 @@ class DataLoader {
   /// [path] The relative path to the data file
   /// Returns a Future containing the parsed JSON data as a dynamic list
   /// Throws an Exception if the data cannot be loaded
-  Future<List<dynamic>> loadData(String path,String year) async {
+  Future<List<dynamic>> loadData(String path, String year) async {
     String content = '';
     if (ConfigLoader.appEnv != 'dev' &&
         organization.pathUrl.startsWith('http')) {
@@ -47,7 +47,7 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<List<Speaker>> loadSpeakers(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.SPEAKER_PATH,year);
+    List<dynamic> jsonList = await loadData(PathsGithub.SPEAKER_PATH, year);
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
@@ -56,14 +56,14 @@ class DataLoader {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<List<Agenda>> loadAgenda(String year) async {
-    var jsonList = await loadData(PathsGithub.AGENDA_PATH,year);
+    var jsonList = await loadData(PathsGithub.AGENDA_PATH, year);
     return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<List<Sponsor>> loadSponsors(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.SPONSOR_PATH,year);
+    List<dynamic> jsonList = await loadData(PathsGithub.SPONSOR_PATH, year);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 }

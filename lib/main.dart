@@ -1,8 +1,8 @@
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 void main() => runApp(MyApp());
 
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       '/auth/callback': (context) {
         final args = ModalRoute.of(context)!.settings.arguments as String?;
         return GitHubCallbackPage(code: args);
-      }
+      },
     },
   );
 }
@@ -23,14 +23,18 @@ class MyApp extends StatelessWidget {
 class GitHubLoginPage extends StatelessWidget {
   final clientId = 'Ov23livw2uLsu4413DzN';
   final clientSecret = '940b8ddfa8119cb26baf0f39ffa661335e8384d5';
-  final redirectUri = 'myapp://auth/callback'; // Asegúrate de que esté registrado en GitHub
+  final redirectUri =
+      'myapp://auth/callback'; // Asegúrate de que esté registrado en GitHub
   var codeGithub = null; // Asegúrate de que esté registrado en GitHub
 
   Future<void> loginWithGitHub() async {
     final authUrl =
         'https://github.com/login/oauth/authorize?client_id=$clientId&redirect_uri=$redirectUri&scope=read:user';
     try {
-      codeGithub = await FlutterWebAuth2.authenticate(url: authUrl, callbackUrlScheme: "myapp");
+      codeGithub = await FlutterWebAuth2.authenticate(
+        url: authUrl,
+        callbackUrlScheme: "myapp",
+      );
     } catch (e) {
       print("Error durante la autenticación: $e");
     }
@@ -56,8 +60,7 @@ class GitHubCallbackPage extends StatefulWidget {
   const GitHubCallbackPage({Key? key, this.code}) : super(key: key);
 
   @override
-  State<GitHubCallbackPage> createState() =>
-      _GitHubCallbackPageState();
+  State<GitHubCallbackPage> createState() => _GitHubCallbackPageState();
 }
 
 class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
@@ -80,7 +83,8 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
       if (widget.code != null) {
         codeToUse = Uri.parse(widget.code!).queryParameters['code'];
       }
-      if (codeToUse == null) throw Exception("No se recibió el código de autorización");
+      if (codeToUse == null)
+        throw Exception("No se recibió el código de autorización");
 
       final response = await http.post(
         Uri.parse('https://github.com/login/oauth/access_token'),
@@ -94,7 +98,8 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
       );
 
       final accessToken = json.decode(response.body)['access_token'];
-      if (accessToken == null) throw Exception("No se recibió el token de acceso");
+      if (accessToken == null)
+        throw Exception("No se recibió el token de acceso");
 
       final userResponse = await http.get(
         Uri.parse('https://api.github.com/user'),

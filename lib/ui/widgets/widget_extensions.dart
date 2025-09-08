@@ -4,9 +4,9 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 /// Extensions for BuildContext to add common functionality
 extension BuildContextExtensions on BuildContext {
   /// Launches a URL with proper error handling and formatting
-  /// 
+  ///
   /// This is a convenience method that can be called from any BuildContext
-  /// 
+  ///
   /// Usage:
   /// ```dart
   /// context.openUrl('https://example.com');
@@ -22,7 +22,10 @@ extension BuildContextExtensions on BuildContext {
       final uri = Uri.parse(formattedUrl);
 
       if (await url_launcher.canLaunchUrl(uri)) {
-        await url_launcher.launchUrl(uri, mode: url_launcher.LaunchMode.externalApplication);
+        await url_launcher.launchUrl(
+          uri,
+          mode: url_launcher.LaunchMode.externalApplication,
+        );
       } else {
         debugPrint('URL could not be launched: $formattedUrl');
       }
@@ -33,9 +36,7 @@ extension BuildContextExtensions on BuildContext {
 
   /// Shows a snackbar with the given message
   void showSnackBar(String message) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(this).showSnackBar(SnackBar(content: Text(message)));
   }
 
   /// Shows an error snackbar with red background

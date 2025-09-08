@@ -11,7 +11,11 @@ class Agenda extends GitHubModel {
   final String uid;
   final List<AgendaDay> days;
 
-  Agenda({required this.uid, required this.days, super.pathUrl = PathsGithub.AGENDA_PATH});
+  Agenda({
+    required this.uid,
+    required this.days,
+    super.pathUrl = PathsGithub.AGENDA_PATH,
+  });
 
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(

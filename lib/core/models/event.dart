@@ -9,7 +9,7 @@ import 'event_dates.dart';
 /// Main configuration class for the event site
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
-class Event extends GitHubModel{
+class Event extends GitHubModel {
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
 
@@ -96,7 +96,7 @@ class Event extends GitHubModel{
       description: json['description'],
       agendaUID: agendaUID,
       speakersUID: speakers,
-      sponsorsUID: sponsors
+      sponsorsUID: sponsors,
     );
   }
 

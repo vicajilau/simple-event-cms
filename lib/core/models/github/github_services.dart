@@ -11,5 +11,5 @@ class GithubService {
     required this.repo,
     required this.branch,
     required this.sha,
-});
+  });
 }

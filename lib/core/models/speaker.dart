@@ -1,7 +1,7 @@
 import '../config/paths_github.dart';
 import 'github/github_model.dart';
 
-class Speaker extends GitHubModel{
+class Speaker extends GitHubModel {
   /// Unique identifier of the speaker
   final String uid;
 
@@ -32,7 +32,7 @@ class Speaker extends GitHubModel{
     name: json["name"],
     bio: json["bio"],
     image: json["image"],
-    social: Social.fromJson(json["social"])
+    social: Social.fromJson(json["social"]),
   );
 
   Map<String, dynamic> toJson() => {
