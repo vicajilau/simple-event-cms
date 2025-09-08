@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     initialRoute: '/',
     routes: {
       '/': (context) => GitHubLoginPage(),
-      '/auth/callback': (context) {
+      '/auth/callback&scope=read:user': (context) {
         final args = ModalRoute.of(context)!.settings.arguments as String?;
         return GitHubCallbackPage(code: args);
       },
@@ -24,7 +24,7 @@ class GitHubLoginPage extends StatelessWidget {
   final clientId = 'Ov23livw2uLsu4413DzN';
   final clientSecret = '940b8ddfa8119cb26baf0f39ffa661335e8384d5';
   final redirectUri =
-      'myapp://auth/callback'; // Asegúrate de que esté registrado en GitHub
+      'http://localhost:3000/#/auth/callback'; // Asegúrate de que esté registrado en GitHub
   var codeGithub = null; // Asegúrate de que esté registrado en GitHub
 
   Future<void> loginWithGitHub() async {
@@ -69,7 +69,7 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
 
   final clientId = 'Ov23livw2uLsu4413DzN';
   final clientSecret = '940b8ddfa8119cb26baf0f39ffa661335e8384d5';
-  final redirectUri = 'myapp://auth/callback';
+  final redirectUri = 'http://localhost:3000/#/auth/callback';
 
   @override
   void initState() {
