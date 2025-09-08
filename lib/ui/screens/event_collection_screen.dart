@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sec/ui/widgets/organization_form_screen.dart';
 
 import '../../core/core.dart';
 import '../../core/models/organization.dart';
@@ -178,8 +179,20 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Acción al presionar el botón
+        onPressed: () async {
+          final SiteConfig? newConfig = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OrganizationFormScreen(),
+            ),
+          );
+
+          if (newConfig != null) {
+            setState(() {
+              events.add(newConfig);
+            });
+            await _saveConfigToJson(widget.dataLoader.config);
+          }
         },
         child: const Icon(Icons.add),
       ),

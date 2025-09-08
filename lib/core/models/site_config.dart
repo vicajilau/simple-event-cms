@@ -11,6 +11,9 @@ class SiteConfig {
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
 
+  /// the name of the room where the event will take place
+  final List<String> room;
+
   /// The year of the event, used for organizing multi-year events
   final String year;
 
@@ -42,6 +45,7 @@ class SiteConfig {
 
   /// Creates a new SiteConfig instance
   SiteConfig({
+    required this.room,
     required this.eventName,
     required this.year,
     required this.baseUrl,
@@ -94,6 +98,9 @@ class SiteConfig {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
+      room:
+          json['room'] ??
+          [], //todo montacer: si seguro que no sera null, quitar el ??
     );
   }
 
@@ -111,6 +118,7 @@ class SiteConfig {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
+      'room': siteConfig.room,
     };
   }
 }
