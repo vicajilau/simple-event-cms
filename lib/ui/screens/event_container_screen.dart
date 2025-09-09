@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/ui/screens/event_form_screen.dart';
-import 'package:sec/ui/screens/speaker_form_screen.dart';
-import 'package:sec/ui/widgets/add_sponsor_screen.dart';
+import 'package:sec/ui/screens/screens.dart';
 
-import '../../core/models/agenda.dart';
-import '../../core/models/site_config.dart';
-import '../../core/models/speaker.dart';
-import '../../core/models/sponsor.dart';
+import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
@@ -98,7 +93,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         width: 60,
         height: 60,
         child: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             if (_selectedIndex == 0) {
               navigateTo(
                 EventFormScreen(
@@ -111,13 +106,13 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
             } else if (_selectedIndex == 1) {
               _addSpeaker();
             } else if (_selectedIndex == 2) {
-              navigateTo(AddSponsorScreen());
+              _addSponsor();
             }
           },
           elevation: 16,
           backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white),
+          shape: const CircleBorder(),
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
     );
@@ -144,6 +139,20 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       setState(() {
         _speakers.add(newSpeaker);
         _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });
+    }
+  }
+
+  Future<void> _addSponsor() async {
+    final newSponsor = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+    );
+
+    if (newSponsor != null && newSponsor is Sponsor) {
+      setState(() {
+        _sponsors.add(newSponsor);
+        _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
       });
     }
   }
