@@ -16,6 +16,7 @@ void main() async {
     EventApp(
       config: config,
       dataLoader: dataLoader,
+
       organization: organization,
     ),
   );
