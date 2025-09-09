@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sec/ui/widgets/organization_form_screen.dart';
 
 import '../../core/core.dart';
 import '../../core/models/organization.dart';
@@ -111,6 +110,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (events.isEmpty) {
+      return const Center(child: Text("No hay organizaciones para mostrar."));
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
