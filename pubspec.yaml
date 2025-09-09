@@ -41,6 +41,7 @@ dependencies:
   flutter_svg: ^2.2.1
   intl: 0.20.2
   flutter_web_auth_2: ^4.1.0
+  github: ^9.2.5
 
 
 dev_dependencies:
