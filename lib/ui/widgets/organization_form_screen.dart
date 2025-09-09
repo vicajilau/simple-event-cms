@@ -7,7 +7,8 @@ import 'package:sec/ui/widgets/add_room.dart';
 import '../widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
-  const OrganizationFormScreen({super.key});
+  final SiteConfig? siteConfig;
+  const OrganizationFormScreen({super.key, this.siteConfig});
 
   @override
   State<OrganizationFormScreen> createState() => _OrganizationFormScreenState();
@@ -21,7 +22,26 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
   final TextEditingController _endDateController = TextEditingController();
 
   bool _hasEndDate = true;
-  final List<String> _rooms = [];
+  List<String> _rooms = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.siteConfig?.eventName ?? '';
+
+    final startDate = widget.siteConfig?.eventDates?.startDate;
+    if (startDate != null) {
+      _startDateController.text = startDate;
+    }
+
+    final endtDate = widget.siteConfig?.eventDates?.endDate;
+    _hasEndDate = startDate != endtDate;
+    if (endtDate != null && _hasEndDate) {
+      _endDateController.text = endtDate;
+    }
+
+    _rooms = widget.siteConfig?.rooms ?? [];
+  }
 
   Future<void> _selectDate(
     BuildContext context,
@@ -135,17 +155,21 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
 
             SectionInputForm(
               label: 'Salas',
-              childInput: SizedBox(height: 200, child: AddRoom()),
+              childInput: SizedBox(
+                height: 200,
+                child: AddRoom(
+                  rooms: _rooms,
+                  editedRooms: (List<String> currentRooms) {
+                    _rooms = currentRooms;
+                  },
+                ),
+              ),
             ),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               spacing: 12,
               children: [
-                // OutlinedButton(
-                //   onPressed: () => Navigator.pop(context),
-                //   child: const Text('Cancelar'),
-                // ),
                 FilledButton(
                   onPressed: _onSubmit,
                   child: const Text('Guardar'),
@@ -170,8 +194,9 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     );
 
     final siteConfig = SiteConfig(
+      uid: widget.siteConfig?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
-      room: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
+      rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
       year: eventDates.startDate.split('-').first,
       baseUrl: "https://hardcode.base.url",
       primaryColor: "#4285F4",

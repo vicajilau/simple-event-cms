@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 
 class AddRoom extends StatefulWidget {
-  const AddRoom({super.key});
+  final List<String> rooms;
+  final void Function(List<String>) editedRooms;
+  const AddRoom({super.key, required this.rooms, required this.editedRooms});
 
   @override
   State<AddRoom> createState() => _AddRoomState();
 }
 
 class _AddRoomState extends State<AddRoom> {
-  final List<TextEditingController> _controllers = [];
+  List<TextEditingController> _controllers = [];
 
   @override
   void initState() {
     super.initState();
-    _addOption();
+    _controllers = List.generate(widget.rooms.length, (index) {
+      return TextEditingController(text: widget.rooms[index]);
+    });
+  }
+
+  void _notifyCurrentRooms() {
+    final List<String> rooms = _controllers.map((e) => e.text).toList();
+    widget.editedRooms(rooms);
   }
 
   void _addOption() {
+    _notifyCurrentRooms();
     setState(() {
       _controllers.add(TextEditingController());
     });
@@ -40,6 +50,7 @@ class _AddRoomState extends State<AddRoom> {
                   _controllers[index].dispose();
                   _controllers.removeAt(index);
                 });
+                _notifyCurrentRooms();
                 Navigator.pop(context);
               },
               child: const Text(
@@ -80,7 +91,9 @@ class _AddRoomState extends State<AddRoom> {
               Expanded(
                 child: TextField(
                   controller: _controllers[index],
-                  style: const TextStyle(color: Colors.white),
+                  onEditingComplete: () {
+                    _notifyCurrentRooms();
+                  },
                   decoration: InputDecoration(
                     hintText: "Option ${index + 1}",
                     hintStyle: const TextStyle(color: Colors.black),

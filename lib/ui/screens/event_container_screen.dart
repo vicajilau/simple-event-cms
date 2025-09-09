@@ -9,6 +9,7 @@ import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
+import '../widgets/widgets.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -94,31 +95,23 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          onPressed: () {
-            if (_selectedIndex == 0) {
-              navigateTo(
-                EventFormScreen(
-                  speakers: ['Fran', 'Ting Mei'],
-                  rooms: [],
-                  days: ['3 de Septiembre', '4 de Septiembre'],
-                  talkTypes: [],
-                ),
-              );
-            } else if (_selectedIndex == 1) {
-              _addSpeaker();
-            } else if (_selectedIndex == 2) {
-              navigateTo(AddSponsorScreen());
-            }
-          },
-          elevation: 16,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white),
-        ),
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () {
+          if (_selectedIndex == 0) {
+            navigateTo(
+              EventFormScreen(
+                speakers: ['Fran', 'Ting Mei'],
+                rooms: [],
+                days: ['3 de Septiembre', '4 de Septiembre'],
+                talkTypes: [],
+              ),
+            );
+          } else if (_selectedIndex == 1) {
+            _addSpeaker();
+          } else if (_selectedIndex == 2) {
+            navigateTo(AddSponsorScreen());
+          }
+        },
       ),
     );
   }
