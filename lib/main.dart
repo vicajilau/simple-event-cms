@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     initialRoute: '/',
     onGenerateRoute: (settings) {
       final uri = Uri.parse(settings.name ?? "");
-      if (uri.path == "/auth/callback" &&
+      if (uri.path == "https://danijimen.github.io/simple-event-cms/auth/callback" &&
           uri.queryParameters.containsKey("code")) {
         final code = uri.queryParameters["code"];
         print("Código recibido: $code");
@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
 class GitHubLoginPage extends StatelessWidget {
   final clientId = 'Ov23livw2uLsu4413DzN';
   final redirectUri =
-      'http://localhost:3000/auth/callback'; // Asegúrate de que esté registrado en GitHub
+      'https://danijimen.github.io/simple-event-cms'; // Asegúrate de que esté registrado en GitHub
 
   Future<void> loginWithGitHub() async {
     try {
@@ -82,7 +82,7 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
   String? error;
 
   final clientId = 'Ov23livw2uLsu4413DzN';
-  final redirectUri = 'http://localhost:3000/auth/callback';
+  final redirectUri = 'https://danijimen.github.io/simple-event-cms';
 
   @override
   void initState() {
