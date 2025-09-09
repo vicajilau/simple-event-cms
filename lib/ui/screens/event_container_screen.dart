@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sec/ui/screens/add_sponsor_screen.dart';
 import 'package:sec/ui/screens/event_form_screen.dart';
-import 'package:sec/ui/screens/speaker_form_screen.dart';
+import 'package:sec/ui/screens/screens.dart';
 
-import '../../core/models/agenda.dart';
-import '../../core/models/site_config.dart';
-import '../../core/models/speaker.dart';
-import '../../core/models/sponsor.dart';
+import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details

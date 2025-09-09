@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/models/sponsor.dart';
-import 'package:sec/ui/widgets/form_screen_wrapper.dart';
-import 'package:sec/ui/widgets/section_input_form.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/ui/widgets/widgets.dart';
 
 class AddSponsorScreen extends StatefulWidget {
-  final Sponsor? sponsor; 
+  final Sponsor? sponsor;
   const AddSponsorScreen({super.key, this.sponsor});
 
   @override

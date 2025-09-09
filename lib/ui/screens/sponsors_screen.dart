@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/add_sponsor_screen.dart';
+import 'package:sec/ui/screens/screens.dart';
 
 import '../../core/core.dart';
 import '../../l10n/app_localizations.dart';
@@ -18,6 +18,8 @@ class SponsorsScreen extends StatefulWidget {
 }
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
+  final Map<String, List<dynamic>> groupedSponsors = {};
+
   @override
   Widget build(BuildContext context) {
     if (widget.sponsors.isEmpty) {
