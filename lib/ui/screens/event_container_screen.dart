@@ -5,6 +5,7 @@ import 'package:sec/ui/screens/screens.dart';
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
+import '../widgets/widgets.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
@@ -103,34 +104,9 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
           } else if (_selectedIndex == 1) {
             _addSpeaker();
           } else if (_selectedIndex == 2) {
-            navigateTo(AddSponsorScreen());
+            _addSponsor();
           }
         },
-      floatingActionButton: SizedBox(
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          onPressed: () async {
-            if (_selectedIndex == 0) {
-              navigateTo(
-                EventFormScreen(
-                  speakers: ['Fran', 'Ting Mei'],
-                  rooms: [],
-                  days: ['3 de Septiembre', '4 de Septiembre'],
-                  talkTypes: [],
-                ),
-              );
-            } else if (_selectedIndex == 1) {
-              _addSpeaker();
-            } else if (_selectedIndex == 2) {
-              _addSponsor();
-            }
-          },
-          elevation: 16,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.add, color: Colors.white),
-        ),
       ),
     );
   }

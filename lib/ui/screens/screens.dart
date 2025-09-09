@@ -1,6 +1,7 @@
 export 'add_sponsor_screen.dart';
 export 'agenda_screen.dart';
 export 'event_container_screen.dart';
+export 'organization_form_screen.dart';
 export 'speaker_form_screen.dart';
 export 'speakers_screen.dart';
 export 'sponsors_screen.dart';
