@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:sec/ui/screens/login_screen.dart';
 
+import 'core/config/config_loader.dart';
+import 'core/services/load/data_loader.dart';
+import 'event_app.dart';
+
 void main() {
   usePathUrlStrategy();
   runApp(MyApp());
@@ -42,10 +46,19 @@ class MyHomePage extends StatelessWidget {
           SizedBox(height: 20), // Espacio entre los botones
           Center(
             child: ElevatedButton(
-              onPressed: () {
-                Navigator.push( // And this context also has a Navigator
+              onPressed: () async {
+                final config = await ConfigLoader.loadConfig();
+                final organization = await ConfigLoader.loadOrganization();
+                final dataLoader = DataLoader(config, organization); // Pasa la instancia de github
+                Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(
+                    builder: (context) => EventApp(
+                      config: config,
+                      dataLoader: dataLoader,
+                      organization: organization,
+                    ),
+                  ),
                 );
               },
               child: Text('Modo Invitado'),
