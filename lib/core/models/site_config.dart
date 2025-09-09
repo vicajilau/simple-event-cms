@@ -8,8 +8,13 @@ import 'event_dates.dart';
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
 class SiteConfig {
+  final String uid;
+
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
+
+  /// the name of the room where the event will take place
+  final List<String> rooms;
 
   /// The year of the event, used for organizing multi-year events
   final String year;
@@ -42,6 +47,8 @@ class SiteConfig {
 
   /// Creates a new SiteConfig instance
   SiteConfig({
+    required this.uid,
+    required this.rooms,
     required this.eventName,
     required this.year,
     required this.baseUrl,
@@ -81,8 +88,12 @@ class SiteConfig {
               .map((item) => item['UID'] as String)
               .toList()
         : [];
+    List<String> rooms = (json['rooms'] != null)
+        ? (json['rooms'] as List).map((item) => item['name'] as String).toList()
+        : [];
     var agendaUID = json['agendaUID'];
     return SiteConfig(
+      uid: json["UID"],
       eventName: json['eventName'],
       year: year,
       baseUrl: baseUrl,
@@ -94,12 +105,14 @@ class SiteConfig {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
+      rooms: rooms,
     );
   }
 
   /// Converts the SiteConfig instance to a JSON object
   Map<String, dynamic> toJson(SiteConfig siteConfig) {
     return {
+      'uid': siteConfig.uid,
       'eventName': siteConfig.eventName,
       'year': siteConfig.year,
       'baseUrl': siteConfig.baseUrl,
@@ -111,6 +124,7 @@ class SiteConfig {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
+      'room': siteConfig.rooms.map((name) => {'name': name}).toList(),
     };
   }
 }

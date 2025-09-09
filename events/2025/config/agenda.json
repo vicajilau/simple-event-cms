@@ -88,93 +88,6 @@
               ]
             }
           ]
-        },
-        {
-          "date": "2025-03-16",
-          "tracks": [
-            {
-              "name": "Sala Principal",
-              "color": "#4285F4",
-              "sessions": [
-                {
-                  "title": "Apertura y Keynote",
-                  "time": "09:00 - 09:30",
-                  "speaker": "Equipo organizador",
-                  "description": "Bienvenida al DevFest 2025",
-                  "type": "keynote"
-                },
-                {
-                  "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
-                  "time": "09:30 - 10:15",
-                  "speaker": "Andreu Ibàñez",
-                  "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
-                  "type": "talk"
-                },
-                {
-                  "title": "Coffee Break",
-                  "time": "10:15 - 10:45",
-                  "speaker": "",
-                  "description": "Networking y café",
-                  "type": "break"
-                },
-                {
-                  "title": "Flutter para Web: Mejores prácticas",
-                  "time": "10:45 - 11:30",
-                  "speaker": "Alfredo Bautista",
-                  "description": "Cómo crear aplicaciones web robustas con Flutter",
-                  "type": "talk"
-                },
-                {
-                  "title": "Firebase y Flutter: Una combinación perfecta",
-                  "time": "11:30 - 12:15",
-                  "speaker": "Victor Carreras",
-                  "description": "Integración completa de Firebase en aplicaciones Flutter",
-                  "type": "talk"
-                },
-                {
-                  "title": "Lunch Break",
-                  "time": "12:15 - 13:30",
-                  "speaker": "",
-                  "description": "Comida y networking",
-                  "type": "break"
-                },
-                {
-                  "title": "Open Gateway: Democratizando las APIs de Telecomunicaciones",
-                  "time": "13:30 - 14:15",
-                  "speaker": "Irene Ruiz",
-                  "description": "Descubre cómo Open Gateway de Telefónica está revolucionando el acceso a APIs de telecomunicaciones para developers. Una visión desde DevRel sobre oportunidades y casos de uso.",
-                  "type": "talk"
-                },
-                {
-                  "title": "Machine Learning en Flutter: De la teoría a la práctica",
-                  "time": "14:15 - 15:00",
-                  "speaker": "Moises Martínez",
-                  "description": "Implementando modelos de ML e IA en aplicaciones Flutter. Casos prácticos, TensorFlow Lite y mejores prácticas desde la perspectiva académica y empresarial.",
-                  "type": "talk"
-                }
-              ]
-            },
-            {
-              "name": "Sala iMac",
-              "color": "#4285F4",
-              "sessions": [
-                {
-                  "title": "Apertura y Keynote",
-                  "time": "09:00 - 09:30",
-                  "speaker": "Equipo organizador",
-                  "description": "Bienvenida al DevFest 2025",
-                  "type": "keynote"
-                },
-                {
-                  "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
-                  "time": "09:30 - 10:15",
-                  "speaker": "Andreu Ibàñez",
-                  "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
-                  "type": "talk"
-                }
-              ]
-            }
-          ]
         }
       ]
     },
@@ -182,7 +95,7 @@
       "UID": "871674",
       "days": [
         {
-          "date": "2025-03-15",
+          "date": "2026-03-14",
           "tracks": [
             {
               "name": "Sala Principal",
@@ -269,7 +182,7 @@
           ]
         },
         {
-          "date": "2025-03-16",
+          "date": "2026-03-15",
           "tracks": [
             {
               "name": "Sala Principal",
