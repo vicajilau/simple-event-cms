@@ -19,16 +19,19 @@ class MyApp extends StatelessWidget {
           children: [
             Center(
               child: ElevatedButton(
-                onPressed: () => LoginPage(),
                 child: Text('Iniciar sesión con GitHub'),
+                onPressed: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
+                }
               ),
             ),
             SizedBox(height: 20), // Espacio entre los botones
             Center(
               child: ElevatedButton(
                 onPressed: () {
-                  // Lógica para el modo invitado
-                  print('Modo invitado seleccionado');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginPage()));
                 },
                 child: Text('Modo Invitado'),
               ),
