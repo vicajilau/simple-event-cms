@@ -12,8 +12,9 @@ class MyApp extends StatelessWidget {
     initialRoute: '/',
     routes: {
       '/': (context) => GitHubLoginPage(),
-      '/auth/callback&scope=read:user': (context) {
+      '/auth/callback': (context) {
         final args = ModalRoute.of(context)!.settings.arguments as String?;
+        print("Código recibido: $args");
         return GitHubCallbackPage(code: args);
       },
     },
@@ -29,7 +30,7 @@ class GitHubLoginPage extends StatelessWidget {
 
   Future<void> loginWithGitHub() async {
     final authUrl =
-        'https://github.com/login/oauth/authorize?client_id=$clientId&redirect_uri=$redirectUri&scope=read:user';
+        'https://github.com/login/oauth/authorize?client_id=$clientId&redirect_uri=$redirectUri';
     try {
       codeGithub = await FlutterWebAuth2.authenticate(
         url: authUrl,
