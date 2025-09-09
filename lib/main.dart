@@ -2,8 +2,12 @@ import 'dart:convert';
 import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:http/http.dart' as http;
+import 'package:sec/event_app.dart';
+
+import 'core/config/config_loader.dart';
+import 'core/services/load/data_loader.dart';
 
 void main() {
   usePathUrlStrategy();
@@ -14,15 +18,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MaterialApp(
     initialRoute: '/',
-    onGenerateRoute:(settings) {
+    onGenerateRoute: (settings) {
       final uri = Uri.parse(settings.name ?? "");
-      if(uri.path == "/auth/callback" && uri.queryParameters.containsKey("code")) {
+      if (uri.path == "/auth/callback" &&
+          uri.queryParameters.containsKey("code")) {
         final code = uri.queryParameters["code"];
         print("Código recibido: $code");
         print("query recibida: ${uri.queryParameters}");
         print("contentText recibido: ${uri.data?.contentText}");
         print("el code aparece como: ${settings.name}");
-        return MaterialPageRoute(builder: (_) => GitHubCallbackPage(code: code,));
+        return MaterialPageRoute(
+          builder: (_) => GitHubCallbackPage(code: code),
+        );
       }
       return MaterialPageRoute(builder: (_) => GitHubLoginPage());
     },
@@ -35,9 +42,8 @@ class GitHubLoginPage extends StatelessWidget {
       'http://localhost:3000/auth/callback'; // Asegúrate de que esté registrado en GitHub
 
   Future<void> loginWithGitHub() async {
-
     try {
-      final authUrl = Uri.https("github.com","/login/oauth/authorize",{
+      final authUrl = Uri.https("github.com", "/login/oauth/authorize", {
         'client_id': clientId,
         'redirect_uri': redirectUri,
         'response_type': 'code',
@@ -88,15 +94,12 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
     try {
       String? codeToUse = widget.code;
 
-
       if (codeToUse == null)
         throw Exception("No se recibió el código de autorización");
 
       final response = await http.post(
         Uri.parse('https://github.com/login/device/code'),
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: {'Accept': 'application/json'},
         body: {
           'client_id': clientId,
           'device_code': codeToUse,
@@ -114,8 +117,23 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
       );
 
       final user = json.decode(userResponse.body);
-      setState(() {
+      setState(() async {
         username = user['login'];
+        if (username != null) {
+          final config = await ConfigLoader.loadConfig();
+          final organization = await ConfigLoader.loadOrganization();
+          final dataLoader = DataLoader(config, organization);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => EventApp(
+                config: config,
+                dataLoader: dataLoader,
+                organization: organization,
+              ),
+            ),
+          );
+        }
       });
     } catch (e) {
       setState(() {
@@ -131,8 +149,6 @@ class _GitHubCallbackPageState extends State<GitHubCallbackPage> {
       body: Center(
         child: error != null
             ? Text('Error: $error')
-            : username != null
-            ? Text('Usuario logueado: $username')
             : CircularProgressIndicator(),
       ),
     );
