@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/add_sponsor_screen.dart';
 import 'package:sec/ui/screens/event_form_screen.dart';
 import 'package:sec/ui/screens/screens.dart';
 
