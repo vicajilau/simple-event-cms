@@ -47,7 +47,7 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<List<Speaker>> loadSpeakers(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.SPEAKER_PATH, year);
+    List<dynamic> jsonList = await loadData(PathsGithub.speakerPath, year);
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
@@ -56,14 +56,14 @@ class DataLoader {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<List<Agenda>> loadAgenda(String year) async {
-    var jsonList = await loadData(PathsGithub.AGENDA_PATH, year);
+    var jsonList = await loadData(PathsGithub.agendaPath, year);
     return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<List<Sponsor>> loadSponsors(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.SPONSOR_PATH, year);
+    List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath, year);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 }

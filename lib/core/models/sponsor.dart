@@ -25,7 +25,7 @@ class Sponsor extends GitHubModel {
     required this.type,
     required this.logo,
     required this.website,
-    super.pathUrl = PathsGithub.SPONSOR_PATH,
+    super.pathUrl = PathsGithub.sponsorPath,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) => Sponsor(

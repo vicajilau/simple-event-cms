@@ -11,7 +11,7 @@ class Organization extends GitHubModel {
     required this.organizationName,
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
-    super.pathUrl = PathsGithub.ORGANIZATION_PATH,
+    super.pathUrl = PathsGithub.organizationPath,
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) => Organization(

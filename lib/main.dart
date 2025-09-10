@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:sec/ui/screens/login_screen.dart';
 
 import 'core/config/config_loader.dart';
@@ -7,7 +6,6 @@ import 'core/services/load/data_loader.dart';
 import 'event_app.dart';
 
 void main() {
-  usePathUrlStrategy();
   runApp(MyApp());
 
 }
@@ -25,6 +23,8 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatelessWidget {
+  const MyHomePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
