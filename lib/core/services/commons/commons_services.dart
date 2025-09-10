@@ -11,17 +11,18 @@ class CommonsServices {
   CommonsServices({required this.githubService});
 
   Future<http.Response> getSha(GithubService githubService) async {
-    final fileUrl =
-        "${this.githubService.repo}${this.githubService.repo}?ref=${this.githubService.branch}";
+    final fileUri = Uri.parse(
+      "${githubService.repo}?ref=${githubService.branch}",
+    );
 
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
-    final res = await github.putJSON(
-      fileUrl,
+    final res = await http.get(
+      fileUri,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
       },
     );
+
     if (res.statusCode == 200) {
       final data = json.decode(res.body);
       //final content = utf8.decode(base64Decode(data['content']));
