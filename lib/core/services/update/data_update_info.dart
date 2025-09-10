@@ -19,30 +19,7 @@ class DataUpdateInfo {
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<http.Response> updateSpeakers(List<Speaker> speakers) async {
-    //List<dynamic> jsonList = await dataLoader.loadData('speakers/speakers.json');
-    final fileUrl = "${githubService.repo}/${speakers[0].pathUrl}?ref=${githubService.branch}";
-    final speakerInfo = base64Encode(
-      utf8.encode(json.encode(speakers.map((speaker) => speaker.toJson()))),
-    );
-    final body = json.encode({
-      "message": "Update speakers from JSON",
-      "content": speakerInfo,
-      "sha": githubService.sha,
-    });
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
-    final res = await github.putJSON(
-      fileUrl,
-      headers: {
-        "Authorization": "Bearer ${githubService.token}",
-        "Accept": "application/vnd.github.v3+json",
-      },
-      body: body,
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception("Failed to update speakers");
-    }
-    return res;
+    return _updateData(speakers,speakers[0].pathUrl, "Update speakers from JSON");
   }
 
   /// Loads event agenda information from the agenda.json file
@@ -50,92 +27,24 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(List<Agenda> agenda) async {
-    //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUrl= "${githubService.repo}/${agenda[0].pathUrl}?ref=${githubService.branch}";
-    final agendaInfo = base64Encode(
-      utf8.encode(json.encode(agenda.map((agenda) => agenda.toJson()))),
-    );
-    final body = json.encode({
-      "message": "Update agendas from JSON",
-      "content": agendaInfo,
-      "sha": githubService.sha,
-    });
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
-    final res = await github.putJSON(
-      fileUrl,
-      headers: {
-        "Authorization": "Bearer ${githubService.token}",
-        "Accept": "application/vnd.github.v3+json",
-      },
-      body: body,
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception("Failed to update speakers");
-    }
-    return res;
+    return _updateData(agenda,agenda[0].pathUrl, "Update agendas from JSON");
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<http.Response> updateSponsors(List<Sponsor> sponsors) async {
-    //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUrl = "${githubService.repo}/${sponsors[0].pathUrl}?ref=${githubService.branch}";
-    final sponsorInfo = base64Encode(
-      utf8.encode(json.encode(sponsors.map((sponsor) => sponsor.toJson()))),
-    );
-    final body = json.encode({
-      "message": "Update agendas from JSON",
-      "content": sponsorInfo,
-      "sha": githubService.sha,
-    });
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
-    final res = await github.putJSON(
-      fileUrl,
-      headers: {
-        "Authorization": "Bearer ${githubService.token}",
-        "Accept": "application/vnd.github.v3+json",
-      },
-      body: body,
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception("Failed to update speakers");
-    }
-    return res;
+    return _updateData(sponsors,sponsors[0].pathUrl, "Update sponsors from JSON");
   }
 
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<http.Response> updateEvents(List<Event> events) async {
-    //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUrl = "${githubService.repo}/${events[0].pathUrl}?ref=${githubService.branch}";
-    final sponsorInfo = base64Encode(
-      utf8.encode(json.encode(events.map((event) => event.toJson()))),
-    );
-    final body = json.encode({
-      "message": "Update agendas from JSON",
-      "content": sponsorInfo,
-      "sha": githubService.sha,
-    });
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
-    final res = await github.putJSON(
-      fileUrl,
-      headers: {
-        "Authorization": "Bearer ${githubService.token}",
-        "Accept": "application/vnd.github.v3+json",
-      },
-      body: body,
-    );
-
-    if (res.statusCode != 200) {
-      throw Exception("Failed to update speakers");
-    }
-    return res;
+    return _updateData(events,events[0].pathUrl, "Update events from JSON");
   }
 
   Future<http.Response> getSha(GithubService githubService) async {
-    final fileUrl = "${githubService.repo}${githubService.repo}?ref=${githubService.branch}";
+    final fileUrl =
+        "${githubService.repo}${githubService.repo}?ref=${githubService.branch}";
 
     var github = GitHub(auth: Authentication.withToken(githubService.token));
     final res = await github.putJSON(
@@ -152,5 +61,57 @@ class DataUpdateInfo {
     } else {
       throw Exception("Failed to get sha");
     }
+  }
+
+  /// Generic function to update data on GitHub
+  Future<http.Response> _updateData<T>(
+      List<T> data,
+      String pathUrl,
+      String commitMessage,
+      ) async {
+    // Convert data to JSON and then to base64
+    final dataInfo = base64Encode(
+      utf8.encode(
+        json.encode(
+          data.map((item) {
+            if (item is Speaker) return item.toJson();
+            if (item is Agenda) return item.toJson();
+            if (item is Sponsor) return item.toJson();
+            if (item is Event) return item.toJson();
+            throw Exception("Unsupported type: ${T.runtimeType}");
+          }).toList(),
+        ),
+      ),
+    );
+
+    // Prepare the request body
+    final body = json.encode({
+      "message": commitMessage,
+      "content": dataInfo,
+      "sha": githubService.sha,
+    });
+
+    // Construct the file URL
+    final fileUrl =
+        "${githubService.repo}/$pathUrl?ref=${githubService.branch}";
+
+    // Initialize GitHub client
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+
+    // Make the PUT request
+    final res = await github.putJSON(
+      fileUrl,
+      headers: {
+        "Authorization": "Bearer ${githubService.token}",
+        "Accept": "application/vnd.github.v3+json",
+      },
+      body: body,
+    );
+
+    // Check the response status
+    if (res.statusCode != 200) {
+      throw Exception("Failed to update $pathUrl: ${res.body}");
+    }
+    return res;
   }
 }
