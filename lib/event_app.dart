@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/event_collection_screen.dart';
-
+import 'package:sec/ui/screens/event/event_collection/event_collection_screen.dart';
 import 'core/models/organization.dart';
 import 'core/services/load/data_loader.dart';
 import 'l10n/app_localizations.dart';
