@@ -56,6 +56,7 @@ class Event extends GitHubModel {
     this.venue,
     this.description,
     super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   /// Creates a SiteConfig from JSON data with additional parameters

@@ -25,6 +25,7 @@ class Speaker extends GitHubModel {
     required this.image,
     required this.social,
     super.pathUrl = PathsGithub.speakerPath,
+    super.updateMessage = PathsGithub.speakerUpdateMessage,
   });
 
   factory Speaker.fromJson(Map<String, dynamic> json) => Speaker(
