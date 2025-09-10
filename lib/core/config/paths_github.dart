@@ -8,7 +8,7 @@ class PathsGithub {
   // Messages for PUT requests to GitHub commits
   static const String agendaUpdateMessage = 'Update agendas from JSON';
   static const String eventUpdateMessage = 'Update events from JSON';
-  static const String organizationUpdateMessage = '';
+  static const String organizationUpdateMessage = 'Update organization from JSON';
   static const String speakerUpdateMessage = 'Update speakers from JSON';
   static const String sponsorUpdateMessage = 'Update sponsors from JSON';
 
