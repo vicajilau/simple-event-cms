@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // MaterialApp provides the Navigator
       title: 'Login con GitHub',
-      home: MyHomePage(), // Use a separate widget for the home screen
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

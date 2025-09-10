@@ -9,7 +9,7 @@ import 'package:sec/core/services/load/data_loader.dart';
 import 'package:sec/ui/screens/event/event_container/event_container_screen.dart';
 import 'package:sec/ui/screens/organization/organization_form_screen.dart';
 import 'package:sec/ui/widgets/add_floating_action_button.dart';
-import 'package:sec/ui/widgets/filter_checkbox.dart';
+import 'package:sec/ui/widgets/event_filter_button.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
@@ -47,7 +47,7 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   List<Event> events = [], eventsToShow = [];
-  bool showEndedEvents = false, showNextsEvents = true;
+  EventFilter currentFilter = EventFilter.all;
 
   /// Initializes the screens list with data loader
   @override
@@ -85,18 +85,25 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   void applyFilters() {
     final now = DateTime.now();
     List<Event> eventsFiltered = [...events];
-    if (showEndedEvents && showNextsEvents) {
-    } else if (showEndedEvents) {
-      eventsFiltered = events.where((event) {
-        final startDate = DateTime.parse(event.eventDates!.startDate);
-        return startDate.isBefore(now);
-      }).toList();
-    } else if (showNextsEvents) {
-      eventsFiltered = events.where((event) {
-        final startDate = DateTime.parse(event.eventDates!.startDate);
-        return startDate.isAfter(now);
-      }).toList();
+
+    switch (currentFilter) {
+      case EventFilter.all:
+        // Mostrar todos los eventos
+        break;
+      case EventFilter.past:
+        eventsFiltered = events.where((event) {
+          final startDate = DateTime.parse(event.eventDates!.startDate);
+          return startDate.isBefore(now);
+        }).toList();
+        break;
+      case EventFilter.current:
+        eventsFiltered = events.where((event) {
+          final startDate = DateTime.parse(event.eventDates!.startDate);
+          return startDate.isAfter(now);
+        }).toList();
+        break;
     }
+
     setState(() {
       eventsToShow = [...eventsFiltered];
     });
@@ -120,19 +127,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
         actions: <Widget>[
-          FilterCheckbox(
-            label: "Eventos pasados",
-            isChecked: showEndedEvents,
-            onChanged: (value) {
-              showEndedEvents = value;
-              applyFilters();
-            },
-          ),
-          FilterCheckbox(
-            label: "Eventos actuales",
-            isChecked: showNextsEvents,
-            onChanged: (value) {
-              showNextsEvents = value;
+          EventFilterButton(
+            selectedFilter: currentFilter,
+            onFilterChanged: (EventFilter filter) {
+              setState(() {
+                currentFilter = filter;
+              });
               applyFilters();
             },
           ),
