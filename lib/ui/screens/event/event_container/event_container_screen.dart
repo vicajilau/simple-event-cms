@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/core.dart';
+import 'package:sec/core/models/agenda.dart';
+import 'package:sec/core/models/event.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
-
-import '../../core/models/agenda.dart';
-import '../../core/models/event.dart';
-import '../../core/models/session_type.dart';
-import '../../core/models/speaker.dart';
-import '../../core/models/sponsor.dart';
-import '../../core/services/load/data_loader.dart';
-import '../../l10n/app_localizations.dart';
-import '../widgets/widgets.dart';
-import 'screens.dart';
+import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/ui/screens/screens.dart';
+import 'package:sec/ui/widgets/add_floating_action_button.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details

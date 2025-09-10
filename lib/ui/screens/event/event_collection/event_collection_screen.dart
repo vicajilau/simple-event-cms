@@ -3,13 +3,14 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sec/core/models/event.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/core/models/organization.dart';
-
-import '../../core/core.dart';
-import '../../core/models/models.dart';
-import '../widgets/add_floating_action_button.dart';
-import '../widgets/filter_checkbox.dart';
-import 'screens.dart';
+import 'package:sec/core/services/load/data_loader.dart';
+import 'package:sec/ui/screens/event/event_container/event_container_screen.dart';
+import 'package:sec/ui/screens/organization/organization_form_screen.dart';
+import 'package:sec/ui/widgets/add_floating_action_button.dart';
+import 'package:sec/ui/widgets/filter_checkbox.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
