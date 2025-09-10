@@ -36,6 +36,7 @@ class Speaker extends GitHubModel {
     social: Social.fromJson(json["social"]),
   );
 
+  @override
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "name": name,

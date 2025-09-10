@@ -27,6 +27,7 @@ class Agenda extends GitHubModel {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() => {"UID": uid, "days": days};
 }
 

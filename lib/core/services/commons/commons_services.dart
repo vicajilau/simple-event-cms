@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
+import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/github/github_services.dart';
-import 'package:sec/core/models/models.dart' hide Event;
 
 class CommonsServices {
   final GithubService githubService;
@@ -42,10 +42,7 @@ class CommonsServices {
       utf8.encode(
         json.encode(
           data.map((item) {
-            if (item is Speaker) return item.toJson();
-            if (item is Agenda) return item.toJson();
-            if (item is Sponsor) return item.toJson();
-            if (item is Event) return item.toJson();
+            if (item is GitHubModel) return item.toJson();
             throw Exception("Unsupported type: ${T.runtimeType}");
           }).toList(),
         ),

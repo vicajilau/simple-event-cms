@@ -37,6 +37,7 @@ class Sponsor extends GitHubModel {
     website: json["website"],
   );
 
+  @override
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "name": name,

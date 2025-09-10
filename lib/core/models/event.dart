@@ -102,6 +102,7 @@ class Event extends GitHubModel {
   }
 
   /// Converts the SiteConfig instance to a JSON object
+    @override
   Map<String, dynamic> toJson() {
     return {
       'eventName': eventName,
