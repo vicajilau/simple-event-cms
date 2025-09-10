@@ -62,9 +62,7 @@ class CommonsServices {
         "${githubService.repo}/$pathUrl?ref=${githubService.branch}";
 
     // Initialize GitHub client
-    var github = GitHub(
-      auth: Authentication.withToken(githubService.token),
-    );
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     // Make the PUT request
     final res = await github.putJSON(
