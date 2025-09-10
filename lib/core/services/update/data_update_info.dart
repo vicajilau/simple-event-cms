@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:github/github.dart' hide Event;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/core.dart';
 
@@ -19,9 +20,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of speaker data
   Future<http.Response> updateSpeakers(List<Speaker> speakers) async {
     //List<dynamic> jsonList = await dataLoader.loadData('speakers/speakers.json');
-    final fileUri = Uri.parse(
-      "${githubService.repo}/${speakers[0].pathUrl}?ref=${githubService.branch}",
-    );
+    final fileUrl = "${githubService.repo}/${speakers[0].pathUrl}?ref=${githubService.branch}";
     final speakerInfo = base64Encode(
       utf8.encode(json.encode(speakers.map((speaker) => speaker.toJson()))),
     );
@@ -30,8 +29,9 @@ class DataUpdateInfo {
       "content": speakerInfo,
       "sha": githubService.sha,
     });
-    final res = await http.put(
-      fileUri,
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    final res = await github.putJSON(
+      fileUrl,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
@@ -51,9 +51,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(List<Agenda> agenda) async {
     //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUri = Uri.parse(
-      "${githubService.repo}/${agenda[0].pathUrl}?ref=${githubService.branch}",
-    );
+    final fileUrl= "${githubService.repo}/${agenda[0].pathUrl}?ref=${githubService.branch}";
     final agendaInfo = base64Encode(
       utf8.encode(json.encode(agenda.map((agenda) => agenda.toJson()))),
     );
@@ -62,8 +60,9 @@ class DataUpdateInfo {
       "content": agendaInfo,
       "sha": githubService.sha,
     });
-    final res = await http.put(
-      fileUri,
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    final res = await github.putJSON(
+      fileUrl,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
@@ -81,9 +80,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<http.Response> updateSponsors(List<Sponsor> sponsors) async {
     //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUri = Uri.parse(
-      "${githubService.repo}/${sponsors[0].pathUrl}?ref=${githubService.branch}",
-    );
+    final fileUrl = "${githubService.repo}/${sponsors[0].pathUrl}?ref=${githubService.branch}";
     final sponsorInfo = base64Encode(
       utf8.encode(json.encode(sponsors.map((sponsor) => sponsor.toJson()))),
     );
@@ -92,8 +89,9 @@ class DataUpdateInfo {
       "content": sponsorInfo,
       "sha": githubService.sha,
     });
-    final res = await http.put(
-      fileUri,
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    final res = await github.putJSON(
+      fileUrl,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
@@ -111,9 +109,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of events data with logos and details
   Future<http.Response> updateEvents(List<Event> events) async {
     //List<dynamic> jsonList = await dataLoader.loadData('agenda/agenda.json');
-    final fileUri = Uri.parse(
-      "${githubService.repo}/${events[0].pathUrl}?ref=${githubService.branch}",
-    );
+    final fileUrl = "${githubService.repo}/${events[0].pathUrl}?ref=${githubService.branch}";
     final sponsorInfo = base64Encode(
       utf8.encode(json.encode(events.map((event) => event.toJson()))),
     );
@@ -122,8 +118,9 @@ class DataUpdateInfo {
       "content": sponsorInfo,
       "sha": githubService.sha,
     });
-    final res = await http.put(
-      fileUri,
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    final res = await github.putJSON(
+      fileUrl,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
@@ -138,12 +135,11 @@ class DataUpdateInfo {
   }
 
   Future<http.Response> getSha(GithubService githubService) async {
-    final fileUri = Uri.parse(
-      "${githubService.repo}${githubService.repo}?ref=${githubService.branch}",
-    );
+    final fileUrl = "${githubService.repo}${githubService.repo}?ref=${githubService.branch}";
 
-    final res = await http.get(
-      fileUri,
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    final res = await github.putJSON(
+      fileUrl,
       headers: {
         "Authorization": "Bearer ${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
