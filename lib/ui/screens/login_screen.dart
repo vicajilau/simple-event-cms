@@ -22,12 +22,16 @@ class _LoginPageState extends State<LoginPage> {
         var github = GitHub(auth: Authentication.withToken(_token));
 
         // Si la autenticación es exitosa y no hay excepción:
-        if (github.auth.isToken || github.auth.isBasic) { // Verifica si hay autenticación básica o token
+        if (github.auth.isToken || github.auth.isBasic) {
+          // Verifica si hay autenticación básica o token
           final config = await ConfigLoader.loadConfig();
           final organization = await ConfigLoader.loadOrganization();
-          final dataLoader = DataLoader(config, organization); // Pasa la instancia de github
+          final dataLoader = DataLoader(
+            config,
+            organization,
+          ); // Pasa la instancia de github
 
-          if(context.mounted){
+          if (context.mounted) {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => EventApp(
@@ -38,7 +42,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             );
           }
-
         } else {
           // Este bloque podría no ser alcanzado si la autenticación falla antes
           _showErrorSnackbar('Fallo de autenticación desconocido.');
@@ -46,7 +49,9 @@ class _LoginPageState extends State<LoginPage> {
       } catch (e) {
         // Captura excepciones comunes de autenticación o de red
         // ignore: use_build_context_synchronously
-        _showErrorSnackbar('Credenciales incorrectas o problema de red. Por favor, verifica tu email y contraseña.');
+        _showErrorSnackbar(
+          'Credenciales incorrectas o problema de red. Por favor, verifica tu email y contraseña.',
+        );
         debugPrint('Error de autenticación: $e');
       }
     }
@@ -69,9 +74,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio de Sesión'),
-      ),
+      appBar: AppBar(title: const Text('Inicio de Sesión')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -81,12 +84,14 @@ class _LoginPageState extends State<LoginPage> {
             children: <Widget>[
               TextFormField(
                 decoration: const InputDecoration(labelText: 'Token'),
-                validator: (value) => value!.isEmpty ? 'Por favor, ingresa un token de github valido' : null,
+                validator: (value) => value!.isEmpty
+                    ? 'Por favor, ingresa un token de github valido'
+                    : null,
                 onSaved: (value) => _token = value!,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed :() => _submit(context),
+                onPressed: () => _submit(context),
                 child: const Text('Iniciar Sesión'),
               ),
             ],

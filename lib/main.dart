@@ -7,7 +7,6 @@ import 'event_app.dart';
 
 void main() {
   runApp(MyApp());
-
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +14,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp( // MaterialApp provides the Navigator
+    return MaterialApp(
+      // MaterialApp provides the Navigator
       title: 'Login con GitHub',
       home: MyHomePage(), // Use a separate widget for the home screen
     );
@@ -36,7 +36,8 @@ class MyHomePage extends StatelessWidget {
             child: ElevatedButton(
               child: Text('Iniciar sesión con GitHub'),
               onPressed: () {
-                Navigator.push( // Now this context has a Navigator
+                Navigator.push(
+                  // Now this context has a Navigator
                   context,
                   MaterialPageRoute(builder: (context) => LoginPage()),
                 );
@@ -49,8 +50,11 @@ class MyHomePage extends StatelessWidget {
               onPressed: () async {
                 final config = await ConfigLoader.loadConfig();
                 final organization = await ConfigLoader.loadOrganization();
-                final dataLoader = DataLoader(config, organization); // Pasa la instancia de github
-                if (context.mounted){
+                final dataLoader = DataLoader(
+                  config,
+                  organization,
+                ); // Pasa la instancia de github
+                if (context.mounted) {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => EventApp(
