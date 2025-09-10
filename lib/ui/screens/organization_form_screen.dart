@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/core.dart';
+import 'package:sec/core/models/event.dart';
 import 'package:sec/ui/widgets/add_room.dart';
 
+import '../../core/models/event_dates.dart';
 import '../widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
-  final SiteConfig? siteConfig;
+  final Event? siteConfig;
   const OrganizationFormScreen({super.key, this.siteConfig});
 
   @override
@@ -193,7 +194,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
       timezone: 'Europe/Madrid',
     );
 
-    final siteConfig = SiteConfig(
+    final siteConfig = Event(
       uid: widget.siteConfig?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
       rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,

@@ -1,6 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+
 import '../models/models.dart';
 import '../models/organization.dart';
 
@@ -34,7 +36,7 @@ class ConfigLoader {
 
     switch (appEnv) {
       case 'pro':
-      // Entorno de producción: Carga desde GitHub Pages.
+        // Entorno de producción: Carga desde GitHub Pages.
         baseUrl = 'https://$_githubUser.github.io/$_githubRepo';
         final configUrl = '$baseUrl/events/$year/config/organization.json';
         final res = await http.get(Uri.parse(configUrl));
@@ -46,9 +48,9 @@ class ConfigLoader {
         configContent = res.body;
         break;
       case 'pre':
-      // Entorno de preproducción: Carga desde el raw de GitHub (rama específica).
+        // Entorno de preproducción: Carga desde el raw de GitHub (rama específica).
         baseUrl =
-        'https://raw.githubusercontent.com/$_githubUser/$_githubRepo/$_githubBranch';
+            'https://raw.githubusercontent.com/$_githubUser/$_githubRepo/$_githubBranch';
         final configUrl = '$baseUrl/events/$year/config/organization.json';
         final res = await http.get(Uri.parse(configUrl));
         if (res.statusCode != 200) {
@@ -60,7 +62,7 @@ class ConfigLoader {
         break;
       case 'dev':
       default:
-      // Entorno de desarrollo: Carga desde los assets locales.
+        // Entorno de desarrollo: Carga desde los assets locales.
         final configPath = 'events/2025/config/organization.json';
         try {
           configContent = await rootBundle.loadString(configPath);
@@ -79,7 +81,7 @@ class ConfigLoader {
     return Organization.fromJson(jsonData);
   }
 
-  static Future<List<SiteConfig>> loadConfig() async {
+  static Future<List<Event>> loadConfig() async {
     String configContent;
     String baseUrl;
 
@@ -131,10 +133,10 @@ class ConfigLoader {
     }
 
     final jsonData = json.decode(configContent);
-    List<SiteConfig> listEventsItems = [];
+    List<Event> listEventsItems = [];
     var listEvents = jsonData['events'];
     listEvents.forEach((event) {
-      listEventsItems.add(SiteConfig.fromJson(event, baseUrl: baseUrl, year: year));
+      listEventsItems.add(Event.fromJson(event, baseUrl: baseUrl, year: year));
     });
 
     // Pasamos la baseUrl construida para que el modelo la tenga.

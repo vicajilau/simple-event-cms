@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sec/ui/screens/speaker_form_screen.dart';
 
-import '../../core/core.dart';
+import '../../core/models/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/widgets.dart';
 

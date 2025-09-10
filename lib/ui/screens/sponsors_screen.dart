@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sec/ui/screens/screens.dart';
 
-import '../../core/core.dart';
+import '../../core/models/models.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/widgets.dart';
 

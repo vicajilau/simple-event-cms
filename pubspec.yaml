@@ -40,6 +40,8 @@ dependencies:
   url_launcher: ^6.3.2
   flutter_svg: ^2.2.1
   intl: 0.20.2
+  github: ^9.2.5
+
 
 dev_dependencies:
   flutter_test:

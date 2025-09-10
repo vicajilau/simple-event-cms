@@ -1,13 +1,15 @@
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/models/sponsor.dart';
 
+import '../config/paths_github.dart';
 import 'agenda.dart';
 import 'event_dates.dart';
+import 'github/github_model.dart';
 
 /// Main configuration class for the event site
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
-class SiteConfig {
+class Event extends GitHubModel {
   final String uid;
 
   /// The name of the event (e.g., "DevFest Spain 2025")
@@ -46,7 +48,7 @@ class SiteConfig {
   List<Sponsor>? sponsors;
 
   /// Creates a new SiteConfig instance
-  SiteConfig({
+  Event({
     required this.uid,
     required this.rooms,
     required this.eventName,
@@ -60,6 +62,8 @@ class SiteConfig {
     this.eventDates,
     this.venue,
     this.description,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   /// Creates a SiteConfig from JSON data with additional parameters
@@ -69,7 +73,7 @@ class SiteConfig {
   /// The [year] parameter identifies which event year this configuration represents
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
-  factory SiteConfig.fromJson(
+  factory Event.fromJson(
     Map<String, dynamic> json, {
     required String baseUrl,
     required String year,
@@ -92,7 +96,7 @@ class SiteConfig {
         ? (json['rooms'] as List).map((item) => item['name'] as String).toList()
         : [];
     var agendaUID = json['agendaUID'];
-    return SiteConfig(
+    return Event(
       uid: json["UID"],
       eventName: json['eventName'],
       year: year,
@@ -110,21 +114,22 @@ class SiteConfig {
   }
 
   /// Converts the SiteConfig instance to a JSON object
-  Map<String, dynamic> toJson(SiteConfig siteConfig) {
+  @override
+  Map<String, dynamic> toJson() {
     return {
-      'uid': siteConfig.uid,
-      'eventName': siteConfig.eventName,
-      'year': siteConfig.year,
-      'baseUrl': siteConfig.baseUrl,
-      'primaryColor': siteConfig.primaryColor,
-      'secondaryColor': siteConfig.secondaryColor,
-      'eventDates': siteConfig.eventDates?.toJson(),
-      'venue': siteConfig.venue?.toJson(),
-      'description': siteConfig.description,
+      'uid': uid,
+      'eventName': eventName,
+      'year': year,
+      'baseUrl': baseUrl,
+      'primaryColor': primaryColor,
+      'secondaryColor': secondaryColor,
+      'eventDates': eventDates?.toJson(),
+      'venue': venue?.toJson(),
+      'description': description,
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'room': siteConfig.rooms.map((name) => {'name': name}).toList(),
+      'room': rooms.map((name) => {'name': name}).toList(),
     };
   }
 }

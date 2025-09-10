@@ -3,17 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sec/core/models/organization.dart';
 
 import '../../core/core.dart';
-import '../../core/models/organization.dart';
-import '../widgets/widgets.dart';
+import '../../core/models/models.dart';
+import '../widgets/add_floating_action_button.dart';
+import '../widgets/filter_checkbox.dart';
 import 'screens.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 class EventCollectionScreen extends StatefulWidget {
   /// Site configuration containing event details
-  final List<SiteConfig> config;
+  final List<Event> config;
 
   /// Data loader for fetching content from various sources
   final DataLoader dataLoader;
@@ -44,7 +46,7 @@ class EventCollectionScreen extends StatefulWidget {
 
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
-  List<SiteConfig> events = [], eventsToShow = [];
+  List<Event> events = [], eventsToShow = [];
   bool showEndedEvents = false, showNextsEvents = true;
 
   /// Initializes the screens list with data loader
@@ -57,9 +59,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Future<void> loadEventsData() async {
     events = widget.dataLoader.config;
-    var agenda = await widget.dataLoader.loadAgenda();
-    var speakers = await widget.dataLoader.loadSpeakers();
-    var sponsors = await widget.dataLoader.loadSponsors();
+    var agenda = await widget.dataLoader.loadAgenda("2025");
+    var speakers = await widget.dataLoader.loadSpeakers("2025");
+    var sponsors = await widget.dataLoader.loadSponsors("2025");
 
     for (var event in events) {
       event.agenda = agenda.firstWhere(
@@ -82,7 +84,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   void applyFilters() {
     final now = DateTime.now();
-    List<SiteConfig> eventsFiltered = [...events];
+    List<Event> eventsFiltered = [...events];
     if (showEndedEvents && showNextsEvents) {
     } else if (showEndedEvents) {
       eventsFiltered = events.where((event) {
@@ -215,8 +217,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           trailing: IconButton(
                             icon: const Icon(Icons.edit),
                             onPressed: () async {
-                              final SiteConfig? newConfig =
-                                  await _navigateToForm(item);
+                              final Event? newConfig = await _navigateToForm(
+                                item,
+                              );
 
                               if (newConfig != null) {
                                 int index = events.indexWhere(
@@ -241,7 +244,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final SiteConfig? newConfig = await _navigateToForm();
+          final Event? newConfig = await _navigateToForm();
 
           if (newConfig != null) {
             events.add(newConfig);
@@ -256,7 +259,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     );
   }
 
-  Future<SiteConfig?> _navigateToForm([SiteConfig? siteConfig]) async {
+  Future<Event?> _navigateToForm([Event? siteConfig]) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
@@ -265,12 +268,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     );
   }
 
-  Future<void> _saveConfigToJson(List<SiteConfig> config) async {
+  Future<void> _saveConfigToJson(List<Event> config) async {
     try {
       final directory = Directory.current.path;
       final file = File('$directory/events/2025/config/site.json');
       final jsonString = jsonEncode(
-        config.map((siteConfig) => siteConfig.toJson(siteConfig)).toList(),
+        config.map((event) => event.toJson()).toList(),
       );
       await file.writeAsString(jsonString);
       if (kDebugMode) {

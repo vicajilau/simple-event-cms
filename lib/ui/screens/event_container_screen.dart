@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/utils/time_utils.dart';
 
-import '../../core/models/models.dart';
-import '../../core/services/data_loader.dart';
+import '../../core/models/agenda.dart';
+import '../../core/models/event.dart';
+import '../../core/models/session_type.dart';
+import '../../core/models/speaker.dart';
+import '../../core/models/sponsor.dart';
+import '../../core/services/load/data_loader.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/widgets.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
-  final List<SiteConfig> config;
+  final List<Event> config;
 
   /// Data loader for fetching content from various sources
   final DataLoader dataLoader;

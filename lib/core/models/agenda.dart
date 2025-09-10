@@ -1,13 +1,22 @@
 // ignore: dangling_library_doc_comments
+import 'package:sec/core/config/paths_github.dart';
+
+import 'github/github_model.dart';
+
 /// Represents a single day in the event agenda
 /// Contains the date and list of tracks for that day
 /// Day name is automatically derived from the date using localization
 
-class Agenda {
+class Agenda extends GitHubModel {
   final String uid;
   final List<AgendaDay> days;
 
-  Agenda({required this.uid, required this.days});
+  Agenda({
+    required this.uid,
+    required this.days,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
+  });
 
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(
@@ -18,6 +27,7 @@ class Agenda {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() => {"UID": uid, "days": days};
 }
 
