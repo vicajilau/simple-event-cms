@@ -14,7 +14,7 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _token = '';
 
-  Future<void> _submit() async {
+  Future<void> _submit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // Aquí puedes agregar la lógica de autenticación
@@ -86,7 +86,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _submit,
+                onPressed :() => _submit(context),
                 child: const Text('Iniciar Sesión'),
               ),
             ],
