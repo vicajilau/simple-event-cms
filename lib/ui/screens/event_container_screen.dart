@@ -4,8 +4,7 @@ import 'package:sec/core/utils/time_utils.dart';
 import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
-import '../widgets/add_sponsor_screen.dart';
-import 'screens.dart';
+import '../widgets/widgets.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
@@ -47,7 +46,11 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   //List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
-  late final List<Widget> _screens;
+  List<Widget> get _screens => [
+    AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
+    SpeakersScreen(key: UniqueKey(), speakers: _speakers),
+    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
+  ];
 
   @override
   void initState() {
@@ -102,25 +105,19 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          onPressed: () async {
-            if (_selectedIndex == 0) {
-              AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
-                _eventFormScreen(),
-              );
-              _addNewSession(newAgendaDay: newAgendaDay);
-            } else if (_selectedIndex == 2) {
-              _navigateTo(AddSponsorScreen());
-            }
-          },
-          elevation: 16,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white),
-        ),
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () {
+          if (_selectedIndex == 0) {
+            AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
+              _eventFormScreen(),
+            );
+            _addNewSession(newAgendaDay: newAgendaDay);
+          } else if (_selectedIndex == 1) {
+            _addSpeaker();
+          } else if (_selectedIndex == 2) {
+            _addSponsor();
+          }
+        },
       ),
     );
   }
@@ -174,6 +171,34 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _addSpeaker() async {
+    final newSpeaker = await Navigator.push<Speaker>(
+      context,
+      MaterialPageRoute(builder: (context) => const SpeakerFormScreen()),
+    );
+
+    if (newSpeaker != null) {
+      setState(() {
+        _speakers.add(newSpeaker);
+        _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });
+    }
+  }
+
+  Future<void> _addSponsor() async {
+    final newSponsor = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+    );
+
+    if (newSponsor != null && newSponsor is Sponsor) {
+      setState(() {
+        _sponsors.add(newSponsor);
+        _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
+      });
+    }
   }
 
   void _editSession(

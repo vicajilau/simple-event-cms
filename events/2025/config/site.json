@@ -1,6 +1,7 @@
 {
   "events": [
     {
+      "UID": "df5fd5ds5dsf",
       "eventName": "DevFest Spain 2025",
       "year": "2025",
       "baseUrl": "https://vicajilau.github.io/event_flutter_template",
@@ -32,9 +33,14 @@
         {"UID": "364973197"},
         {"UID": "726612689"},
         {"UID": "14575333"}
+      ],
+      "rooms": [
+        {"name": "Sala Principal"},
+        {"name": "Sala iMac"}
       ]
     },
     {
+      "UID": "gfhdfdfgdsfg4dfg",
       "eventName": "DevFest Spain 2026",
       "year": "2026",
       "baseUrl": "https://vicajilau.github.io/event_flutter_template",
@@ -42,7 +48,7 @@
       "secondaryColor": "#34A853",
       "eventDates": {
         "startDate": "2026-03-14",
-        "endDate": "2026-03-14",
+        "endDate": "2026-03-15",
         "timezone": "Europe/Madrid"
       },
       "venue": {
@@ -63,6 +69,10 @@
         {"UID": "bn5e8qewerdd"},
         {"UID": "1ad33dzfdff"},
         {"UID": "lapw52524669"}
+      ],
+      "rooms": [
+        {"name": "Sala Principal"},
+        {"name": "Sala iMac"}
       ]
     }
   ]

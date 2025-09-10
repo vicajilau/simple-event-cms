@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/core.dart';
 import '../../core/models/organization.dart';
+import '../widgets/widgets.dart';
 import 'screens.dart';
 
 /// Main home screen widget that displays the event information and navigation
@@ -43,7 +44,8 @@ class EventCollectionScreen extends StatefulWidget {
 
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
-  List<SiteConfig> events = [];
+  List<SiteConfig> events = [], eventsToShow = [];
+  bool showEndedEvents = false, showNextsEvents = true;
 
   /// Initializes the screens list with data loader
   @override
@@ -74,6 +76,36 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           .whereType<Sponsor>()
           .toList();
     }
+    sortEvents();
+    applyFilters();
+  }
+
+  void applyFilters() {
+    final now = DateTime.now();
+    List<SiteConfig> eventsFiltered = [...events];
+    if (showEndedEvents && showNextsEvents) {
+    } else if (showEndedEvents) {
+      eventsFiltered = events.where((event) {
+        final startDate = DateTime.parse(event.eventDates!.startDate);
+        return startDate.isBefore(now);
+      }).toList();
+    } else if (showNextsEvents) {
+      eventsFiltered = events.where((event) {
+        final startDate = DateTime.parse(event.eventDates!.startDate);
+        return startDate.isAfter(now);
+      }).toList();
+    }
+    setState(() {
+      eventsToShow = [...eventsFiltered];
+    });
+  }
+
+  void sortEvents() {
+    events.sort((a, b) {
+      final aDate = DateTime.parse(a.eventDates!.startDate);
+      final bDate = DateTime.parse(b.eventDates!.startDate);
+      return aDate.compareTo(bDate);
+    });
   }
 
   @override
@@ -86,104 +118,150 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.filter_list_alt),
-            onPressed: () {
-              // Acción para el filtro
+          FilterCheckbox(
+            label: "Eventos pasados",
+            isChecked: showEndedEvents,
+            onChanged: (value) {
+              showEndedEvents = value;
+              applyFilters();
+            },
+          ),
+          FilterCheckbox(
+            label: "Eventos actuales",
+            isChecked: showNextsEvents,
+            onChanged: (value) {
+              showNextsEvents = value;
+              applyFilters();
             },
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
-        itemCount: events.length,
-        itemBuilder: (BuildContext context, int index) {
-          var item = events[index];
-          return Dismissible(
-            key: Key(item.eventName),
-            direction: DismissDirection.endToStart,
-            onDismissed: (direction) async {
-              final scaffoldMessenger = ScaffoldMessenger.of(context);
-              setState(() {
-                events.removeAt(index);
-                widget.dataLoader.config.remove(item);
-              });
-              await _saveConfigToJson(widget.dataLoader.config);
-              scaffoldMessenger.showSnackBar(
-                SnackBar(content: Text("${item.eventName} eliminado")),
-              );
-            },
-            background: Container(
-              color: Colors.red,
-              alignment: Alignment.centerRight,
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: const Icon(Icons.delete, color: Colors.white),
-            ),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventContainerScreen(
-                      config: widget.config,
-                      dataLoader: widget.dataLoader,
-                      locale: widget.locale,
-                      localeChanged: widget.localeChanged,
-                      agendaDays: item.agenda?.days ?? [],
-                      speakers: item.speakers ?? [],
-                      sponsors: item.sponsors ?? [],
+      body: eventsToShow.isEmpty
+          ? Center(child: Text("No hay organizaciones para mostrar."))
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
+              itemCount: eventsToShow.length,
+              itemBuilder: (BuildContext context, int index) {
+                var item = eventsToShow[index];
+                return Dismissible(
+                  key: Key(item.eventName),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) async {
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    final indexToRemove = events.indexWhere(
+                      (element) => element.uid == item.uid,
+                    );
+                    events.removeAt(indexToRemove);
+                    setState(() {
+                      eventsToShow = [...events];
+                    });
+                    widget.dataLoader.config.remove(item);
+
+                    await _saveConfigToJson(widget.dataLoader.config);
+                    scaffoldMessenger.showSnackBar(
+                      SnackBar(content: Text("${item.eventName} eliminado")),
+                    );
+                  },
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventContainerScreen(
+                            config: widget.config,
+                            dataLoader: widget.dataLoader,
+                            locale: widget.locale,
+                            localeChanged: widget.localeChanged,
+                            agendaDays: item.agenda?.days ?? [],
+                            speakers: item.speakers ?? [],
+                            sponsors: item.sponsors ?? [],
+                          ),
+                        ),
+                      );
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.event,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 16.0,
+                          ),
+                          title: Text(
+                            item.eventName,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
+                              style: Theme.of(context).textTheme.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () async {
+                              final SiteConfig? newConfig =
+                                  await _navigateToForm(item);
+
+                              if (newConfig != null) {
+                                int index = events.indexWhere(
+                                  (element) => element.uid == newConfig.uid,
+                                );
+                                if (index != -1) {
+                                  events[index] = newConfig;
+                                  setState(() {
+                                    eventsToShow = [...events];
+                                  });
+                                }
+                                await _saveConfigToJson(events);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
               },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 4.0),
-                child: Card(
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.event,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 16.0,
-                    ),
-                    title: Text(
-                      item.eventName,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: Text(
-                        "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
-                        style: Theme.of(context).textTheme.bodySmall,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.edit),
-                      onPressed: () {
-                        // code to edit the event
-                      },
-                    ),
-                  ),
-                ),
-              ),
             ),
-          );
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () async {
+          final SiteConfig? newConfig = await _navigateToForm();
+
+          if (newConfig != null) {
+            events.add(newConfig);
+            setState(() {
+              eventsToShow = [...events];
+            });
+            await _saveConfigToJson(events);
+          }
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Acción al presionar el botón
-        },
-        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Future<SiteConfig?> _navigateToForm([SiteConfig? siteConfig]) async {
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrganizationFormScreen(siteConfig: siteConfig),
+      ),
     );
   }
 
@@ -205,120 +283,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
   }
 
-  /*void _addDay() {}
-
-  /// Shows a dialog with event information including dates, venue, and description
-  void _showEventInfo(BuildContext context,SiteConfig siteConfig) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(siteConfig.eventName),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (siteConfig.eventDates != null) ...[
-              Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${siteConfig.eventDates!.startDate} - ${siteConfig.eventDates!.endDate}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-            ],
-            if (siteConfig.venue != null) ...[
-              GestureDetector(
-                onTap: () => _openGoogleMaps(siteConfig.venue!),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            siteConfig.venue!.name,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                ),
-                          ),
-                          Text(
-                            siteConfig.venue!.address,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppLocalizations.of(context)!.openUrl,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-            if (siteConfig.description != null &&
-                siteConfig.description!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text(
-                siteConfig.description!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ] else ...[
-              const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.description),
-            ],
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.close),
-          ),
-        ],
-      ),
-    );
-  }*/
-
   /// Opens Google Maps with the venue location
   /*Future<void> _openGoogleMaps(Venue venue) async {
     final query = Uri.encodeComponent('${venue.name}, ${venue.address}');
@@ -327,70 +291,5 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
     // Use the extension to open URL from context
     await context.openUrl(googleMapsUrl);
-  }*/
-}
-
-class AgendaCard extends StatelessWidget {
-  /// Site configuration containing event details
-  final List<SiteConfig> config;
-
-  /// Data loader for fetching content from various sources
-  final DataLoader dataLoader;
-
-  /// Currently selected locale for the application
-  final Locale locale;
-
-  /// Callback function to be called when the locale changes
-  final ValueChanged<Locale> localeChanged;
-
-  const AgendaCard({
-    super.key,
-    required this.config,
-    required this.dataLoader,
-    required this.locale,
-    required this.localeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: ListTile(
-          leading: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              // ....
-            },
-          ),
-          title: Text('DevFest Spain 2025'),
-          subtitle: Text('12/10/25 - 15/10/25'),
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              // ....
-            },
-          ),
-          onTap: () async {
-            /* final agendaDays = await _getAgendaDays();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventContainerScreen(
-                  config: config,
-                  dataLoader: dataLoader,
-                  locale: locale,
-                  localeChanged: localeChanged,
-                  agendaDays: agendaDays,
-                ),
-              ),
-            );*/
-          },
-        ),
-      ),
-    );
-  }
-
-  /*Future<List<AgendaDay>> _getAgendaDays() async {
-    return await dataLoader.loadAgenda();
   }*/
 }
