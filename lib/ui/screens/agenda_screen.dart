@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:sec/ui/dialogs/delete_dialog.dart';
 
-import '../../core/models/agenda.dart';
+import '../../core/models/models.dart';
 import '../../core/utils/date_utils.dart';
-import '../../l10n/app_localizations.dart';
 
 class ExpansionTileState {
   final bool isExpanded;
@@ -15,8 +15,15 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
+  final void Function(String, String, Session) editSession;
+  final void Function(Session) removeSession;
 
-  const AgendaScreen({super.key, required this.agendaDays});
+  const AgendaScreen({
+    super.key,
+    required this.agendaDays,
+    required this.editSession,
+    required this.removeSession,
+  });
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -48,6 +55,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             _expansionTilesStates[date]?.isExpanded ?? false;
         final int tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
         return ExpansionTile(
+          shape: const Border(),
           initiallyExpanded: isExpanded,
           showTrailingIcon: false,
           onExpansionChanged: (value) {
@@ -125,6 +133,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             }),
           ),
           CustomTabBarView(
+            date: date,
             tracks: tracks,
             currentIndex: tabBarIndex,
             onIndexChanged: (value) {
@@ -138,6 +147,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
+            editSession: widget.editSession,
+            removeSession: widget.removeSession,
           ),
         ],
       ),
@@ -154,15 +165,21 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
 // ignore: must_be_immutable
 class CustomTabBarView extends StatefulWidget {
+  final String date;
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
+  final void Function(String, String, Session) editSession;
+  final void Function(Session) removeSession;
 
   CustomTabBarView({
     super.key,
     required this.tracks,
     required this.currentIndex,
     required this.onIndexChanged,
+    required this.editSession,
+    required this.removeSession,
+    required this.date,
   });
 
   @override
@@ -176,7 +193,13 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
   void initState() {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
-      return SessionCards(sessions: widget.tracks[index].sessions);
+      return SessionCards(
+        sessions: widget.tracks[index].sessions,
+        editSession: widget.editSession,
+        removeSession: widget.removeSession,
+        date: widget.date,
+        track: widget.tracks[index].name,
+      );
     });
   }
 
@@ -199,33 +222,75 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 }
 
 class SessionCards extends StatelessWidget {
+  final String date, track;
   final List<Session> sessions;
+  final void Function(String, String, Session) editSession;
+  final void Function(Session) removeSession;
 
-  const SessionCards({super.key, required this.sessions});
+  const SessionCards({
+    super.key,
+    required this.sessions,
+    required this.editSession,
+    required this.removeSession,
+    required this.date,
+    required this.track,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        children: List.generate(sessions.length, (index) {
-          final session = sessions[index];
-          return _buildSessionCard(
-            context,
-            Session(
-              title: session.title,
-              time: session.time,
-              speaker: session.speaker,
-              description: session.description,
-              type: session.type,
-            ),
-          );
-        }),
+        children: sessions.isEmpty
+            ? [
+                SizedBox(
+                  height: 150,
+                  child: Center(child: const Text('No hay sesiones')),
+                ),
+              ]
+            : List.generate(sessions.length, (index) {
+                final session = sessions[index];
+                return GestureDetector(
+                  onTap: () {
+                    editSession(date, track, sessions[index]);
+                  },
+                  child: _buildSessionCard(
+                    context,
+                    Session(
+                      title: session.title,
+                      time: session.time,
+                      speaker: session.speaker,
+                      description: session.description,
+                      type: session.type,
+                      uid: session.uid,
+                    ),
+                    onDeleteTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DeleteDialog(
+                            title: 'Borrar sesión',
+                            message:
+                                '¿Estás seguro de que deseas borrar la sesión??',
+                            onDeletePressed: () {
+                              removeSession(sessions[index]);
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
+                );
+              }),
       ),
     );
   }
 
-  Widget _buildSessionCard(BuildContext context, Session session) {
+  Widget _buildSessionCard(
+    BuildContext context,
+    Session session, {
+    required Function() onDeleteTap,
+  }) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -240,13 +305,19 @@ class SessionCards extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: _getSessionTypeColor(context, session.type),
+                    color: SessionTypes.getSessionTypeColor(
+                      context,
+                      session.type,
+                    ),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     session.time,
                     style: TextStyle(
-                      color: _getSessionTypeTextColor(context, session.type),
+                      color: SessionTypes.getSessionTypeTextColor(
+                        context,
+                        session.type,
+                      ),
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -266,7 +337,7 @@ class SessionCards extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      _getSessionTypeLabel(context, session.type),
+                      SessionTypes.getSessionTypeLabel(context, session.type),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                         fontSize: 10,
@@ -303,66 +374,25 @@ class SessionCards extends StatelessWidget {
                 ],
               ),
             ],
-            if (session.description.isNotEmpty) ...[
+            if (session.description?.isNotEmpty ?? false) ...[
               const SizedBox(height: 8),
               Text(
-                session.description,
+                session.description!,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                onPressed: onDeleteTap,
+                icon: Icon(Icons.delete),
+              ),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  Color _getSessionTypeColor(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return Colors.purple.shade100;
-      case 'talk':
-        return Theme.of(context).colorScheme.primaryContainer;
-      case 'workshop':
-        return Colors.green.shade100;
-      case 'break':
-        return Colors.orange.shade100;
-      default:
-        return Theme.of(context).colorScheme.surfaceContainerHighest;
-    }
-  }
-
-  Color _getSessionTypeTextColor(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return Colors.purple.shade800;
-      case 'talk':
-        return Theme.of(context).colorScheme.onPrimaryContainer;
-      case 'workshop':
-        return Colors.green.shade800;
-      case 'break':
-        return Colors.orange.shade800;
-      default:
-        return Theme.of(context).colorScheme.onSurfaceVariant;
-    }
-  }
-
-  /// Returns the localized label for the given session type
-  String _getSessionTypeLabel(BuildContext context, String type) {
-    switch (type) {
-      case 'keynote':
-        return AppLocalizations.of(context)!.keynote;
-      case 'talk':
-        return AppLocalizations.of(context)!.talk;
-      case 'workshop':
-        return AppLocalizations.of(context)!.workshop;
-      case 'break':
-        return AppLocalizations.of(context)!.sessionBreak;
-      case 'panel':
-        return 'PANEL';
-      default:
-        return 'EVENTO';
-    }
   }
 }

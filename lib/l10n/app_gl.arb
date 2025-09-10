@@ -29,5 +29,19 @@
   "github": "GitHub",
   "website": "Sitio Web",
   "openUrl": "Abrir URL",
-  "changeLanguage": "Cambiar Idioma"
+  "changeLanguage": "Cambiar Idioma",
+  "speakerForm": "Formulario de Relator",
+  "nameLabel": "Nome*",
+  "nameErrorHint": "Por favor, introduce o teu nome",
+  "bioLabel": "Biografía*",
+  "bioErrorHint": "Por favor, introduce a túa biografía",
+  "imageUrlLabel": "URL da Imaxe",
+  "nameHint": "Introduce o nome do relator",
+  "bioHint": "Introduce a biografía do relator",
+  "imageUrlHint": "Introduce a URL da imaxe do relator",
+  "twitterHint": "Introduce a URL de Twitter",
+  "githubHint": "Introduce a URL de GitHub",
+  "linkedinHint": "Introduce a URL de LinkedIn",
+  "websiteHint": "Introduce a URL da páxina web",
+  "saveButton": "Gardar"
 }

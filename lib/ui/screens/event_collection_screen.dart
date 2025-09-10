@@ -3,17 +3,19 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sec/core/models/organization.dart';
 
 import '../../core/core.dart';
-import '../../core/models/organization.dart';
-import '../widgets/language_selector.dart';
+import '../../core/models/models.dart';
+import '../widgets/add_floating_action_button.dart';
+import '../widgets/filter_checkbox.dart';
 import 'screens.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 class EventCollectionScreen extends StatefulWidget {
   /// Site configuration containing event details
-  final List<SiteConfig> config;
+  final List<Event> config;
 
   /// Data loader for fetching content from various sources
   final DataLoader dataLoader;
@@ -44,7 +46,8 @@ class EventCollectionScreen extends StatefulWidget {
 
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
-  List<SiteConfig> events = [];
+  List<Event> events = [], eventsToShow = [];
+  bool showEndedEvents = false, showNextsEvents = true;
 
   /// Initializes the screens list with data loader
   @override
@@ -56,9 +59,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Future<void> loadEventsData() async {
     events = widget.dataLoader.config;
-    var agenda = await widget.dataLoader.loadAgenda();
-    var speakers = await widget.dataLoader.loadSpeakers();
-    var sponsors = await widget.dataLoader.loadSponsors();
+    var agenda = await widget.dataLoader.loadAgenda("2025");
+    var speakers = await widget.dataLoader.loadSpeakers("2025");
+    var sponsors = await widget.dataLoader.loadSponsors("2025");
 
     for (var event in events) {
       event.agenda = agenda.firstWhere(
@@ -75,6 +78,36 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           .whereType<Sponsor>()
           .toList();
     }
+    sortEvents();
+    applyFilters();
+  }
+
+  void applyFilters() {
+    final now = DateTime.now();
+    List<Event> eventsFiltered = [...events];
+    if (showEndedEvents && showNextsEvents) {
+    } else if (showEndedEvents) {
+      eventsFiltered = events.where((event) {
+        final startDate = DateTime.parse(event.eventDates!.startDate);
+        return startDate.isBefore(now);
+      }).toList();
+    } else if (showNextsEvents) {
+      eventsFiltered = events.where((event) {
+        final startDate = DateTime.parse(event.eventDates!.startDate);
+        return startDate.isAfter(now);
+      }).toList();
+    }
+    setState(() {
+      eventsToShow = [...eventsFiltered];
+    });
+  }
+
+  void sortEvents() {
+    events.sort((a, b) {
+      final aDate = DateTime.parse(a.eventDates!.startDate);
+      final bDate = DateTime.parse(b.eventDates!.startDate);
+      return aDate.compareTo(bDate);
+    });
   }
 
   @override
@@ -86,126 +119,161 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
-        actions: [
-          LanguageSelector(
-            currentLocale: widget.locale,
-            onLanguageChanged: widget.localeChanged,
+        actions: <Widget>[
+          FilterCheckbox(
+            label: "Eventos pasados",
+            isChecked: showEndedEvents,
+            onChanged: (value) {
+              showEndedEvents = value;
+              applyFilters();
+            },
+          ),
+          FilterCheckbox(
+            label: "Eventos actuales",
+            isChecked: showNextsEvents,
+            onChanged: (value) {
+              showNextsEvents = value;
+              applyFilters();
+            },
           ),
         ],
       ),
-      body: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
-        itemCount: events.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: widget.crossAxisCount,
-          childAspectRatio: 1.5,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          var item = events[index];
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => EventContainerScreen(
-                    config: widget.config,
-                    dataLoader: widget.dataLoader,
-                    locale: widget.locale,
-                    localeChanged: widget.localeChanged,
-                    agendaDays: item.agenda?.days ?? [],
-                    speakers: item.speakers ?? [],
-                    sponsors: item.sponsors ?? [],
+      body: eventsToShow.isEmpty
+          ? Center(child: Text("No hay organizaciones para mostrar."))
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
+              itemCount: eventsToShow.length,
+              itemBuilder: (BuildContext context, int index) {
+                var item = eventsToShow[index];
+                return Dismissible(
+                  key: Key(item.eventName),
+                  direction: DismissDirection.endToStart,
+                  onDismissed: (direction) async {
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    final indexToRemove = events.indexWhere(
+                      (element) => element.uid == item.uid,
+                    );
+                    events.removeAt(indexToRemove);
+                    setState(() {
+                      eventsToShow = [...events];
+                    });
+                    widget.dataLoader.config.remove(item);
+
+                    await _saveConfigToJson(widget.dataLoader.config);
+                    scaffoldMessenger.showSnackBar(
+                      SnackBar(content: Text("${item.eventName} eliminado")),
+                    );
+                  },
+                  background: Container(
+                    color: Colors.red,
+                    alignment: Alignment.centerRight,
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: const Icon(Icons.delete, color: Colors.white),
                   ),
-                ),
-              );
-            },
-            child: Card(
-              color: Colors.blue.withAlpha(67),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: const Text("Delete Event"),
-                                content: const Text(
-                                  "Are you sure you want to delete this event?",
-                                ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    child: const Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                  TextButton(
-                                    child: const Text("Delete"),
-                                    onPressed: () async {
-                                      Navigator.of(context).pop();
-                                      setState(() {
-                                        events.remove(item);
-                                        widget.dataLoader.config.remove(item);
-                                      });
-                                      await _saveConfigToJson(
-                                        widget.dataLoader.config,
-                                      );
-                                    },
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventContainerScreen(
+                            config: widget.config,
+                            dataLoader: widget.dataLoader,
+                            locale: widget.locale,
+                            localeChanged: widget.localeChanged,
+                            agendaDays: item.agenda?.days ?? [],
+                            speakers: item.speakers ?? [],
+                            sponsors: item.sponsors ?? [],
+                          ),
+                        ),
+                      );
+                    },
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Card(
+                        child: ListTile(
+                          leading: Icon(
+                            Icons.event,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0,
+                            horizontal: 16.0,
+                          ),
+                          title: Text(
                             item.eventName,
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
                             maxLines: 2,
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
-                            style: Theme.of(context).textTheme.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Text(
+                              "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
+                              style: Theme.of(context).textTheme.bodySmall,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ],
+                          trailing: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () async {
+                              final Event? newConfig = await _navigateToForm(
+                                item,
+                              );
+
+                              if (newConfig != null) {
+                                int index = events.indexWhere(
+                                  (element) => element.uid == newConfig.uid,
+                                );
+                                if (index != -1) {
+                                  events[index] = newConfig;
+                                  setState(() {
+                                    eventsToShow = [...events];
+                                  });
+                                }
+                                await _saveConfigToJson(events);
+                              }
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                );
+              },
             ),
-          );
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () async {
+          final Event? newConfig = await _navigateToForm();
+
+          if (newConfig != null) {
+            events.add(newConfig);
+            setState(() {
+              eventsToShow = [...events];
+            });
+            await _saveConfigToJson(events);
+          }
         },
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Future<Event?> _navigateToForm([Event? siteConfig]) async {
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => OrganizationFormScreen(siteConfig: siteConfig),
       ),
     );
   }
 
-  Future<void> _saveConfigToJson(List<SiteConfig> config) async {
+  Future<void> _saveConfigToJson(List<Event> config) async {
     try {
       final directory = Directory.current.path;
       final file = File('$directory/events/2025/config/site.json');
       final jsonString = jsonEncode(
-        config.map((siteConfig) => siteConfig.toJson(siteConfig)).toList(),
+        config.map((event) => event.toJson()).toList(),
       );
       await file.writeAsString(jsonString);
       if (kDebugMode) {
@@ -218,120 +286,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
   }
 
-  /*void _addDay() {}
-
-  /// Shows a dialog with event information including dates, venue, and description
-  void _showEventInfo(BuildContext context,SiteConfig siteConfig) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(siteConfig.eventName),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (siteConfig.eventDates != null) ...[
-              Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${siteConfig.eventDates!.startDate} - ${siteConfig.eventDates!.endDate}',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-            ],
-            if (siteConfig.venue != null) ...[
-              GestureDetector(
-                onTap: () => _openGoogleMaps(siteConfig.venue!),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            siteConfig.venue!.name,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                ),
-                          ),
-                          Text(
-                            siteConfig.venue!.address,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  decoration: TextDecoration.underline,
-                                  decorationColor: Theme.of(
-                                    context,
-                                  ).colorScheme.primary,
-                                ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            AppLocalizations.of(context)!.openUrl,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onSurfaceVariant,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 12),
-            ],
-            if (siteConfig.description != null &&
-                siteConfig.description!.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Text(
-                siteConfig.description!,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ] else ...[
-              const SizedBox(height: 8),
-              Text(AppLocalizations.of(context)!.description),
-            ],
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.close),
-          ),
-        ],
-      ),
-    );
-  }*/
-
   /// Opens Google Maps with the venue location
   /*Future<void> _openGoogleMaps(Venue venue) async {
     final query = Uri.encodeComponent('${venue.name}, ${venue.address}');
@@ -340,70 +294,5 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
     // Use the extension to open URL from context
     await context.openUrl(googleMapsUrl);
-  }*/
-}
-
-class AgendaCard extends StatelessWidget {
-  /// Site configuration containing event details
-  final List<SiteConfig> config;
-
-  /// Data loader for fetching content from various sources
-  final DataLoader dataLoader;
-
-  /// Currently selected locale for the application
-  final Locale locale;
-
-  /// Callback function to be called when the locale changes
-  final ValueChanged<Locale> localeChanged;
-
-  const AgendaCard({
-    super.key,
-    required this.config,
-    required this.dataLoader,
-    required this.locale,
-    required this.localeChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Card(
-        child: ListTile(
-          leading: IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              // ....
-            },
-          ),
-          title: Text('DevFest Spain 2025'),
-          subtitle: Text('12/10/25 - 15/10/25'),
-          trailing: IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              // ....
-            },
-          ),
-          onTap: () async {
-            /* final agendaDays = await _getAgendaDays();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => EventContainerScreen(
-                  config: config,
-                  dataLoader: dataLoader,
-                  locale: locale,
-                  localeChanged: localeChanged,
-                  agendaDays: agendaDays,
-                ),
-              ),
-            );*/
-          },
-        ),
-      ),
-    );
-  }
-
-  /*Future<List<AgendaDay>> _getAgendaDays() async {
-    return await dataLoader.loadAgenda();
   }*/
 }

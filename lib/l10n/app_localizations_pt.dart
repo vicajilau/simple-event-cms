@@ -99,4 +99,46 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Alterar Idioma';
+
+  @override
+  String get speakerForm => 'Formulário do Palestrante';
+
+  @override
+  String get nameLabel => 'Nome*';
+
+  @override
+  String get nameErrorHint => 'Por favor, insira o seu nome';
+
+  @override
+  String get bioLabel => 'Biografia*';
+
+  @override
+  String get bioErrorHint => 'Por favor, insira a sua biografia';
+
+  @override
+  String get imageUrlLabel => 'URL da Imagem';
+
+  @override
+  String get nameHint => 'Insira o nome do palestrante';
+
+  @override
+  String get bioHint => 'Insira a biografia do palestrante';
+
+  @override
+  String get imageUrlHint => 'Insira a URL da imagem do palestrante';
+
+  @override
+  String get twitterHint => 'Insira a URL do Twitter';
+
+  @override
+  String get githubHint => 'Insira a URL do GitHub';
+
+  @override
+  String get linkedinHint => 'Insira a URL do LinkedIn';
+
+  @override
+  String get websiteHint => 'Insira a URL do site';
+
+  @override
+  String get saveButton => 'Salvar';
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/ui/screens/event_collection_screen.dart';
 
 import 'core/models/organization.dart';
-import 'core/services/data_loader.dart';
+import 'core/services/load/data_loader.dart';
 import 'l10n/app_localizations.dart';
 
 /// Main application widget that sets up the Material Design theme and localization

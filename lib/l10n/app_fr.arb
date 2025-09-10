@@ -29,5 +29,19 @@
   "github": "GitHub",
   "website": "Site Web",
   "openUrl": "Ouvrir l'URL",
-  "changeLanguage": "Changer la Langue"
+  "changeLanguage": "Changer la Langue",
+  "speakerForm": "Formulaire d'intervenant",
+  "nameLabel": "Nom*",
+  "nameErrorHint": "Veuillez entrer votre nom",
+  "bioLabel": "Biographie*",
+  "bioErrorHint": "Veuillez entrer votre biographie",
+  "imageUrlLabel": "URL de l'image",
+  "nameHint": "Entrez le nom de l'intervenant",
+  "bioHint": "Entrez la biographie de l'intervenant",
+  "imageUrlHint": "Entrez l'URL de l'image de l'intervenant",
+  "twitterHint": "Entrez l'URL de Twitter",
+  "githubHint": "Entrez l'URL de GitHub",
+  "linkedinHint": "Entrez l'URL de LinkedIn",
+  "websiteHint": "Entrez l'URL du site web",
+  "saveButton": "Enregistrer"
 }

@@ -1,9 +1,10 @@
 {
   "events": [
     {
+      "UID": "df5fd5ds5dsf",
       "eventName": "DevFest Spain 2025",
       "year": "2025",
-      "baseUrl": "https://vicajilau.github.io/event_flutter_template",
+      "baseUrl": "https://github.com/vicajilau/simple-event-cms",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
@@ -21,7 +22,8 @@
       "speakersUID": [
         {"UID": "123456"},
         {"UID": "123457"},
-        {"UID": "123458"}
+        {"UID": "123458"},
+        {"UID": "alfa11212"}
       ],
       "sponsorsUID": [
         {"UID": "456546456"},
@@ -31,9 +33,14 @@
         {"UID": "364973197"},
         {"UID": "726612689"},
         {"UID": "14575333"}
+      ],
+      "rooms": [
+        {"name": "Sala Principal"},
+        {"name": "Sala iMac"}
       ]
     },
     {
+      "UID": "gfhdfdfgdsfg4dfg",
       "eventName": "DevFest Spain 2026",
       "year": "2026",
       "baseUrl": "https://vicajilau.github.io/event_flutter_template",
@@ -41,7 +48,7 @@
       "secondaryColor": "#34A853",
       "eventDates": {
         "startDate": "2026-03-14",
-        "endDate": "2026-03-14",
+        "endDate": "2026-03-15",
         "timezone": "Europe/Madrid"
       },
       "venue": {
@@ -53,7 +60,8 @@
       "agendaUID": "871674",
       "speakersUID": [
         {"UID": "123459"},
-        {"UID": "123460"}
+        {"UID": "123460"},
+        {"UID": "alfa11212"}
       ],
       "sponsorsUID": [
         {"UID": "8sad8asdasd"},
@@ -61,6 +69,10 @@
         {"UID": "bn5e8qewerdd"},
         {"UID": "1ad33dzfdff"},
         {"UID": "lapw52524669"}
+      ],
+      "rooms": [
+        {"name": "Sala Principal"},
+        {"name": "Sala iMac"}
       ]
     }
   ]

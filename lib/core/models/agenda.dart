@@ -1,13 +1,22 @@
 // ignore: dangling_library_doc_comments
+import 'package:sec/core/config/paths_github.dart';
+
+import 'github/github_model.dart';
+
 /// Represents a single day in the event agenda
 /// Contains the date and list of tracks for that day
 /// Day name is automatically derived from the date using localization
 
-class Agenda {
+class Agenda extends GitHubModel {
   final String uid;
   final List<AgendaDay> days;
 
-  Agenda({required this.uid, required this.days});
+  Agenda({
+    required this.uid,
+    required this.days,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
+  });
 
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(
@@ -18,6 +27,7 @@ class Agenda {
     );
   }
 
+  @override
   Map<String, dynamic> toJson() => {"UID": uid, "days": days};
 }
 
@@ -75,6 +85,9 @@ class Track {
 /// Represents an individual session within a track
 /// Contains all the details about a specific presentation, talk, or activity
 class Session {
+  /// UID of the session
+  final String uid;
+
   /// The title of the session
   final String title;
 
@@ -85,17 +98,18 @@ class Session {
   final String speaker;
 
   /// A detailed description of the session content
-  final String description;
+  final String? description;
 
   /// The type of session (e.g., "keynote", "talk", "workshop", "break")
   final String type;
 
   /// Creates a new Session instance
   Session({
+    required this.uid,
     required this.title,
     required this.time,
     required this.speaker,
-    required this.description,
+    this.description,
     required this.type,
   });
 
@@ -103,6 +117,7 @@ class Session {
   /// All fields are required and must be present in the JSON
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
+      uid: json['UID'],
       title: json['title'],
       time: json['time'],
       speaker: json['speaker'],

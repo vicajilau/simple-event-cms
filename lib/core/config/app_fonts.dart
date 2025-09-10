@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AppFonts {
+abstract class AppFonts {
   static const TextStyle titleHeadingForm = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 22,
@@ -10,6 +10,4 @@ class AppFonts {
     fontWeight: FontWeight.bold,
     fontSize: 14,
   );
-
-  AppFonts._();
 }

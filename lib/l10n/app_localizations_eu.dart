@@ -99,4 +99,46 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Hizkuntza aldatu';
+
+  @override
+  String get speakerForm => 'Hizlariaren Inprimakia';
+
+  @override
+  String get nameLabel => 'Izena*';
+
+  @override
+  String get nameErrorHint => 'Mesedez, sartu zure izena';
+
+  @override
+  String get bioLabel => 'Biografia*';
+
+  @override
+  String get bioErrorHint => 'Mesedez, sartu zure biografia';
+
+  @override
+  String get imageUrlLabel => 'Irudiaren URLa';
+
+  @override
+  String get nameHint => 'Sartu hizlariaren izena';
+
+  @override
+  String get bioHint => 'Sartu hizlariaren biografia';
+
+  @override
+  String get imageUrlHint => 'Sartu hizlariaren irudiaren URLa';
+
+  @override
+  String get twitterHint => 'Sartu Twitter URLa';
+
+  @override
+  String get githubHint => 'Sartu GitHub URLa';
+
+  @override
+  String get linkedinHint => 'Sartu LinkedIn URLa';
+
+  @override
+  String get websiteHint => 'Sartu webgunearen URLa';
+
+  @override
+  String get saveButton => 'Gorde';
 }
