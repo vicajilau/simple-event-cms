@@ -54,16 +54,16 @@ class CommonsServices {
     final body = json.encode({
       "message": commitMessage,
       "content": dataInfo,
-      "sha": this.githubService.sha,
+      "sha": githubService.sha,
     });
 
     // Construct the file URL
     final fileUrl =
-        "${this.githubService.repo}/$pathUrl?ref=${this.githubService.branch}";
+        "${githubService.repo}/$pathUrl?ref=${githubService.branch}";
 
     // Initialize GitHub client
     var github = GitHub(
-      auth: Authentication.withToken(this.githubService.token),
+      auth: Authentication.withToken(githubService.token),
     );
 
     // Make the PUT request
