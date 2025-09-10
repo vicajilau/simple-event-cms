@@ -209,7 +209,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       padding: const EdgeInsets.only(top: 8.0),
                       child: Text(
                         _timeErrorMessage!,
-                        style: TextStyle(color: Colors.red),
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 194, 67, 58),
+                          fontSize: 12,
+                        ),
                       ),
                     ),
                 ],
@@ -294,7 +297,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ),
     );
     /*);
-    );*/
+ );*/
   }
 
   Widget _buildTitle() {
@@ -307,33 +310,42 @@ class _EventFormScreenState extends State<EventFormScreen> {
       children: [
         FilledButton(
           onPressed: () {
+            if (!isTimeSelected(_initSessionTime) ||
+                !isTimeSelected(_endSessionTime)) {
+              setState(() {
+                _timeErrorMessage =
+                    'Por favor, seleccionar ambas horas: inicio y final.';
+              });
+            }
             if (_formKey.currentState!.validate()) {
               if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
                 return;
               }
-              _popScreen();
+              Session session = Session(
+                title: _titleController.text,
+                time:
+                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
+                speaker: _selectedSpeaker,
+                description: _descriptionController.text,
+                type: _selectedTalkType,
+                uid: DateTime.now().toString(),
+              );
+              Track track = Track(
+                name: _selectedRoom,
+                color: '',
+                sessions: [session],
+              );
+              AgendaDay agendaDay = AgendaDay(
+                date: _selectedDay,
+                tracks: [track],
+              );
+              Navigator.pop(context, agendaDay);
             }
           },
           child: const Text('Guardar'),
         ),
       ],
     );
-  }
-
-  void _popScreen() {
-    final initTime = _initSessionTime?.format(context) ?? '00:00';
-    final finalTime = _endSessionTime?.format(context) ?? '00:00';
-    Session session = Session(
-      title: _titleController.text,
-      time: '$initTime - $finalTime',
-      speaker: _selectedSpeaker,
-      description: _descriptionController.text,
-      type: _selectedTalkType,
-      uid: DateTime.now().toString(),
-    );
-    Track track = Track(name: _selectedRoom, color: '', sessions: [session]);
-    AgendaDay agendaDay = AgendaDay(date: _selectedDay, tracks: [track]);
-    Navigator.pop(context, agendaDay);
   }
 
   Widget _timeSelector({
@@ -400,5 +412,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
     final endMinutes = endTime.hour * 60 + endTime.minute;
 
     return startMinutes < endMinutes;
+  }
+
+  bool isTimeSelected(TimeOfDay? time) {
+    return time != null && !(time.hour == 0 && time.minute == 0);
   }
 }
