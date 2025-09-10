@@ -20,26 +20,25 @@ class _LoginPageState extends State<LoginPage> {
       // Aquí puedes agregar la lógica de autenticación
       try {
         var github = GitHub(auth: Authentication.withToken(_token));
-        // Intenta realizar una operación simple para verificar la autenticación,
-        // por ejemplo, obtener la información del usuario actual.
-        // Si esto falla, lanzará una excepción que podemos capturar.
-        var user = await github.users.getCurrentUser();
 
         // Si la autenticación es exitosa y no hay excepción:
         if (github.auth.isToken || github.auth.isBasic) { // Verifica si hay autenticación básica o token
           final config = await ConfigLoader.loadConfig();
           final organization = await ConfigLoader.loadOrganization();
           final dataLoader = DataLoader(config, organization); // Pasa la instancia de github
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => EventApp(
-                config: config,
-                dataLoader: dataLoader,
-                organization: organization,
+
+          if(context.mounted){
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => EventApp(
+                  config: config,
+                  dataLoader: dataLoader,
+                  organization: organization,
+                ),
               ),
-            ),
-          );
+            );
+          }
+
         } else {
           // Este bloque podría no ser alcanzado si la autenticación falla antes
           _showErrorSnackbar('Fallo de autenticación desconocido.');
@@ -48,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         // Captura excepciones comunes de autenticación o de red
         // ignore: use_build_context_synchronously
         _showErrorSnackbar('Credenciales incorrectas o problema de red. Por favor, verifica tu email y contraseña.');
-        print('Error de autenticación: $e');
+        debugPrint('Error de autenticación: $e');
       }
     }
   }
