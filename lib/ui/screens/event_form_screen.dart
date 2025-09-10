@@ -39,13 +39,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
   String _selectedDay = '',
       _selectedRoom = '',
       _selectedSpeaker = '',
-      _selectedSessionType = '';
-  final double spacingForRowDropdown = 60, spacingForRowTime = 20;
-
+      _selectedTalkType = '';
+  final double spacingForRowDropdown = 40, spacingForRowTime = 40;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-
   final _formKey = GlobalKey<FormState>();
+  String? _timeErrorMessage;
 
   @override
   void initState() {
@@ -67,10 +66,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
       }
 
       if (widget.data.sessionTypes.contains(session.type.toUpperCase())) {
-        _selectedSessionType = session.type;
+        _selectedTalkType = session.type;
       }
 
-      _descriptionController.text = session.description;
+      _descriptionController.text = session.description ?? '';
 
       final parts = session.time.split(' - ');
       _initSessionTime = TimeUtils.parseTime(parts.first);
@@ -89,175 +88,216 @@ class _EventFormScreenState extends State<EventFormScreen> {
   Widget build(BuildContext context) {
     return FormScreenWrapper(
       pageTitle: 'Creación evento',
-      widgetFormChild: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          spacing: 12,
-          children: [
-            _buildTitle(),
-            SectionInputForm(
-              label: 'Título*',
-              childInput: TextFormField(
-                maxLines: 1,
-                controller: _titleController,
-                decoration: AppDecorations.textFieldDecoration.copyWith(
-                  hintText: 'Introduce título de la charla',
+      widgetFormChild: Padding(
+        padding: EdgeInsetsGeometry.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            spacing: 18,
+            children: [
+              _buildTitle(),
+              SectionInputForm(
+                label: 'Título*',
+                childInput: TextFormField(
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  maxLines: 1,
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
+                    hintText: 'Introduce título de la charla',
+                  ),
+                  controller: _titleController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor, introduce un título de la charla';
+                    }
+                    return null;
+                  },
                 ),
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Nombre';
-                  }
-                  return null;
-                },
               ),
-            ),
-            Row(
-              spacing: spacingForRowDropdown,
-              children: [
-                SectionInputForm(
-                  label: 'Dia del evento*',
-                  childInput: DropdownButton<String>(
-                    value: _selectedDay.isEmpty ? null : _selectedDay,
-                    hint: Text('Selecciona un día'),
-                    items: widget.data.days
-                        .map(
-                          (String day) => DropdownMenuItem<String>(
-                            value: day,
-                            child: Text(day),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (String? day) {
-                      setState(() {
-                        _selectedDay = day ?? '';
-                      });
-                    },
-                  ),
-                ),
-                SectionInputForm(
-                  label: 'Sala*',
-                  childInput: DropdownButton<String>(
-                    value: _selectedRoom.isEmpty ? null : _selectedRoom,
-                    hint: Text('Selecciona una sala'),
-                    items: widget.data.rooms
-                        .map(
-                          (String room) => DropdownMenuItem<String>(
-                            value: room,
-                            child: Text(room),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (String? room) {
-                      setState(() {
-                        _selectedRoom = room ?? '';
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SectionInputForm(
-              label: 'Hora*',
-              childInput: Row(
-                spacing: spacingForRowTime,
+              Row(
+                spacing: spacingForRowDropdown,
                 children: [
-                  _timeSelector(
-                    label: 'Hora de inicio:',
-                    currentTime: _initSessionTime,
-                    onIndexChanged: (value) {
-                      setState(() {
-                        _initSessionTime = value;
-                      });
-                    },
+                  Expanded(
+                    child: SectionInputForm(
+                      label: 'Día del evento*',
+                      childInput: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        initialValue: _selectedDay.isEmpty
+                            ? null
+                            : _selectedDay,
+                        decoration: InputDecoration(
+                          hintText: 'Selecciona un día',
+                        ),
+                        items: widget.data.days
+                            .map(
+                              (day) => DropdownMenuItem(
+                                value: day,
+                                child: Text(day),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (day) => _selectedDay = day ?? '',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, selecciona un día';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
                   ),
-                  _timeSelector(
-                    label: 'Hora final:',
-                    currentTime: _endSessionTime,
-                    onIndexChanged: (value) {
-                      setState(() {
-                        _endSessionTime = value;
-                      });
-                    },
+                  Expanded(
+                    child: SectionInputForm(
+                      label: 'Sala*',
+                      childInput: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        initialValue: _selectedRoom.isEmpty
+                            ? null
+                            : _selectedRoom,
+                        decoration: InputDecoration(
+                          hintText: 'Selecciona una sala',
+                        ),
+                        items: widget.data.rooms
+                            .map(
+                              (room) => DropdownMenuItem(
+                                value: room,
+                                child: Text(room),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (room) => _selectedRoom = room ?? '',
+                        validator: (value) {
+                          return value == null || value.isEmpty
+                              ? 'Por favor, selecciona una sala'
+                              : null;
+                        },
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Row(
-              spacing: spacingForRowDropdown,
-              children: [
-                SectionInputForm(
-                  label: 'Spekaer*',
-                  childInput: DropdownButton<String>(
-                    value: _selectedSpeaker.isEmpty ? null : _selectedSpeaker,
-                    hint: Text('Selecciona un speaker'),
-                    items: widget.data.speakers
-                        .map(
-                          (String speaker) => DropdownMenuItem<String>(
-                            value: speaker,
-                            child: Text(speaker),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (String? speaker) {
-                      setState(() {
-                        _selectedSpeaker = speaker ?? '';
-                      });
-                    },
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    spacing: spacingForRowTime,
+                    children: [
+                      _timeSelector(
+                        label: 'Hora de inicio:\t\t',
+                        currentTime: _initSessionTime,
+                        onIndexChanged: (value) {
+                          setState(() {
+                            _initSessionTime = value;
+                          });
+                        },
+                        isStartTime: true,
+                      ),
+                      _timeSelector(
+                        label: 'Hora final:\t\t',
+                        currentTime: _endSessionTime,
+                        onIndexChanged: (value) {
+                          setState(() {
+                            _endSessionTime = value;
+                          });
+                        },
+                        isStartTime: false,
+                      ),
+                    ],
                   ),
-                ),
-                SectionInputForm(
-                  label: 'Tipo de charla*',
-                  childInput: DropdownButton<String>(
-                    value: _selectedSessionType.isEmpty
-                        ? null
-                        : _selectedSessionType,
-                    hint: Text('Selecciona el tipo de charla'),
-                    items: widget.data.sessionTypes
-                        .map(
-                          (String talkType) => DropdownMenuItem<String>(
-                            value: talkType,
-                            child: Text(talkType),
-                          ),
-                        )
-                        .toList(),
-                    onChanged: (String? talkType) {
-                      setState(() {
-                        _selectedSessionType = talkType ?? '';
-                      });
-                    },
-                  ),
-                ),
-              ],
-            ),
-            SectionInputForm(
-              label: 'Descripción',
-              childInput: TextFormField(
-                maxLines: 4,
-                decoration: AppDecorations.textFieldDecoration.copyWith(
-                  hintText: 'Introduce la descripción...',
-                ),
-                controller: _descriptionController,
-                onChanged: (value) {
-                  _descriptionController.text = value;
-                },
-                // The validator receives the text that the user has entered.
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Nombre';
-                  }
-                  return null;
-                },
+                  if (_timeErrorMessage != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        _timeErrorMessage!,
+                        style: TextStyle(
+                          color: const Color.fromARGB(255, 194, 67, 58),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                ],
               ),
-            ),
-            _buildFooter(),
-          ],
+              Row(
+                spacing: spacingForRowDropdown,
+                children: [
+                  Expanded(
+                    child: SectionInputForm(
+                      label: 'Speaker*',
+                      childInput: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        initialValue: _selectedSpeaker.isEmpty
+                            ? null
+                            : _selectedSpeaker,
+                        decoration: InputDecoration(
+                          hintText: 'Selecciona un speaker',
+                        ),
+                        items: widget.data.speakers
+                            .map(
+                              (speaker) => DropdownMenuItem(
+                                value: speaker,
+                                child: Text(speaker),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (speaker) =>
+                            _selectedSpeaker = speaker ?? '',
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Por favor, selecciona un speaker';
+                          }
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: SectionInputForm(
+                      label: 'Tipo de charla*',
+                      childInput: DropdownButtonFormField(
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        initialValue: _selectedTalkType.isEmpty
+                            ? null
+                            : _selectedTalkType,
+                        decoration: InputDecoration(
+                          hintText: 'Selecciona el tipo de charla',
+                        ),
+                        items: widget.data.sessionTypes
+                            .map(
+                              (type) => DropdownMenuItem(
+                                value: type,
+                                child: Text(type),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (type) => _selectedTalkType = type ?? '',
+                        validator: (value) {
+                          return value == null || value.isEmpty
+                              ? 'Por favor, selecciona el tipo de charla'
+                              : null;
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SectionInputForm(
+                label: 'Descripción',
+                childInput: TextFormField(
+                  maxLines: 4,
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
+                    hintText: 'Introduce la descripción...',
+                  ),
+                  controller: _descriptionController,
+                ),
+              ),
+              _buildFooter(),
+            ],
+          ),
         ),
       ),
     );
     /*);
-    );*/
+ );*/
   }
 
   Widget _buildTitle() {
@@ -270,26 +310,37 @@ class _EventFormScreenState extends State<EventFormScreen> {
       children: [
         FilledButton(
           onPressed: () {
-            final initTime = _initSessionTime?.format(context) ?? '00:00';
-            final finalTime = _endSessionTime?.format(context) ?? '00:00';
-            Session session = Session(
-              title: _titleController.text,
-              time: '$initTime - $finalTime',
-              speaker: _selectedSpeaker,
-              description: _descriptionController.text,
-              type: _selectedSessionType,
-              uid: widget.data.session?.uid ?? DateTime.now().toString(),
-            );
-            Track track = Track(
-              name: _selectedRoom,
-              color: '',
-              sessions: [session],
-            );
-            AgendaDay agendaDay = AgendaDay(
-              date: _selectedDay,
-              tracks: [track],
-            );
-            Navigator.pop(context, agendaDay);
+            if (!isTimeSelected(_initSessionTime) ||
+                !isTimeSelected(_endSessionTime)) {
+              setState(() {
+                _timeErrorMessage =
+                    'Por favor, seleccionar ambas horas: inicio y final.';
+              });
+            }
+            if (_formKey.currentState!.validate()) {
+              if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
+                return;
+              }
+              Session session = Session(
+                title: _titleController.text,
+                time:
+                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
+                speaker: _selectedSpeaker,
+                description: _descriptionController.text,
+                type: _selectedTalkType,
+                uid: DateTime.now().toString(),
+              );
+              Track track = Track(
+                name: _selectedRoom,
+                color: '',
+                sessions: [session],
+              );
+              AgendaDay agendaDay = AgendaDay(
+                date: _selectedDay,
+                tracks: [track],
+              );
+              Navigator.pop(context, agendaDay);
+            }
           },
           child: const Text('Guardar'),
         ),
@@ -301,19 +352,44 @@ class _EventFormScreenState extends State<EventFormScreen> {
     required String label,
     required TimeOfDay? currentTime,
     required ValueChanged<TimeOfDay> onIndexChanged,
+    required bool isStartTime,
   }) {
     return Row(
-      spacing: 12,
       children: [
-        Text(label, style: Theme.of(context).textTheme.bodyMedium),
+        Text(
+          label,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
         GestureDetector(
           onTap: () async {
             final TimeOfDay? pickedTime = await showTimePicker(
               context: context,
-              initialTime: TimeOfDay.now(),
+              initialTime: currentTime ?? TimeOfDay.now(),
             );
-            if (pickedTime != null && pickedTime != _initSessionTime) {
+
+            if (pickedTime != null) {
               onIndexChanged(pickedTime);
+
+              final newStartTime = isStartTime ? pickedTime : _initSessionTime;
+              final newEndTime = isStartTime ? _endSessionTime : pickedTime;
+
+              if (newStartTime != null && newEndTime != null) {
+                bool isValid = isTimeRangeValid(newStartTime, newEndTime);
+
+                setState(() {
+                  _timeErrorMessage = isValid
+                      ? null
+                      : (isStartTime
+                            ? 'La hora de inicio debe ser antes que la hora final.'
+                            : 'La hora final debe ser después de la hora de inicio.');
+                });
+              } else {
+                setState(() {
+                  _timeErrorMessage = null;
+                });
+              }
             }
           },
           child: Container(
@@ -327,5 +403,18 @@ class _EventFormScreenState extends State<EventFormScreen> {
         ),
       ],
     );
+  }
+
+  bool isTimeRangeValid(TimeOfDay? startTime, TimeOfDay? endTime) {
+    if (startTime == null || endTime == null) return false;
+
+    final startMinutes = startTime.hour * 60 + startTime.minute;
+    final endMinutes = endTime.hour * 60 + endTime.minute;
+
+    return startMinutes < endMinutes;
+  }
+
+  bool isTimeSelected(TimeOfDay? time) {
+    return time != null && !(time.hour == 0 && time.minute == 0);
   }
 }
