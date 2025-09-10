@@ -78,7 +78,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
               childInput: TextFormField(
                 controller: _nameController,
                 maxLines: 1,
-                decoration: AppDecorations.textfieldDecoration.copyWith(
+                decoration: AppDecorations.textFieldDecoration.copyWith(
                   hintText: 'Introduce el nombre del evento',
                 ),
                 validator: (value) =>
@@ -94,7 +94,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
                     child: TextFormField(
                       controller: _startDateController,
                       readOnly: true,
-                      decoration: AppDecorations.textfieldDecoration.copyWith(
+                      decoration: AppDecorations.textFieldDecoration.copyWith(
                         hintText: 'YYYY-MM-DD',
                       ),
                       onTap: () => _selectDate(context, _startDateController),
@@ -116,7 +116,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
                       child: TextFormField(
                         controller: _endDateController,
                         readOnly: true,
-                        decoration: AppDecorations.textfieldDecoration.copyWith(
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
                           hintText: 'YYYY-MM-DD',
                         ),
                         onTap: () => _selectDate(context, _endDateController),

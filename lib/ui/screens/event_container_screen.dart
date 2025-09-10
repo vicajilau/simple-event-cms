@@ -5,6 +5,7 @@ import '../../core/models/models.dart';
 import '../../core/services/data_loader.dart';
 import '../../l10n/app_localizations.dart';
 import '../widgets/widgets.dart';
+import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Site configuration containing event details
@@ -43,14 +44,10 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   int _selectedIndex = 0;
   List<AgendaDay> _agendaDays = [];
   List<Speaker> _speakers = [];
-  //List<Sponsor> _sponsors = [];
+  List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
-  List<Widget> get _screens => [
-    AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
-    SpeakersScreen(key: UniqueKey(), speakers: _speakers),
-    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
-  ];
+  List<Widget> _screens = [];
 
   @override
   void initState() {
@@ -63,7 +60,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
       }
     }
     _speakers = [...widget.speakers];
-    //_sponsors = [...widget.sponsors];
+    _sponsors = [...widget.sponsors];
     _screens = [
       AgendaScreen(
         agendaDays: _agendaDays,
@@ -71,8 +68,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         editSession: _editSession,
         removeSession: _deleteSession,
       ),
-      SpeakersScreen(dataLoader: widget.dataLoader, speakers: widget.speakers),
-      SponsorsScreen(dataLoader: widget.dataLoader, sponsors: widget.sponsors),
+      SpeakersScreen(speakers: widget.speakers),
+      SponsorsScreen(sponsors: widget.sponsors),
     ];
   }
 
@@ -106,7 +103,7 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         ],
       ),
       floatingActionButton: AddFloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
           if (_selectedIndex == 0) {
             AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
               _eventFormScreen(),
