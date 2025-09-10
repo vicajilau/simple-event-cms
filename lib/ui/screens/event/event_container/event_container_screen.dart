@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sec/core/core.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -7,12 +6,6 @@ import 'package:sec/ui/screens/screens.dart';
 import 'package:sec/ui/widgets/add_floating_action_button.dart';
 
 class EventContainerScreen extends StatefulWidget {
-  /// Site configuration containing event details
-  final List<Event> config;
-
-  /// Data loader for fetching content from various sources
-  final DataLoader dataLoader;
-
   /// Currently selected locale for the application
   final Locale locale;
 
@@ -25,8 +18,6 @@ class EventContainerScreen extends StatefulWidget {
 
   const EventContainerScreen({
     super.key,
-    required this.config,
-    required this.dataLoader,
     required this.locale,
     required this.localeChanged,
     required this.agendaDays,
