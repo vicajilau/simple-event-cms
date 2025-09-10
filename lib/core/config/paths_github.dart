@@ -4,6 +4,11 @@ class PathsGithub {
   static const String organizationPath = 'config/organization.json';
   static const String speakerPath = 'speakers/speakers.json';
   static const String sponsorPath = 'sponsors/sponsors.json';
+  static const String agendaUpdateMessage = 'Update agendas from JSON';
+  static const String eventUpdateMessage = 'Update events from JSON';
+  static const String organizationUpdateMessage = '';
+  static const String speakerUpdateMessage = 'Update speakers from JSON';
+  static const String sponsorUpdateMessage = 'Update sponsors from JSON';
 
   // You can add more model paths here as needed
   // static const String anotherModel = 'https://example.com/another_model.pt';
