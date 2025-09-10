@@ -4,8 +4,8 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/event.dart';
 import 'package:sec/ui/widgets/add_room.dart';
 
-import '../../../core/models/event_dates.dart';
-import '../../widgets/widgets.dart';
+import '../../core/models/event_dates.dart';
+import '../widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
   final Event? siteConfig;

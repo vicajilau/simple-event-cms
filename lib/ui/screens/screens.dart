@@ -1,8 +1,9 @@
-export 'sponsor/add_sponsor/add_sponsor_screen.dart';
-export 'agenda/agenda_screen.dart';
-export 'event/event_form/event_form_screen.dart';
-export 'login/login_screen.dart';
-export 'organization/organization_form_screen.dart';
-export 'speaker/speaker_form/speaker_form_screen.dart';
-export 'speaker/speaker/speakers_screen.dart';
-export 'sponsor/sponsor/sponsors_screen.dart';
+export 'add_sponsor_screen.dart';
+export 'agenda_screen.dart';
+export 'event_container_screen.dart';
+export 'event_form_screen.dart';
+export 'login_screen.dart';
+export 'organization_form_screen.dart';
+export 'speaker_form_screen.dart';
+export 'speakers_screen.dart';
+export 'sponsors_screen.dart';
