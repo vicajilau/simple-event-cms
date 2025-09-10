@@ -21,4 +21,14 @@ class Organization extends GitHubModel {
     secondaryColorOrganization: json["secondaryColorOrganization"],
     pathUrl: json["baseUrlOrganization"],
   );
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "organizationName": organizationName,
+      "primaryColorOrganization": primaryColorOrganization,
+      "secondaryColorOrganization": secondaryColorOrganization,
+      "baseUrlOrganization": pathUrl,
+    };
+  }
 }
