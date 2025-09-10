@@ -50,16 +50,17 @@ class MyHomePage extends StatelessWidget {
                 final config = await ConfigLoader.loadConfig();
                 final organization = await ConfigLoader.loadOrganization();
                 final dataLoader = DataLoader(config, organization); // Pasa la instancia de github
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EventApp(
-                      config: config,
-                      dataLoader: dataLoader,
-                      organization: organization,
+                if (context.mounted){
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => EventApp(
+                        config: config,
+                        dataLoader: dataLoader,
+                        organization: organization,
+                      ),
                     ),
-                  ),
-                );
+                  );
+                }
               },
               child: Text('Modo Invitado'),
             ),
