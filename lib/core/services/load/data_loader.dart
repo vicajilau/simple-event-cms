@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/models/organization.dart';
 
 import '../../config/config_loader.dart';
 import '../../models/models.dart';

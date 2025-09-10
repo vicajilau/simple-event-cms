@@ -1,17 +1,22 @@
-import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/models/sponsor.dart';
 
 import '../config/paths_github.dart';
 import 'agenda.dart';
 import 'event_dates.dart';
+import 'github/github_model.dart';
 
 /// Main configuration class for the event site
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
+  final String uid;
+
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
+
+  /// the name of the room where the event will take place
+  final List<String> rooms;
 
   /// The year of the event, used for organizing multi-year events
   final String year;
@@ -44,6 +49,8 @@ class Event extends GitHubModel {
 
   /// Creates a new SiteConfig instance
   Event({
+    required this.uid,
+    required this.rooms,
     required this.eventName,
     required this.year,
     required this.baseUrl,
@@ -85,8 +92,12 @@ class Event extends GitHubModel {
               .map((item) => item['UID'] as String)
               .toList()
         : [];
+    List<String> rooms = (json['rooms'] != null)
+        ? (json['rooms'] as List).map((item) => item['name'] as String).toList()
+        : [];
     var agendaUID = json['agendaUID'];
     return Event(
+      uid: json["UID"],
       eventName: json['eventName'],
       year: year,
       baseUrl: baseUrl,
@@ -98,13 +109,15 @@ class Event extends GitHubModel {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
+      rooms: rooms,
     );
   }
 
   /// Converts the SiteConfig instance to a JSON object
-    @override
+  @override
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'eventName': eventName,
       'year': year,
       'baseUrl': baseUrl,
@@ -116,6 +129,7 @@ class Event extends GitHubModel {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
+      'room': rooms.map((name) => {'name': name}).toList(),
     };
   }
 }

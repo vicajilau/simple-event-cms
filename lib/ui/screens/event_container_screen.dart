@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/event_form_screen.dart';
-import 'package:sec/ui/screens/speaker_form_screen.dart';
-import 'package:sec/ui/widgets/add_sponsor_screen.dart';
+import 'package:sec/core/utils/time_utils.dart';
 
 import '../../core/models/agenda.dart';
 import '../../core/models/event.dart';
+import '../../core/models/session_type.dart';
 import '../../core/models/speaker.dart';
 import '../../core/models/sponsor.dart';
 import '../../core/services/load/data_loader.dart';
 import '../../l10n/app_localizations.dart';
+import '../widgets/widgets.dart';
 import 'screens.dart';
 
 class EventContainerScreen extends StatefulWidget {
@@ -51,18 +51,30 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
-  List<Widget> get _screens => [
-    AgendaScreen(key: UniqueKey(), agendaDays: _agendaDays),
-    SpeakersScreen(key: UniqueKey(), speakers: _speakers),
-    SponsorsScreen(key: UniqueKey(), sponsors: _sponsors),
-  ];
+  List<Widget> _screens = [];
 
   @override
   void initState() {
     super.initState();
     _agendaDays = [...widget.agendaDays];
+    _sortAgendaDaysByDate();
+    for (var agendaDay in _agendaDays) {
+      for (var track in agendaDay.tracks) {
+        _sortSessionsByStartTime(track);
+      }
+    }
     _speakers = [...widget.speakers];
     _sponsors = [...widget.sponsors];
+    _screens = [
+      AgendaScreen(
+        agendaDays: _agendaDays,
+        key: UniqueKey(),
+        editSession: _editSession,
+        removeSession: _deleteSession,
+      ),
+      SpeakersScreen(speakers: widget.speakers),
+      SponsorsScreen(sponsors: widget.sponsors),
+    ];
   }
 
   @override
@@ -94,37 +106,65 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
           ),
         ],
       ),
-      floatingActionButton: SizedBox(
-        width: 60,
-        height: 60,
-        child: FloatingActionButton(
-          onPressed: () {
-            if (_selectedIndex == 0) {
-              navigateTo(
-                EventFormScreen(
-                  speakers: ['Fran', 'Ting Mei'],
-                  rooms: [],
-                  days: ['3 de Septiembre', '4 de Septiembre'],
-                  talkTypes: [],
-                ),
-              );
-            } else if (_selectedIndex == 1) {
-              _addSpeaker();
-            } else if (_selectedIndex == 2) {
-              navigateTo(AddSponsorScreen());
-            }
-          },
-          elevation: 16,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          shape: CircleBorder(),
-          child: Icon(Icons.add, color: Colors.white),
-        ),
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () async {
+          if (_selectedIndex == 0) {
+            AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
+              _eventFormScreen(),
+            );
+            _addNewSession(newAgendaDay: newAgendaDay);
+          } else if (_selectedIndex == 1) {
+            _addSpeaker();
+          } else if (_selectedIndex == 2) {
+            _addSponsor();
+          }
+        },
       ),
     );
   }
 
-  void navigateTo(Widget screen) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
+  EventFormScreen _eventFormScreen({
+    String? day,
+    String? track,
+    Session? session,
+  }) {
+    return EventFormScreen(
+      data: EventFormData(
+        speakers: _getSpeakers(),
+        rooms: _getRoomNames(),
+        days: _getAgendaDays(),
+        sessionTypes: SessionTypes.allLabels(context),
+        session: session,
+        track: track ?? '',
+        day: day ?? '',
+      ),
+    );
+  }
+
+  Future<T?> _navigateTo<T>(Widget screen) async {
+    return await Navigator.push<T>(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
+    );
+  }
+
+  List<String> _getAgendaDays() {
+    return _agendaDays.map((agendaDay) {
+      return agendaDay.date;
+    }).toList();
+  }
+
+  List<String> _getRoomNames() {
+    return _agendaDays
+        .expand((agendaDay) => agendaDay.tracks.map((track) => track.name))
+        .toSet()
+        .toList();
+  }
+
+  List<String> _getSpeakers() {
+    return _speakers.map((speaker) {
+      return speaker.name;
+    }).toList();
   }
 
   /// Handles tab selection changes
@@ -146,5 +186,116 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
       });
     }
+  }
+
+  Future<void> _addSponsor() async {
+    final newSponsor = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+    );
+
+    if (newSponsor != null && newSponsor is Sponsor) {
+      setState(() {
+        _sponsors.add(newSponsor);
+        _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
+      });
+    }
+  }
+
+  void _editSession(
+    String date,
+    String trackName,
+    Session sessionToEdit,
+  ) async {
+    AgendaDay agendaDayEdited = await _navigateTo(
+      _eventFormScreen(day: date, track: trackName, session: sessionToEdit),
+    );
+
+    _removeSessionFromAgenda(agendaDayEdited.tracks.first.sessions.first);
+    _insertSessionToAgenda(agendaDayEdited);
+
+    _refreshAgendaState();
+  }
+
+  void _insertSessionToAgenda(AgendaDay agendaDay) {
+    final Session editedSession = agendaDay.tracks.first.sessions.first;
+
+    AgendaDay? targetDay = _agendaDays.firstWhere(
+      (d) => d.date == agendaDay.date,
+      orElse: () => AgendaDay(date: agendaDay.date, tracks: []),
+    );
+
+    Track? targetTrack = targetDay.tracks.firstWhere(
+      (t) => t.name == agendaDay.tracks.first.name,
+      orElse: () {
+        final newTrack = Track(
+          color: '',
+          name: agendaDay.tracks.first.name,
+          sessions: [],
+        );
+        targetDay.tracks.add(newTrack);
+        return newTrack;
+      },
+    );
+
+    targetTrack.sessions.add(editedSession);
+    _sortSessionsByStartTime(targetTrack);
+
+    if (!_agendaDays.any((d) => d.date == targetDay.date)) {
+      _agendaDays.add(targetDay);
+    }
+    _sortAgendaDaysByDate();
+  }
+
+  void _sortSessionsByStartTime(Track track) {
+    track.sessions.sort((a, b) {
+      final aMinutes = TimeUtils.parseStartTimeToMinutes(a.time);
+      final bMinutes = TimeUtils.parseStartTimeToMinutes(b.time);
+      return aMinutes.compareTo(bMinutes);
+    });
+  }
+
+  void _sortAgendaDaysByDate() {
+    _agendaDays.sort((a, b) {
+      final aDate = DateTime.parse(a.date);
+      final bDate = DateTime.parse(b.date);
+      return aDate.compareTo(bDate);
+    });
+  }
+
+  void _removeSessionFromAgenda(Session sessionToRemove) {
+    for (var agendaDay in _agendaDays) {
+      for (var track in agendaDay.tracks) {
+        track.sessions.removeWhere((s) => s.uid == sessionToRemove.uid);
+      }
+    }
+  }
+
+  void _deleteSession(Session sessionToDelete) {
+    _removeSessionFromAgenda(sessionToDelete);
+    _refreshAgendaState();
+  }
+
+  void _addNewSession({AgendaDay? newAgendaDay}) {
+    if (newAgendaDay == null) {
+      return;
+    }
+
+    _insertSessionToAgenda(newAgendaDay);
+
+    setState(() {
+      _refreshAgendaState();
+    });
+  }
+
+  void _refreshAgendaState() {
+    setState(() {
+      _screens[0] = AgendaScreen(
+        agendaDays: _agendaDays,
+        key: UniqueKey(),
+        editSession: _editSession,
+        removeSession: _deleteSession,
+      );
+    });
   }
 }

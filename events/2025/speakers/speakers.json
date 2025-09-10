@@ -1,5 +1,13 @@
 [
   {
+    "UID": "alfa11212",
+    "name": "Equipo organizador",
+    "bio": "Equipo organizador del evento",
+    "image": "",
+    "social": {
+    }
+  },
+  {
     "UID": "123456",
     "name": "Irene Ruiz",
     "bio": "DevRel Intern at Open Gateway (Telefónica) | Developer Advocate | Google Developer Groups Lead and Women Techmakers Ambassador at Google Developers",

@@ -40,7 +40,7 @@ class FormScreenWrapper extends StatelessWidget {
               child: Center(
                 child: Container(
                   constraints: const BoxConstraints(
-                    maxWidth: 550,
+                    maxWidth: 600,
                     maxHeight: 850,
                   ),
                   decoration: BoxDecoration(
