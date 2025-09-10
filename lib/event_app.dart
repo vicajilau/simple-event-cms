@@ -100,7 +100,9 @@ class _EventAppState extends State<EventApp> {
         locale: _locale ?? AppLocalizations.supportedLocales.first,
         localeChanged: _changeLocale,
         organization: widget.organization,
-        viewmodel: EventCollectionViewmodelImp(dataLoader: dataLoader),
+        viewmodel: EventCollectionViewmodelImp(
+          repository: DataRepositoryImp(dataLoader: dataLoader),
+        ),
       ),
     );
   }

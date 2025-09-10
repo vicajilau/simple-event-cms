@@ -4,27 +4,46 @@ import '../../../../core/models/models.dart';
 import '../../../../core/services/load/data_loader.dart';
 
 abstract class DataRepository {
-  // TODO: esto estaba en la view, y hay que analizar donde y como meterlo
-  /*Future<void> _saveConfigToJson(List<Event> config) async {
-    try {
-      final directory = Directory.current.path;
-      final file = File('$directory/events/2025/config/site.json');
-      final jsonString = jsonEncode(
-        config.map((event) => event.toJson()).toList(),
-      );
-      await file.writeAsString(jsonString);
-      if (kDebugMode) {
-        print('Configuración guardada en ${file.path}');
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error al guardar la configuración: $e');
-      }
-    }
-  }*/
+  Future<List<Event>> loadEvents();
+  Future<void> saveEvents(List<Event> events);
 }
 
-abstract class DataRepositoryImp extends DataRepository {}
+class DataRepositoryImp extends DataRepository {
+  final DataLoader dataLoader;
+
+  DataRepositoryImp({required this.dataLoader});
+
+  @override
+  Future<List<Event>> loadEvents() async {
+    final allEvents = dataLoader.config;
+    var agenda = await dataLoader.loadAgenda("2025");
+    var speakers = await dataLoader.loadSpeakers("2025");
+    var sponsors = await dataLoader.loadSponsors("2025");
+
+    for (var event in allEvents) {
+      event.agenda = agenda.firstWhere(
+        (element) => element.uid == event.agendaUID,
+      );
+
+      event.speakers = event.speakersUID
+          .map((uid) => speakers.firstWhere((s) => s.uid == uid))
+          .whereType<Speaker>()
+          .toList();
+
+      event.sponsors = event.sponsorsUID
+          .map((uid) => sponsors.firstWhere((s) => s.uid == uid))
+          .whereType<Sponsor>()
+          .toList();
+    }
+    return allEvents;
+  }
+
+  @override
+  Future<void> saveEvents(List<Event> events) {
+    // TODO: implement saveEvents
+    throw UnimplementedError();
+  }
+}
 
 abstract class ViewModel {
   void setup();
@@ -43,6 +62,8 @@ abstract class EventCollectionViewmodel extends ViewModel {
 }
 
 class EventCollectionViewmodelImp implements EventCollectionViewmodel {
+  DataRepository repository;
+
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
     [],
@@ -54,14 +75,14 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   @override
   bool showEndedEvents = false, showNextEvents = true;
 
-  final DataLoader dataLoader;
   List<Event> _allEvents = [];
 
-  EventCollectionViewmodelImp({required this.dataLoader});
+  EventCollectionViewmodelImp({required this.repository});
 
   @override
-  void setup() {
-    _loadEventsData();
+  void setup() async {
+    _allEvents = await repository.loadEvents();
+    _updateEventsToShow();
   }
 
   @override
@@ -85,8 +106,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   @override
   void addEvent(Event event) {
     _allEvents.add(event);
-    _sortEvents();
-    _applyFilters();
+    _updateEventsToShow();
     // TODO: implement saveConfigToJson
     //await _saveConfigToJson(widget.dataLoader.config);
   }
@@ -96,8 +116,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents[index] = event;
-      _sortEvents();
-      _applyFilters();
+      _updateEventsToShow();
       // TODO: implement saveConfigToJson
       //await _saveConfigToJson(widget.dataLoader.config);
     }
@@ -111,27 +130,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
     //await _saveConfigToJson(widget.dataLoader.config);
   }
 
-  Future<void> _loadEventsData() async {
-    _allEvents = dataLoader.config;
-    var agenda = await dataLoader.loadAgenda("2025");
-    var speakers = await dataLoader.loadSpeakers("2025");
-    var sponsors = await dataLoader.loadSponsors("2025");
-
-    for (var event in _allEvents) {
-      event.agenda = agenda.firstWhere(
-        (element) => element.uid == event.agendaUID,
-      );
-
-      event.speakers = event.speakersUID
-          .map((uid) => speakers.firstWhere((s) => s.uid == uid))
-          .whereType<Speaker>()
-          .toList();
-
-      event.sponsors = event.sponsorsUID
-          .map((uid) => sponsors.firstWhere((s) => s.uid == uid))
-          .whereType<Sponsor>()
-          .toList();
-    }
+  void _updateEventsToShow() {
     _sortEvents();
     _applyFilters();
   }
