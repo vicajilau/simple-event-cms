@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sec/core/models/event.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/models/organization.dart';
 import 'package:sec/core/services/load/data_loader.dart';

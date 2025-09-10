@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/core.dart';
-import 'package:sec/core/models/agenda.dart';
-import 'package:sec/core/models/event.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
