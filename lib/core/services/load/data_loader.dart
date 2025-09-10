@@ -42,7 +42,12 @@ class DataLoader {
       final localPath = 'events/$year/$path';
       content = await rootBundle.loadString(localPath);
     }
-    return json.decode(content);
+    if(path == PathsGithub.eventPath){
+      return json.decode(content)["events"];
+    }else{
+      return json.decode(content);
+    }
+
   }
 
   /// Loads speaker information from the speakers.json file
@@ -67,4 +72,12 @@ class DataLoader {
     List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath, year);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
+
+  /// Loads event information from the events.json file
+  /// Returns a Future containing a list of event data
+  Future<List<Event>> loadEvents(String year) async {
+    List<dynamic> jsonList = await loadData(PathsGithub.eventPath, year);
+    return jsonList.map<Event>((jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>)).toList();
+  }
+
 }

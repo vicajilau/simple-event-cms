@@ -2,8 +2,6 @@ import '../config/paths_github.dart';
 import 'github/github_model.dart';
 
 class Speaker extends GitHubModel {
-  /// Unique identifier of the speaker
-  final String uid;
 
   /// Full name of the speaker
   final String name;
@@ -19,7 +17,7 @@ class Speaker extends GitHubModel {
 
   /// Creates a new Speaker instance
   Speaker({
-    required this.uid,
+    required super.uid,
     required this.name,
     required this.bio,
     required this.image,

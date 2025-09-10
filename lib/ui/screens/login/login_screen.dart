@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/core.dart';
+import 'package:sec/core/models/github/github_services.dart';
 import 'package:sec/event_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,10 +21,12 @@ class _LoginPageState extends State<LoginPage> {
       _formKey.currentState!.save();
       // Aquí puedes agregar la lógica de autenticación
       try {
+
         var github = GitHub(auth: Authentication.withToken(_token));
 
         // Si la autenticación es exitosa y no hay excepción:
         if (github.auth.isToken || github.auth.isBasic) {
+          await SecureInfo.saveGithubKey(GithubService(token:github.auth.authorizationHeaderValue().toString(), repo: await ConfigLoader.loadBaseUrl()));
           // Verifica si hay autenticación básica o token
           final config = await ConfigLoader.loadConfig();
           final organization = await ConfigLoader.loadOrganization();

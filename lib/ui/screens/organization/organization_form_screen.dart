@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/event.dart';
+import 'package:sec/core/services/commons/commons_services.dart';
+import 'package:sec/core/services/update/data_update_info.dart';
 import 'package:sec/ui/widgets/add_room.dart';
 
 import '../../../core/models/event_dates.dart';
 import '../../widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
-  final Event? siteConfig;
-  const OrganizationFormScreen({super.key, this.siteConfig});
+  final Event? event;
+  const OrganizationFormScreen({super.key, this.event});
 
   @override
   State<OrganizationFormScreen> createState() => _OrganizationFormScreenState();
@@ -28,20 +31,20 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.siteConfig?.eventName ?? '';
+    _nameController.text = widget.event?.eventName ?? '';
 
-    final startDate = widget.siteConfig?.eventDates?.startDate;
+    final startDate = widget.event?.eventDates?.startDate;
     if (startDate != null) {
       _startDateController.text = startDate;
     }
 
-    final endtDate = widget.siteConfig?.eventDates?.endDate;
+    final endtDate = widget.event?.eventDates?.endDate;
     _hasEndDate = startDate != endtDate;
     if (endtDate != null && _hasEndDate) {
       _endDateController.text = endtDate;
     }
 
-    _rooms = widget.siteConfig?.rooms ?? [];
+    _rooms = widget.event?.rooms ?? [];
   }
 
   Future<void> _selectDate(
@@ -183,7 +186,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     );
   }
 
-  void _onSubmit() {
+  Future<void> _onSubmit() async {
     if (!_formKey.currentState!.validate()) return;
 
     final eventDates = EventDates(
@@ -194,8 +197,8 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
       timezone: 'Europe/Madrid',
     );
 
-    final siteConfig = Event(
-      uid: widget.siteConfig?.uid ?? DateTime.now().toString(),
+    final event = Event(
+      uid: widget.event?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
       rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
       year: eventDates.startDate.split('-').first,
@@ -213,7 +216,11 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
       speakersUID: ["speaker123"],
       sponsorsUID: ["sponsor123"],
     );
-
-    Navigator.pop(context, siteConfig);
+    var github = await SecureInfo.getGithubKey();
+    if(github != null){
+      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
+      await dataUpdateInfo.updateEvents(event);
+    }
+    Navigator.pop(context, event);
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-
 import '../../../../core/models/agenda.dart';
 import '../../../../core/utils/time_utils.dart';
 import '../../../widgets/widgets.dart';
@@ -309,7 +308,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FilledButton(
-          onPressed: () {
+          onPressed: () async {
             if (!isTimeSelected(_initSessionTime) ||
                 !isTimeSelected(_endSessionTime)) {
               setState(() {
@@ -339,6 +338,15 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 date: _selectedDay,
                 tracks: [track],
               );
+              /*var github = await SecureInfo.getGithubKey();
+              if (github != null) {
+                //todo: update agenda day
+                DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+                  dataCommons: CommonsServices(githubService: github),
+                );
+                await dataUpdateInfo.updateAgendaDay(agendaDay,);
+                Navigator.pop(context, agendaDay);
+              }*/
               Navigator.pop(context, agendaDay);
             }
           },

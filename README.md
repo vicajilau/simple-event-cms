@@ -83,7 +83,7 @@ enum Environment {
 
 class ConfigLoader {
   static Environment currentEnvironment = Environment.dev;
-  static Map<String, dynamic>? siteConfig;
+  static Map<String, dynamic>? event;
   static String baseUrl = _getBaseUrl();
 }
 ```
@@ -92,7 +92,7 @@ class ConfigLoader {
 
 ```dart
 // Event configuration model
-class SiteConfig {
+class event {
   final String eventName;
   final EventDates dates;
   final Venue venue;

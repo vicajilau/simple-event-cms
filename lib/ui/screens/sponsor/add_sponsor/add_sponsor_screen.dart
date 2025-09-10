@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/services/commons/commons_services.dart';
+import 'package:sec/core/services/update/data_update_info.dart';
 import 'package:sec/ui/widgets/widgets.dart';
+
+import '../../../../core/config/secure_info.dart';
 
 class AddSponsorScreen extends StatefulWidget {
   final Sponsor? sponsor;
@@ -114,7 +118,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         final sponsor = Sponsor(
                           uid:
@@ -125,7 +129,12 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                           logo: _logoController.text,
                           website: _websiteController.text,
                         );
-                        Navigator.pop(context, sponsor);
+                        var github = (await SecureInfo.getGithubKey());
+                        if(github != null){
+                          DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
+                          await dataUpdateInfo.updateSponsors(sponsor);
+                          Navigator.pop(context, sponsor);
+                        }
                       }
                     },
                     child: Text(isEditing ? 'Actualizar' : 'Guardar'),

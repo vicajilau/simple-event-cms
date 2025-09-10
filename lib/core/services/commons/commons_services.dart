@@ -18,8 +18,9 @@ class CommonsServices {
     final res = await http.get(
       fileUri,
       headers: {
-        "Authorization": "Bearer ${githubService.token}",
+        "Authorization": "${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
+        "Access-Control-Allow-Origin": "*"
       },
     );
 
@@ -34,19 +35,25 @@ class CommonsServices {
 
   /// Generic function to update data on GitHub
   Future<http.Response> updateData<T>(
-    List<T> data,
+    List<GitHubModel> dataOriginal,
+    GitHubModel data,
     String pathUrl,
     String commitMessage,
   ) async {
+    // Find the index of the data to update, if it exists
+    int indexElementFounded = dataOriginal.indexWhere((item) => item.uid == data.uid);
+
+    // If data exists, replace it; otherwise, add it
+    if (dataOriginal.indexWhere((item) => item.uid == data.uid) != -1) {
+      dataOriginal[indexElementFounded] = data;
+    } else {
+      dataOriginal.add(data);
+    }
+
     // Convert data to JSON and then to base64
     final dataInfo = base64Encode(
       utf8.encode(
-        json.encode(
-          data.map((item) {
-            if (item is GitHubModel) return item.toJson();
-            throw Exception("Unsupported type: ${T.runtimeType}");
-          }).toList(),
-        ),
+        json.encode(dataOriginal.map((item) => item.toJson()).toList()),
       ),
     );
 
@@ -54,7 +61,6 @@ class CommonsServices {
     final body = json.encode({
       "message": commitMessage,
       "content": dataInfo,
-      "sha": githubService.sha,
     });
 
     // Construct the file URL
@@ -68,8 +74,9 @@ class CommonsServices {
     final res = await github.putJSON(
       fileUrl,
       headers: {
-        "Authorization": "Bearer ${githubService.token}",
+        "Authorization": "${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
+        "Access-Control-Allow-Origin": "*"
       },
       body: body,
     );

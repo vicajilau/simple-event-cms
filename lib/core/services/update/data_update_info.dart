@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:sec/core/core.dart';
 
 import '../../models/models.dart';
 import '../commons/commons_services.dart';
@@ -8,16 +9,26 @@ class DataUpdateInfo {
 
   DataUpdateInfo({required this.dataCommons});
 
+  Future<DataLoader> getDataLoader() async {
+    final config = await ConfigLoader.loadConfig();
+    final organization = await ConfigLoader.loadOrganization();
+    return DataLoader(
+      config,
+      organization,
+    );
+  }
+
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<http.Response> updateSpeakers(List<Speaker> speakers) async {
-    if (speakers.isEmpty) {
-      throw Exception("No speakers to update");
-    }
+  Future<http.Response> updateSpeaker(Speaker speakers) async {
+    var dataLoader = await getDataLoader();
+    var speakersOriginal = await dataLoader.loadSpeakers("2025");
+
     return dataCommons.updateData(
+      speakersOriginal,
       speakers,
-      speakers[0].pathUrl,
-      speakers[0].updateMessage,
+      speakers.pathUrl,
+      speakers.updateMessage,
     );
   }
 
@@ -25,40 +36,56 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> updateAgenda(List<Agenda> agenda) async {
-    if (agenda.isEmpty) {
-      throw Exception("No agenda to update");
-    }
+  Future<http.Response> updateAgenda(Agenda agenda) async {
+    var dataLoader = await getDataLoader();
+    var agendaOriginal = await dataLoader.loadAgenda("2025");
     return dataCommons.updateData(
+      agendaOriginal,
       agenda,
-      agenda[0].pathUrl,
-      agenda[0].updateMessage,
+      agenda.pathUrl,
+      agenda.updateMessage,
+    );
+  }
+
+  /// Loads event agenda day information from the agenda.json file
+  /// Parses the JSON structure and returns a list of AgendaDay objects
+  /// with proper type conversion and validation
+  /// Returns a Future containing a list of AgendaDay models
+  Future<http.Response> updateAgendaDay(AgendaDay agendaDay,Agenda agenda) async {
+    var dataLoader = await getDataLoader();
+    var agendaOriginal = await dataLoader.loadAgenda("2025");
+
+    return dataCommons.updateData(
+      agendaOriginal,
+      agenda,
+      agenda.pathUrl,
+      agenda.updateMessage,
     );
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<http.Response> updateSponsors(List<Sponsor> sponsors) async {
-    if (sponsors.isEmpty) {
-      throw Exception("No sponsors to update");
-    }
+  Future<http.Response> updateSponsors(Sponsor sponsors) async {
+    var dataLoader = await getDataLoader();
+    var sponsorOriginal = await dataLoader.loadSponsors("2025");
     return dataCommons.updateData(
+      sponsorOriginal,
       sponsors,
-      sponsors[0].pathUrl,
-      sponsors[0].updateMessage,
+      sponsors.pathUrl,
+      sponsors.updateMessage,
     );
   }
 
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
-  Future<http.Response> updateEvents(List<Event> events) async {
-    if (events.isEmpty) {
-      throw Exception("No events to update");
-    }
+  Future<http.Response> updateEvents(Event event) async {
+    var dataLoader = await getDataLoader();
+    var eventsOriginal = await dataLoader.loadEvents("2025");
     return dataCommons.updateData(
-      events,
-      events[0].pathUrl,
-      events[0].updateMessage,
+      eventsOriginal,
+      event,
+      event.pathUrl,
+      event.updateMessage,
     );
   }
 }

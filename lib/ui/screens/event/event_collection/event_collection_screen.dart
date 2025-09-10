@@ -259,11 +259,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     );
   }
 
-  Future<Event?> _navigateToForm([Event? siteConfig]) async {
+  Future<Event?> _navigateToForm([Event? event]) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => OrganizationFormScreen(siteConfig: siteConfig),
+        builder: (context) => OrganizationFormScreen(event: event),
       ),
     );
   }
