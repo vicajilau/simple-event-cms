@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class AppDecorations {
-  static final InputDecoration textfieldDecoration = InputDecoration(
+abstract class AppDecorations {
+  static final InputDecoration textFieldDecoration = InputDecoration(
     /* hintText: hintText,*/
     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0)),
     enabledBorder: OutlineInputBorder(

@@ -75,7 +75,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 label: AppLocalizations.of(context)?.nameLabel ?? '',
                 childInput: TextFormField(
                   controller: _nameController,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.nameHint ?? '',
                   ),
                   validator: (value) {
@@ -90,7 +90,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 label: AppLocalizations.of(context)?.imageUrlLabel ?? '',
                 childInput: TextFormField(
                   controller: _imageUrlController,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.imageUrlHint ?? '',
                   ),
                 ),
@@ -100,7 +100,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 childInput: TextFormField(
                   controller: _bioController,
                   maxLines: 5,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: AppLocalizations.of(context)?.bioHint ?? '',
                   ),
                   validator: (value) {

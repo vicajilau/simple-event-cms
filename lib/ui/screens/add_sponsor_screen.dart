@@ -67,29 +67,33 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                 label: 'Nombre*',
                 childInput: TextFormField(
                   controller: _nameController,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce el nombre del Sponsor',
                   ),
                   validator: (value) =>
                       value == null || value.isEmpty ? 'Nombre' : null,
                 ),
               ),
+
               SectionInputForm(
                 label: 'Logo*',
                 childInput: TextFormField(
+                  maxLines: 1,
                   controller: _logoController,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce la URL del logo',
                   ),
                   validator: (value) =>
                       value == null || value.isEmpty ? 'Logo' : null,
                 ),
               ),
+
               SectionInputForm(
                 label: 'Web*',
                 childInput: TextFormField(
+                  maxLines: 1,
                   controller: _websiteController,
-                  decoration: AppDecorations.textfieldDecoration.copyWith(
+                  decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: 'Introduce la URL de la web',
                   ),
                   validator: (value) =>
