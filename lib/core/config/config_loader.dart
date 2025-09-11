@@ -4,7 +4,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
 import '../models/models.dart';
-import '../models/organization.dart';
 
 class ConfigLoader {
   // Lee las variables de entorno. Si no se definen, usa valores por defecto.
