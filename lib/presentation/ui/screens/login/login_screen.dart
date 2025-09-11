@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
-import 'package:sec/core/core.dart';
-import 'package:sec/event_app.dart';
+import 'package:go_router/go_router.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   String _token = '';
 
@@ -24,23 +23,9 @@ class _LoginPageState extends State<LoginPage> {
         // Si la autenticación es exitosa y no hay excepción:
         if (github.auth.isToken || github.auth.isBasic) {
           // Verifica si hay autenticación básica o token
-          final config = await ConfigLoader.loadConfig();
-          final organization = await ConfigLoader.loadOrganization();
-          final dataLoader = DataLoader(
-            config,
-            organization,
-          ); // Pasa la instancia de github
-
           if (context.mounted) {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => EventApp(
-                  config: config,
-                  dataLoader: dataLoader,
-                  organization: organization,
-                ),
-              ),
-            );
+            // Redirigir a la pantalla de eventos después del login exitoso
+            context.go('/events');
           }
         } else {
           // Este bloque podría no ser alcanzado si la autenticación falla antes

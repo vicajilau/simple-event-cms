@@ -1,80 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:sec/data/repositories/sec_repository_imp.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
-import 'package:sec/presentation/view_models/event_collection_view_model.dart';
+import 'package:sec/core/routing/app_router.dart';
+import 'package:sec/l10n/app_localizations.dart';
 
-import 'core/models/organization.dart';
-import 'data/local_data/data_loader.dart';
-import 'l10n/app_localizations.dart';
-
-/// Main application widget that sets up the Material Design theme and localization
-/// Supports multiple languages and environments (dev, pre, pro)
-class EventApp extends StatefulWidget {
-  /// Site configuration containing event details and styling
-  final dynamic config;
-
-  /// Data loader for fetching speakers, agenda, and sponsors
-  final DataLoader dataLoader;
-
-  final Organization organization;
-
-  const EventApp({
-    super.key,
-    required this.config,
-    required this.dataLoader,
-    required this.organization,
-  });
-
-  @override
-  State<EventApp> createState() => _EventAppState();
-}
-
-class _EventAppState extends State<EventApp> {
-  /// Currently selected locale for the application
-  Locale? _locale;
-
-  /// Changes the application locale
-  void _changeLocale(Locale locale) {
-    setState(() {
-      _locale = locale;
-    });
-  }
+/// Aplicación unificada que maneja tanto la vista de eventos como el panel de administración
+/// Usa GoRouter para navegación basada en rutas
+class EventApp extends StatelessWidget {
+  const EventApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final dataLoader = widget.dataLoader;
-    final organization = widget.organization;
-    final primaryColor = Color(
-      int.parse(
-        organization.primaryColorOrganization.replaceFirst('#', '0xff'),
-      ),
-    );
-    final secondaryColor = Color(
-      int.parse(
-        organization.secondaryColorOrganization.replaceFirst('#', '0xff'),
-      ),
-    );
-
-    return MaterialApp(
-      title: organization.organizationName,
+    return MaterialApp.router(
+      title: 'Simple Event CMS',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      locale: _locale,
+      routerConfig: AppRouter.router,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-          seedColor: primaryColor,
-          secondary: secondaryColor,
+          seedColor: const Color(0xFF4285F4),
           brightness: Brightness.light,
         ),
-        appBarTheme: AppBarTheme(
+        appBarTheme: const AppBarTheme(
           centerTitle: true,
           elevation: 0,
-          backgroundColor: primaryColor,
+          backgroundColor: Color(0xFF4285F4),
           foregroundColor: Colors.white,
-          titleTextStyle: const TextStyle(
+          titleTextStyle: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -89,22 +41,12 @@ class _EventAppState extends State<EventApp> {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
+            backgroundColor: const Color(0xFF4285F4),
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          ),
-        ),
-      ),
-      home: EventCollectionScreen(
-        locale: _locale ?? AppLocalizations.supportedLocales.first,
-        localeChanged: _changeLocale,
-        organization: widget.organization,
-        viewmodel: EventCollectionViewModelImp(
-          useCase: EventUseCaseImp(
-            repository: SecRepositoryImp(dataLoader: dataLoader),
           ),
         ),
       ),
