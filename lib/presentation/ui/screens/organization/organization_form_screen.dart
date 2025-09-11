@@ -38,7 +38,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
       _endDateController.text = endtDate;
     }
 
-    _rooms = widget.siteConfig?.rooms ?? [];
+    _rooms = widget.siteConfig?.tracks ?? [];
   }
 
   Future<void> _selectDate(
@@ -194,7 +194,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     final siteConfig = Event(
       uid: widget.siteConfig?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
-      rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
+      tracks: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
       year: eventDates.startDate.split('-').first,
       baseUrl: "https://hardcode.base.url",
       primaryColor: "#4285F4",

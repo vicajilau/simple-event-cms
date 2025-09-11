@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
-import 'package:sec/presentation/view_models/event_collection_view_model.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 
 import 'core/models/organization.dart';
 import 'data/local_data/data_loader.dart';
@@ -11,7 +11,7 @@ import 'l10n/app_localizations.dart';
 /// Main application widget that sets up the Material Design theme and localization
 /// Supports multiple languages and environments (dev, pre, pro)
 class EventApp extends StatefulWidget {
-  /// Site configuration containing event details and styling
+  /// Site configuration containing event_collection details and styling
   final dynamic config;
 
   /// Data loader for fetching speakers, agenda, and sponsors

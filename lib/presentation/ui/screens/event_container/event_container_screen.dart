@@ -5,24 +5,22 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
+import 'event_container_view_model.dart';
+
 class EventContainerScreen extends StatefulWidget {
+  final EventContainerViewModel viewModel;
+
   /// Currently selected locale for the application
   final Locale locale;
 
   /// Callback function to be called when the locale changes
   final ValueChanged<Locale> localeChanged;
 
-  final List<AgendaDay> agendaDays;
-  final List<Speaker> speakers;
-  final List<Sponsor> sponsors;
-
   const EventContainerScreen({
     super.key,
     required this.locale,
     required this.localeChanged,
-    required this.agendaDays,
-    required this.speakers,
-    required this.sponsors,
+    required this.viewModel,
   });
 
   @override
@@ -34,7 +32,6 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   int _selectedIndex = 0;
   List<AgendaDay> _agendaDays = [];
   List<Speaker> _speakers = [];
-  List<Sponsor> _sponsors = [];
 
   /// List of screens to display in the IndexedStack
   List<Widget> _screens = [];
@@ -42,15 +39,14 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
   @override
   void initState() {
     super.initState();
-    _agendaDays = [...widget.agendaDays];
+    _agendaDays = [...widget.viewModel.getAgenda().days];
     _sortAgendaDaysByDate();
     for (var agendaDay in _agendaDays) {
       for (var track in agendaDay.tracks) {
         _sortSessionsByStartTime(track);
       }
     }
-    _speakers = [...widget.speakers];
-    _sponsors = [...widget.sponsors];
+    _speakers = [...widget.viewModel.getSpeakers()];
     _screens = [
       AgendaScreen(
         agendaDays: _agendaDays,
@@ -58,8 +54,8 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         editSession: _editSession,
         removeSession: _deleteSession,
       ),
-      SpeakersScreen(speakers: widget.speakers),
-      SponsorsScreen(sponsors: widget.sponsors),
+      SpeakersScreen(speakers: widget.viewModel.getSpeakers()),
+      SponsorsScreen(sponsors: widget.viewModel.getSponsors()),
     ];
   }
 
@@ -96,25 +92,31 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
         onPressed: () async {
           if (_selectedIndex == 0) {
             AgendaDay? newAgendaDay = await _navigateTo<AgendaDay>(
-              _eventFormScreen(),
+              _agendaFormScreen(),
             );
             _addNewSession(newAgendaDay: newAgendaDay);
           } else if (_selectedIndex == 1) {
             _addSpeaker();
           } else if (_selectedIndex == 2) {
-            _addSponsor();
+            final sponsor = await Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+            );
+            if (sponsor != null) {
+              widget.viewModel.addSponsor(sponsor);
+            }
           }
         },
       ),
     );
   }
 
-  EventFormScreen _eventFormScreen({
+  AgendaFormScreen _agendaFormScreen({
     String? day,
     String? track,
     Session? session,
   }) {
-    return EventFormScreen(
+    return AgendaFormScreen(
       data: EventFormData(
         speakers: _getSpeakers(),
         rooms: _getRoomNames(),
@@ -174,27 +176,13 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     }
   }
 
-  Future<void> _addSponsor() async {
-    final newSponsor = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
-    );
-
-    if (newSponsor != null && newSponsor is Sponsor) {
-      setState(() {
-        _sponsors.add(newSponsor);
-        _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
-      });
-    }
-  }
-
   void _editSession(
     String date,
     String trackName,
     Session sessionToEdit,
   ) async {
     AgendaDay agendaDayEdited = await _navigateTo(
-      _eventFormScreen(day: date, track: trackName, session: sessionToEdit),
+      _agendaFormScreen(day: date, track: trackName, session: sessionToEdit),
     );
 
     _removeSessionFromAgenda(agendaDayEdited.tracks.first.sessions.first);

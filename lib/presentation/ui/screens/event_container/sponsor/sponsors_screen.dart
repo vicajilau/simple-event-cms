@@ -4,7 +4,7 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-/// Screen that displays event sponsors in a responsive grid layout
+/// Screen that displays event_collection sponsors in a responsive grid layout
 /// Fetches sponsor data and displays logos with clickable links
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information

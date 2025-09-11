@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/presentation/ui/screens/event_container/event_container_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../../../view_models/event_collection_view_model.dart';
+import 'event_collection_view_model.dart';
 
-/// Main home screen widget that displays the event information and navigation
+/// Main home screen widget that displays the event_collection information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 class EventCollectionScreen extends StatefulWidget {
   final EventCollectionViewModel viewmodel;
@@ -106,9 +107,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             builder: (context) => EventContainerScreen(
                               locale: widget.locale,
                               localeChanged: widget.localeChanged,
-                              agendaDays: item.agenda?.days ?? [],
-                              speakers: item.speakers ?? [],
-                              sponsors: item.sponsors ?? [],
+                              viewModel: EventContainerViewModelImp(
+                                event: item,
+                              ),
                             ),
                           ),
                         );
