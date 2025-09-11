@@ -5,7 +5,6 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-
 class EventFormData {
   final List<String> rooms;
   final List<String> days;
