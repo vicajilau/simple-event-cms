@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/login_screen.dart';
+import 'package:sec/data/local_data/data_loader.dart';
+import 'package:sec/presentation/ui/screens/login/login_screen.dart';
 
 import 'core/config/config_loader.dart';
-import 'core/services/load/data_loader.dart';
 import 'event_app.dart';
 
 void main() {
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // MaterialApp provides the Navigator
+      debugShowCheckedModeBanner: false,
       title: 'Login con GitHub',
       home: MyHomePage(), // Use a separate widget for the home screen
     );

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/event_collection_screen.dart';
+import 'package:sec/data/repositories/sec_repository_imp.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/view_models/event_collection_view_model.dart';
 
 import 'core/models/organization.dart';
-import 'core/services/load/data_loader.dart';
+import 'data/local_data/data_loader.dart';
 import 'l10n/app_localizations.dart';
 
 /// Main application widget that sets up the Material Design theme and localization
@@ -40,7 +43,6 @@ class _EventAppState extends State<EventApp> {
 
   @override
   Widget build(BuildContext context) {
-    final config = widget.config;
     final dataLoader = widget.dataLoader;
     final organization = widget.organization;
     final primaryColor = Color(
@@ -97,11 +99,14 @@ class _EventAppState extends State<EventApp> {
         ),
       ),
       home: EventCollectionScreen(
-        config: config,
-        dataLoader: dataLoader,
         locale: _locale ?? AppLocalizations.supportedLocales.first,
         localeChanged: _changeLocale,
         organization: widget.organization,
+        viewmodel: EventCollectionViewModelImp(
+          useCase: EventUseCaseImp(
+            repository: SecRepositoryImp(dataLoader: dataLoader),
+          ),
+        ),
       ),
     );
   }
