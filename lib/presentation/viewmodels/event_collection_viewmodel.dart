@@ -1,15 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 import 'viewmodel_common.dart';
 
 abstract class EventCollectionViewmodel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract final ValueNotifier<bool> isLoading;
-  abstract bool showEndedEvents, showNextEvents;
-  void toggleShowEndedEvents(bool value);
-  void toggleShowNextEvents(bool value);
+  abstract EventFilter currentFilter;
+  void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
   void editEvent(Event event);
   void deleteEvent(Event event);
@@ -27,7 +27,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
 
   @override
-  bool showEndedEvents = false, showNextEvents = true;
+  EventFilter currentFilter = EventFilter.all;
 
   List<Event> _allEvents = [];
 
@@ -46,14 +46,8 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   }
 
   @override
-  void toggleShowEndedEvents(bool value) {
-    showEndedEvents = value;
-    _applyFilters();
-  }
-
-  @override
-  void toggleShowNextEvents(bool value) {
-    showNextEvents = value;
+  void onEventFilterChanged(EventFilter value) {
+    currentFilter = value;
     _applyFilters();
   }
 
@@ -92,17 +86,22 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   void _applyFilters() {
     final now = DateTime.now();
     List<Event> eventsFiltered = [..._allEvents];
-    if (showEndedEvents && showNextEvents) {
-    } else if (showEndedEvents) {
-      eventsFiltered = _allEvents.where((event) {
-        final startDate = DateTime.parse(event.eventDates!.startDate);
-        return startDate.isBefore(now);
-      }).toList();
-    } else if (showNextEvents) {
-      eventsFiltered = _allEvents.where((event) {
-        final startDate = DateTime.parse(event.eventDates!.startDate);
-        return startDate.isAfter(now);
-      }).toList();
+    switch (currentFilter) {
+      case EventFilter.all:
+        // Mostrar todos los eventos
+        break;
+      case EventFilter.past:
+        eventsFiltered = eventsFiltered.where((event) {
+          final startDate = DateTime.parse(event.eventDates!.startDate);
+          return startDate.isBefore(now);
+        }).toList();
+        break;
+      case EventFilter.current:
+        eventsFiltered = eventsFiltered.where((event) {
+          final startDate = DateTime.parse(event.eventDates!.startDate);
+          return startDate.isAfter(now);
+        }).toList();
+        break;
     }
     eventsToShow.value = eventsFiltered;
   }

@@ -52,18 +52,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       appBar: AppBar(
         title: Text(widget.organization.organizationName),
         actions: <Widget>[
-          FilterCheckbox(
-            label: "Eventos pasados",
-            isChecked: widget.viewmodel.showEndedEvents,
-            onChanged: (value) {
-              widget.viewmodel.toggleShowEndedEvents(value);
-            },
-          ),
-          FilterCheckbox(
-            label: "Eventos actuales",
-            isChecked: widget.viewmodel.showNextEvents,
-            onChanged: (value) {
-              widget.viewmodel.toggleShowNextEvents(value);
+          EventFilterButton(
+            selectedFilter: widget.viewmodel.currentFilter,
+            onFilterChanged: (EventFilter filter) {
+              widget.viewmodel.onEventFilterChanged(filter);
             },
           ),
         ],
