@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 enum EventFilter {
-  all('Todos'),
-  past('Eventos pasados'),
-  current('Eventos actuales');
+  all('All'),
+  past('Past Events'),
+  current('Current Events');
 
   const EventFilter(this.label);
   final String label;
