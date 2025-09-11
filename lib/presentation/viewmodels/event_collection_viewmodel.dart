@@ -88,7 +88,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
     List<Event> eventsFiltered = [..._allEvents];
     switch (currentFilter) {
       case EventFilter.all:
-        // Mostrar todos los eventos
+        // Show all events
         break;
       case EventFilter.past:
         eventsFiltered = eventsFiltered.where((event) {
