@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/ui/screens/screens.dart';
-import 'package:sec/ui/widgets/add_floating_action_button.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventContainerScreen extends StatefulWidget {
   /// Currently selected locale for the application

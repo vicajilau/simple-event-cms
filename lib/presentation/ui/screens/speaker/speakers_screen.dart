@@ -1,10 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/speaker/speaker_form/speaker_form_screen.dart';
-
-import '../../../../core/models/models.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../widgets/widgets.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 /// Screen that displays a grid of speakers with their information and social links
 /// Fetches speaker data from the configured data source and displays it in cards

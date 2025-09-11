@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/ui/widgets/widgets.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class AddSponsorScreen extends StatefulWidget {
   final Sponsor? sponsor;

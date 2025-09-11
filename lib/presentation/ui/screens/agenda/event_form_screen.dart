@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/time_utils.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../../../../core/models/agenda.dart';
-import '../../../../core/utils/time_utils.dart';
-import '../../../widgets/widgets.dart';
 
 class EventFormData {
   final List<String> rooms;

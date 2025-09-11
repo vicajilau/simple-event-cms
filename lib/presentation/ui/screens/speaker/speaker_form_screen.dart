@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
-import 'package:sec/core/models/speaker.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/ui/widgets/widgets.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final Speaker? speaker;

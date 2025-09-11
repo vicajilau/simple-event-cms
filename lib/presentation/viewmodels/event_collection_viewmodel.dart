@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
-import '../../../../core/models/models.dart';
-import '../../../../core/services/load/data_loader.dart';
+import '../../core/models/models.dart';
+import '../../core/services/load/data_loader.dart';
 
 abstract class DataRepository {
   Future<List<Event>> loadEvents();
@@ -107,8 +107,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   void addEvent(Event event) {
     _allEvents.add(event);
     _updateEventsToShow();
-    // TODO: implement saveConfigToJson
-    //await _saveConfigToJson(widget.dataLoader.config);
+    repository.saveEvents(_allEvents);
   }
 
   @override
@@ -117,17 +116,14 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      // TODO: implement saveConfigToJson
-      //await _saveConfigToJson(widget.dataLoader.config);
+      repository.saveEvents(_allEvents);
     }
   }
 
   @override
   void deleteEvent(int index) async {
     _allEvents.removeAt(index);
-
-    // TODO: implement saveConfigToJson
-    //await _saveConfigToJson(widget.dataLoader.config);
+    repository.saveEvents(_allEvents);
   }
 
   void _updateEventsToShow() {

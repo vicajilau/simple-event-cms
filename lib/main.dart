@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/login/login_screen.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
 
 import 'core/config/config_loader.dart';
 import 'core/services/load/data_loader.dart';

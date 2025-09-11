@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/models/event.dart';
-import 'package:sec/ui/widgets/add_room.dart';
-
-import '../../../core/models/event_dates.dart';
-import '../../widgets/widgets.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
   final Event? siteConfig;

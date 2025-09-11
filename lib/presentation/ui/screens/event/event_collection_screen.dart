@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/ui/screens/screens.dart';
-import 'package:sec/ui/widgets/widgets.dart';
-
-import 'event_collection_viewmodel.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
+import 'package:sec/presentation/viewmodels/viewmodels.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors

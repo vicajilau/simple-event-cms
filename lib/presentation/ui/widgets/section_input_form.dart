@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/config/app_fonts.dart';
+import '../../../core/config/app_fonts.dart';
 
 class SectionInputForm extends StatelessWidget {
   final String label;

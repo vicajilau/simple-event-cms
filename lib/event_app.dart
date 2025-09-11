@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sec/ui/screens/event/event_collection/event_collection_screen.dart';
-import 'package:sec/ui/screens/event/event_collection/event_collection_viewmodel.dart';
+import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/viewmodels/viewmodels.dart';
 
 import 'core/models/organization.dart';
 import 'core/services/load/data_loader.dart';
