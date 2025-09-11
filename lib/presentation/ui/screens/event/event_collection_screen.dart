@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-import 'package:sec/presentation/viewmodels/event_collection_viewmodel.dart';
+
+import '../../../view_models/event_collection_view_model.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 class EventCollectionScreen extends StatefulWidget {
-  final EventCollectionViewmodel viewmodel;
+  final EventCollectionViewModel viewmodel;
 
   /// Currently selected locale for the application
   final Locale locale;

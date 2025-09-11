@@ -3,9 +3,9 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import 'viewmodel_common.dart';
+import 'view_model_common.dart';
 
-abstract class EventCollectionViewmodel extends ViewModelCommon {
+abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract final ValueNotifier<bool> isLoading;
   abstract EventFilter currentFilter;
@@ -15,7 +15,7 @@ abstract class EventCollectionViewmodel extends ViewModelCommon {
   void deleteEvent(Event event);
 }
 
-class EventCollectionViewmodelImp implements EventCollectionViewmodel {
+class EventCollectionViewModelImp implements EventCollectionViewModel {
   EventUseCase useCase;
 
   @override
@@ -31,10 +31,10 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
 
   List<Event> _allEvents = [];
 
-  EventCollectionViewmodelImp({required this.useCase});
+  EventCollectionViewModelImp({required this.useCase});
 
   @override
-  void setup() async {
+  Future<void> setup() async {
     _allEvents = await useCase.getComposedEvents();
     _updateEventsToShow();
   }

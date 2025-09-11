@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
-import 'package:sec/presentation/viewmodels/event_collection_viewmodel.dart';
+import 'package:sec/presentation/view_models/event_collection_view_model.dart';
 
 import 'core/models/organization.dart';
 import 'data/local_data/data_loader.dart';
@@ -102,7 +102,7 @@ class _EventAppState extends State<EventApp> {
         locale: _locale ?? AppLocalizations.supportedLocales.first,
         localeChanged: _changeLocale,
         organization: widget.organization,
-        viewmodel: EventCollectionViewmodelImp(
+        viewmodel: EventCollectionViewModelImp(
           useCase: EventUseCaseImp(
             repository: SecRepositoryImp(dataLoader: dataLoader),
           ),
