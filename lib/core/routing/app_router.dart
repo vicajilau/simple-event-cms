@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:flutter/material.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 class AppRouter {
@@ -22,25 +21,13 @@ class AppRouter {
         name: 'admin_login',
         builder: (context, state) => const LoginScreen(),
       ),
-      // Ruta de detalle de evento
+      // Ruta de detalle de evento - ahora usa inyección de dependencias
       GoRoute(
         path: '/event/:eventId',
         name: 'event_detail',
         builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>?;
-          if (extra != null) {
-            return EventContainerScreen(
-              locale: extra['locale'] ?? const Locale('es'),
-              localeChanged: (locale) {
-                // TODO: Implementar cambio de idioma global
-              },
-              agendaDays: extra['agendaDays'] ?? [],
-              speakers: extra['speakers'] ?? [],
-              sponsors: extra['sponsors'] ?? [],
-            );
-          }
-          // Fallback si no se pasan datos
-          return const EventCollectionScreen();
+          final eventId = state.pathParameters['eventId'] ?? '';
+          return EventDetailScreen(eventId: eventId);
         },
       ),
     ],

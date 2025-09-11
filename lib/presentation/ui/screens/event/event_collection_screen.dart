@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/config/config_loader.dart';
-import 'package:sec/data/local_data/data_loader.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_models/event_collection_view_model.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
-import 'package:sec/data/repositories/sec_repository_imp.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
-/// Now self-contained and loads its own configuration
+/// Now uses dependency injection for better testability and architecture
 class EventCollectionScreen extends StatefulWidget {
   final int crossAxisCount;
 
@@ -37,16 +35,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Future<void> _loadConfiguration() async {
     try {
-      final config = await ConfigLoader.loadConfig();
-      final organization = await ConfigLoader.loadOrganization();
-      final dataLoader = DataLoader(config, organization);
+      // Usar inyección de dependencias en lugar de crear instancias manualmente
+      final useCase = getIt<EventUseCase>();
+      final organization = getIt<Organization>();
 
-      final viewmodel = EventCollectionViewModelImp(
-        useCase: EventUseCaseImp(
-          repository: SecRepositoryImp(dataLoader: dataLoader),
-        ),
-      );
-
+      final viewmodel = EventCollectionViewModelImp(useCase: useCase);
       await viewmodel.setup();
 
       setState(() {

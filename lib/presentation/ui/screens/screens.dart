@@ -2,6 +2,7 @@ export 'agenda/agenda_screen.dart';
 export 'agenda/event_form_screen.dart';
 export 'event/event_collection_screen.dart';
 export 'event/event_container_screen.dart';
+export 'event/event_detail_screen.dart';
 export 'login/admin_screen.dart';
 export 'login/login_screen.dart';
 export 'organization/organization_form_screen.dart';
