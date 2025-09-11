@@ -19,18 +19,36 @@ class EventUseCaseImp implements EventUseCase {
     var sponsors = await repository.loadSponsors();
 
     for (var event in allEvents) {
-      event.agenda = agenda.firstWhere(
-        (element) => element.uid == event.agendaUID,
-        orElse: () => null,
-      );
+      // Find agenda, return null if not found
+      try {
+        event.agenda = agenda.firstWhere(
+          (element) => element.uid == event.agendaUID,
+        );
+      } on StateError {
+        event.agenda = null;
+      }
 
+      // Find speakers, filter out nulls
       event.speakers = event.speakersUID
-          .map((uid) => speakers.firstWhere((s) => s.uid == uid, orElse: () => null))
+          .map((uid) {
+            try {
+              return speakers.firstWhere((s) => s.uid == uid);
+            } on StateError {
+              return null;
+            }
+          })
           .whereType<Speaker>()
           .toList();
 
+      // Find sponsors, filter out nulls
       event.sponsors = event.sponsorsUID
-          .map((uid) => sponsors.firstWhere((s) => s.uid == uid, orElse: () => null))
+          .map((uid) {
+            try {
+              return sponsors.firstWhere((s) => s.uid == uid);
+            } on StateError {
+              return null;
+            }
+          })
           .whereType<Sponsor>()
           .toList();
     }
