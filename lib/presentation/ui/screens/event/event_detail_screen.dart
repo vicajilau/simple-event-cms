@@ -15,18 +15,33 @@ class EventDetailScreen extends StatefulWidget {
   State<EventDetailScreen> createState() => _EventDetailScreenState();
 }
 
-class _EventDetailScreenState extends State<EventDetailScreen> {
+class _EventDetailScreenState extends State<EventDetailScreen>
+    with SingleTickerProviderStateMixin {
   Event? _event;
   List<AgendaDay> _agendaDays = [];
   List<Speaker> _speakers = [];
   List<Sponsor> _sponsors = [];
   bool _isLoading = true;
   String? _errorMessage;
+  late TabController _tabController;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(() {
+      setState(() {
+        _selectedIndex = _tabController.index;
+      });
+    });
     _loadEventData();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadEventData() async {
@@ -84,74 +99,75 @@ class _EventDetailScreenState extends State<EventDetailScreen> {
       return const Scaffold(body: Center(child: Text('Evento no encontrado')));
     }
 
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(_event!.eventName),
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                icon: const Icon(Icons.schedule),
-                text: AppLocalizations.of(context)?.agenda ?? 'Agenda',
-              ),
-              Tab(
-                icon: const Icon(Icons.people),
-                text: AppLocalizations.of(context)?.speakers ?? 'Ponentes',
-              ),
-              Tab(
-                icon: const Icon(Icons.business),
-                text:
-                    AppLocalizations.of(context)?.sponsors ?? 'Patrocinadores',
-              ),
-            ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_event!.eventName),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.language),
+            onPressed: () => _showLanguageSelector(context),
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.language),
-              onPressed: () => _showLanguageSelector(context),
-            ),
-          ],
-        ),
-        body: TabBarView(
-          children: [
-            // Agenda Tab
-            _agendaDays.isEmpty
-                ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)?.noEventsScheduled ??
-                          'No hay eventos programados',
-                    ),
-                  )
-                : AgendaScreen(
-                    agendaDays: _agendaDays,
-                    editSession: (day, track, session) {
-                      // TODO: Implementar edición de sesión
-                    },
-                    removeSession: (session) {
-                      // TODO: Implementar eliminación de sesión
-                    },
+        ],
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          // Agenda Tab
+          _agendaDays.isEmpty
+              ? Center(
+                  child: Text(
+                    AppLocalizations.of(context)?.noEventsScheduled ??
+                        'No hay eventos programados',
                   ),
-            // Speakers Tab
-            _speakers.isEmpty
-                ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)?.noSpeakersRegistered ??
-                          'No hay ponentes registrados',
-                    ),
-                  )
-                : SpeakersScreen(speakers: _speakers),
-            // Sponsors Tab
-            _sponsors.isEmpty
-                ? Center(
-                    child: Text(
-                      AppLocalizations.of(context)?.noSponsorsRegistered ??
-                          'No hay patrocinadores registrados',
-                    ),
-                  )
-                : SponsorsScreen(sponsors: _sponsors),
-          ],
-        ),
+                )
+              : AgendaScreen(
+                  agendaDays: _agendaDays,
+                  editSession: (day, track, session) {
+                    // TODO: Implementar edición de sesión
+                  },
+                  removeSession: (session) {
+                    // TODO: Implementar eliminación de sesión
+                  },
+                ),
+          // Speakers Tab
+          _speakers.isEmpty
+              ? Center(
+                  child: Text(
+                    AppLocalizations.of(context)?.noSpeakersRegistered ??
+                        'No hay ponentes registrados',
+                  ),
+                )
+              : SpeakersScreen(speakers: _speakers),
+          // Sponsors Tab
+          _sponsors.isEmpty
+              ? Center(
+                  child: Text(
+                    AppLocalizations.of(context)?.noSponsorsRegistered ??
+                        'No hay patrocinadores registrados',
+                  ),
+                )
+              : SponsorsScreen(sponsors: _sponsors),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          _tabController.animateTo(index);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.schedule),
+            label: AppLocalizations.of(context)?.agenda ?? 'Agenda',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.people),
+            label: AppLocalizations.of(context)?.speakers ?? 'Ponentes',
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.business),
+            label: AppLocalizations.of(context)?.sponsors ?? 'Patrocinadores',
+          ),
+        ],
       ),
     );
   }

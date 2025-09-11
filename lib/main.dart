@@ -5,7 +5,7 @@ import 'package:sec/event_app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Configurar URLs limpias sin hash para Flutter web
   usePathUrlStrategy();
 
