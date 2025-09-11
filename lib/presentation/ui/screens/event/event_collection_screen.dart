@@ -1,33 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/config/config_loader.dart';
+import 'package:sec/data/local_data/data_loader.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-
-import '../../../view_models/event_collection_view_model.dart';
+import 'package:sec/presentation/view_models/event_collection_view_model.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
+import 'package:sec/data/repositories/sec_repository_imp.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
+/// Now self-contained and loads its own configuration
 class EventCollectionScreen extends StatefulWidget {
-  final EventCollectionViewModel viewmodel;
-
-  /// Currently selected locale for the application
-  final Locale locale;
-
-  /// Callback function to be called when the locale changes
-  final ValueChanged<Locale> localeChanged;
-
   final int crossAxisCount;
 
-  final Organization organization;
-
-  const EventCollectionScreen({
-    super.key,
-    required this.locale,
-    required this.localeChanged,
-    this.crossAxisCount = 4,
-    required this.organization,
-    required this.viewmodel,
-  });
+  const EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
   @override
   State<EventCollectionScreen> createState() => _EventCollectionScreenState();
@@ -35,43 +23,129 @@ class EventCollectionScreen extends StatefulWidget {
 
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
+  int _titleTapCount = 0;
+  EventCollectionViewModel? _viewmodel;
+  Organization? _organization;
+  bool _isLoading = true;
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup();
+    _loadConfiguration();
+  }
+
+  Future<void> _loadConfiguration() async {
+    try {
+      final config = await ConfigLoader.loadConfig();
+      final organization = await ConfigLoader.loadOrganization();
+      final dataLoader = DataLoader(config, organization);
+
+      final viewmodel = EventCollectionViewModelImp(
+        useCase: EventUseCaseImp(
+          repository: SecRepositoryImp(dataLoader: dataLoader),
+        ),
+      );
+
+      await viewmodel.setup();
+
+      setState(() {
+        _viewmodel = viewmodel;
+        _organization = organization;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error cargando configuración: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
   void dispose() {
-    widget.viewmodel.dispose();
+    _viewmodel?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_errorMessage != null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(_errorMessage!),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _isLoading = true;
+                    _errorMessage = null;
+                  });
+                  _loadConfiguration();
+                },
+                child: const Text('Reintentar'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (_viewmodel == null || _organization == null) {
+      return const Scaffold(
+        body: Center(child: Text('Error: Configuración no disponible')),
+      );
+    }
+
+    final currentLocale = Localizations.localeOf(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.organization.organizationName),
+        title: GestureDetector(
+          onTap: () {
+            _titleTapCount++;
+            if (_titleTapCount >= 5) {
+              _titleTapCount = 0;
+              context.go('/admin');
+            }
+            // Reset counter after 3 seconds
+            Future.delayed(const Duration(seconds: 3), () {
+              if (mounted) {
+                setState(() {
+                  _titleTapCount = 0;
+                });
+              }
+            });
+          },
+          child: Text(_organization!.organizationName),
+        ),
         actions: <Widget>[
           EventFilterButton(
-            selectedFilter: widget.viewmodel.currentFilter,
+            selectedFilter: _viewmodel!.currentFilter,
             onFilterChanged: (EventFilter filter) {
-              widget.viewmodel.onEventFilterChanged(filter);
+              _viewmodel!.onEventFilterChanged(filter);
             },
           ),
         ],
       ),
       body: ValueListenableBuilder<bool>(
-        valueListenable: widget.viewmodel.isLoading,
+        valueListenable: _viewmodel!.isLoading,
         builder: (context, isLoading, child) {
           if (isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
           return ValueListenableBuilder<List<Event>>(
-            valueListenable: widget.viewmodel.eventsToShow,
-            builder: (context, events, child) {
-              if (events.isEmpty) {
+            valueListenable: _viewmodel!.eventsToShow,
+            builder: (context, eventsToShow, child) {
+              if (eventsToShow.isEmpty) {
                 return const Center(
                   child: Text("No hay eventos para mostrar."),
                 );
@@ -79,16 +153,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
               return ListView.builder(
                 padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
-                itemCount: events.length,
+                itemCount: eventsToShow.length,
                 itemBuilder: (BuildContext context, int index) {
-                  var item = events[index];
+                  var item = eventsToShow[index];
                   return Dismissible(
-                    key: UniqueKey(),
+                    key: Key(item.eventName),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      widget.viewmodel.deleteEvent(item);
-                      final scaffoldMessenger = ScaffoldMessenger.of(context);
-                      scaffoldMessenger.showSnackBar(
+                      _viewmodel!.deleteEvent(item);
+                      ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("${item.eventName} eliminado")),
                       );
                     },
@@ -100,17 +173,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EventContainerScreen(
-                              locale: widget.locale,
-                              localeChanged: widget.localeChanged,
-                              agendaDays: item.agenda?.days ?? [],
-                              speakers: item.speakers ?? [],
-                              sponsors: item.sponsors ?? [],
-                            ),
-                          ),
+                        context.go(
+                          '/event/${item.uid}',
+                          extra: {
+                            'locale': currentLocale,
+                            'agendaDays': item.agenda?.days ?? [],
+                            'speakers': item.speakers ?? [],
+                            'sponsors': item.sponsors ?? [],
+                          },
                         );
                       },
                       child: Padding(
@@ -144,9 +214,17 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                               icon: const Icon(Icons.edit),
                               onPressed: () async {
                                 final Event? eventEdited =
-                                    await _navigateToForm(item);
+                                    await Navigator.push<Event>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            OrganizationFormScreen(
+                                              siteConfig: item,
+                                            ),
+                                      ),
+                                    );
                                 if (eventEdited != null) {
-                                  widget.viewmodel.editEvent(eventEdited);
+                                  _viewmodel!.editEvent(eventEdited);
                                 }
                               },
                             ),
@@ -163,22 +241,18 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final Event? newConfig = await _navigateToForm();
+          final Event? newConfig = await Navigator.push<Event>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const OrganizationFormScreen(),
+            ),
+          );
           if (newConfig != null) {
-            widget.viewmodel.addEvent(newConfig);
+            _viewmodel!.addEvent(newConfig);
           }
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    );
-  }
-
-  Future<Event?> _navigateToForm([Event? siteConfig]) async {
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => OrganizationFormScreen(siteConfig: siteConfig),
-      ),
     );
   }
 }
