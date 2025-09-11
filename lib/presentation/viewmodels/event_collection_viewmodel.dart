@@ -1,56 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
 
-import '../../core/models/models.dart';
-import '../../core/services/load/data_loader.dart';
+import 'viewmodel_common.dart';
 
-abstract class DataRepository {
-  Future<List<Event>> loadEvents();
-  Future<void> saveEvents(List<Event> events);
-}
-
-class DataRepositoryImp extends DataRepository {
-  final DataLoader dataLoader;
-
-  DataRepositoryImp({required this.dataLoader});
-
-  @override
-  Future<List<Event>> loadEvents() async {
-    final allEvents = dataLoader.config;
-    var agenda = await dataLoader.loadAgenda("2025");
-    var speakers = await dataLoader.loadSpeakers("2025");
-    var sponsors = await dataLoader.loadSponsors("2025");
-
-    for (var event in allEvents) {
-      event.agenda = agenda.firstWhere(
-        (element) => element.uid == event.agendaUID,
-      );
-
-      event.speakers = event.speakersUID
-          .map((uid) => speakers.firstWhere((s) => s.uid == uid))
-          .whereType<Speaker>()
-          .toList();
-
-      event.sponsors = event.sponsorsUID
-          .map((uid) => sponsors.firstWhere((s) => s.uid == uid))
-          .whereType<Sponsor>()
-          .toList();
-    }
-    return allEvents;
-  }
-
-  @override
-  Future<void> saveEvents(List<Event> events) {
-    // TODO: implement saveEvents
-    throw UnimplementedError();
-  }
-}
-
-abstract class ViewModel {
-  void setup();
-  void dispose();
-}
-
-abstract class EventCollectionViewmodel extends ViewModel {
+abstract class EventCollectionViewmodel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract final ValueNotifier<bool> isLoading;
   abstract bool showEndedEvents, showNextEvents;
@@ -58,11 +12,11 @@ abstract class EventCollectionViewmodel extends ViewModel {
   void toggleShowNextEvents(bool value);
   void addEvent(Event event);
   void editEvent(Event event);
-  void deleteEvent(int index);
+  void deleteEvent(Event event);
 }
 
 class EventCollectionViewmodelImp implements EventCollectionViewmodel {
-  DataRepository repository;
+  EventUseCase useCase;
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -77,11 +31,11 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
 
   List<Event> _allEvents = [];
 
-  EventCollectionViewmodelImp({required this.repository});
+  EventCollectionViewmodelImp({required this.useCase});
 
   @override
   void setup() async {
-    _allEvents = await repository.loadEvents();
+    _allEvents = await useCase.getComposedEvents();
     _updateEventsToShow();
   }
 
@@ -107,7 +61,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
   void addEvent(Event event) {
     _allEvents.add(event);
     _updateEventsToShow();
-    repository.saveEvents(_allEvents);
+    useCase.saveEvents(_allEvents);
   }
 
   @override
@@ -116,17 +70,21 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      repository.saveEvents(_allEvents);
+      useCase.saveEvents(_allEvents);
     }
   }
 
   @override
-  void deleteEvent(int index) async {
-    _allEvents.removeAt(index);
-    repository.saveEvents(_allEvents);
+  void deleteEvent(Event event) async {
+    int index = _allEvents.indexWhere((element) => element.uid == event.uid);
+    if (index != -1) {
+      _allEvents.removeAt(index);
+      _applyFilters();
+      useCase.saveEvents(_allEvents);
+    }
   }
 
-  void _updateEventsToShow() {
+  void _updateEventsToShow() async {
     _sortEvents();
     _applyFilters();
   }
@@ -146,7 +104,7 @@ class EventCollectionViewmodelImp implements EventCollectionViewmodel {
         return startDate.isAfter(now);
       }).toList();
     }
-    eventsToShow.value = [...eventsFiltered];
+    eventsToShow.value = eventsFiltered;
   }
 
   void _sortEvents() {

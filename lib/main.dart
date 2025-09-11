@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 import 'core/config/config_loader.dart';
-import 'core/services/load/data_loader.dart';
+import 'data/local_data/data_loader.dart';
 import 'event_app.dart';
 
 void main() {

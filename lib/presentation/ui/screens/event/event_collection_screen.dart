@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-import 'package:sec/presentation/viewmodels/viewmodels.dart';
+import 'package:sec/presentation/viewmodels/event_collection_viewmodel.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
@@ -90,10 +90,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   var item = events[index];
                   return Dismissible(
-                    key: Key(item.eventName),
+                    key: UniqueKey(),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      widget.viewmodel.deleteEvent(index);
+                      widget.viewmodel.deleteEvent(item);
                       final scaffoldMessenger = ScaffoldMessenger.of(context);
                       scaffoldMessenger.showSnackBar(
                         SnackBar(content: Text("${item.eventName} eliminado")),

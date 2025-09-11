@@ -4,8 +4,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/paths_github.dart';
 
-import '../../config/config_loader.dart';
-import '../../models/models.dart';
+import '../../core/config/config_loader.dart';
+import '../../core/models/models.dart';
 
 /// Service class responsible for loading event data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration

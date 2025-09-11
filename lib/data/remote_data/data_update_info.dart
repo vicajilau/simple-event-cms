@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 
-import '../../models/models.dart';
-import '../commons/commons_services.dart';
+import '../../core/models/models.dart';
+import 'commons_services.dart';
 
 class DataUpdateInfo {
   final CommonsServices dataCommons;

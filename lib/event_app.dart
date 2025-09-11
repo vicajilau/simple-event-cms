@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sec/data/repositories/sec_repository_imp.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
-import 'package:sec/presentation/viewmodels/viewmodels.dart';
+import 'package:sec/presentation/viewmodels/event_collection_viewmodel.dart';
 
 import 'core/models/organization.dart';
-import 'core/services/load/data_loader.dart';
+import 'data/local_data/data_loader.dart';
 import 'l10n/app_localizations.dart';
 
 /// Main application widget that sets up the Material Design theme and localization
@@ -101,7 +103,9 @@ class _EventAppState extends State<EventApp> {
         localeChanged: _changeLocale,
         organization: widget.organization,
         viewmodel: EventCollectionViewmodelImp(
-          repository: DataRepositoryImp(dataLoader: dataLoader),
+          useCase: EventUseCaseImp(
+            repository: SecRepositoryImp(dataLoader: dataLoader),
+          ),
         ),
       ),
     );
