@@ -6,5 +6,7 @@ export 'event_container/speaker/speaker_form_screen.dart';
 export 'event_container/speaker/speakers_screen.dart';
 export 'event_container/sponsor/add_sponsor_screen.dart';
 export 'event_container/sponsor/sponsors_screen.dart';
+export 'event/event_detail_screen.dart';
+export 'login/admin_screen.dart';
 export 'login/login_screen.dart';
 export 'organization/organization_form_screen.dart';
