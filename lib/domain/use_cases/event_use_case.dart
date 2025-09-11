@@ -21,15 +21,16 @@ class EventUseCaseImp implements EventUseCase {
     for (var event in allEvents) {
       event.agenda = agenda.firstWhere(
         (element) => element.uid == event.agendaUID,
+        orElse: () => null,
       );
 
       event.speakers = event.speakersUID
-          .map((uid) => speakers.firstWhere((s) => s.uid == uid))
+          .map((uid) => speakers.firstWhere((s) => s.uid == uid, orElse: () => null))
           .whereType<Speaker>()
           .toList();
 
       event.sponsors = event.sponsorsUID
-          .map((uid) => sponsors.firstWhere((s) => s.uid == uid))
+          .map((uid) => sponsors.firstWhere((s) => s.uid == uid, orElse: () => null))
           .whereType<Sponsor>()
           .toList();
     }
