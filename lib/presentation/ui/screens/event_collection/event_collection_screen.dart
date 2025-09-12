@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -13,9 +11,14 @@ import 'event_collection_view_model.dart';
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 /// Now uses dependency injection for better testability and architecture
 class EventCollectionScreen extends StatefulWidget {
+  final EventCollectionViewModel viewmodel;
   final int crossAxisCount;
 
-  const EventCollectionScreen({super.key, this.crossAxisCount = 4});
+  const EventCollectionScreen({
+    super.key,
+    required this.viewmodel,
+    this.crossAxisCount = 4,
+  });
 
   @override
   State<EventCollectionScreen> createState() => _EventCollectionScreenState();
@@ -24,42 +27,16 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  EventCollectionViewModel? _viewmodel;
-  Organization? _organization;
-  bool _isLoading = true;
-  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadConfiguration();
-  }
-
-  Future<void> _loadConfiguration() async {
-    try {
-      // Usar inyección de dependencias en lugar de crear instancias manualmente
-      final useCase = getIt<EventUseCase>();
-      final organization = getIt<Organization>();
-
-      final viewmodel = EventCollectionViewModelImp(useCase: useCase);
-      await viewmodel.setup();
-
-      setState(() {
-        _viewmodel = viewmodel;
-        _organization = organization;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error cargando configuración: $e';
-        _isLoading = false;
-      });
-    }
+    widget.viewmodel.setup();
   }
 
   @override
   void dispose() {
-    _viewmodel?.dispose();
+    widget.viewmodel.dispose();
     super.dispose();
   }
 
@@ -83,39 +60,32 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               }
             });
           },
-          child: Text(_organization!.organizationName),
+          child: Text(widget.viewmodel.organizationName),
         ),
         actions: <Widget>[
           EventFilterButton(
-            selectedFilter: _viewmodel!.currentFilter,
+            selectedFilter: widget.viewmodel.currentFilter,
             onFilterChanged: (EventFilter filter) {
-              _viewmodel!.onEventFilterChanged(filter);
+              widget.viewmodel.onEventFilterChanged(filter);
             },
           ),
         ],
       ),
       body: ValueListenableBuilder<ViewState>(
-        valueListenable: _viewmodel!.viewState,
+        valueListenable: widget.viewmodel.viewState,
         builder: (context, viewState, child) {
           if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
           if (viewState == ViewState.error) {
-            // TODO en viewModel:
-            /*if (_viewmodel == null || _organization == null) {
-              return const Scaffold(
-                body: Center(child: Text('Error: Configuración no disponible')),
-              );
-            }*/
-
             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(_errorMessage!),
+                  Text(widget.viewmodel.errorMessage),
                   const SizedBox(height: 16),
-                  ElevatedButton(
+                  /*ElevatedButton(
                     onPressed: () {
                       setState(() {
                         _isLoading = true;
@@ -124,14 +94,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       _loadConfiguration();
                     },
                     child: const Text('Reintentar'),
-                  ),
+                  ),*/
                 ],
               ),
             );
           }
 
           return ValueListenableBuilder<List<Event>>(
-            valueListenable: _viewmodel!.eventsToShow,
+            valueListenable: widget.viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
                 return const Center(
@@ -148,7 +118,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     key: Key(item.eventName),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      _viewmodel!.deleteEvent(item);
+                      widget.viewmodel.deleteEvent(item);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("${item.eventName} eliminado")),
                       );
@@ -204,7 +174,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       ),
                                     );
                                 if (eventEdited != null) {
-                                  _viewmodel!.editEvent(eventEdited);
+                                  widget.viewmodel.editEvent(eventEdited);
                                 }
                               },
                             ),
@@ -228,7 +198,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             ),
           );
           if (newConfig != null) {
-            _viewmodel!.addEvent(newConfig);
+            widget.viewmodel.addEvent(newConfig);
           }
         },
       ),

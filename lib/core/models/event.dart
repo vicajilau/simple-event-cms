@@ -119,7 +119,7 @@ class Event extends GitHubModel {
       'baseUrl': baseUrl,
       'primaryColor': primaryColor,
       'secondaryColor': secondaryColor,
-      'eventDates': eventDates?.toJson(),
+      'eventDates': eventDates.toJson(),
       'venue': venue?.toJson(),
       'description': description,
       'agendaUID': agendaUID,

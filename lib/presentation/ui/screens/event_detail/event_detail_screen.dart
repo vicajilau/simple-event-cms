@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
@@ -10,9 +8,14 @@ import 'package:sec/presentation/view_model_common.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
+  final EventDetailViewModel viewmodel;
   final String eventId;
 
-  const EventDetailScreen({super.key, required this.eventId});
+  const EventDetailScreen({
+    super.key,
+    required this.viewmodel,
+    required this.eventId,
+  });
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
@@ -20,16 +23,13 @@ class EventDetailScreen extends StatefulWidget {
 
 class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
-  EventDetailViewModel? viewmodel;
   late TabController _tabController;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    final useCase = getIt<EventUseCase>();
-    viewmodel = EventDetailViewModelImp(useCase, widget.eventId);
-    viewmodel!.setup();
+    widget.viewmodel.setup();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {
@@ -41,13 +41,13 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   @override
   void dispose() {
     _tabController.dispose();
-    viewmodel!.dispose();
+    widget.viewmodel.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final eventTitle = viewmodel?.eventTitle() ?? '';
+    final eventTitle = widget.viewmodel.eventTitle();
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +60,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         ],
       ),
       body: ValueListenableBuilder<ViewState>(
-        valueListenable: viewmodel!.viewState,
+        valueListenable: widget.viewmodel.viewState,
         builder: (context, viewState, child) {
           if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -69,10 +69,10 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(viewmodel!.errorMessage),
+                  Text(widget.viewmodel.errorMessage),
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: viewmodel!.setup,
+                    onPressed: widget.viewmodel.setup,
                     child: const Text('Reintentar'),
                   ),
                 ],
@@ -80,8 +80,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           }
 
-          final agendaDays = viewmodel?.getAgenda().days ?? [];
-          final speakers = viewmodel?.getSpeakers() ?? [];
+          final agendaDays = widget.viewmodel.getAgenda().days ?? [];
+          final speakers = widget.viewmodel.getSpeakers() ?? [];
 
           return TabBarView(
             controller: _tabController,
@@ -113,7 +113,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     )
                   : SpeakersScreen(speakers: speakers),
               // Sponsors Tab
-              SponsorsScreen(viewModel: viewmodel!),
+              SponsorsScreen(viewModel: widget.viewmodel),
             ],
           );
         },
@@ -200,7 +200,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
 
     if (newSponsor != null && newSponsor is Sponsor) {
-      viewmodel!.addSponsor(newSponsor);
+      widget.viewmodel.addSponsor(newSponsor);
     }
   }
 

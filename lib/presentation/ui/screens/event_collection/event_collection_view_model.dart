@@ -8,6 +8,7 @@ import '../../../view_model_common.dart';
 abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
+  String get organizationName;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
   void editEvent(Event event);
@@ -16,6 +17,10 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
 
 class EventCollectionViewModelImp implements EventCollectionViewModel {
   EventUseCase useCase;
+  Organization organization; // TODO: Revisa,. no se para que se usa actualmente
+
+  @override
+  String get organizationName => organization.organizationName;
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -33,10 +38,17 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   List<Event> _allEvents = [];
 
-  EventCollectionViewModelImp({required this.useCase});
+  EventCollectionViewModelImp({
+    required this.useCase,
+    required this.organization,
+  });
 
   @override
   Future<void> setup() async {
+    loadEvents();
+  }
+
+  void loadEvents() async {
     viewState.value = ViewState.isLoading;
     try {
       _allEvents = await useCase.getComposedEvents();
