@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 /// Event detail screen that uses dependency injection for data loading
@@ -80,7 +82,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
           final agendaDays = viewmodel?.getAgenda().days ?? [];
           final speakers = viewmodel?.getSpeakers() ?? [];
-          final sponsors = viewmodel?.getSponsors() ?? [];
 
           return TabBarView(
             controller: _tabController,
@@ -112,14 +113,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     )
                   : SpeakersScreen(speakers: speakers),
               // Sponsors Tab
-              sponsors.isEmpty
-                  ? Center(
-                      child: Text(
-                        AppLocalizations.of(context)?.noSponsorsRegistered ??
-                            'No hay patrocinadores registrados',
-                      ),
-                    )
-                  : SponsorsScreen(sponsors: sponsors),
+              SponsorsScreen(viewModel: viewmodel!),
             ],
           );
         },
@@ -144,6 +138,76 @@ class _EventDetailScreenState extends State<EventDetailScreen>
           ),
         ],
       ),
+      floatingActionButton: AddFloatingActionButton(
+        onPressed: () async {
+          if (_selectedIndex == 0) {
+            _addTrackToAgenda();
+          } else if (_selectedIndex == 1) {
+            _addSpeaker();
+          } else if (_selectedIndex == 2) {
+            _addSponsor();
+          }
+        },
+      ),
+    );
+  }
+
+  void _addTrackToAgenda() async {
+    AgendaFormScreen agenda = AgendaFormScreen(
+      data: EventFormData(
+        rooms: [],
+        days: [],
+        speakers: [],
+        sessionTypes: [],
+        session: null,
+        track: '[]',
+        day: 'day',
+      ),
+      /* speakers: _getSpeakers(),
+          rooms: _getRoomNames(),
+          days: _getAgendaDays(),
+          sessionTypes: SessionTypes.allLabels(context),
+          session: session,
+          track: track ?? '',
+          day: day ?? '',*/
+    );
+
+    final newAgendaDay = await Navigator.push<Speaker>(
+      context,
+      MaterialPageRoute(builder: (context) => agenda),
+    );
+    /*_addNewSession(newAgendaDay: newAgendaDay);*/
+  }
+
+  void _addSpeaker() async {
+    final newSpeaker = await Navigator.push<Speaker>(
+      context,
+      MaterialPageRoute(builder: (context) => const SpeakerFormScreen()),
+    );
+
+    if (newSpeaker != null) {
+      /*setState(() {
+        _speakers.add(newSpeaker);
+        _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
+      });*/
+    }
+  }
+
+  Future<void> _addSponsor() async {
+    final newSponsor = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+    );
+
+    if (newSponsor != null && newSponsor is Sponsor) {
+      viewmodel!.addSponsor(newSponsor);
+    }
+  }
+
+  Future<T?> _navigateTo<T>(Widget screen) async {
+    return await Navigator.push<T>(
+      context,
+      MaterialPageRoute(builder: (context) => screen),
     );
   }
 

@@ -4,12 +4,18 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 import 'package:uuid/uuid.dart';
 
-abstract class EventDetailViewModel extends ViewModelCommon {
+abstract class SponsorsViewModel {
+  abstract final ValueNotifier<List<Sponsor>> sponsors;
+  void addSponsor(Sponsor sponsor);
+  void editSponsor(Sponsor sponsor);
+  void removeSponsor(String id);
+}
+
+abstract class EventDetailViewModel
+    implements ViewModelCommon, SponsorsViewModel {
   String eventTitle();
   Agenda getAgenda();
   List<Speaker> getSpeakers();
-  List<Sponsor> getSponsors();
-  void addSponsor(Sponsor sponsor);
 }
 
 class EventDetailViewModelImp extends EventDetailViewModel {
@@ -54,6 +60,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
         (e) => e.uid == eventId,
         orElse: () => events.first, // Fallback al primer evento
       );
+      sponsors.value = event?.sponsors ?? [];
       viewState.value = ViewState.loadFinished;
     } catch (e) {
       // TODO: immplementación control de errores (hay que crear los errores)
@@ -86,21 +93,33 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   }
 
   @override
-  List<Sponsor> getSponsors() {
-    return event?.sponsors ?? [];
-  }
+  ValueNotifier<List<Sponsor>> sponsors = ValueNotifier([]);
 
   @override
   void addSponsor(Sponsor sponsor) async {
-    /* final newSponsor = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
-    );*/
+    List<Sponsor> currentSponsors = [...event?.sponsors ?? []];
+    currentSponsors.add(sponsor);
+    sponsors.value = currentSponsors;
+    // TODO: llamar al use case para que guarde
+  }
 
-    /*if (sponsor != null && newSponsor is Sponsor) {
-      setState(() {*/
-    event!.sponsors?.add(sponsor);
-    /*   _screens[2] = SponsorsScreen(key: UniqueKey(), sponsors: _sponsors);
-      });*/
+  @override
+  void editSponsor(Sponsor sponsor) {
+    final index =
+        event?.sponsors?.indexWhere((s) => s.uid == sponsor.uid) ?? -1;
+    List<Sponsor> currentSponsors = [...event?.sponsors ?? []];
+    if (index != -1) {
+      currentSponsors[index] = sponsor;
+      sponsors.value = currentSponsors;
+      // TODO: llamar al use case para que guarde
+    }
+  }
+
+  @override
+  void removeSponsor(String id) {
+    List<Sponsor> currentSponsors = [...event?.sponsors ?? []];
+    currentSponsors.removeWhere((s) => s.uid == id);
+    sponsors.value = currentSponsors;
+    // TODO: llamar al use case para que guarde
   }
 }
