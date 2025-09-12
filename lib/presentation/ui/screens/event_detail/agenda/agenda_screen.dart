@@ -10,7 +10,7 @@ class ExpansionTileState {
   ExpansionTileState({required this.isExpanded, required this.tabBarIndex});
 }
 
-/// Screen that displays the event agenda with sessions organized by days and tracks
+/// Screen that displays the event_collection agenda with sessions organized by days and tracks
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;

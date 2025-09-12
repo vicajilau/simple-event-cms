@@ -27,18 +27,18 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     super.initState();
     _nameController.text = widget.siteConfig?.eventName ?? '';
 
-    final startDate = widget.siteConfig?.eventDates?.startDate;
+    final startDate = widget.siteConfig?.eventDates.startDate;
     if (startDate != null) {
       _startDateController.text = startDate;
     }
 
-    final endtDate = widget.siteConfig?.eventDates?.endDate;
+    final endtDate = widget.siteConfig?.eventDates.endDate;
     _hasEndDate = startDate != endtDate;
     if (endtDate != null && _hasEndDate) {
       _endDateController.text = endtDate;
     }
 
-    _rooms = widget.siteConfig?.rooms ?? [];
+    _rooms = widget.siteConfig?.tracks ?? [];
   }
 
   Future<void> _selectDate(
@@ -194,7 +194,7 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     final siteConfig = Event(
       uid: widget.siteConfig?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
-      rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
+      tracks: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
       year: eventDates.startDate.split('-').first,
       baseUrl: "https://hardcode.base.url",
       primaryColor: "#4285F4",

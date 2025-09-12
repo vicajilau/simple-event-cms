@@ -284,7 +284,7 @@ Contributions are welcome! Please follow these steps:
 2. **Create a branch for your feature:**
 
    ```bash
-   git checkout -b feature/new-event-feature
+   git checkout -b feature/new-event_collection-feature
    ```
 
 3. **Make changes and test:**
@@ -309,7 +309,7 @@ Contributions are welcome! Please follow these steps:
    ```bash
    git add .
    git commit -m "feat: add new event management feature"
-   git push origin feature/new-event-feature
+   git push origin feature/new-event_collection-feature
    ```
 
 6. **Create Pull Request**

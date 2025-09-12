@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/routing/screen_factory.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 class AppRouter {
@@ -8,7 +9,7 @@ class AppRouter {
       GoRoute(
         path: '/',
         name: 'home',
-        builder: (context, state) => const EventCollectionScreen(),
+        builder: (context, state) => ScreenFactory.eventCollectionScreen(),
       ),
       // Rutas de administración
       GoRoute(
@@ -27,7 +28,7 @@ class AppRouter {
         name: 'event_detail',
         builder: (context, state) {
           final eventId = state.pathParameters['eventId'] ?? '';
-          return EventDetailScreen(eventId: eventId);
+          return ScreenFactory.eventDetailScreen(eventId);
         },
       ),
     ],

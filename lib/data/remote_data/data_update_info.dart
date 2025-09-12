@@ -21,7 +21,7 @@ class DataUpdateInfo {
     );
   }
 
-  /// Loads event agenda information from the agenda.json file
+  /// Loads event_collection agenda information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models

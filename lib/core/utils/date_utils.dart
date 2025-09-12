@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// Utility class for event date-related operations
+/// Utility class for event_collection date-related operations
 /// Provides localized date formatting and day name extraction
 class EventDateUtils {
   /// Gets the localized day name from a date string
