@@ -27,12 +27,12 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     super.initState();
     _nameController.text = widget.siteConfig?.eventName ?? '';
 
-    final startDate = widget.siteConfig?.eventDates?.startDate;
+    final startDate = widget.siteConfig?.eventDates.startDate;
     if (startDate != null) {
       _startDateController.text = startDate;
     }
 
-    final endtDate = widget.siteConfig?.eventDates?.endDate;
+    final endtDate = widget.siteConfig?.eventDates.endDate;
     _hasEndDate = startDate != endtDate;
     if (endtDate != null && _hasEndDate) {
       _endDateController.text = endtDate;

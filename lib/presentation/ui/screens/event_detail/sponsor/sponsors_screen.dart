@@ -10,9 +10,9 @@ import '../event_detail_view_model.dart';
 /// Fetches sponsor data and displays logos with clickable links
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
-  final SponsorsViewModel viewModel;
+  final SponsorsViewModel viewmodel;
 
-  const SponsorsScreen({super.key, required this.viewModel});
+  const SponsorsScreen({super.key, required this.viewmodel});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -24,7 +24,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-      valueListenable: widget.viewModel.sponsors,
+      valueListenable: widget.viewmodel.sponsors,
       builder: (context, sponsors, child) {
         if (sponsors.isEmpty) {
           Center(
@@ -159,7 +159,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
                                     if (updatedSponsor != null &&
                                         updatedSponsor is Sponsor) {
-                                      widget.viewModel.editSponsor(
+                                      widget.viewmodel.editSponsor(
                                         updatedSponsor,
                                       );
                                     }
@@ -169,7 +169,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                 IconButton(
                                   icon: const Icon(Icons.delete, size: 20),
                                   onPressed: () {
-                                    widget.viewModel.removeSponsor(sponsor.uid);
+                                    widget.viewmodel.removeSponsor(sponsor.uid);
                                   },
                                 ),
                               ],

@@ -80,8 +80,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           }
 
-          final agendaDays = widget.viewmodel.getAgenda().days ?? [];
-          final speakers = widget.viewmodel.getSpeakers() ?? [];
+          final agendaDays = widget.viewmodel.getAgenda().days;
 
           return TabBarView(
             controller: _tabController,
@@ -104,16 +103,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                       },
                     ),
               // Speakers Tab
-              speakers.isEmpty
-                  ? Center(
-                      child: Text(
-                        AppLocalizations.of(context)?.noSpeakersRegistered ??
-                            'No hay ponentes registrados',
-                      ),
-                    )
-                  : SpeakersScreen(speakers: speakers),
+              SpeakersScreen(viewmodel: widget.viewmodel),
               // Sponsors Tab
-              SponsorsScreen(viewModel: widget.viewmodel),
+              SponsorsScreen(viewmodel: widget.viewmodel),
             ],
           );
         },
@@ -186,10 +178,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
 
     if (newSpeaker != null) {
-      /*setState(() {
-        _speakers.add(newSpeaker);
-        _screens[1] = SpeakersScreen(key: UniqueKey(), speakers: _speakers);
-      });*/
+      widget.viewmodel.addSpeaker(newSpeaker);
     }
   }
 
@@ -202,13 +191,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     if (newSponsor != null && newSponsor is Sponsor) {
       widget.viewmodel.addSponsor(newSponsor);
     }
-  }
-
-  Future<T?> _navigateTo<T>(Widget screen) async {
-    return await Navigator.push<T>(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
-    );
   }
 
   void _showLanguageSelector(BuildContext context) {

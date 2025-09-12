@@ -114,13 +114,13 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
         break;
       case EventFilter.past:
         eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates!.startDate);
+          final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isBefore(now);
         }).toList();
         break;
       case EventFilter.current:
         eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates!.startDate);
+          final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isAfter(now);
         }).toList();
         break;
@@ -130,8 +130,8 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   void _sortEvents() {
     _allEvents.sort((a, b) {
-      final aDate = DateTime.parse(a.eventDates!.startDate);
-      final bDate = DateTime.parse(b.eventDates!.startDate);
+      final aDate = DateTime.parse(a.eventDates.startDate);
+      final bDate = DateTime.parse(b.eventDates.startDate);
       return aDate.compareTo(bDate);
     });
   }
