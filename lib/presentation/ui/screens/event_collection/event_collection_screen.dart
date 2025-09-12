@@ -5,6 +5,7 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+import 'package:sec/presentation/view_model_common.dart';
 
 import 'event_collection_view_model.dart';
 
@@ -64,42 +65,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (_errorMessage != null) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(_errorMessage!),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    _isLoading = true;
-                    _errorMessage = null;
-                  });
-                  _loadConfiguration();
-                },
-                child: const Text('Reintentar'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_viewmodel == null || _organization == null) {
-      return const Scaffold(
-        body: Center(child: Text('Error: Configuración no disponible')),
-      );
-    }
-
-    final currentLocale = Localizations.localeOf(context);
-
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -129,11 +94,40 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           ),
         ],
       ),
-      body: ValueListenableBuilder<bool>(
-        valueListenable: _viewmodel!.isLoading,
-        builder: (context, isLoading, child) {
-          if (isLoading) {
+      body: ValueListenableBuilder<ViewState>(
+        valueListenable: _viewmodel!.viewState,
+        builder: (context, viewState, child) {
+          if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
+          }
+
+          if (viewState == ViewState.error) {
+            // TODO en viewModel:
+            /*if (_viewmodel == null || _organization == null) {
+              return const Scaffold(
+                body: Center(child: Text('Error: Configuración no disponible')),
+              );
+            }*/
+
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(_errorMessage!),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _errorMessage = null;
+                      });
+                      _loadConfiguration();
+                    },
+                    child: const Text('Reintentar'),
+                  ),
+                ],
+              ),
+            );
           }
 
           return ValueListenableBuilder<List<Event>>(
@@ -167,15 +161,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        context.go(
-                          '/event/${item.uid}',
-                          extra: {
-                            'locale': currentLocale,
-                            'agendaDays': item.agenda?.days ?? [],
-                            'speakers': item.speakers ?? [],
-                            'sponsors': item.sponsors ?? [],
-                          },
-                        );
+                        context.go('/event/${item.uid}');
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -199,7 +185,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 4.0),
                               child: Text(
-                                "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
+                                "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
                                 style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),

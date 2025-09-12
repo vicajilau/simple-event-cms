@@ -7,7 +7,6 @@ import '../../../view_model_common.dart';
 
 abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
-  abstract final ValueNotifier<bool> isLoading;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
@@ -24,7 +23,10 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   );
 
   @override
-  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
+
+  @override
+  String errorMessage = '';
 
   @override
   EventFilter currentFilter = EventFilter.all;
@@ -35,14 +37,22 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   @override
   Future<void> setup() async {
-    _allEvents = await useCase.getComposedEvents();
-    _updateEventsToShow();
+    viewState.value = ViewState.isLoading;
+    try {
+      _allEvents = await useCase.getComposedEvents();
+      _updateEventsToShow();
+      viewState.value = ViewState.loadFinished;
+    } catch (e) {
+      // TODO: immplementación control de errores (hay que crear los errores)
+      errorMessage = "Error cargando datos";
+      viewState.value = ViewState.error;
+    }
   }
 
   @override
   void dispose() {
     eventsToShow.dispose();
-    isLoading.dispose();
+    viewState.dispose();
   }
 
   @override

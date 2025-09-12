@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/view_model_common.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
@@ -17,91 +18,38 @@ class EventDetailScreen extends StatefulWidget {
 
 class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
-  Event? _event;
-  List<AgendaDay> _agendaDays = [];
-  List<Speaker> _speakers = [];
-  List<Sponsor> _sponsors = [];
-  bool _isLoading = true;
-  String? _errorMessage;
+  EventDetailViewModel? viewmodel;
   late TabController _tabController;
   int _selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    final useCase = getIt<EventUseCase>();
+    viewmodel = EventDetailViewModelImp(useCase, widget.eventId);
+    viewmodel!.setup();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {
         _selectedIndex = _tabController.index;
       });
     });
-    _loadEventData();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    viewmodel!.dispose();
     super.dispose();
-  }
-
-  Future<void> _loadEventData() async {
-    try {
-      final useCase = getIt<EventUseCase>();
-      final events = await useCase.getComposedEvents();
-
-      // Buscar el evento específico por ID
-      final event = events.firstWhere(
-        (e) => e.uid == widget.eventId,
-        orElse: () => events.first, // Fallback al primer evento
-      );
-
-      setState(() {
-        _event = event;
-        _agendaDays = event.agenda?.days ?? [];
-        _speakers = event.speakers ?? [];
-        _sponsors = event.sponsors ?? [];
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        _errorMessage = 'Error cargando evento: $e';
-        _isLoading = false;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }
-
-    if (_errorMessage != null) {
-      return Scaffold(
-        appBar: AppBar(title: const Text('Error')),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(_errorMessage!),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _loadEventData,
-                child: const Text('Reintentar'),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
-    if (_event == null) {
-      return const Scaffold(body: Center(child: Text('Evento no encontrado')));
-    }
+    final eventTitle = viewmodel?.eventTitle() ?? '';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_event!.eventName),
+        title: Text(eventTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.language),
@@ -109,45 +57,72 @@ class _EventDetailScreenState extends State<EventDetailScreen>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          // Agenda Tab
-          _agendaDays.isEmpty
-              ? Center(
-                  child: Text(
-                    AppLocalizations.of(context)?.noEventsScheduled ??
-                        'No hay eventos programados',
+      body: ValueListenableBuilder<ViewState>(
+        valueListenable: viewmodel!.viewState,
+        builder: (context, viewState, child) {
+          if (viewState == ViewState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (viewState == ViewState.error) {
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(viewmodel!.errorMessage),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: viewmodel!.setup,
+                    child: const Text('Reintentar'),
                   ),
-                )
-              : AgendaScreen(
-                  agendaDays: _agendaDays,
-                  editSession: (day, track, session) {
-                    // TODO: Implementar edición de sesión
-                  },
-                  removeSession: (session) {
-                    // TODO: Implementar eliminación de sesión
-                  },
-                ),
-          // Speakers Tab
-          _speakers.isEmpty
-              ? Center(
-                  child: Text(
-                    AppLocalizations.of(context)?.noSpeakersRegistered ??
-                        'No hay ponentes registrados',
-                  ),
-                )
-              : SpeakersScreen(speakers: _speakers),
-          // Sponsors Tab
-          _sponsors.isEmpty
-              ? Center(
-                  child: Text(
-                    AppLocalizations.of(context)?.noSponsorsRegistered ??
-                        'No hay patrocinadores registrados',
-                  ),
-                )
-              : SponsorsScreen(sponsors: _sponsors),
-        ],
+                ],
+              ),
+            );
+          }
+
+          final agendaDays = viewmodel?.getAgenda().days ?? [];
+          final speakers = viewmodel?.getSpeakers() ?? [];
+          final sponsors = viewmodel?.getSponsors() ?? [];
+
+          return TabBarView(
+            controller: _tabController,
+            children: [
+              // Agenda Tab
+              agendaDays.isEmpty
+                  ? Center(
+                      child: Text(
+                        AppLocalizations.of(context)?.noEventsScheduled ??
+                            'No hay eventos programados',
+                      ),
+                    )
+                  : AgendaScreen(
+                      agendaDays: agendaDays,
+                      editSession: (day, track, session) {
+                        // TODO: Implementar edición de sesión
+                      },
+                      removeSession: (session) {
+                        // TODO: Implementar eliminación de sesión
+                      },
+                    ),
+              // Speakers Tab
+              speakers.isEmpty
+                  ? Center(
+                      child: Text(
+                        AppLocalizations.of(context)?.noSpeakersRegistered ??
+                            'No hay ponentes registrados',
+                      ),
+                    )
+                  : SpeakersScreen(speakers: speakers),
+              // Sponsors Tab
+              sponsors.isEmpty
+                  ? Center(
+                      child: Text(
+                        AppLocalizations.of(context)?.noSponsorsRegistered ??
+                            'No hay patrocinadores registrados',
+                      ),
+                    )
+                  : SponsorsScreen(sponsors: sponsors),
+            ],
+          );
+        },
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,

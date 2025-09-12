@@ -11,8 +11,14 @@ class EventUseCaseImp implements EventUseCase {
 
   EventUseCaseImp({required this.repository});
 
+  List<Event> events = [];
+
   @override
   Future<List<Event>> getComposedEvents() async {
+    if (events.isNotEmpty) {
+      return events;
+    }
+
     final allEvents = await repository.loadEvents();
     var agenda = await repository.loadEAgendas();
     var speakers = await repository.loadESpeakers();
@@ -52,6 +58,7 @@ class EventUseCaseImp implements EventUseCase {
           .whereType<Sponsor>()
           .toList();
     }
+    events = allEvents;
     return allEvents;
   }
 
