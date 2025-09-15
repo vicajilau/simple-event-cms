@@ -5,7 +5,6 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_models/event_collection_view_model.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
 
 /// Main home screen widget that displays the event information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
@@ -35,11 +34,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Future<void> _loadConfiguration() async {
     try {
-      // Usar inyección de dependencias en lugar de crear instancias manualmente
-      final useCase = getIt<EventUseCase>();
       final organization = getIt<Organization>();
 
-      final viewmodel = EventCollectionViewModelImp(useCase: useCase);
+      final viewmodel = getIt<EventCollectionViewModel>() as EventCollectionViewModelImp;
       await viewmodel.setup();
 
       setState(() {
