@@ -10,7 +10,10 @@ class DataUpdateInfo {
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<http.Response> updateSpeakers(List<Speaker> speakers,Speaker speaker) async {
+  Future<http.Response> updateSpeakers(
+    List<Speaker> speakers,
+    Speaker speaker,
+  ) async {
     if (speakers.isEmpty) {
       throw Exception("No speakers to update");
     }
@@ -26,7 +29,10 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> updateAgenda(List<Agenda> agendas,Agenda agenda) async {
+  Future<http.Response> updateAgenda(
+    List<Agenda> agendas,
+    Agenda agenda,
+  ) async {
     if (agendas.isEmpty) {
       throw Exception("No agenda to update");
     }
@@ -40,7 +46,10 @@ class DataUpdateInfo {
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<http.Response> updateSponsors(List<Sponsor> sponsors,Sponsor sponsor) async {
+  Future<http.Response> updateSponsors(
+    List<Sponsor> sponsors,
+    Sponsor sponsor,
+  ) async {
     if (sponsors.isEmpty) {
       throw Exception("No sponsors to update");
     }
@@ -54,7 +63,7 @@ class DataUpdateInfo {
 
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
-  Future<http.Response> updateEvents(List<Event> events,Event event) async {
+  Future<http.Response> updateEvents(List<Event> events, Event event) async {
     if (events.isEmpty) {
       throw Exception("No events to update");
     }

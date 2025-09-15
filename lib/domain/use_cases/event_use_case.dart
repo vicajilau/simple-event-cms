@@ -10,7 +10,6 @@ abstract class EventUseCase {
 class EventUseCaseImp implements EventUseCase {
   SecRepository repository = getIt<SecRepository>();
 
-
   List<Event> events = [];
 
   @override

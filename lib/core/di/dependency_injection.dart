@@ -12,24 +12,17 @@ final GetIt getIt = GetIt.instance;
 
 /// Configura todas las dependencias de la aplicación
 Future<void> setupDependencies() async {
-
   // Registrar configuración global
   getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
 
   // Core services
-  getIt.registerLazySingleton<DataLoader>(
-    () => DataLoader(),
-  );
+  getIt.registerLazySingleton<DataLoader>(() => DataLoader());
 
   // Repositories
-  getIt.registerLazySingleton<SecRepository>(
-    () => SecRepositoryImp(),
-  );
+  getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());
 
   // Use Cases
-  getIt.registerLazySingleton<EventUseCase>(
-    () => EventUseCaseImp(),
-  );
+  getIt.registerLazySingleton<EventUseCase>(() => EventUseCaseImp());
 
   // Event ViewModel
   getIt.registerLazySingleton<EventCollectionViewModel>(

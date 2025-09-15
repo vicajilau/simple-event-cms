@@ -96,7 +96,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       );
     }
 
-
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -246,9 +245,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         onPressed: () async {
           final Event? newConfig = await Navigator.push<Event>(
             context,
-            MaterialPageRoute(
-              builder: (context) => const EventFormScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const EventFormScreen()),
           );
           if (newConfig != null) {
             widget.viewmodel.addEvent(newConfig);

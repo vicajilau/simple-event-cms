@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
+import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
-import 'package:sec/core/models/github/github_services.dart';
 
 class CommonsServices {
-  final GithubService githubService;
+  final GithubData githubService;
 
   CommonsServices({required this.githubService});
 
-  Future<http.Response> getSha(GithubService githubService) async {
+  Future<http.Response> getSha(GithubData githubService) async {
     final fileUri = Uri.parse(
       "${githubService.repo}?ref=${githubService.branch}",
     );

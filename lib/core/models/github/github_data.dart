@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-class GithubService {
+class GithubData {
   final String token;
   final String repo;
   String branch = "develop";
 
-  GithubService({
+  GithubData({
     required this.token,
     required this.repo,
-    this.branch = "main",
+    this.branch = "develop",
   });
 
-  factory GithubService.fromJson(String str) {
+  factory GithubData.fromJson(String str) {
     final Map<String, dynamic> json = jsonDecode(str);
-    return GithubService(
+    return GithubData(
       token: json["token"],
       repo: json["repo"],
       branch: json["branch"],

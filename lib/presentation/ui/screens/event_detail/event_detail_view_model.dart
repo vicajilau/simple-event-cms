@@ -40,7 +40,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     return event?.agenda ?? _createNewAgenda();
   }
 
-
   @override
   void dispose() {
     viewState.dispose();
@@ -48,7 +47,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   @override
   void setup([Object? argument]) {
-    if(argument is String){
+    if (argument is String) {
       _loadEventData(argument);
     }
   }
