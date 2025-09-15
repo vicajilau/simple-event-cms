@@ -5,7 +5,6 @@ import 'package:github/github.dart' hide Organization, Event;
 import 'package:sec/core/config/secure_info.dart';
 
 import '../models/models.dart';
-import '../models/organization.dart';
 
 class ConfigLoader {
   static var year = '2025';
