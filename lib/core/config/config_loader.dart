@@ -7,6 +7,7 @@ import '../models/models.dart';
 
 class ConfigLoader {
   static var year = '2025';
+  static var user = 'vicajilau';
 
   // Lee las variables de entorno. Si no se definen, usa valores por defecto.
   static const String appEnv = String.fromEnvironment(
@@ -26,7 +27,7 @@ class ConfigLoader {
   static Future<Organization> loadOrganization() async {
     final configUrl = 'events/$year/config/organization.json';
     var github = GitHub();
-    var repositorySlug = RepositorySlug("vicajilau", "simple-event-cms");
+    var repositorySlug = RepositorySlug(user, "simple-event-cms");
     final res = await github.repositories.getContents(
         repositorySlug, configUrl);
     if (res.file == null || res.file!.content == null) {
@@ -45,7 +46,7 @@ class ConfigLoader {
 
     final configUrl = 'events/$year/config/site.json';
     var github = GitHub();
-    var repositorySlug = RepositorySlug("vicajilau", "simple-event-cms");
+    var repositorySlug = RepositorySlug(user, "simple-event-cms");
     final res = await github.repositories.getContents(repositorySlug, configUrl);
 
     if (res.file == null || res.file!.content == null) {
