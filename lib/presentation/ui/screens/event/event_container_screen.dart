@@ -109,12 +109,12 @@ class _EventContainerScreenState extends State<EventContainerScreen> {
     );
   }
 
-  EventFormScreen _eventFormScreen({
+  AgendaEventFormScreen _eventFormScreen({
     String? day,
     String? track,
     Session? session,
   }) {
-    return EventFormScreen(
+    return AgendaEventFormScreen(
       data: EventFormData(
         speakers: _getSpeakers(),
         rooms: _getRoomNames(),

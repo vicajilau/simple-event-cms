@@ -5,5 +5,5 @@ abstract class SecRepository {
   Future<List<Agenda>> loadEAgendas();
   Future<List<Speaker>> loadESpeakers();
   Future<List<Sponsor>> loadSponsors();
-  Future<void> saveEvents(List<Event> events);
+  Future<void> saveEvent(Event event);
 }

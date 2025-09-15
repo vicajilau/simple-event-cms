@@ -10,8 +10,6 @@ import 'github/github_model.dart';
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
-  final String uid;
-
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
 
@@ -47,9 +45,9 @@ class Event extends GitHubModel {
   List<Speaker>? speakers;
   List<Sponsor>? sponsors;
 
-  /// Creates a new SiteConfig instance
+  /// Creates a new event instance
   Event({
-    required this.uid,
+    required super.uid,
     required this.rooms,
     required this.eventName,
     required this.year,
@@ -66,18 +64,14 @@ class Event extends GitHubModel {
     super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
-  /// Creates a SiteConfig from JSON data with additional parameters
+  /// Creates a event from JSON data with additional parameters
   ///
   /// The [json] parameter contains the configuration data from site.json
   /// The [baseUrl] parameter specifies where to load data from (local or remote)
   /// The [year] parameter identifies which event year this configuration represents
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
-  factory Event.fromJson(
-    Map<String, dynamic> json, {
-    required String baseUrl,
-    required String year,
-  }) {
+  factory Event.fromJson(Map<String, dynamic> json) {
     EventDates? eventDates;
     if (json['eventDates'] != null) {
       eventDates = EventDates.fromJson(json['eventDates']);
@@ -99,8 +93,8 @@ class Event extends GitHubModel {
     return Event(
       uid: json["UID"],
       eventName: json['eventName'],
-      year: year,
-      baseUrl: baseUrl,
+      year: json['year'],
+      baseUrl: json['baseUrl'],
       primaryColor: json['primaryColor'],
       secondaryColor: json['secondaryColor'],
       eventDates: eventDates,
@@ -113,7 +107,7 @@ class Event extends GitHubModel {
     );
   }
 
-  /// Converts the SiteConfig instance to a JSON object
+  /// Converts the event instance to a JSON object
   @override
   Map<String, dynamic> toJson() {
     return {

@@ -24,16 +24,16 @@ class EventFormData {
   });
 }
 
-class EventFormScreen extends StatefulWidget {
+class AgendaEventFormScreen extends StatefulWidget {
   final EventFormData data;
 
-  const EventFormScreen({super.key, required this.data});
+  const AgendaEventFormScreen({super.key, required this.data});
 
   @override
-  State<EventFormScreen> createState() => _EventFormScreenState();
+  State<AgendaEventFormScreen> createState() => _AgendaEventFormScreenState();
 }
 
-class _EventFormScreenState extends State<EventFormScreen> {
+class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
   TimeOfDay? _initSessionTime, _endSessionTime;
   String _selectedDay = '',
       _selectedRoom = '',
@@ -308,7 +308,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FilledButton(
-          onPressed: () {
+          onPressed: () async {
             if (!isTimeSelected(_initSessionTime) ||
                 !isTimeSelected(_endSessionTime)) {
               setState(() {
@@ -338,6 +338,15 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 date: _selectedDay,
                 tracks: [track],
               );
+              /*var github = await SecureInfo.getGithubKey();
+              if (github != null) {
+                //todo: update agenda day
+                DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+                  dataCommons: CommonsServices(githubService: github),
+                );
+                await dataUpdateInfo.updateAgendaDay(agendaDay,);
+                Navigator.pop(context, agendaDay);
+              }*/
               Navigator.pop(context, agendaDay);
             }
           },

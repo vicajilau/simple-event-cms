@@ -116,12 +116,12 @@ A complete testing suite has been implemented for the Flutter tech events applic
 
 **Tests included**:
 
-- ✅ **SiteConfig.fromJson creates object correctly**
+- ✅ **event.fromJson creates object correctly**
 
   - Tests creation from complete JSON
   - Verifies all required and optional fields
 
-- ✅ **SiteConfig.fromJson handles null optional fields**
+- ✅ **event.fromJson handles null optional fields**
 
   - Tests handling of null optional fields
 
