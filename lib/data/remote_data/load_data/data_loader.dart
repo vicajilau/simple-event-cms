@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/config/config_loader.dart';
 import '../../../core/models/models.dart';
@@ -11,12 +12,10 @@ import '../../../core/models/models.dart';
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
   /// Site configuration containing base URL and other settings
-  final List<Event> config;
+  final List<Event> config = getIt<List<Event>>();
 
-  final Organization organization;
+  final Organization organization = getIt<Organization>();
 
-  /// Creates a new DataLoader with the specified configuration
-  DataLoader(this.config, this.organization);
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL

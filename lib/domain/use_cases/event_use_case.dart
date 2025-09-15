@@ -1,3 +1,4 @@
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
@@ -7,9 +8,8 @@ abstract class EventUseCase {
 }
 
 class EventUseCaseImp implements EventUseCase {
-  SecRepository repository;
+  SecRepository repository = getIt<SecRepository>();
 
-  EventUseCaseImp({required this.repository});
 
   List<Event> events = [];
 

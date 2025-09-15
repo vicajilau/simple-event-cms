@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -15,7 +16,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
 }
 
 class EventCollectionViewModelImp implements EventCollectionViewModel {
-  EventUseCase useCase;
+  EventUseCase useCase = getIt<EventUseCase>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -32,10 +33,6 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   EventFilter currentFilter = EventFilter.all;
 
   List<Event> _allEvents = [];
-
-  EventCollectionViewModelImp({
-    required this.useCase,
-  });
 
   @override
   Future<void> setup([Object? argument]) async {

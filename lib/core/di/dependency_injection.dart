@@ -22,22 +22,22 @@ Future<void> setupDependencies() async {
 
   // Core services
   getIt.registerLazySingleton<DataLoader>(
-    () => DataLoader(getIt<List<Event>>(), getIt<Organization>()),
+    () => DataLoader(),
   );
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(
-    () => SecRepositoryImp(dataLoader: getIt<DataLoader>()),
+    () => SecRepositoryImp(),
   );
 
   // Use Cases
   getIt.registerLazySingleton<EventUseCase>(
-    () => EventUseCaseImp(repository: getIt<SecRepository>()),
+    () => EventUseCaseImp(),
   );
 
   // Event ViewModel
   getIt.registerFactory<EventCollectionViewModel>(
-    () => EventCollectionViewModelImp(useCase: getIt<EventUseCase>()),
+    () => EventCollectionViewModelImp(),
   );
   // Event Detail ViewModel
   getIt.registerFactory<EventDetailViewModel>(
