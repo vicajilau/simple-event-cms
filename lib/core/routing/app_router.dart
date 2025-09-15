@@ -41,7 +41,8 @@ class AppRouter {
       GoRoute(
         path: adminEditEventPath,
         name: adminEditEventName,
-        builder: (context, state) => EventFormScreen(eventId: state.pathParameters['eventId'] ?? ''),
+        builder: (context, state) =>
+            EventFormScreen(eventId: state.pathParameters['eventId'] ?? ''),
       ),
       // Ruta de detalle de evento - ahora usa inyección de dependencias
       GoRoute(

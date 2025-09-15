@@ -244,7 +244,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final Event? newConfig = await AppRouter.router.push(AppRouter.adminCreateEventPath);
+          final Event? newConfig = await AppRouter.router.push(
+            AppRouter.adminCreateEventPath,
+          );
           if (newConfig != null) {
             widget.viewmodel.addEvent(newConfig);
           }

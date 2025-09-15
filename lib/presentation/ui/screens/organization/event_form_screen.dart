@@ -56,8 +56,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     }
 
     _tracks = event?.tracks ?? [];
-    _timezoneController.text =
-        event?.eventDates.timezone ?? 'Europe/Madrid';
+    _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
     _baseUrlController.text = event?.baseUrl ?? '';
     _primaryColorController.text = event?.primaryColor ?? '';
     _secondaryColorController.text = event?.secondaryColor ?? '';
