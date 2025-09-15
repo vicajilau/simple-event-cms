@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
@@ -172,9 +173,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSpeaker() async {
-    final newSpeaker = await Navigator.push<Speaker>(
-      context,
-      MaterialPageRoute(builder: (context) => const SpeakerFormScreen()),
+    final Speaker? newSpeaker = await AppRouter.router.push(
+      AppRouter.speakerFormPath,
     );
 
     if (newSpeaker != null) {

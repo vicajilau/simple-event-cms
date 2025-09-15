@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
+import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 /// Screen that displays a grid of speakers with their information and social links
@@ -11,8 +13,9 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakersViewModel viewmodel;
+  SpeakerUseCase speakerUseCase = getIt<SpeakerUseCase>();
 
-  const SpeakersScreen({super.key, required this.viewmodel});
+  SpeakersScreen({super.key, required this.viewmodel});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
@@ -209,13 +212,11 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                           IconWidget(
                             icon: Icons.edit,
                             onTap: () async {
-                              final updatedSpeaker =
-                                  await Navigator.push<Speaker>(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          SpeakerFormScreen(speaker: speaker),
-                                    ),
+                              final Speaker? updatedSpeaker = await AppRouter
+                                  .router
+                                  .push(
+                                    AppRouter.speakerFormPath,
+                                    extra: speaker.uid,
                                   );
 
                               if (updatedSpeaker != null) {

@@ -1,13 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
-  final Speaker? speaker;
-  const SpeakerFormScreen({super.key, this.speaker});
+  final String? speakerUID;
+  SpeakerUseCase? speakerUseCase =getIt<SpeakerUseCase>();
+  late final speaker = speakerUseCase?.getSpeakerById(speakerUID.toString());
+  SpeakerFormScreen({super.key, this.speakerUID});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -24,9 +28,10 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _websiteController = TextEditingController();
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    final speaker = widget.speaker;
+
+    final speaker = await widget.speakerUseCase?.getSpeakerById(widget.speakerUID.toString());
     if (speaker != null) {
       _nameController.text = speaker.name;
       _imageUrlController.text = speaker.image ?? '';
@@ -155,13 +160,14 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   FilledButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      final speaker = await widget.speakerUseCase?.getSpeakerById(widget.speakerUID.toString());
                       if (_formKey.currentState!.validate()) {
                         Navigator.pop(
                           context,
                           Speaker(
                             uid:
-                                widget.speaker?.uid ??
+                                speaker?.uid ??
                                 DateTime.now().microsecondsSinceEpoch
                                     .toString(),
                             name: _nameController.text,

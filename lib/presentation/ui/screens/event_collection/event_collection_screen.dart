@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 import '../../../view_model_common.dart';
@@ -218,13 +217,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             trailing: IconButton(
                               icon: const Icon(Icons.edit),
                               onPressed: () async {
-                                final Event? eventEdited =
-                                    await Navigator.push<Event>(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            EventFormScreen(eventId: item.uid),
-                                      ),
+                                final Event? eventEdited = await AppRouter
+                                    .router
+                                    .push(
+                                      AppRouter.adminEditEventPath,
+                                      extra: item.uid,
                                     );
                                 if (eventEdited != null) {
                                   widget.viewmodel.editEvent(eventEdited);
