@@ -1,144 +1,74 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
+import 'package:github/github.dart' hide Organization, Event;
 
 import '../models/models.dart';
 
 class ConfigLoader {
+  static var year = '2025';
+  static var user = 'vicajilau';
+  static var project = 'simple-event-cms';
+
   // Lee las variables de entorno. Si no se definen, usa valores por defecto.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
     defaultValue: 'dev',
   );
-  static const String _githubUser = String.fromEnvironment(
-    'GITHUB_USER',
-    defaultValue: 'vicajilau',
-  );
-  static const String _githubRepo = String.fromEnvironment(
-    'GITHUB_REPO',
-    defaultValue: 'event_flutter_template',
-  );
-  static const String _githubBranch = String.fromEnvironment(
-    'GITHUB_BRANCH',
-    defaultValue: 'main',
-  );
+
+  static Future<String> loadBaseUrl() async {
+    final organizationConfigPath = 'events/$year/config/organization.json';
+    final organizationConfigContent = await rootBundle.loadString(
+      organizationConfigPath,
+    );
+    final organizationJsonData = json.decode(organizationConfigContent);
+    return Organization.fromJson(organizationJsonData).baseUrl;
+  }
 
   static Future<Organization> loadOrganization() async {
-    String configContent;
-    String baseUrl;
-
-    // Obtiene el año de la URL si está en web, si no, usa el año actual.
-    // final queryYear = kIsWeb ? uri.queryParameters['year'] : null;
-    // Para este ejemplo, usaremos el año 2025 fijo como en tu estructura.
-    const year = '2025';
-
-    switch (appEnv) {
-      case 'pro':
-        // Entorno de producción: Carga desde GitHub Pages.
-        baseUrl = 'https://$_githubUser.github.io/$_githubRepo';
-        final configUrl = '$baseUrl/events/$year/config/organization.json';
-        final res = await http.get(Uri.parse(configUrl));
-        if (res.statusCode != 200) {
-          throw Exception(
-            "Error cargando configuración de producción desde $configUrl",
-          );
-        }
-        configContent = res.body;
-        break;
-      case 'pre':
-        // Entorno de preproducción: Carga desde el raw de GitHub (rama específica).
-        baseUrl =
-            'https://raw.githubusercontent.com/$_githubUser/$_githubRepo/$_githubBranch';
-        final configUrl = '$baseUrl/events/$year/config/organization.json';
-        final res = await http.get(Uri.parse(configUrl));
-        if (res.statusCode != 200) {
-          throw Exception(
-            "Error cargando configuración de pre-producción desde $configUrl",
-          );
-        }
-        configContent = res.body;
-        break;
-      case 'dev':
-      default:
-        // Entorno de desarrollo: Carga desde los assets locales.
-        final configPath = 'events/2025/config/organization.json';
-        try {
-          configContent = await rootBundle.loadString(configPath);
-          // En dev, la baseUrl es la ruta base de los assets.
-          baseUrl = 'events/2025';
-        } catch (e) {
-          throw Exception(
-            "Error cargando config local: $configPath. Asegúrate de que esté en pubspec.yaml",
-          );
-        }
-        break;
+    final configUrl = 'events/$year/config/organization.json';
+    var github = GitHub();
+    var repositorySlug = RepositorySlug(user, project);
+    final res = await github.repositories.getContents(
+      repositorySlug,
+      configUrl,
+    );
+    if (res.file == null || res.file!.content == null) {
+      throw Exception(
+        "Error cargando configuración de producción desde $configUrl",
+      );
+    } else {
+      final file = utf8.decode(
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
+      final fileJsonData = json.decode(file);
+      return Organization.fromJson(fileJsonData);
     }
-
-    final jsonData = json.decode(configContent);
-
-    return Organization.fromJson(jsonData);
   }
 
   static Future<List<Event>> loadConfig() async {
-    String configContent;
-    String baseUrl;
+    final configUrl = 'events/$year/config/site.json';
+    var github = GitHub();
+    var repositorySlug = RepositorySlug(user, project);
+    final res = await github.repositories.getContents(
+      repositorySlug,
+      configUrl,
+    );
 
-    // Obtiene el año de la URL si está en web, si no, usa el año actual.
-    // final queryYear = kIsWeb ? uri.queryParameters['year'] : null;
-    // Para este ejemplo, usaremos el año 2025 fijo como en tu estructura.
-    const year = '2025';
+    if (res.file == null || res.file!.content == null) {
+      throw Exception(
+        "Error cargando configuración de producción desde $configUrl",
+      );
+    } else {
+      final file = utf8.decode(
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
+      final fileJsonData = json.decode(file);
+      final List<dynamic> eventDataList = fileJsonData["events"];
 
-    switch (appEnv) {
-      case 'pro':
-        // Entorno de producción: Carga desde GitHub Pages.
-        baseUrl = 'https://$_githubUser.github.io/$_githubRepo';
-        final configUrl = '$baseUrl/events/$year/config/site.json';
-        final res = await http.get(Uri.parse(configUrl));
-        if (res.statusCode != 200) {
-          throw Exception(
-            "Error cargando configuración de producción desde $configUrl",
-          );
-        }
-        configContent = res.body;
-        break;
-      case 'pre':
-        // Entorno de preproducción: Carga desde el raw de GitHub (rama específica).
-        baseUrl =
-            'https://raw.githubusercontent.com/$_githubUser/$_githubRepo/$_githubBranch';
-        final configUrl = '$baseUrl/events/$year/config/site.json';
-        final res = await http.get(Uri.parse(configUrl));
-        if (res.statusCode != 200) {
-          throw Exception(
-            "Error cargando configuración de pre-producción desde $configUrl",
-          );
-        }
-        configContent = res.body;
-        break;
-      case 'dev':
-      default:
-        // Entorno de desarrollo: Carga desde los assets locales.
-        final configPath = 'events/2025/config/site.json';
-        try {
-          configContent = await rootBundle.loadString(configPath);
-          // En dev, la baseUrl es la ruta base de los assets.
-          baseUrl = 'events/2025';
-        } catch (e) {
-          throw Exception(
-            "Error cargando config local: $configPath. Asegúrate de que esté en pubspec.yaml",
-          );
-        }
-        break;
+      return eventDataList
+          .map((eventData) => Event.fromJson(eventData))
+          .toList();
     }
-
-    final jsonData = json.decode(configContent);
-    List<Event> listEventsItems = [];
-    var listEvents = jsonData['events'];
-    listEvents.forEach((event) {
-      listEventsItems.add(Event.fromJson(event, baseUrl: baseUrl, year: year));
-    });
-
-    // Pasamos la baseUrl construida para que el modelo la tenga.
-    return listEventsItems;
   }
 }

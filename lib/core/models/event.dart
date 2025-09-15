@@ -47,7 +47,7 @@ class Event extends GitHubModel {
   List<Speaker>? speakers;
   List<Sponsor>? sponsors;
 
-  /// Creates a new SiteConfig instance
+  /// Creates a new event instance
   Event({
     required this.uid,
     required this.tracks,
@@ -64,20 +64,14 @@ class Event extends GitHubModel {
     this.description,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
-  });
+  }) : super(uid: '');
 
-  /// Creates a SiteConfig from JSON data with additional parameters
+  /// Creates a event from JSON data with additional parameters
   ///
   /// The [json] parameter contains the configuration data from site.json
-  /// The [baseUrl] parameter specifies where to load data from (local or remote)
-  /// The [year] parameter identifies which event_collection year this configuration represents
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
-  factory Event.fromJson(
-    Map<String, dynamic> json, {
-    required String baseUrl,
-    required String year,
-  }) {
+  factory Event.fromJson(Map<String, dynamic> json) {
     List<String> speakers = (json['speakersUID'] != null)
         ? (json['speakersUID'] as List)
               .map((item) => item['UID'] as String)
@@ -95,8 +89,8 @@ class Event extends GitHubModel {
     return Event(
       uid: json["UID"],
       eventName: json['eventName'],
-      year: year,
-      baseUrl: baseUrl,
+      year: json['year'],
+      baseUrl: json['baseUrl'],
       primaryColor: json['primaryColor'],
       secondaryColor: json['secondaryColor'],
       eventDates: EventDates.fromJson(json['eventDates']),
@@ -109,7 +103,7 @@ class Event extends GitHubModel {
     );
   }
 
-  /// Converts the SiteConfig instance to a JSON object
+  /// Converts the event instance to a JSON object
   @override
   Map<String, dynamic> toJson() {
     return {

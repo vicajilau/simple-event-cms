@@ -3,20 +3,15 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 
-import '../../core/config/config_loader.dart';
-import '../../core/models/models.dart';
+import '../../../core/config/config_loader.dart';
+import '../../../core/models/models.dart';
 
 /// Service class responsible for loading event_collection data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
-  /// Site configuration containing base URL and other settings
-  final List<Event> config;
-
-  final Organization organization;
-
-  /// Creates a new DataLoader with the specified configuration
-  DataLoader(this.config, this.organization);
+  final Organization organization = getIt<Organization>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -41,7 +36,11 @@ class DataLoader {
       final localPath = 'events/$year/$path';
       content = await rootBundle.loadString(localPath);
     }
-    return json.decode(content);
+    if (path == PathsGithub.eventPath) {
+      return json.decode(content)["events"];
+    } else {
+      return json.decode(content);
+    }
   }
 
   /// Loads speaker information from the speakers.json file
@@ -65,5 +64,16 @@ class DataLoader {
   Future<List<Sponsor>> loadSponsors(String year) async {
     List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath, year);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
+  }
+
+  /// Loads event information from the events.json file
+  /// Returns a Future containing a list of event data
+  Future<List<Event>> loadEvents(String year) async {
+    List<dynamic> jsonList = await loadData(PathsGithub.eventPath, year);
+    return jsonList
+        .map<Event>(
+          (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
+        )
+        .toList();
   }
 }

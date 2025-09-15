@@ -29,7 +29,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup();
+    widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {

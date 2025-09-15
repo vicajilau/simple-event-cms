@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/config/secure_info.dart';
+import 'package:sec/core/core.dart';
+import 'package:sec/core/models/github/github_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,10 +25,16 @@ class _LoginPageState extends State<LoginScreen> {
 
         // Si la autenticación es exitosa y no hay excepción:
         if (github.auth.isToken || github.auth.isBasic) {
+          await SecureInfo.saveGithubKey(
+            GithubData(
+              token: github.auth.authorizationHeaderValue().toString(),
+              repo: await ConfigLoader.loadBaseUrl(),
+            ),
+          );
           // Verifica si hay autenticación básica o token
           if (context.mounted) {
             // Redirigir a la pantalla de eventos después del login exitoso
-            context.go('/events');
+            context.go('/');
           }
         } else {
           // Este bloque podría no ser alcanzado si la autenticación falla antes

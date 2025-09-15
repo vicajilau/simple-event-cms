@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -25,8 +26,7 @@ abstract class EventDetailViewModel
 }
 
 class EventDetailViewModelImp extends EventDetailViewModel {
-  final EventUseCase useCase;
-  final String eventId;
+  final EventUseCase useCase = getIt<EventUseCase>();
   Event? event;
 
   @override
@@ -40,16 +40,16 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     return event?.agenda ?? _createNewAgenda();
   }
 
-  EventDetailViewModelImp(this.useCase, this.eventId);
-
   @override
   void dispose() {
     viewState.dispose();
   }
 
   @override
-  void setup() {
-    _loadEventData(eventId);
+  void setup([Object? argument]) {
+    if (argument is String) {
+      _loadEventData(argument);
+    }
   }
 
   @override

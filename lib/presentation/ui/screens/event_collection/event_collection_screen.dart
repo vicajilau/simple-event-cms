@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-import 'package:sec/presentation/view_model_common.dart';
 
+import '../../../view_model_common.dart';
 import 'event_collection_view_model.dart';
 
 /// Main home screen widget that displays the event_collection information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 /// Now uses dependency injection for better testability and architecture
 class EventCollectionScreen extends StatefulWidget {
-  final EventCollectionViewModel viewmodel;
+  final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   final int crossAxisCount;
 
-  const EventCollectionScreen({
-    super.key,
-    required this.viewmodel,
-    this.crossAxisCount = 4,
-  });
+  EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
   @override
   State<EventCollectionScreen> createState() => _EventCollectionScreenState();
@@ -27,11 +25,34 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
+  EventCollectionViewModel _viewmodel = getIt<EventCollectionViewModel>();
+  String? organizationName;
+  bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup();
+    _loadConfiguration();
+  }
+
+  Future<void> _loadConfiguration() async {
+    try {
+      // Usar inyección de dependencias en lugar de crear instancias manualmente
+      final organization = getIt<Organization>();
+
+      widget.viewmodel.setup();
+
+      setState(() {
+        organizationName = organization.organizationName;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Error cargando configuración: $e';
+        _isLoading = false;
+      });
+    }
   }
 
   @override
@@ -42,6 +63,40 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_errorMessage != null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(_errorMessage!),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _isLoading = true;
+                    _errorMessage = null;
+                  });
+                  _loadConfiguration();
+                },
+                child: const Text('Reintentar'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (organizationName == null) {
+      return const Scaffold(
+        body: Center(child: Text('Error: Configuración no disponible')),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
@@ -60,7 +115,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               }
             });
           },
-          child: Text(widget.viewmodel.organizationName),
+          child: Text(organizationName.toString()),
         ),
         actions: <Widget>[
           EventFilterButton(
@@ -101,7 +156,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           }
 
           return ValueListenableBuilder<List<Event>>(
-            valueListenable: widget.viewmodel.eventsToShow,
+            valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
                 return const Center(
@@ -168,9 +223,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            OrganizationFormScreen(
-                                              siteConfig: item,
-                                            ),
+                                            EventFormScreen(eventId: item.uid),
                                       ),
                                     );
                                 if (eventEdited != null) {
@@ -191,11 +244,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final Event? newConfig = await Navigator.push<Event>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const OrganizationFormScreen(),
-            ),
+          final Event? newConfig = await AppRouter.router.push(
+            AppRouter.adminCreateEventPath,
           );
           if (newConfig != null) {
             widget.viewmodel.addEvent(newConfig);

@@ -5,6 +5,6 @@ enum ViewState { error, isLoading, loadFinished }
 abstract class ViewModelCommon {
   abstract final ValueNotifier<ViewState> viewState;
   abstract final String errorMessage;
-  void setup();
+  void setup([Object? argument]);
   void dispose();
 }
