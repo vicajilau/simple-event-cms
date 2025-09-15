@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
@@ -222,7 +223,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            EventFormScreen(event: item),
+                                            EventFormScreen(eventId: item.uid),
                                       ),
                                     );
                                 if (eventEdited != null) {
@@ -243,10 +244,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final Event? newConfig = await Navigator.push<Event>(
-            context,
-            MaterialPageRoute(builder: (context) => const EventFormScreen()),
-          );
+          final Event? newConfig = await AppRouter.router.push(AppRouter.adminCreateEventPath);
           if (newConfig != null) {
             widget.viewmodel.addEvent(newConfig);
           }

@@ -1,4 +1,3 @@
-export 'event/event_container_screen.dart';
 export 'event_collection/event_collection_screen.dart';
 export 'event_detail/agenda/agenda_form_screen.dart';
 export 'event_detail/agenda/agenda_screen.dart';

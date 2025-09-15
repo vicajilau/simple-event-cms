@@ -4,6 +4,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class EventUseCase {
   Future<List<Event>> getComposedEvents();
+  Event? getEventById(String id);
   void saveEvent(Event event);
 }
 
@@ -59,6 +60,18 @@ class EventUseCaseImp implements EventUseCase {
     }
     events = allEvents;
     return allEvents;
+  }
+
+  @override
+  Event? getEventById(String id) {
+    if (events.isEmpty) {
+      getComposedEvents();
+    }
+    try {
+      return events.firstWhere((event) => event.uid == id);
+    } on StateError {
+      return null;
+    }
   }
 
   @override
