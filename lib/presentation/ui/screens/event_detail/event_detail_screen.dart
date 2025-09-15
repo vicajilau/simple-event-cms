@@ -145,7 +145,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addTrackToAgenda() async {
-    AgendaFormScreen agenda = AgendaFormScreen(
+    /*AgendaFormScreen agenda = AgendaFormScreen(
       data: EventFormData(
         rooms: [],
         days: [],
@@ -168,7 +168,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       context,
       MaterialPageRoute(builder: (context) => agenda),
     );
-    /*_addNewSession(newAgendaDay: newAgendaDay);*/
+    _addNewSession(newAgendaDay: newAgendaDay);*/
   }
 
   void _addSpeaker() async {
