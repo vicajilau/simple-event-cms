@@ -209,7 +209,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            OrganizationFormScreen(event: item),
+                                            EventFormScreen(event: item),
                                       ),
                                     );
                                 if (eventEdited != null) {
@@ -233,7 +233,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           final Event? newConfig = await Navigator.push<Event>(
             context,
             MaterialPageRoute(
-              builder: (context) => const OrganizationFormScreen(),
+              builder: (context) => const EventFormScreen(),
             ),
           );
           if (newConfig != null) {

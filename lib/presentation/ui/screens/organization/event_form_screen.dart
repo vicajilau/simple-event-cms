@@ -4,15 +4,15 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-class OrganizationFormScreen extends StatefulWidget {
+class EventFormScreen extends StatefulWidget {
   final Event? event;
-  const OrganizationFormScreen({super.key, this.event});
+  const EventFormScreen({super.key, this.event});
 
   @override
-  State<OrganizationFormScreen> createState() => _OrganizationFormScreenState();
+  State<EventFormScreen> createState() => _EventFormScreenState();
 }
 
-class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
+class _EventFormScreenState extends State<EventFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
   final TextEditingController _nameController = TextEditingController();

@@ -24,16 +24,16 @@ class EventFormData {
   });
 }
 
-class EventFormScreen extends StatefulWidget {
+class AgendaEventFormScreen extends StatefulWidget {
   final EventFormData data;
 
-  const EventFormScreen({super.key, required this.data});
+  const AgendaEventFormScreen({super.key, required this.data});
 
   @override
-  State<EventFormScreen> createState() => _EventFormScreenState();
+  State<AgendaEventFormScreen> createState() => _AgendaEventFormScreenState();
 }
 
-class _EventFormScreenState extends State<EventFormScreen> {
+class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
   TimeOfDay? _initSessionTime, _endSessionTime;
   String _selectedDay = '',
       _selectedRoom = '',
