@@ -1,7 +1,5 @@
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
-import '../../domain/use_cases/event_use_case.dart';
 
 class ScreenFactory {
   const ScreenFactory();
@@ -11,8 +9,7 @@ class ScreenFactory {
   }
 
   static EventDetailScreen eventDetailScreen(String eventId) {
-    final useCase = getIt<EventUseCase>();
-    final viewmodel = EventDetailViewModelImp(useCase);
+    final viewmodel = EventDetailViewModelImp();
     return EventDetailScreen(viewmodel: viewmodel, eventId: eventId);
   }
 }

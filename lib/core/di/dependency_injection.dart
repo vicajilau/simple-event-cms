@@ -12,11 +12,9 @@ final GetIt getIt = GetIt.instance;
 
 /// Configura todas las dependencias de la aplicación
 Future<void> setupDependencies() async {
-  // Cargar configuración inicial
-  final organization = await ConfigLoader.loadOrganization();
 
   // Registrar configuración global
-  getIt.registerSingleton<Organization>(organization);
+  getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
 
   // Core services
   getIt.registerLazySingleton<DataLoader>(
@@ -39,7 +37,7 @@ Future<void> setupDependencies() async {
   );
   // Event Detail ViewModel
   getIt.registerLazySingleton<EventDetailViewModel>(
-    () => EventDetailViewModelImp(getIt<EventUseCase>()),
+    () => EventDetailViewModelImp(),
   );
 }
 
