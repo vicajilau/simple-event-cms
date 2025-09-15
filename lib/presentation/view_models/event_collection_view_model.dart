@@ -55,7 +55,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   void addEvent(Event event) {
     _allEvents.add(event);
     _updateEventsToShow();
-    useCase.saveEvents(_allEvents);
+    useCase.saveEvent(event);
   }
 
   @override
@@ -64,7 +64,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      useCase.saveEvents(_allEvents);
+      useCase.saveEvent(event);
     }
   }
 
@@ -74,7 +74,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
-      useCase.saveEvents(_allEvents);
+      useCase.saveEvent(event);
     }
   }
 

@@ -74,7 +74,7 @@ class CommonsServices {
     final res = await github.putJSON(
       fileUrl,
       headers: {
-        "Authorization": "${githubService.token}",
+        "Authorization": githubService.token,
         "Accept": "application/vnd.github.v3+json",
         "Access-Control-Allow-Origin": "*"
       },

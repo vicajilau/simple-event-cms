@@ -3,7 +3,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class EventUseCase {
   Future<List<Event>> getComposedEvents();
-  void saveEvents(List<Event> events);
+  void saveEvent(Event event);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -56,7 +56,7 @@ class EventUseCaseImp implements EventUseCase {
   }
 
   @override
-  void saveEvents(List<Event> events) {
-    // TODO: implement saveEvents
+  Future<void> saveEvent(Event event) async {
+    repository.saveEvent(event);
   }
 }

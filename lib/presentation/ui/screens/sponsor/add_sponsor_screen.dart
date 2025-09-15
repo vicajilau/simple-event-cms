@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/remote_data/commons_services.dart';
-import 'package:sec/data/remote_data/data_update_info.dart';
+import 'package:sec/data/remote_data/common/commons_services.dart';
+import 'package:sec/data/remote_data/update_data/data_update_info.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 import '../../../../core/config/secure_info.dart';

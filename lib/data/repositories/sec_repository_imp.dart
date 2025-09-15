@@ -1,6 +1,10 @@
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/local_data/data_loader.dart';
+import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
+
+import '../../core/config/secure_info.dart';
+import '../remote_data/common/commons_services.dart';
+import '../remote_data/update_data/data_update_info.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader;
@@ -28,8 +32,11 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveEvents(List<Event> events) {
-    // TODO: implement saveEvents
-    throw UnimplementedError();
+  Future<void> saveEvent(Event event) async {
+    var github = await SecureInfo.getGithubKey();
+    if(github != null){
+      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
+      await dataUpdateInfo.updateEvent(event);
+    }
   }
 }

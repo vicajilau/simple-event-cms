@@ -1,8 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'package:sec/core/core.dart';
 
-import '../../core/models/models.dart';
-import 'commons_services.dart';
+import '../../../core/models/models.dart';
+import '../common/commons_services.dart';
 
 class DataUpdateInfo {
   final CommonsServices dataCommons;
@@ -27,7 +27,7 @@ class DataUpdateInfo {
     return dataCommons.updateData(
       speakersOriginal,
       speakers,
-      speakers.pathUrl,
+      "events/2025/${speakers.pathUrl}",
       speakers.updateMessage,
     );
   }
@@ -42,7 +42,7 @@ class DataUpdateInfo {
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
-      agenda.pathUrl,
+      "events/2025/${agenda.pathUrl}",
       agenda.updateMessage,
     );
   }
@@ -58,7 +58,7 @@ class DataUpdateInfo {
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
-      agenda.pathUrl,
+      "events/2025/${agenda.pathUrl}",
       agenda.updateMessage,
     );
   }
@@ -71,20 +71,20 @@ class DataUpdateInfo {
     return dataCommons.updateData(
       sponsorOriginal,
       sponsors,
-      sponsors.pathUrl,
+      "events/2025/${sponsors.pathUrl}",
       sponsors.updateMessage,
     );
   }
 
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
-  Future<http.Response> updateEvents(Event event) async {
+  Future<http.Response> updateEvent(Event event) async {
     var dataLoader = await getDataLoader();
     var eventsOriginal = await dataLoader.loadEvents("2025");
     return dataCommons.updateData(
       eventsOriginal,
       event,
-      event.pathUrl,
+      "events/2025/${event.pathUrl}",
       event.updateMessage,
     );
   }

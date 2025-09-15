@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/remote_data/commons_services.dart';
-import 'package:sec/data/remote_data/data_update_info.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class OrganizationFormScreen extends StatefulWidget {
@@ -65,14 +62,14 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
   @override
   Widget build(BuildContext context) {
     return FormScreenWrapper(
-      pageTitle: 'Creación organización',
+      pageTitle: 'Creación evento',
       widgetFormChild: Form(
         key: _formKey,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           spacing: 16,
           children: [
-            Text('Creando organización', style: AppFonts.titleHeadingForm),
+            Text('Creando evento', style: AppFonts.titleHeadingForm),
 
             SectionInputForm(
               label: 'Nombre del evento',
@@ -213,11 +210,6 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
       speakersUID: ["speaker123"],
       sponsorsUID: ["sponsor123"],
     );
-    var github = await SecureInfo.getGithubKey();
-    if(github != null){
-      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
-      await dataUpdateInfo.updateEvents(event);
-    }
     Navigator.pop(context, event);
   }
 }
