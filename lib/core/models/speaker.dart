@@ -2,7 +2,6 @@ import '../config/paths_github.dart';
 import 'github/github_model.dart';
 
 class Speaker extends GitHubModel {
-
   /// Full name of the speaker
   final String name;
 

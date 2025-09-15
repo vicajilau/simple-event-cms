@@ -30,32 +30,39 @@ class ConfigLoader {
     var github = GitHub();
     var repositorySlug = RepositorySlug(user, project);
     final res = await github.repositories.getContents(
-        repositorySlug, configUrl);
+      repositorySlug,
+      configUrl,
+    );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
         "Error cargando configuración de producción desde $configUrl",
       );
     } else {
       final file = utf8.decode(
-          base64.decode(res.file!.content!.replaceAll("\n", "")));
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
       final fileJsonData = json.decode(file);
       return Organization.fromJson(fileJsonData);
     }
   }
 
   static Future<List<Event>> loadConfig() async {
-
     final configUrl = 'events/$year/config/site.json';
     var github = GitHub();
     var repositorySlug = RepositorySlug(user, project);
-    final res = await github.repositories.getContents(repositorySlug, configUrl);
+    final res = await github.repositories.getContents(
+      repositorySlug,
+      configUrl,
+    );
 
     if (res.file == null || res.file!.content == null) {
       throw Exception(
         "Error cargando configuración de producción desde $configUrl",
       );
-    }else{
-      final file = utf8.decode(base64.decode(res.file!.content!.replaceAll("\n", "")));
+    } else {
+      final file = utf8.decode(
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
       final fileJsonData = json.decode(file);
       final List<dynamic> eventDataList = fileJsonData["events"];
 
@@ -63,7 +70,5 @@ class ConfigLoader {
           .map((eventData) => Event.fromJson(eventData))
           .toList();
     }
-
-
   }
 }

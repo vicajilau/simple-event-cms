@@ -37,7 +37,7 @@ Future<void> setupDependencies() async {
 
   // Event ViewModel
   getIt.registerFactory<EventCollectionViewModel>(
-        () => EventCollectionViewModelImp(useCase: getIt<EventUseCase>()),
+    () => EventCollectionViewModelImp(useCase: getIt<EventUseCase>()),
   );
 }
 

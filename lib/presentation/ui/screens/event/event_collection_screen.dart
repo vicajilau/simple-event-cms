@@ -36,7 +36,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     try {
       final organization = getIt<Organization>();
 
-      final viewmodel = getIt<EventCollectionViewModel>() as EventCollectionViewModelImp;
+      final viewmodel =
+          getIt<EventCollectionViewModel>() as EventCollectionViewModelImp;
       await viewmodel.setup();
 
       setState(() {
@@ -208,9 +209,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (context) =>
-                                            OrganizationFormScreen(
-                                              event: item,
-                                            ),
+                                            OrganizationFormScreen(event: item),
                                       ),
                                     );
                                 if (eventEdited != null) {

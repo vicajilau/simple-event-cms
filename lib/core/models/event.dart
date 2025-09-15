@@ -10,7 +10,6 @@ import 'github/github_model.dart';
 /// Contains all the essential information needed to configure and display an event
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
-
   /// The name of the event (e.g., "DevFest Spain 2025")
   final String eventName;
 

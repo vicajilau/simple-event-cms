@@ -130,8 +130,10 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                           website: _websiteController.text,
                         );
                         var github = (await SecureInfo.getGithubKey());
-                        if(github != null){
-                          DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
+                        if (github != null) {
+                          DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+                            dataCommons: CommonsServices(githubService: github),
+                          );
                           await dataUpdateInfo.updateSponsors(sponsor);
                           Navigator.pop(context, sponsor);
                         }

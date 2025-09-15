@@ -11,8 +11,6 @@ class GithubService {
     this.branch = "main",
   });
 
-
-
   factory GithubService.fromJson(String str) {
     final Map<String, dynamic> json = jsonDecode(str);
     return GithubService(

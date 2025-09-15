@@ -21,7 +21,8 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
   final TextEditingController _timezoneController = TextEditingController();
   final TextEditingController _baseUrlController = TextEditingController();
   final TextEditingController _primaryColorController = TextEditingController();
-  final TextEditingController _secondaryColorController = TextEditingController();
+  final TextEditingController _secondaryColorController =
+      TextEditingController();
   final TextEditingController _venueNameController = TextEditingController();
   final TextEditingController _venueAddressController = TextEditingController();
   final TextEditingController _venueCityController = TextEditingController();
@@ -49,7 +50,8 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     }
 
     _rooms = widget.event?.rooms ?? [];
-    _timezoneController.text = widget.event?.eventDates?.timezone ?? 'Europe/Madrid';
+    _timezoneController.text =
+        widget.event?.eventDates?.timezone ?? 'Europe/Madrid';
     _baseUrlController.text = widget.event?.baseUrl ?? '';
     _primaryColorController.text = widget.event?.primaryColor ?? '';
     _secondaryColorController.text = widget.event?.secondaryColor ?? '';
@@ -58,10 +60,8 @@ class _OrganizationFormScreenState extends State<OrganizationFormScreen> {
     _venueCityController.text = widget.event?.venue?.city ?? '';
     _descriptionController.text = widget.event?.description ?? '';
     _agendaUIDController.text = widget.event?.agendaUID ?? '';
-    _speakersUIDController.text =
-        widget.event?.speakersUID.join(', ') ?? '';
-    _sponsorsUIDController.text =
-        widget.event?.sponsorsUID.join(', ') ?? '';
+    _speakersUIDController.text = widget.event?.speakersUID.join(', ') ?? '';
+    _sponsorsUIDController.text = widget.event?.sponsorsUID.join(', ') ?? '';
   }
 
   Future<void> _selectDate(

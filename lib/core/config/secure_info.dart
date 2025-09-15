@@ -1,14 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sec/core/models/github/github_services.dart';
-import 'dart:convert';
 
 /// Defines a class named `SecureInfo` to interact with `FlutterSecureStorage`.
 ///
 /// This class provides methods to securely save and retrieve keys.
 abstract class SecureInfo {
   static final FlutterSecureStorage _storage = const FlutterSecureStorage();
-
-
 
   /// Constructor that initializes an instance of `FlutterSecureStorage`.
   // SecureInfo() : _storage = const FlutterSecureStorage();

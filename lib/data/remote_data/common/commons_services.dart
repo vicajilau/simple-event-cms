@@ -20,7 +20,7 @@ class CommonsServices {
       headers: {
         "Authorization": "${githubService.token}",
         "Accept": "application/vnd.github.v3+json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
     );
 
@@ -41,7 +41,9 @@ class CommonsServices {
     String commitMessage,
   ) async {
     // Find the index of the data to update, if it exists
-    int indexElementFounded = dataOriginal.indexWhere((item) => item.uid == data.uid);
+    int indexElementFounded = dataOriginal.indexWhere(
+      (item) => item.uid == data.uid,
+    );
 
     // If data exists, replace it; otherwise, add it
     if (dataOriginal.indexWhere((item) => item.uid == data.uid) != -1) {
@@ -58,10 +60,7 @@ class CommonsServices {
     );
 
     // Prepare the request body
-    final body = json.encode({
-      "message": commitMessage,
-      "content": dataInfo,
-    });
+    final body = json.encode({"message": commitMessage, "content": dataInfo});
 
     // Construct the file URL
     final fileUrl =
@@ -76,7 +75,7 @@ class CommonsServices {
       headers: {
         "Authorization": githubService.token,
         "Accept": "application/vnd.github.v3+json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
       body: body,
     );

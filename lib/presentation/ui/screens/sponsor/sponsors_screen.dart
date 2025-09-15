@@ -157,7 +157,6 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
                                 if (updatedSponsor != null &&
                                     updatedSponsor is Sponsor) {
-
                                   setState(() {
                                     final index = widget.sponsors.indexWhere(
                                       (s) => s.uid == sponsor.uid,

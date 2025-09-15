@@ -16,7 +16,6 @@ class Organization extends GitHubModel {
     required this.baseUrl,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
-
   });
 
   factory Organization.fromJson(Map<String, dynamic> json) => Organization(

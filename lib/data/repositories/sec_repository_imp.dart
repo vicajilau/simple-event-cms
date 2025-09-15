@@ -34,8 +34,10 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<void> saveEvent(Event event) async {
     var github = await SecureInfo.getGithubKey();
-    if(github != null){
-      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(dataCommons: CommonsServices(githubService: github));
+    if (github != null) {
+      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+        dataCommons: CommonsServices(githubService: github),
+      );
       await dataUpdateInfo.updateEvent(event);
     }
   }

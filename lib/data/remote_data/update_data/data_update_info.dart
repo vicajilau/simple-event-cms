@@ -12,10 +12,7 @@ class DataUpdateInfo {
   Future<DataLoader> getDataLoader() async {
     final config = await ConfigLoader.loadConfig();
     final organization = await ConfigLoader.loadOrganization();
-    return DataLoader(
-      config,
-      organization,
-    );
+    return DataLoader(config, organization);
   }
 
   /// Loads speaker information from the speakers.json file
@@ -51,7 +48,10 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> updateAgendaDay(AgendaDay agendaDay,Agenda agenda) async {
+  Future<http.Response> updateAgendaDay(
+    AgendaDay agendaDay,
+    Agenda agenda,
+  ) async {
     var dataLoader = await getDataLoader();
     var agendaOriginal = await dataLoader.loadAgenda("2025");
 
