@@ -135,7 +135,9 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                             dataCommons: CommonsServices(githubService: github),
                           );
                           await dataUpdateInfo.updateSponsors(sponsor);
-                          Navigator.pop(context, sponsor);
+                          if (context.mounted) {
+                            Navigator.pop(context, sponsor);
+                          }
                         }
                       }
                     },

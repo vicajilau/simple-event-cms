@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sec/core/models/github/github_services.dart';
 
@@ -25,7 +26,7 @@ abstract class SecureInfo {
       await _storage.write(key: 'github_service', value: githubServiceJson);
     } catch (e) {
       // Consider handling the error more specifically or logging it.
-      print('Error saving GithubService: $e');
+      debugPrint('Error saving GithubService: $e');
       rethrow; // Rethrow the exception so the caller can handle it.
     }
   }
