@@ -212,7 +212,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                                       MaterialPageRoute(
                                         builder: (context) =>
                                             OrganizationFormScreen(
-                                              siteConfig: item,
+                                              event: item,
                                             ),
                                       ),
                                     );
