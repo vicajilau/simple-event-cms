@@ -96,12 +96,13 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     _applyFilters();
   }
 
-  void _applyFilters() {
+  Future<void> _applyFilters() async {
     final now = DateTime.now();
     List<Event> eventsFiltered = [..._allEvents];
     switch (currentFilter) {
       case EventFilter.all:
         // Show all events
+        eventsFiltered = _allEvents;
         break;
       case EventFilter.past:
         eventsFiltered = eventsFiltered.where((event) {

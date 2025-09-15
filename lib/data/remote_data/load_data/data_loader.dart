@@ -11,8 +11,6 @@ import '../../../core/models/models.dart';
 /// Service class responsible for loading event_collection data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
-  /// Site configuration containing base URL and other settings
-  final List<Event> config = getIt<List<Event>>();
 
   final Organization organization = getIt<Organization>();
 
