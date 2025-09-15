@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Organization, Event;
-import 'package:sec/core/config/secure_info.dart';
 
 import '../models/models.dart';
 
@@ -25,48 +24,44 @@ class ConfigLoader {
   }
 
   static Future<Organization> loadOrganization() async {
-    final baseUrl = await loadBaseUrl();
-
-    final configUrl = '$baseUrl/events/$year/config/organization.json';
-    var accessToken = (await SecureInfo.getGithubKey())?.token;
-    var github = GitHub(auth: Authentication.withToken(accessToken));
-    final res = await github.getJSON(configUrl,
-      headers: {
-        "Authorization": "$accessToken",
-        "Accept": "application/vnd.github.v3+json",
-        "Access-Control-Allow-Origin": "*"
-      },);
-    if (res == null) {
+    final configUrl = 'events/$year/config/organization.json';
+    var github = GitHub();
+    var repositorySlug = RepositorySlug("vicajilau", "simple-event-cms");
+    final res = await github.repositories.getContents(
+        repositorySlug, configUrl);
+    if (res.file == null || res.file!.content == null) {
       throw Exception(
         "Error cargando configuración de producción desde $configUrl",
       );
+    } else {
+      final file = utf8.decode(
+          base64.decode(res.file!.content!.replaceAll("\n", "")));
+      final fileJsonData = json.decode(file);
+      return Organization.fromJson(fileJsonData["events"]);
     }
-    return Organization.fromJson(res);
   }
 
   static Future<List<Event>> loadConfig() async {
-    final baseUrl = await loadBaseUrl();
 
-    final configUrl = '$baseUrl/events/$year/config/site.json';
-    var accessToken = (await SecureInfo.getGithubKey())?.token;
-    var github = GitHub(auth: Authentication.withToken(accessToken));
-    final res = await github.getJSON(configUrl,
-      headers: {
-        "Authorization": "$accessToken",
-        "Accept": "application/vnd.github.v3+json",
-        "Access-Control-Allow-Origin": "*"
-      },);
+    final configUrl = 'events/$year/config/site.json';
+    var github = GitHub();
+    var repositorySlug = RepositorySlug("vicajilau", "simple-event-cms");
+    final res = await github.repositories.getContents(repositorySlug, configUrl);
 
-    if (res == null) {
+    if (res.file == null || res.file!.content == null) {
       throw Exception(
         "Error cargando configuración de producción desde $configUrl",
       );
+    }else{
+      final file = utf8.decode(base64.decode(res.file!.content!.replaceAll("\n", "")));
+      final fileJsonData = json.decode(file);
+      final List<dynamic> eventDataList = fileJsonData["events"];
+
+      return eventDataList
+          .map((eventData) => Event.fromJson(eventData))
+          .toList();
     }
 
-    final List<dynamic> eventDataList = res["events"];
 
-    return eventDataList
-        .map((eventData) => Event.fromJson(eventData))
-        .toList();
   }
 }
