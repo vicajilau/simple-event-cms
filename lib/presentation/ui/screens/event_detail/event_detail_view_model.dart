@@ -26,7 +26,6 @@ abstract class EventDetailViewModel
 
 class EventDetailViewModelImp extends EventDetailViewModel {
   final EventUseCase useCase;
-  final String eventId;
   Event? event;
 
   @override
@@ -40,7 +39,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     return event?.agenda ?? _createNewAgenda();
   }
 
-  EventDetailViewModelImp(this.useCase, this.eventId);
+  EventDetailViewModelImp(this.useCase);
 
   @override
   void dispose() {
@@ -48,8 +47,10 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   }
 
   @override
-  void setup() {
-    _loadEventData(eventId);
+  void setup([Object? argument]) {
+    if(argument is String){
+      _loadEventData(argument);
+    }
   }
 
   @override

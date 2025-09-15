@@ -8,7 +8,6 @@ import '../../../view_model_common.dart';
 abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
-  String get organizationName;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
   void editEvent(Event event);
@@ -17,10 +16,6 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
 
 class EventCollectionViewModelImp implements EventCollectionViewModel {
   EventUseCase useCase;
-  Organization organization; // TODO: Revisa,. no se para que se usa actualmente
-
-  @override
-  String get organizationName => organization.organizationName;
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -40,11 +35,10 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   EventCollectionViewModelImp({
     required this.useCase,
-    required this.organization,
   });
 
   @override
-  Future<void> setup() async {
+  Future<void> setup([Object? argument]) async {
     loadEvents();
   }
 
@@ -77,7 +71,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   void addEvent(Event event) {
     _allEvents.add(event);
     _updateEventsToShow();
-    useCase.saveEvents(_allEvents);
+    useCase.saveEvent(event);
   }
 
   @override
@@ -86,7 +80,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      useCase.saveEvents(_allEvents);
+      useCase.saveEvent(event);
     }
   }
 
@@ -96,7 +90,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
-      useCase.saveEvents(_allEvents);
+      useCase.saveEvent(event);
     }
   }
 

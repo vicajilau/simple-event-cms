@@ -1,3 +1,4 @@
+export 'event/event_container_screen.dart';
 export 'event_collection/event_collection_screen.dart';
 export 'event_detail/agenda/agenda_form_screen.dart';
 export 'event_detail/agenda/agenda_screen.dart';
@@ -8,4 +9,4 @@ export 'event_detail/sponsor/add_sponsor_screen.dart';
 export 'event_detail/sponsor/sponsors_screen.dart';
 export 'login/admin_screen.dart';
 export 'login/login_screen.dart';
-export 'organization/organization_form_screen.dart';
+export 'organization/event_form_screen.dart';

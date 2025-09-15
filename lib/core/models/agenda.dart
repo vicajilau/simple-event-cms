@@ -8,11 +8,10 @@ import 'github/github_model.dart';
 /// Day name is automatically derived from the date using localization
 
 class Agenda extends GitHubModel {
-  final String uid;
   final List<AgendaDay> days;
 
   Agenda({
-    required this.uid,
+    required super.uid,
     required this.days,
     super.pathUrl = PathsGithub.agendaPath,
     super.updateMessage = PathsGithub.agendaUpdateMessage,
