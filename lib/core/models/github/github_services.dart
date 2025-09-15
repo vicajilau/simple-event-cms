@@ -3,7 +3,7 @@ import 'dart:convert';
 class GithubService {
   final String token;
   final String repo;
-  String branch = "feature/prepare_clean_update_fata";
+  String branch = "develop";
 
   GithubService({
     required this.token,
