@@ -3,7 +3,6 @@ import 'package:github/github.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/models/github/github_services.dart';
-import 'package:sec/event_app.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -31,7 +30,7 @@ class _LoginPageState extends State<LoginScreen> {
           // Verifica si hay autenticación básica o token
           if (context.mounted) {
             // Redirigir a la pantalla de eventos después del login exitoso
-            context.go('/events');
+            context.go('/');
           }
         } else {
           // Este bloque podría no ser alcanzado si la autenticación falla antes
