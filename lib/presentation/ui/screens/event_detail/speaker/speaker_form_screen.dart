@@ -9,7 +9,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final String? speakerUID;
-  SpeakerUseCase? speakerUseCase = getIt<SpeakerUseCase>();
+  final SpeakerUseCase? speakerUseCase = getIt<SpeakerUseCase>();
   SpeakerFormScreen({super.key, this.speakerUID});
 
   @override

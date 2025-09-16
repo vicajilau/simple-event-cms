@@ -24,7 +24,7 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  EventCollectionViewModel _viewmodel = getIt<EventCollectionViewModel>();
+  final EventCollectionViewModel _viewmodel = getIt<EventCollectionViewModel>();
   String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;

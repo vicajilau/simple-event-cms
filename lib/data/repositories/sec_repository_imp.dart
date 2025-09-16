@@ -8,6 +8,9 @@ import '../remote_data/update_data/data_update_info.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader = getIt<DataLoader>();
+  final DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+    dataCommons: CommonsServices(),
+  );
 
   @override
   Future<List<Event>> loadEvents() async {
@@ -31,9 +34,21 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<void> saveEvent(Event event) async {
-    DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-      dataCommons: CommonsServices(),
-    );
     await dataUpdateInfo.updateEvent(event);
+  }
+
+  @override
+  Future<void> saveAgenda(Agenda agenda) async {
+    await dataUpdateInfo.updateAgenda(agenda);
+  }
+
+  @override
+  Future<void> saveSpeaker(Speaker speaker) async {
+    await dataUpdateInfo.updateSpeaker(speaker);
+  }
+
+  @override
+  Future<void> saveSponsor(Sponsor sponsor) async {
+    await dataUpdateInfo.updateSponsors(sponsor);
   }
 }

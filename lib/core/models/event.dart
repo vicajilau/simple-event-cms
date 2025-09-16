@@ -10,6 +10,7 @@ import 'github/github_model.dart';
 /// Contains all the essential information needed to configure and display an event_collection
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
+  @override
   final String uid;
 
   /// The name of the event_collection (e.g., "DevFest Spain 2025")

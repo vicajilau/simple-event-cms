@@ -182,7 +182,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   Future<void> _addSponsor() async {
     final newSponsor = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => const AddSponsorScreen()),
+      MaterialPageRoute(builder: (_) => AddSponsorScreen()),
     );
 
     if (newSponsor != null && newSponsor is Sponsor) {
