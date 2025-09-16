@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart';
+import 'package:github/github.dart' hide Organization;
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/config/secure_info.dart';
-import 'package:sec/core/core.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
+import 'package:sec/core/models/models.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -14,6 +15,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginPageState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
+  final Organization organization = getIt<Organization>();
   String _token = '';
 
   Future<void> _submit(BuildContext context) async {
@@ -27,10 +29,7 @@ class _LoginPageState extends State<LoginScreen> {
         // Si la autenticación es exitosa y no hay excepción:
         if (user.login != null) {
           await SecureInfo.saveGithubKey(
-            GithubData(
-              token: github.auth.token.toString(),
-              repo: await ConfigLoader.loadBaseUrl(),
-            ),
+            GithubData(token: github.auth.token.toString()),
           );
           // Verifica si hay autenticación básica o token
           if (context.mounted) {

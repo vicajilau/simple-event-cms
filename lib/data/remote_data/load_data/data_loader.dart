@@ -22,8 +22,7 @@ class DataLoader {
   /// Throws an Exception if the data cannot be loaded
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
-    if (ConfigLoader.appEnv != 'dev' &&
-        organization.baseUrl.startsWith('http')) {
+    if (ConfigLoader.appEnv != 'dev') {
       // Remote loading
       final url = 'events/${organization.year}/$path';
       var github = GitHub();
