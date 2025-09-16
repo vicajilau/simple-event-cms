@@ -7,7 +7,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {
-  EventUseCase? eventUseCase = getIt<EventUseCase>();
+  final EventUseCase? eventUseCase = getIt<EventUseCase>();
   final String? eventId;
   EventFormScreen({super.key, this.eventId});
 
@@ -36,7 +36,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   bool _hasEndDate = true;
   List<String> _tracks = [];
-  Event? event = null;
+  Event? event;
 
   @override
   void initState() {

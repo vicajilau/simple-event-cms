@@ -166,7 +166,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                     onPressed: () async {
                       final speaker = await widget.speakerUseCase
                           ?.getSpeakerById(widget.speakerUID.toString());
-                      if (_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate() && context.mounted) {
                         Navigator.pop(
                           context,
                           Speaker(

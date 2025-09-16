@@ -10,8 +10,6 @@ import 'github/github_model.dart';
 /// Contains all the essential information needed to configure and display an event_collection
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
-  @override
-  final String uid;
 
   /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
@@ -50,7 +48,7 @@ class Event extends GitHubModel {
 
   /// Creates a new event instance
   Event({
-    required this.uid,
+    required super.uid,
     required this.tracks,
     required this.eventName,
     required this.year,
@@ -65,7 +63,7 @@ class Event extends GitHubModel {
     this.description,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
-  }) : super(uid: '');
+  }) : super();
 
   /// Creates a event from JSON data with additional parameters
   ///

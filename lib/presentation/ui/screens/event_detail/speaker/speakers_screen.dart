@@ -13,7 +13,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakersViewModel viewmodel;
-  SpeakerUseCase speakerUseCase = getIt<SpeakerUseCase>();
+  final SpeakerUseCase speakerUseCase = getIt<SpeakerUseCase>();
 
   SpeakersScreen({super.key, required this.viewmodel});
 
