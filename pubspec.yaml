@@ -79,6 +79,7 @@ flutter:
     - events/2025/config/
     - events/2025/speakers/
     - events/2025/sponsors/
+    - events/organization/
     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -14,8 +14,7 @@ class ConfigLoader {
   );
 
   static Future<Organization> loadOrganization() async {
-    final localConfigPath =
-        'assets/events/organization/config/organization.json';
+    final localConfigPath = 'events/organization/organization.json';
     final String response = await rootBundle.loadString(localConfigPath);
     final data = await json.decode(response);
     var localOrganization = Organization.fromJson(data);
