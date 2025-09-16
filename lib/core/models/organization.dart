@@ -7,6 +7,9 @@ class Organization extends GitHubModel {
   final String primaryColorOrganization;
   final String secondaryColorOrganization;
   final String baseUrl;
+  final String github_user;
+  final String project_name;
+  final String year;
 
   Organization({
     super.uid = "unique-id-organization",
@@ -14,6 +17,9 @@ class Organization extends GitHubModel {
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
     required this.baseUrl,
+    required this.github_user,
+    required this.project_name,
+    required this.year,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
   });
@@ -23,6 +29,9 @@ class Organization extends GitHubModel {
     primaryColorOrganization: json["primaryColorOrganization"],
     secondaryColorOrganization: json["secondaryColorOrganization"],
     baseUrl: json["baseUrlOrganization"],
+    github_user: json["github_user"],
+    project_name: json["project_name"],
+    year: json["year"],
   );
 
   @override
@@ -32,6 +41,9 @@ class Organization extends GitHubModel {
       "primaryColorOrganization": primaryColorOrganization,
       "secondaryColorOrganization": secondaryColorOrganization,
       "baseUrlOrganization": baseUrl,
+      "github_user": github_user,
+      "project_name": project_name,
+      "year": year,
     };
   }
 }

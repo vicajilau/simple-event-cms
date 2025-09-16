@@ -14,22 +14,22 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<List<Event>> loadEvents() async {
-    return dataLoader.loadEvents("2025");
+    return dataLoader.loadEvents();
   }
 
   @override
   Future<List<Agenda>> loadEAgendas() async {
-    return await dataLoader.loadAgenda("2025");
+    return await dataLoader.loadAgenda();
   }
 
   @override
   Future<List<Speaker>> loadESpeakers() async {
-    return await dataLoader.loadSpeakers("2025");
+    return await dataLoader.loadSpeakers();
   }
 
   @override
   Future<List<Sponsor>> loadSponsors() async {
-    return await dataLoader.loadSponsors("2025");
+    return await dataLoader.loadSponsors();
   }
 
   @override

@@ -8,18 +8,19 @@ import '../common/commons_services.dart';
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
+  final Organization organization = getIt<Organization>();
 
   DataUpdateInfo({required this.dataCommons});
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<http.Response> updateSpeaker(Speaker speakers) async {
-    var speakersOriginal = await dataLoader.loadSpeakers("2025");
+    var speakersOriginal = await dataLoader.loadSpeakers();
 
     return dataCommons.updateData(
       speakersOriginal,
       speakers,
-      "events/2025/${speakers.pathUrl}",
+      "events/${organization.year}/${speakers.pathUrl}",
       speakers.updateMessage,
     );
   }
@@ -29,11 +30,11 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(Agenda agenda) async {
-    var agendaOriginal = await dataLoader.loadAgenda("2025");
+    var agendaOriginal = await dataLoader.loadAgenda();
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
-      "events/2025/${agenda.pathUrl}",
+      "events/${organization.year}/${agenda.pathUrl}",
       agenda.updateMessage,
     );
   }
@@ -46,12 +47,12 @@ class DataUpdateInfo {
     AgendaDay agendaDay,
     Agenda agenda,
   ) async {
-    var agendaOriginal = await dataLoader.loadAgenda("2025");
+    var agendaOriginal = await dataLoader.loadAgenda();
 
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
-      "events/2025/${agenda.pathUrl}",
+      "events/${organization.year}/${agenda.pathUrl}",
       agenda.updateMessage,
     );
   }
@@ -59,11 +60,11 @@ class DataUpdateInfo {
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<http.Response> updateSponsors(Sponsor sponsors) async {
-    var sponsorOriginal = await dataLoader.loadSponsors("2025");
+    var sponsorOriginal = await dataLoader.loadSponsors();
     return dataCommons.updateData(
       sponsorOriginal,
       sponsors,
-      "events/2025/${sponsors.pathUrl}",
+      "events/${organization.year}/${sponsors.pathUrl}",
       sponsors.updateMessage,
     );
   }
@@ -71,11 +72,11 @@ class DataUpdateInfo {
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<http.Response> updateEvent(Event event) async {
-    var eventsOriginal = await dataLoader.loadEvents("2025");
+    var eventsOriginal = await dataLoader.loadEvents();
     return dataCommons.updateData(
       eventsOriginal,
       event,
-      "events/2025/${event.pathUrl}",
+      "events/${organization.year}/${event.pathUrl}",
       event.updateMessage,
     );
   }
@@ -83,14 +84,14 @@ class DataUpdateInfo {
   /// Removes speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<http.Response> removeSpeaker(String speakerId) async {
-    var speakersOriginal = await dataLoader.loadSpeakers("2025");
+    var speakersOriginal = await dataLoader.loadSpeakers();
     var speakerToRemove = speakersOriginal.firstWhere(
       (agenda) => agenda.uid == speakerId,
     );
     return dataCommons.removeData(
       speakersOriginal,
       speakerToRemove,
-      "events/2025/${speakerToRemove.pathUrl}",
+      "events/${organization.year}/${speakerToRemove.pathUrl}",
       speakerToRemove.updateMessage,
     );
   }
@@ -100,14 +101,14 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> removeAgenda(String agendaId) async {
-    var agendaOriginal = await dataLoader.loadAgenda("2025");
+    var agendaOriginal = await dataLoader.loadAgenda();
     var agendaToRemove = agendaOriginal.firstWhere(
       (agenda) => agenda.uid == agendaId,
     );
     return dataCommons.removeData(
       agendaOriginal,
       agendaToRemove,
-      "events/2025/${agendaToRemove.pathUrl}",
+      "events/${organization.year}/${agendaToRemove.pathUrl}",
       agendaToRemove.updateMessage,
     );
   }
@@ -115,14 +116,14 @@ class DataUpdateInfo {
   /// Removes sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<http.Response> removeSponsors(String sponsorId) async {
-    var sponsorOriginal = await dataLoader.loadSponsors("2025");
+    var sponsorOriginal = await dataLoader.loadSponsors();
     var sponsorToRemove = sponsorOriginal.firstWhere(
       (sponsor) => sponsor.uid == sponsorId,
     );
     return dataCommons.removeData(
       sponsorOriginal,
       sponsorToRemove,
-      "events/2025/${sponsorToRemove.pathUrl}",
+      "events/${organization.year}/${sponsorToRemove.pathUrl}",
       sponsorToRemove.updateMessage,
     );
   }
@@ -130,14 +131,14 @@ class DataUpdateInfo {
   /// Remove events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<http.Response> removeEvent(String eventId) async {
-    var eventsOriginal = await dataLoader.loadEvents("2025");
+    var eventsOriginal = await dataLoader.loadEvents();
     var eventToRemove = eventsOriginal.firstWhere(
       (event) => event.uid == eventId,
     );
     return dataCommons.removeData(
       eventsOriginal,
       eventToRemove,
-      "events/2025/${eventToRemove.pathUrl}",
+      "events/${organization.year}/${eventToRemove.pathUrl}",
       eventToRemove.updateMessage,
     );
   }
@@ -152,7 +153,7 @@ class DataUpdateInfo {
   /// The update message is also taken from the parent `Agenda`.
   /// Returns a `Future<http.Response>` indicating the outcome of the operation.
   Future<http.Response> removeAgendaDayById(String agendaDayId) async {
-    var agendaListOriginal = await dataLoader.loadAgenda("2025");
+    var agendaListOriginal = await dataLoader.loadAgenda();
     Agenda agendaToRemove = agendaListOriginal.firstWhere(
       (agenda) => agenda.days.any((day) => day.uid == agendaDayId),
     );
@@ -167,7 +168,7 @@ class DataUpdateInfo {
     return dataCommons.updateData(
       agendaListOriginal,
       agendaToRemove,
-      "events/2025/${agendaToRemove.pathUrl}",
+      "events/${organization.year}/${agendaToRemove.pathUrl}",
       agendaToRemove.updateMessage,
     );
   }

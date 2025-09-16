@@ -12,8 +12,6 @@ import '../../../core/models/models.dart';
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
   final Organization organization = getIt<Organization>();
-  static var user = 'vicajilau';
-  static var project = 'simple-event-cms';
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -22,14 +20,17 @@ class DataLoader {
   /// [path] The relative path to the data file
   /// Returns a Future containing the parsed JSON data as a dynamic list
   /// Throws an Exception if the data cannot be loaded
-  Future<List<dynamic>> loadData(String path, String year) async {
+  Future<List<dynamic>> loadData(String path) async {
     String content = "";
     if (ConfigLoader.appEnv != 'dev' &&
         organization.baseUrl.startsWith('http')) {
       // Remote loading
-      final url = 'events/$year/$path';
+      final url = 'events/${organization.year}/$path';
       var github = GitHub();
-      var repositorySlug = RepositorySlug(user, project);
+      var repositorySlug = RepositorySlug(
+        organization.github_user,
+        organization.project_name,
+      );
       final res = await github.repositories.getContents(
         repositorySlug,
         url,
@@ -47,7 +48,7 @@ class DataLoader {
           file; // No es necesario codificar a JSON aquí, ya es una cadena JSON
     } else if (ConfigLoader.appEnv == 'dev') {
       // Local loading
-      final localPath = 'events/$year/$path';
+      final localPath = 'events/${organization.year}/$path';
       content = await rootBundle.loadString(localPath);
     }
     if (path == PathsGithub.eventPath) {
@@ -59,8 +60,8 @@ class DataLoader {
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<List<Speaker>> loadSpeakers(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.speakerPath, year);
+  Future<List<Speaker>> loadSpeakers() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.speakerPath);
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
@@ -68,22 +69,22 @@ class DataLoader {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<List<Agenda>> loadAgenda(String year) async {
-    var jsonList = await loadData(PathsGithub.agendaPath, year);
+  Future<List<Agenda>> loadAgenda() async {
+    var jsonList = await loadData(PathsGithub.agendaPath);
     return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<List<Sponsor>> loadSponsors(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath, year);
+  Future<List<Sponsor>> loadSponsors() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 
   /// Loads event information from the events.json file
   /// Returns a Future containing a list of event data
-  Future<List<Event>> loadEvents(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.eventPath, year);
+  Future<List<Event>> loadEvents() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.eventPath);
     return jsonList
         .map<Event>(
           (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
