@@ -3,12 +3,12 @@ import 'dart:convert';
 class GithubData {
   final String? token;
   final String? repo;
-  String branch = "feature/sponsor-screen-with-MVVM";
+  String branch = "feature/refactor_code";
 
   GithubData({
     this.token,
     this.repo,
-    this.branch = "feature/sponsor-screen-with-MVVM",
+    this.branch = "feature/refactor_code",
   });
 
   factory GithubData.fromJson(String str) {
