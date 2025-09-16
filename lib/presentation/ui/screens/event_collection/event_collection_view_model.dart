@@ -53,12 +53,6 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   }
 
   @override
-  void dispose() {
-    eventsToShow.dispose();
-    viewState.dispose();
-  }
-
-  @override
   void onEventFilterChanged(EventFilter value) {
     currentFilter = value;
     _applyFilters();
@@ -127,4 +121,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
       return aDate.compareTo(bDate);
     });
   }
+
+  @override
+  void dispose() {}
 }
