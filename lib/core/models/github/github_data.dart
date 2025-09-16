@@ -5,11 +5,7 @@ class GithubData {
   final String? repo;
   String branch = "feature/refactor_code";
 
-  GithubData({
-    this.token,
-    this.repo,
-    this.branch = "feature/refactor_code",
-  });
+  GithubData({this.token, this.repo, this.branch = "feature/refactor_code"});
 
   factory GithubData.fromJson(String str) {
     final Map<String, dynamic> json = jsonDecode(str);

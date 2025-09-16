@@ -26,7 +26,7 @@ Main event configuration including basic information, dates, venue, and theming:
 {
   "eventName": "DevFest Spain 2025",
   "year": "2025",
-  "baseUrl": "https://vicajilau.github.io/event_flutter_template",
+  "baseUrl": "https://raw.githubusercontent.com/vicajilau/simple-event-cms/feature/refactor_code",
   "primaryColor": "#4285F4",
   "secondaryColor": "#34A853",
   "eventDates": {

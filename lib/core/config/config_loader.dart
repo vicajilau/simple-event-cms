@@ -13,7 +13,7 @@ class ConfigLoader {
   // Lee las variables de entorno. Si no se definen, usa valores por defecto.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
-    defaultValue: 'dev',
+    defaultValue: 'prod',
   );
 
   static Future<String> loadBaseUrl() async {
@@ -32,6 +32,7 @@ class ConfigLoader {
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
+      ref: "feature/refactor_code",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(

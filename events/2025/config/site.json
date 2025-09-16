@@ -8,6 +8,7 @@
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
+        "UID": "3428674hgdfedfhjwq",
         "startDate": "2025-03-15",
         "endDate": "2025-03-15",
         "timezone": "Europe/Madrid"
@@ -43,7 +44,7 @@
       "UID": "gfhdfdfgdsfg4dfg",
       "eventName": "DevFest Spain 2026",
       "year": "2026",
-      "baseUrl": "https://vicajilau.github.io/event_flutter_template",
+      "baseUrl": "https://raw.githubusercontent.com/vicajilau/simple-event-cms/feature/refactor_code",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {

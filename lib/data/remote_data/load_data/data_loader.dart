@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
+import 'package:github/github.dart' hide Event, Organization;
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
@@ -12,6 +12,8 @@ import '../../../core/models/models.dart';
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
   final Organization organization = getIt<Organization>();
+  static var user = 'vicajilau';
+  static var project = 'simple-event-cms';
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -21,16 +23,28 @@ class DataLoader {
   /// Returns a Future containing the parsed JSON data as a dynamic list
   /// Throws an Exception if the data cannot be loaded
   Future<List<dynamic>> loadData(String path, String year) async {
-    String content = '';
+    String content = "";
     if (ConfigLoader.appEnv != 'dev' &&
-        organization.pathUrl.startsWith('http')) {
+        organization.baseUrl.startsWith('http')) {
       // Remote loading
-      final url = '${organization.pathUrl}/$path';
-      final res = await http.get(Uri.parse(url));
-      if (res.statusCode != 200) {
-        throw Exception("Error loading data from $url");
+      final url = 'events/$year/$path';
+      var github = GitHub();
+      var repositorySlug = RepositorySlug(user, project);
+      final res = await github.repositories.getContents(
+        repositorySlug,
+        url,
+        ref: "feature/refactor_code",
+      );
+      if (res.file == null || res.file!.content == null) {
+        throw Exception(
+          "Error cargando configuración de producción desde $url",
+        );
       }
-      content = res.body;
+      final file = utf8.decode(
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
+      content =
+          file; // No es necesario codificar a JSON aquí, ya es una cadena JSON
     } else if (ConfigLoader.appEnv == 'dev') {
       // Local loading
       final localPath = 'events/$year/$path';
