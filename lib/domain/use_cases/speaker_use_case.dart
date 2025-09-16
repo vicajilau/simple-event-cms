@@ -6,12 +6,14 @@ abstract class SpeakerUseCase {
   Future<List<Speaker>> getComposedSpeakers();
   Future<Speaker?> getSpeakerById(String id);
   void saveSpeaker(Speaker speaker);
+  void removeSpeaker(String speakerId);
 }
 
 class SpeakerUseCaseImp implements SpeakerUseCase {
+  final SecRepository repository = getIt<SecRepository>();
+
   @override
   Future<List<Speaker>> getComposedSpeakers() {
-    SecRepository repository = getIt<SecRepository>();
     return repository.loadESpeakers();
   }
 
@@ -25,6 +27,11 @@ class SpeakerUseCaseImp implements SpeakerUseCase {
 
   @override
   void saveSpeaker(Speaker speaker) {
-    // TODO: implement saveEvent
+    repository.saveSpeaker(speaker);
+  }
+
+  @override
+  void removeSpeaker(String speakerId) {
+    repository.removeSpeaker(speakerId);
   }
 }

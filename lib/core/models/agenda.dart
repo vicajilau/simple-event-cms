@@ -30,7 +30,7 @@ class Agenda extends GitHubModel {
   Map<String, dynamic> toJson() => {"UID": uid, "days": days};
 }
 
-class AgendaDay {
+class AgendaDay extends GitHubModel {
   /// The date of the event_collection day in ISO format (YYYY-MM-DD)
   final String date;
 
@@ -38,19 +38,29 @@ class AgendaDay {
   final List<Track> tracks;
 
   /// Creates a new AgendaDay instance
-  AgendaDay({required this.date, required this.tracks});
+  AgendaDay({
+    required super.uid,
+    required this.date,
+    required this.tracks,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
+  });
 
   /// Creates an AgendaDay from JSON data
   /// Parses the tracks array and converts each track to a Track object
   /// The day name is automatically generated from the date using localization
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
+      uid: json['UID'],
       date: json['date'],
       tracks: (json['tracks'] as List)
           .map((track) => Track.fromJson(track))
           .toList(),
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {"UID": uid, "date": date, "tracks": tracks};
 }
 
 /// Represents a track or room within an event_collection day
@@ -83,10 +93,7 @@ class Track {
 
 /// Represents an individual session within a track
 /// Contains all the details about a specific presentation, talk, or activity
-class Session {
-  /// UID of the session
-  final String uid;
-
+class Session extends GitHubModel {
   /// The title of the session
   final String title;
 
@@ -104,10 +111,12 @@ class Session {
 
   /// Creates a new Session instance
   Session({
-    required this.uid,
+    required super.uid,
     required this.title,
     required this.time,
     required this.speaker,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
     this.description,
     required this.type,
   });
@@ -124,4 +133,14 @@ class Session {
       type: json['type'],
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+    "UID": uid,
+    "title": title,
+    "time": time,
+    "speaker": speaker,
+    "description": description,
+    "type": type,
+  };
 }

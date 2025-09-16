@@ -1,8 +1,11 @@
 import 'package:intl/intl.dart';
+import 'package:sec/core/models/github/github_model.dart';
+
+import '../config/paths_github.dart';
 
 /// Represents the date information for an event_collection
 /// Contains start date, end date, and timezone information
-class EventDates {
+class EventDates extends GitHubModel {
   /// The start date of the event_collection in ISO format (YYYY-MM-DD)
   final String startDate;
 
@@ -14,15 +17,19 @@ class EventDates {
 
   /// Creates a new EventDates instance
   EventDates({
+    required super.uid,
     required this.startDate,
     required this.endDate,
     required this.timezone,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   /// Creates an EventDates from JSON data
   /// All date fields are required and must be in ISO format
   factory EventDates.fromJson(Map<String, dynamic> json) {
     return EventDates(
+      uid: json['UID'],
       startDate: json['startDate'],
       endDate: json['endDate'],
       timezone: json['timezone'],
@@ -31,7 +38,12 @@ class EventDates {
 
   /// Converts this EventDates instance to a JSON object
   Map<String, dynamic> toJson() {
-    return {'startDate': startDate, 'endDate': endDate, 'timezone': timezone};
+    return {
+      'id': uid,
+      'startDate': startDate,
+      'endDate': endDate,
+      'timezone': timezone,
+    };
   }
 
   List<String> getFormattedDaysInDateRange() {

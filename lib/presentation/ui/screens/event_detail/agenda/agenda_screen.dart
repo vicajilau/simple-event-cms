@@ -14,15 +14,8 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
-  final void Function(String, String, Session) editSession;
-  final void Function(Session) removeSession;
 
-  const AgendaScreen({
-    super.key,
-    required this.agendaDays,
-    required this.editSession,
-    required this.removeSession,
-  });
+  const AgendaScreen({super.key, required this.agendaDays});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -146,8 +139,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
-            editSession: widget.editSession,
-            removeSession: widget.removeSession,
+            editSession: (day, track, session) => {/*TODO edit session*/},
+            removeSession: (session) => {/*TODO remove session*/},
           ),
         ],
       ),

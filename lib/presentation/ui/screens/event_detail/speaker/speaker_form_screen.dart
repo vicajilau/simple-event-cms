@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
@@ -166,14 +167,14 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                     onPressed: () async {
                       final speaker = await widget.speakerUseCase
                           ?.getSpeakerById(widget.speakerUID.toString());
-                      if (_formKey.currentState!.validate() && context.mounted) {
+                      if (_formKey.currentState!.validate() &&
+                          context.mounted) {
                         Navigator.pop(
                           context,
                           Speaker(
                             uid:
                                 speaker?.uid ??
-                                DateTime.now().microsecondsSinceEpoch
-                                    .toString(),
+                                'Speaker_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                             name: _nameController.text,
                             image: _imageUrlController.text,
                             bio: _bioController.text,

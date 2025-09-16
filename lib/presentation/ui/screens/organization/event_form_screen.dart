@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -298,10 +299,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
       timezone: _timezoneController.text.isNotEmpty
           ? _timezoneController.text
           : 'Europe/Madrid',
+      uid: 'EventDate_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
     );
 
     final eventModified = Event(
-      uid: event?.uid ?? DateTime.now().toString(),
+      uid:
+          event?.uid ??
+          'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
       eventName: _nameController.text,
       tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,

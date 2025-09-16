@@ -91,15 +91,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             'No hay eventos programados',
                       ),
                     )
-                  : AgendaScreen(
-                      agendaDays: agendaDays,
-                      editSession: (day, track, session) {
-                        // TODO: Implementar edición de sesión
-                      },
-                      removeSession: (session) {
-                        // TODO: Implementar eliminación de sesión
-                      },
-                    ),
+                  : AgendaScreen(agendaDays: agendaDays),
               // Speakers Tab
               SpeakersScreen(viewmodel: widget.viewmodel),
               // Sponsors Tab

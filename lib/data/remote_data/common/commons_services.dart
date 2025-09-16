@@ -84,4 +84,48 @@ class CommonsServices {
     }
     return res;
   }
+
+  /// Generic function to remove data from GitHub
+  Future<http.Response> removeData<T extends GitHubModel>(
+    List<T> dataOriginal,
+    T dataToRemove,
+    String pathUrl,
+    String commitMessage,
+  ) async {
+    githubService = await SecureInfo.getGithubKey();
+
+    // Remove the item with the specified UID
+    dataOriginal.remove(dataToRemove);
+
+    // Convert data to JSON and then to base64
+    final dataInfo = json.encode(
+      dataOriginal.map((item) => item.toJson()).toList(),
+    );
+
+    // Prepare the request body
+    final body = json.encode({"message": commitMessage, "content": dataInfo});
+
+    // Construct the file URL
+    final fileUrl = "${githubService?.repo}/$pathUrl";
+
+    // Initialize GitHub client
+    var github = GitHub(auth: Authentication.withToken(githubService?.token));
+
+    // Make the PUT request
+    final res = await github.client.put(
+      Uri.parse(fileUrl),
+      headers: {
+        "Authorization": 'token ${githubService?.token}',
+        "Accept": "application/vnd.github.v3+json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: body,
+    );
+
+    // Check the response status
+    if (res.statusCode != 200) {
+      throw Exception("Failed to remove data from $pathUrl: ${res.body}");
+    }
+    return res;
+  }
 }
