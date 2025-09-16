@@ -4,7 +4,6 @@
       "UID": "df5fd5ds5dsf",
       "eventName": "DevFest Spain 2025",
       "year": "2025",
-      "baseUrl": "https://github.com/vicajilau/simple-event-cms",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
@@ -44,7 +43,6 @@
       "UID": "gfhdfdfgdsfg4dfg",
       "eventName": "DevFest Spain 2026",
       "year": "2026",
-      "baseUrl": "https://raw.githubusercontent.com/vicajilau/simple-event-cms/feature/refactor_code",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {

@@ -26,7 +26,6 @@ Main event configuration including basic information, dates, venue, and theming:
 {
   "eventName": "DevFest Spain 2025",
   "year": "2025",
-  "baseUrl": "https://raw.githubusercontent.com/vicajilau/simple-event-cms/feature/refactor_code",
   "primaryColor": "#4285F4",
   "secondaryColor": "#34A853",
   "eventDates": {
@@ -49,7 +48,6 @@ Main event configuration including basic information, dates, venue, and theming:
 |------------------------|--------|----------------------------------------------|
 | `eventName`            | string | Name of your event                           |
 | `year`                 | string | Event year (matches directory name)          |
-| `baseUrl`              | string | Base URL for deployment (GitHub Pages, etc.) |
 | `primaryColor`         | string | Primary theme color (hex format)             |
 | `secondaryColor`       | string | Secondary theme color (hex format)           |
 | `eventDates.startDate` | string | Event start date (ISO format)                |

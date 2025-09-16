@@ -58,7 +58,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
     _tracks = event?.tracks ?? [];
     _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
-    _baseUrlController.text = event?.baseUrl ?? '';
     _primaryColorController.text = event?.primaryColor ?? '';
     _secondaryColorController.text = event?.secondaryColor ?? '';
     _venueNameController.text = event?.venue?.name ?? '';
@@ -309,7 +308,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
       eventName: _nameController.text,
       tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,
-      baseUrl: _baseUrlController.text,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       eventDates: eventDates,
