@@ -132,7 +132,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                         var github = (await SecureInfo.getGithubKey());
                         if (github != null) {
                           DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-                            dataCommons: CommonsServices(githubService: github),
+                            dataCommons: CommonsServices(),
                           );
                           await dataUpdateInfo.updateSponsors(sponsor);
                           if (context.mounted) {

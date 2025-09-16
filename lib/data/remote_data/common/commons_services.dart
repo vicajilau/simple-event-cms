@@ -2,23 +2,23 @@ import 'dart:convert';
 
 import 'package:github/github.dart';
 import 'package:http/http.dart' as http;
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 
 class CommonsServices {
-  final GithubData githubService;
+  GithubData? githubService;
 
-  CommonsServices({required this.githubService});
-
-  Future<http.Response> getSha(GithubData githubService) async {
+  Future<http.Response> getSha() async {
+    githubService = await SecureInfo.getGithubKey();
     final fileUri = Uri.parse(
-      "${githubService.repo}?ref=${githubService.branch}",
+      "${githubService?.repo}?ref=${githubService?.branch}",
     );
 
     final res = await http.get(
       fileUri,
       headers: {
-        "Authorization": 'token ${githubService.token}',
+        "Authorization": 'token ${githubService?.token.toString()}',
         "Accept": "application/vnd.github.v3+json",
         "Access-Control-Allow-Origin": "*",
       },
@@ -40,6 +40,7 @@ class CommonsServices {
     String pathUrl,
     String commitMessage,
   ) async {
+    githubService = await SecureInfo.getGithubKey();
     // Find the index of the data to update, if it exists
     int indexElementFounded = dataOriginal.indexWhere(
       (item) => item.uid == data.uid,
@@ -64,16 +65,16 @@ class CommonsServices {
 
     // Construct the file URL
     final fileUrl =
-        "${githubService.repo}/$pathUrl?ref=${githubService.branch}";
+        "${githubService?.repo}/$pathUrl?ref=${githubService?.branch}";
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = GitHub(auth: Authentication.withToken(githubService?.token));
 
     // Make the PUT request
     final res = await github.putJSON(
       fileUrl,
       headers: {
-        "Authorization": 'token ${githubService.token}',
+        "Authorization": 'token ${githubService?.token}',
         "Accept": "application/vnd.github.v3+json",
         "Access-Control-Allow-Origin": "*",
       },

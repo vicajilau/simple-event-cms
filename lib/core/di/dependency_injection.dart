@@ -9,7 +9,6 @@ import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 
-
 final GetIt getIt = GetIt.instance;
 
 /// Configures all application dependencies
