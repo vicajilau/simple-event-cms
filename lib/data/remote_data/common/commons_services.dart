@@ -54,25 +54,22 @@ class CommonsServices {
     }
 
     // Convert data to JSON and then to base64
-    final dataInfo = base64Encode(
-      utf8.encode(
-        json.encode(dataOriginal.map((item) => item.toJson()).toList()),
-      ),
+    final dataInfo = json.encode(
+      dataOriginal.map((item) => item.toJson()).toList(),
     );
 
     // Prepare the request body
     final body = json.encode({"message": commitMessage, "content": dataInfo});
 
     // Construct the file URL
-    final fileUrl =
-        "${githubService?.repo}/$pathUrl?ref=${githubService?.branch}";
+    final fileUrl = "${githubService?.repo}/$pathUrl";
 
     // Initialize GitHub client
     var github = GitHub(auth: Authentication.withToken(githubService?.token));
 
     // Make the PUT request
-    final res = await github.putJSON(
-      fileUrl,
+    final res = await github.client.put(
+      Uri.parse(fileUrl),
       headers: {
         "Authorization": 'token ${githubService?.token}',
         "Accept": "application/vnd.github.v3+json",
