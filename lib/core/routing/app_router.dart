@@ -10,7 +10,7 @@ class AppRouter {
   static const String adminCreateEventPath = '/admin/events/create';
   static const String adminEditEventPath = '/admin/events/edit/:eventId';
   static const String eventDetailPath = '/event/:eventId';
-  static const String speakerFormPath = '/event/:eventId';
+  static const String speakerFormPath = '/speaker/form/:speakerId';
 
   // Names
   static const String homeName = 'home';
@@ -20,7 +20,7 @@ class AppRouter {
   static const String adminCreateEventName = 'admin_create_event';
   static const String adminEditEventName = 'admin_edit_event';
   static const String eventDetailName = 'event_detail';
-  static const String speakerFormName = 'event_detail';
+  static const String speakerFormName = 'speaker_form';
 
   static final GoRouter router = GoRouter(
     initialLocation: homePath,
@@ -59,7 +59,8 @@ class AppRouter {
         path: speakerFormPath,
         name: speakerFormName,
         builder: (context, state) {
-          return SpeakerFormScreen();
+          final speakerId = state.pathParameters['speakerId'] ?? '';
+          return SpeakerFormScreen(speakerUID: speakerId);
         },
       ),
     ],

@@ -1,4 +1,3 @@
-import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 class ScreenFactory {
@@ -9,7 +8,6 @@ class ScreenFactory {
   }
 
   static EventDetailScreen eventDetailScreen(String eventId) {
-    final viewmodel = EventDetailViewModelImp();
-    return EventDetailScreen(viewmodel: viewmodel, eventId: eventId);
+    return EventDetailScreen(eventId: eventId);
   }
 }

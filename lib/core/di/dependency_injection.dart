@@ -30,6 +30,9 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<EventCollectionViewModel>(
     () => EventCollectionViewModelImp(),
   );
+  getIt.registerLazySingleton<EventDetailViewModel>(
+    () => EventDetailViewModelImp(),
+  );
   // Event Detail ViewModel
   getIt.registerLazySingleton<EventDetailViewModel>(
     () => EventDetailViewModelImp(),

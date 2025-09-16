@@ -9,7 +9,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final String? speakerUID;
-  SpeakerUseCase? speakerUseCase =getIt<SpeakerUseCase>();
+  SpeakerUseCase? speakerUseCase = getIt<SpeakerUseCase>();
   late final speaker = speakerUseCase?.getSpeakerById(speakerUID.toString());
   SpeakerFormScreen({super.key, this.speakerUID});
 
@@ -31,7 +31,9 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   Future<void> initState() async {
     super.initState();
 
-    final speaker = await widget.speakerUseCase?.getSpeakerById(widget.speakerUID.toString());
+    final speaker = await widget.speakerUseCase?.getSpeakerById(
+      widget.speakerUID.toString(),
+    );
     if (speaker != null) {
       _nameController.text = speaker.name;
       _imageUrlController.text = speaker.image ?? '';
@@ -161,7 +163,8 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 children: [
                   FilledButton(
                     onPressed: () async {
-                      final speaker = await widget.speakerUseCase?.getSpeakerById(widget.speakerUID.toString());
+                      final speaker = await widget.speakerUseCase
+                          ?.getSpeakerById(widget.speakerUID.toString());
                       if (_formKey.currentState!.validate()) {
                         Navigator.pop(
                           context,

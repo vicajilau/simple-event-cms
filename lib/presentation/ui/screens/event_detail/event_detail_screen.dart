@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -9,14 +10,10 @@ import 'package:sec/presentation/view_model_common.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
-  final EventDetailViewModel viewmodel;
+  final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
   final String eventId;
 
-  const EventDetailScreen({
-    super.key,
-    required this.viewmodel,
-    required this.eventId,
-  });
+  EventDetailScreen({super.key, required this.eventId});
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
