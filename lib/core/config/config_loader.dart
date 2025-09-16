@@ -7,7 +7,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import '../models/models.dart';
 
 class ConfigLoader {
-  // Lee las variables de entorno. Si no se definen, usa valores por defecto.
+  // Reads environment variables. If not defined, uses default values.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
     defaultValue: 'prod',
