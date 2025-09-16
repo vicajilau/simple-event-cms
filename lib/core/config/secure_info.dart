@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:sec/core/models/github/github_services.dart';
+import 'package:sec/core/models/github/github_data.dart';
 
 /// Defines a class named `SecureInfo` to interact with `FlutterSecureStorage`.
 ///
@@ -18,7 +18,7 @@ abstract class SecureInfo {
   /// [githubService]: The GithubService object to save.
   ///
   /// Throws an exception if an error occurs during writing.
-  static Future<void> saveGithubKey(GithubService githubService) async {
+  static Future<void> saveGithubKey(GithubData githubService) async {
     try {
       // Convert the GithubService object to a JSON string
       String githubServiceJson = jsonEncode(githubService.toJson());
@@ -35,11 +35,11 @@ abstract class SecureInfo {
   ///
   /// Returns the value as a `String?` (can be null if the key does not exist).
   /// Throws an exception if an error occurs during reading.
-  static Future<GithubService?> getGithubKey() async {
+  static Future<GithubData?> getGithubKey() async {
     String? githubServiceJson = await _storage.read(key: 'github_service');
     if (githubServiceJson != null) {
       // Convert the JSON string back to a GithubService object
-      return GithubService.fromJson(jsonDecode(githubServiceJson));
+      return GithubData.fromJson(jsonDecode(githubServiceJson));
     }
     return null;
   }

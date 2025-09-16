@@ -1,19 +1,20 @@
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
-import '../../core/config/secure_info.dart';
 import '../remote_data/common/commons_services.dart';
 import '../remote_data/update_data/data_update_info.dart';
 
 class SecRepositoryImp extends SecRepository {
-  final DataLoader dataLoader;
-
-  SecRepositoryImp({required this.dataLoader});
+  final DataLoader dataLoader = getIt<DataLoader>();
+  final DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+    dataCommons: CommonsServices(),
+  );
 
   @override
   Future<List<Event>> loadEvents() async {
-    return dataLoader.config;
+    return dataLoader.loadEvents("2025");
   }
 
   @override
@@ -33,12 +34,21 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<void> saveEvent(Event event) async {
-    var github = await SecureInfo.getGithubKey();
-    if (github != null) {
-      DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-        dataCommons: CommonsServices(githubService: github),
-      );
-      await dataUpdateInfo.updateEvent(event);
-    }
+    await dataUpdateInfo.updateEvent(event);
+  }
+
+  @override
+  Future<void> saveAgenda(Agenda agenda) async {
+    await dataUpdateInfo.updateAgenda(agenda);
+  }
+
+  @override
+  Future<void> saveSpeaker(Speaker speaker) async {
+    await dataUpdateInfo.updateSpeaker(speaker);
+  }
+
+  @override
+  Future<void> saveSponsor(Sponsor sponsor) async {
+    await dataUpdateInfo.updateSponsors(sponsor);
   }
 }

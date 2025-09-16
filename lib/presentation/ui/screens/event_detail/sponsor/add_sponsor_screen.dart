@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/remote_data/common/commons_services.dart';
-import 'package:sec/data/remote_data/update_data/data_update_info.dart';
+import 'package:sec/domain/repositories/sec_repository.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../../../../core/config/secure_info.dart';
+import '../../../../../core/config/secure_info.dart';
+import '../../../../../core/di/dependency_injection.dart';
 
 class AddSponsorScreen extends StatefulWidget {
   final Sponsor? sponsor;
-  const AddSponsorScreen({super.key, this.sponsor});
+  final SecRepository repository = getIt<SecRepository>();
+  AddSponsorScreen({super.key, this.sponsor});
 
   @override
   State<AddSponsorScreen> createState() => _AddSponsorScreenState();
@@ -131,10 +132,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                         );
                         var github = (await SecureInfo.getGithubKey());
                         if (github != null) {
-                          DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-                            dataCommons: CommonsServices(githubService: github),
-                          );
-                          await dataUpdateInfo.updateSponsors(sponsor);
+                          await widget.repository.saveSponsor(sponsor);
                           if (context.mounted) {
                             Navigator.pop(context, sponsor);
                           }

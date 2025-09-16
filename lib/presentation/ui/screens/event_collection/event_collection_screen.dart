@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-import 'package:sec/presentation/view_models/event_collection_view_model.dart';
 
-/// Main home screen widget that displays the event information and navigation
+import '../../../view_model_common.dart';
+import 'event_collection_view_model.dart';
+
+/// Main home screen widget that displays the event_collection information and navigation
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 /// Now uses dependency injection for better testability and architecture
 class EventCollectionScreen extends StatefulWidget {
+  final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   final int crossAxisCount;
 
-  const EventCollectionScreen({super.key, this.crossAxisCount = 4});
+  EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
   @override
   State<EventCollectionScreen> createState() => _EventCollectionScreenState();
@@ -21,8 +24,8 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  EventCollectionViewModel? _viewmodel;
-  Organization? _organization;
+  final EventCollectionViewModel _viewmodel = getIt<EventCollectionViewModel>();
+  String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -34,15 +37,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Future<void> _loadConfiguration() async {
     try {
+      // Usar inyección de dependencias en lugar de crear instancias manualmente
       final organization = getIt<Organization>();
 
-      final viewmodel =
-          getIt<EventCollectionViewModel>() as EventCollectionViewModelImp;
-      await viewmodel.setup();
+      widget.viewmodel.setup();
 
       setState(() {
-        _viewmodel = viewmodel;
-        _organization = organization;
+        organizationName = organization.organizationName;
         _isLoading = false;
       });
     } catch (e) {
@@ -55,7 +56,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   void dispose() {
-    _viewmodel?.dispose();
+    widget.viewmodel.dispose();
     super.dispose();
   }
 
@@ -89,13 +90,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       );
     }
 
-    if (_viewmodel == null || _organization == null) {
+    if (organizationName == null) {
       return const Scaffold(
         body: Center(child: Text('Error: Configuración no disponible')),
       );
     }
-
-    final currentLocale = Localizations.localeOf(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -115,26 +114,48 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               }
             });
           },
-          child: Text(_organization!.organizationName),
+          child: Text(organizationName.toString()),
         ),
         actions: <Widget>[
           EventFilterButton(
-            selectedFilter: _viewmodel!.currentFilter,
+            selectedFilter: widget.viewmodel.currentFilter,
             onFilterChanged: (EventFilter filter) {
-              _viewmodel!.onEventFilterChanged(filter);
+              widget.viewmodel.onEventFilterChanged(filter);
             },
           ),
         ],
       ),
-      body: ValueListenableBuilder<bool>(
-        valueListenable: _viewmodel!.isLoading,
-        builder: (context, isLoading, child) {
-          if (isLoading) {
+      body: ValueListenableBuilder<ViewState>(
+        valueListenable: widget.viewmodel.viewState,
+        builder: (context, viewState, child) {
+          if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
           }
 
+          if (viewState == ViewState.error) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(widget.viewmodel.errorMessage),
+                  const SizedBox(height: 16),
+                  /*ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLoading = true;
+                        _errorMessage = null;
+                      });
+                      _loadConfiguration();
+                    },
+                    child: const Text('Reintentar'),
+                  ),*/
+                ],
+              ),
+            );
+          }
+
           return ValueListenableBuilder<List<Event>>(
-            valueListenable: _viewmodel!.eventsToShow,
+            valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
                 return const Center(
@@ -151,7 +172,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     key: Key(item.eventName),
                     direction: DismissDirection.endToStart,
                     onDismissed: (direction) async {
-                      _viewmodel!.deleteEvent(item);
+                      widget.viewmodel.deleteEvent(item);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text("${item.eventName} eliminado")),
                       );
@@ -164,15 +185,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     ),
                     child: GestureDetector(
                       onTap: () {
-                        context.go(
-                          '/event/${item.uid}',
-                          extra: {
-                            'locale': currentLocale,
-                            'agendaDays': item.agenda?.days ?? [],
-                            'speakers': item.speakers ?? [],
-                            'sponsors': item.sponsors ?? [],
-                          },
-                        );
+                        context.go('/event/${item.uid}');
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -196,7 +209,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             subtitle: Padding(
                               padding: const EdgeInsets.only(top: 4.0),
                               child: Text(
-                                "${item.eventDates?.startDate.toString()}/${item.eventDates?.endDate}",
+                                "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
                                 style: Theme.of(context).textTheme.bodySmall,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -204,16 +217,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             trailing: IconButton(
                               icon: const Icon(Icons.edit),
                               onPressed: () async {
-                                final Event? eventEdited =
-                                    await Navigator.push<Event>(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            EventFormScreen(event: item),
-                                      ),
+                                final Event? eventEdited = await AppRouter
+                                    .router
+                                    .push(
+                                      AppRouter.adminEditEventPath,
+                                      extra: item.uid,
                                     );
                                 if (eventEdited != null) {
-                                  _viewmodel!.editEvent(eventEdited);
+                                  widget.viewmodel.editEvent(eventEdited);
                                 }
                               },
                             ),
@@ -230,14 +241,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
       floatingActionButton: AddFloatingActionButton(
         onPressed: () async {
-          final Event? newConfig = await Navigator.push<Event>(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EventFormScreen(),
-            ),
+          final Event? newConfig = await AppRouter.router.push(
+            AppRouter.adminCreateEventPath,
           );
           if (newConfig != null) {
-            _viewmodel!.addEvent(newConfig);
+            widget.viewmodel.addEvent(newConfig);
           }
         },
       ),

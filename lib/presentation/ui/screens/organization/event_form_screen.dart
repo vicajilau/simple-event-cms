@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {
-  final Event? event;
-  const EventFormScreen({super.key, this.event});
+  final EventUseCase? eventUseCase = getIt<EventUseCase>();
+  final String? eventId;
+  EventFormScreen({super.key, this.eventId});
 
   @override
   State<EventFormScreen> createState() => _EventFormScreenState();
@@ -32,36 +35,38 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _sponsorsUIDController = TextEditingController();
 
   bool _hasEndDate = true;
-  List<String> _rooms = [];
+  List<String> _tracks = [];
+  Event? event;
+
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.event?.eventName ?? '';
+    event = widget.eventUseCase?.getEventById(widget.eventId.toString());
+    _nameController.text = event?.eventName ?? '';
 
-    final startDate = widget.event?.eventDates?.startDate;
+    final startDate = event?.eventDates.startDate;
     if (startDate != null) {
       _startDateController.text = startDate;
     }
 
-    final endtDate = widget.event?.eventDates?.endDate;
+    final endtDate = event?.eventDates.endDate;
     _hasEndDate = startDate != endtDate;
     if (endtDate != null && _hasEndDate) {
       _endDateController.text = endtDate;
     }
 
-    _rooms = widget.event?.rooms ?? [];
-    _timezoneController.text =
-        widget.event?.eventDates?.timezone ?? 'Europe/Madrid';
-    _baseUrlController.text = widget.event?.baseUrl ?? '';
-    _primaryColorController.text = widget.event?.primaryColor ?? '';
-    _secondaryColorController.text = widget.event?.secondaryColor ?? '';
-    _venueNameController.text = widget.event?.venue?.name ?? '';
-    _venueAddressController.text = widget.event?.venue?.address ?? '';
-    _venueCityController.text = widget.event?.venue?.city ?? '';
-    _descriptionController.text = widget.event?.description ?? '';
-    _agendaUIDController.text = widget.event?.agendaUID ?? '';
-    _speakersUIDController.text = widget.event?.speakersUID.join(', ') ?? '';
-    _sponsorsUIDController.text = widget.event?.sponsorsUID.join(', ') ?? '';
+    _tracks = event?.tracks ?? [];
+    _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
+    _baseUrlController.text = event?.baseUrl ?? '';
+    _primaryColorController.text = event?.primaryColor ?? '';
+    _secondaryColorController.text = event?.secondaryColor ?? '';
+    _venueNameController.text = event?.venue?.name ?? '';
+    _venueAddressController.text = event?.venue?.address ?? '';
+    _venueCityController.text = event?.venue?.city ?? '';
+    _descriptionController.text = event?.description ?? '';
+    _agendaUIDController.text = event?.agendaUID ?? '';
+    _speakersUIDController.text = event?.speakersUID.join(', ') ?? '';
+    _sponsorsUIDController.text = event?.sponsorsUID.join(', ') ?? '';
   }
 
   Future<void> _selectDate(
@@ -179,9 +184,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
               childInput: SizedBox(
                 height: 200,
                 child: AddRoom(
-                  rooms: _rooms,
+                  rooms: _tracks,
                   editedRooms: (List<String> currentRooms) {
-                    _rooms = currentRooms;
+                    _tracks = currentRooms;
                   },
                 ),
               ),
@@ -295,10 +300,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
           : 'Europe/Madrid',
     );
 
-    final event = Event(
-      uid: widget.event?.uid ?? DateTime.now().toString(),
+    final eventModified = Event(
+      uid: event?.uid ?? DateTime.now().toString(),
       eventName: _nameController.text,
-      rooms: _rooms.isEmpty ? ['Sala Principal'] : _rooms,
+      tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,
       baseUrl: _baseUrlController.text,
       primaryColor: _primaryColorController.text,
@@ -314,6 +319,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
       speakersUID: ["speaker123"],
       sponsorsUID: ["sponsor123"],
     );
-    Navigator.pop(context, event);
+    Navigator.pop(context, eventModified);
   }
 }

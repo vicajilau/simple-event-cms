@@ -6,35 +6,36 @@ import 'agenda.dart';
 import 'event_dates.dart';
 import 'github/github_model.dart';
 
-/// Main configuration class for the event site
-/// Contains all the essential information needed to configure and display an event
+/// Main configuration class for the event_collection site
+/// Contains all the essential information needed to configure and display an event_collection
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
-  /// The name of the event (e.g., "DevFest Spain 2025")
+
+  /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
 
-  /// the name of the room where the event will take place
-  final List<String> rooms;
+  /// the name of the room where the event_collection will take place
+  final List<String> tracks;
 
-  /// The year of the event, used for organizing multi-year events
+  /// The year of the event_collection, used for organizing multi-year events
   final String year;
 
   /// The base URL for data loading (local assets or remote URLs)
   final String baseUrl;
 
-  /// Primary color for the event theme in hex format (e.g., "#4285F4")
+  /// Primary color for the event_collection theme in hex format (e.g., "#4285F4")
   final String primaryColor;
 
-  /// Secondary color for the event theme in hex format (e.g., "#34A853")
+  /// Secondary color for the event_collection theme in hex format (e.g., "#34A853")
   final String secondaryColor;
 
   /// Event date information including start, end dates and timezone
-  final EventDates? eventDates;
+  final EventDates eventDates;
 
-  /// Venue information where the event will take place
+  /// Venue information where the event_collection will take place
   final Venue? venue;
 
-  /// Optional description of the event
+  /// Optional description of the event_collection
   final String? description;
 
   final String agendaUID;
@@ -48,7 +49,7 @@ class Event extends GitHubModel {
   /// Creates a new event instance
   Event({
     required super.uid,
-    required this.rooms,
+    required this.tracks,
     required this.eventName,
     required this.year,
     required this.baseUrl,
@@ -57,25 +58,19 @@ class Event extends GitHubModel {
     required this.agendaUID,
     required this.speakersUID,
     required this.sponsorsUID,
-    this.eventDates,
+    required this.eventDates,
     this.venue,
     this.description,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
-  });
+  }) : super();
 
   /// Creates a event from JSON data with additional parameters
   ///
   /// The [json] parameter contains the configuration data from site.json
-  /// The [baseUrl] parameter specifies where to load data from (local or remote)
-  /// The [year] parameter identifies which event year this configuration represents
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {
-    EventDates? eventDates;
-    if (json['eventDates'] != null) {
-      eventDates = EventDates.fromJson(json['eventDates']);
-    }
     List<String> speakers = (json['speakersUID'] != null)
         ? (json['speakersUID'] as List)
               .map((item) => item['UID'] as String)
@@ -97,13 +92,13 @@ class Event extends GitHubModel {
       baseUrl: json['baseUrl'],
       primaryColor: json['primaryColor'],
       secondaryColor: json['secondaryColor'],
-      eventDates: eventDates,
+      eventDates: EventDates.fromJson(json['eventDates']),
       venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
       description: json['description'],
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
-      rooms: rooms,
+      tracks: rooms,
     );
   }
 
@@ -117,13 +112,13 @@ class Event extends GitHubModel {
       'baseUrl': baseUrl,
       'primaryColor': primaryColor,
       'secondaryColor': secondaryColor,
-      'eventDates': eventDates?.toJson(),
+      'eventDates': eventDates.toJson(),
       'venue': venue?.toJson(),
       'description': description,
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'room': rooms.map((name) => {'name': name}).toList(),
+      'room': tracks.map((name) => {'name': name}).toList(),
     };
   }
 }

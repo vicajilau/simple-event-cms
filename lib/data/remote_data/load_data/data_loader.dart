@@ -3,20 +3,15 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/config/config_loader.dart';
 import '../../../core/models/models.dart';
 
-/// Service class responsible for loading event data from various sources
+/// Service class responsible for loading event_collection data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
-  /// Site configuration containing base URL and other settings
-  final List<Event> config;
-
-  final Organization organization;
-
-  /// Creates a new DataLoader with the specified configuration
-  DataLoader(this.config, this.organization);
+  final Organization organization = getIt<Organization>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -55,7 +50,7 @@ class DataLoader {
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
-  /// Loads event agenda information from the agenda.json file
+  /// Loads event_collection agenda information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models

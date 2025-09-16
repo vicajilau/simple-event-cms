@@ -3,7 +3,7 @@ import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/core.dart';
-import 'package:sec/core/models/github/github_services.dart';
+import 'package:sec/core/models/github/github_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,12 +22,13 @@ class _LoginPageState extends State<LoginScreen> {
       // Aquí puedes agregar la lógica de autenticación
       try {
         var github = GitHub(auth: Authentication.withToken(_token));
+        final user = await github.users.getCurrentUser();
 
         // Si la autenticación es exitosa y no hay excepción:
-        if (github.auth.isToken || github.auth.isBasic) {
+        if (user.login != null) {
           await SecureInfo.saveGithubKey(
-            GithubService(
-              token: github.auth.authorizationHeaderValue().toString(),
+            GithubData(
+              token: github.auth.token.toString(),
               repo: await ConfigLoader.loadBaseUrl(),
             ),
           );

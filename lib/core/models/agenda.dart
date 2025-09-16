@@ -3,7 +3,7 @@ import 'package:sec/core/config/paths_github.dart';
 
 import 'github/github_model.dart';
 
-/// Represents a single day in the event agenda
+/// Represents a single day in the event_collection agenda
 /// Contains the date and list of tracks for that day
 /// Day name is automatically derived from the date using localization
 
@@ -31,7 +31,7 @@ class Agenda extends GitHubModel {
 }
 
 class AgendaDay {
-  /// The date of the event day in ISO format (YYYY-MM-DD)
+  /// The date of the event_collection day in ISO format (YYYY-MM-DD)
   final String date;
 
   /// List of tracks/rooms available on this day
@@ -53,7 +53,7 @@ class AgendaDay {
   }
 }
 
-/// Represents a track or room within an event day
+/// Represents a track or room within an event_collection day
 /// Contains track information and the sessions scheduled for that track
 class Track {
   /// The name or identifier of the track/room (e.g., "Main Hall", "Room A")

@@ -1,24 +1,19 @@
 import 'package:http/http.dart' as http;
 import 'package:sec/core/core.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/models/models.dart';
 import '../common/commons_services.dart';
 
 class DataUpdateInfo {
   final CommonsServices dataCommons;
+  final DataLoader dataLoader = getIt<DataLoader>();
 
   DataUpdateInfo({required this.dataCommons});
-
-  Future<DataLoader> getDataLoader() async {
-    final config = await ConfigLoader.loadConfig();
-    final organization = await ConfigLoader.loadOrganization();
-    return DataLoader(config, organization);
-  }
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<http.Response> updateSpeaker(Speaker speakers) async {
-    var dataLoader = await getDataLoader();
     var speakersOriginal = await dataLoader.loadSpeakers("2025");
 
     return dataCommons.updateData(
@@ -34,7 +29,6 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(Agenda agenda) async {
-    var dataLoader = await getDataLoader();
     var agendaOriginal = await dataLoader.loadAgenda("2025");
     return dataCommons.updateData(
       agendaOriginal,
@@ -52,7 +46,6 @@ class DataUpdateInfo {
     AgendaDay agendaDay,
     Agenda agenda,
   ) async {
-    var dataLoader = await getDataLoader();
     var agendaOriginal = await dataLoader.loadAgenda("2025");
 
     return dataCommons.updateData(
@@ -66,7 +59,6 @@ class DataUpdateInfo {
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<http.Response> updateSponsors(Sponsor sponsors) async {
-    var dataLoader = await getDataLoader();
     var sponsorOriginal = await dataLoader.loadSponsors("2025");
     return dataCommons.updateData(
       sponsorOriginal,
@@ -79,7 +71,6 @@ class DataUpdateInfo {
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<http.Response> updateEvent(Event event) async {
-    var dataLoader = await getDataLoader();
     var eventsOriginal = await dataLoader.loadEvents("2025");
     return dataCommons.updateData(
       eventsOriginal,

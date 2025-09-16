@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import 'view_model_common.dart';
+import '../../../view_model_common.dart';
 
 abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
-  abstract final ValueNotifier<bool> isLoading;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
@@ -16,7 +16,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
 }
 
 class EventCollectionViewModelImp implements EventCollectionViewModel {
-  EventUseCase useCase;
+  EventUseCase useCase = getIt<EventUseCase>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -24,25 +24,32 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   );
 
   @override
-  final ValueNotifier<bool> isLoading = ValueNotifier<bool>(false);
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
+
+  @override
+  String errorMessage = '';
 
   @override
   EventFilter currentFilter = EventFilter.all;
 
   List<Event> _allEvents = [];
 
-  EventCollectionViewModelImp({required this.useCase});
-
   @override
-  Future<void> setup() async {
-    _allEvents = await useCase.getComposedEvents();
-    _updateEventsToShow();
+  Future<void> setup([Object? argument]) async {
+    loadEvents();
   }
 
-  @override
-  void dispose() {
-    eventsToShow.dispose();
-    isLoading.dispose();
+  void loadEvents() async {
+    viewState.value = ViewState.isLoading;
+    try {
+      _allEvents = await useCase.getComposedEvents();
+      _updateEventsToShow();
+      viewState.value = ViewState.loadFinished;
+    } catch (e) {
+      // TODO: immplementación control de errores (hay que crear los errores)
+      errorMessage = "Error cargando datos";
+      viewState.value = ViewState.error;
+    }
   }
 
   @override
@@ -83,22 +90,23 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     _applyFilters();
   }
 
-  void _applyFilters() {
+  Future<void> _applyFilters() async {
     final now = DateTime.now();
     List<Event> eventsFiltered = [..._allEvents];
     switch (currentFilter) {
       case EventFilter.all:
         // Show all events
+        eventsFiltered = _allEvents;
         break;
       case EventFilter.past:
         eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates!.startDate);
+          final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isBefore(now);
         }).toList();
         break;
       case EventFilter.current:
         eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates!.startDate);
+          final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isAfter(now);
         }).toList();
         break;
@@ -108,9 +116,12 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   void _sortEvents() {
     _allEvents.sort((a, b) {
-      final aDate = DateTime.parse(a.eventDates!.startDate);
-      final bDate = DateTime.parse(b.eventDates!.startDate);
+      final aDate = DateTime.parse(a.eventDates.startDate);
+      final bDate = DateTime.parse(b.eventDates.startDate);
       return aDate.compareTo(bDate);
     });
   }
+
+  @override
+  void dispose() {}
 }
