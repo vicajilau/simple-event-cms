@@ -11,7 +11,7 @@ import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model
 
 final GetIt getIt = GetIt.instance;
 
-/// Configura todas las dependencias de la aplicación
+/// Configures all application dependencies
 Future<void> setupDependencies() async {
   // Registrar configuración global
   getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
@@ -30,10 +30,6 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<EventCollectionViewModel>(
     () => EventCollectionViewModelImp(),
   );
-  getIt.registerLazySingleton<EventDetailViewModel>(
-    () => EventDetailViewModelImp(),
-  );
-  // Event Detail ViewModel
   getIt.registerLazySingleton<EventDetailViewModel>(
     () => EventDetailViewModelImp(),
   );

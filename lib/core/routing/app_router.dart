@@ -1,12 +1,11 @@
 import 'package:go_router/go_router.dart';
-import 'package:sec/core/routing/screen_factory.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class AppRouter {
   // Paths
   static const String homePath = '/';
-  static const String adminLoginPath = '/admin/login';
+  static const String adminLoginPath = '/admin';
   static const String adminCreateEventPath = '/admin/events/create';
   static const String adminEditEventPath = '/admin/events/edit/:eventId';
   static const String eventDetailPath = '/event/:eventId';
@@ -28,7 +27,7 @@ class AppRouter {
       GoRoute(
         path: homePath,
         name: homeName,
-        builder: (context, state) => ScreenFactory.eventCollectionScreen(),
+        builder: (context, state) => EventCollectionScreen(crossAxisCount: 4),
       ),
       GoRoute(
         path: adminLoginPath,
@@ -46,13 +45,13 @@ class AppRouter {
         builder: (context, state) =>
             EventFormScreen(eventId: state.pathParameters['eventId'] ?? ''),
       ),
-      // Ruta de detalle de evento - ahora usa inyección de dependencias
+
       GoRoute(
         path: eventDetailPath,
         name: eventDetailName,
         builder: (context, state) {
           final eventId = state.pathParameters['eventId'] ?? '';
-          return ScreenFactory.eventDetailScreen(eventId);
+          return EventDetailScreen(eventId: eventId);
         },
       ),
       GoRoute(

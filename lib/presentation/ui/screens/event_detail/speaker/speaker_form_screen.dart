@@ -10,7 +10,6 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 class SpeakerFormScreen extends StatefulWidget {
   final String? speakerUID;
   SpeakerUseCase? speakerUseCase = getIt<SpeakerUseCase>();
-  late final speaker = speakerUseCase?.getSpeakerById(speakerUID.toString());
   SpeakerFormScreen({super.key, this.speakerUID});
 
   @override
@@ -28,21 +27,23 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _websiteController = TextEditingController();
 
   @override
-  Future<void> initState() async {
+  void initState() {
     super.initState();
 
-    final speaker = await widget.speakerUseCase?.getSpeakerById(
-      widget.speakerUID.toString(),
-    );
-    if (speaker != null) {
-      _nameController.text = speaker.name;
-      _imageUrlController.text = speaker.image ?? '';
-      _bioController.text = speaker.bio;
-      _twitterController.text = speaker.social.twitter ?? '';
-      _githubController.text = speaker.social.github ?? '';
-      _linkedinController.text = speaker.social.linkedin ?? '';
-      _websiteController.text = speaker.social.website ?? '';
-    }
+    Future.microtask(() async {
+      final speaker = await widget.speakerUseCase?.getSpeakerById(
+        widget.speakerUID.toString(),
+      );
+      if (speaker != null) {
+        _nameController.text = speaker.name;
+        _imageUrlController.text = speaker.image ?? '';
+        _bioController.text = speaker.bio;
+        _twitterController.text = speaker.social.twitter ?? '';
+        _githubController.text = speaker.social.github ?? '';
+        _linkedinController.text = speaker.social.linkedin ?? '';
+        _websiteController.text = speaker.social.website ?? '';
+      }
+    });
   }
 
   @override

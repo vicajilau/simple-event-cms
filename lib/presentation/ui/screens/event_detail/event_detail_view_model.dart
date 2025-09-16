@@ -41,9 +41,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   }
 
   @override
-  void dispose() {
-    viewState.dispose();
-  }
+  void dispose() {}
 
   @override
   void setup([Object? argument]) {
