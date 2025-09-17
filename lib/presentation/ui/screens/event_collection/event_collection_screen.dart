@@ -99,9 +99,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          onTap: () {
+          onTap: () async {
             _titleTapCount++;
-            if (_titleTapCount >= 5) {
+            if (_titleTapCount >= 5 && await widget.viewmodel.checkToken()) {
               _titleTapCount = 0;
               context.go('/admin');
             }
@@ -167,71 +167,38 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
                 itemCount: eventsToShow.length,
                 itemBuilder: (BuildContext context, int index) {
-                  var item = eventsToShow[index];
-                  return Dismissible(
-                    key: Key(item.eventName),
-                    direction: DismissDirection.endToStart,
-                    onDismissed: (direction) async {
-                      widget.viewmodel.deleteEvent(item);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text("${item.eventName} eliminado")),
+                  final item = eventsToShow[index];
+                  return FutureBuilder<bool>(
+                    future: widget.viewmodel.checkToken(),
+                    builder: (context, snapshot) {
+                      final bool canDismiss = snapshot.data ?? false;
+                      return Dismissible(
+                        key: Key(item.eventName),
+                        direction: canDismiss
+                            ? DismissDirection.endToStart
+                            : DismissDirection.none,
+                        onDismissed: (direction) async {
+                          if (canDismiss) {
+                            widget.viewmodel.deleteEvent(item);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text("${item.eventName} eliminado"),
+                              ),
+                            );
+                          }
+                        },
+                        confirmDismiss: (direction) async {
+                          return canDismiss;
+                        },
+                        background: Container(
+                          color: Colors.red,
+                          alignment: Alignment.centerRight,
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: const Icon(Icons.delete, color: Colors.white),
+                        ),
+                        child: _buildEventCard(context, item, canDismiss),
                       );
                     },
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        context.go('/event/${item.uid}');
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Card(
-                          child: ListTile(
-                            leading: Icon(
-                              Icons.event,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 10.0,
-                              horizontal: 16.0,
-                            ),
-                            title: Text(
-                              item.eventName,
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.bold),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
-                            ),
-                            subtitle: Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
-                                "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
-                                style: Theme.of(context).textTheme.bodySmall,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            trailing: IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () async {
-                                final Event? eventEdited = await AppRouter
-                                    .router
-                                    .push(
-                                      AppRouter.adminEditEventPath,
-                                      extra: item.uid,
-                                    );
-                                if (eventEdited != null) {
-                                  widget.viewmodel.editEvent(eventEdited);
-                                }
-                              },
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
                   );
                 },
               );
@@ -239,17 +206,78 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           );
         },
       ),
-      floatingActionButton: AddFloatingActionButton(
-        onPressed: () async {
-          final Event? newConfig = await AppRouter.router.push(
-            AppRouter.adminCreateEventPath,
-          );
-          if (newConfig != null) {
-            widget.viewmodel.addEvent(newConfig);
+      floatingActionButton: FutureBuilder<bool>(
+        future: widget.viewmodel.checkToken(),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            return AddFloatingActionButton(
+              onPressed: () async {
+                final Event? newConfig = await AppRouter.router.push(
+                  AppRouter.adminCreateEventPath,
+                );
+                if (newConfig != null) {
+                  widget.viewmodel.addEvent(newConfig);
+                }
+              },
+            );
           }
+          return const SizedBox.shrink(); // No muestra nada si no hay token
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget _buildEventCard(BuildContext context, Event item, bool isAdmin) {
+    return GestureDetector(
+      onTap: () {
+        context.go('/event/${item.uid}');
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4.0),
+        child: Card(
+          child: ListTile(
+            leading: Icon(
+              Icons.event,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              vertical: 10.0,
+              horizontal: 16.0,
+            ),
+            title: Text(
+              item.eventName,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
+                style: Theme.of(context).textTheme.bodySmall,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            trailing: isAdmin
+                ? IconButton(
+                    icon: const Icon(Icons.edit),
+                    onPressed: () async {
+                      final Event? eventEdited = await AppRouter.router.push(
+                        AppRouter.adminEditEventPath,
+                        extra: item.uid,
+                      );
+                      if (eventEdited != null) {
+                        widget.viewmodel.editEvent(eventEdited);
+                      }
+                    },
+                  )
+                : null,
+          ),
+        ),
+      ),
     );
   }
 }

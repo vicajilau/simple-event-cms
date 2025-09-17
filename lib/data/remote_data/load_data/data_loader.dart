@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Event, Organization;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/config/config_loader.dart';
@@ -27,8 +28,9 @@ class DataLoader {
       final url = 'events/${organization.year}/$path';
       var github = GitHub();
       var repositorySlug = RepositorySlug(
-        organization.github_user,
-        organization.project_name,
+        organization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            organization.projectName,
       );
       final res = await github.repositories.getContents(
         repositorySlug,

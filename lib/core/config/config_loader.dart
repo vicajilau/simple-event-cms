@@ -2,12 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
 import '../models/models.dart';
 
 class ConfigLoader {
-  // Reads environment variables. If not defined, uses default values.
+  // Read environment variables. If not defined, use default values.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
     defaultValue: 'prod',
@@ -22,8 +23,9 @@ class ConfigLoader {
     var github = GitHub();
     final res = await github.repositories.getContents(
       RepositorySlug(
-        localOrganization.github_user,
-        localOrganization.project_name,
+        localOrganization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            localOrganization.projectName,
       ),
       configUrl,
       ref: "feature/refactor_code",
@@ -44,8 +46,8 @@ class ConfigLoader {
   static Future<List<Event>> loadConfig() async {
     Organization organization = getIt<Organization>();
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.github_user,
-      organization.project_name,
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
 
     final configUrl = 'events/${organization.year}/config/site.json';

@@ -4,13 +4,13 @@ import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final String? speakerUID;
-  final SpeakerUseCase? speakerUseCase = getIt<SpeakerUseCase>();
+  final SpeakerViewModel? speakerViewModel = getIt<SpeakerViewModel>();
   SpeakerFormScreen({super.key, this.speakerUID});
 
   @override
@@ -32,7 +32,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
     super.initState();
 
     Future.microtask(() async {
-      final speaker = await widget.speakerUseCase?.getSpeakerById(
+      final speaker = await widget.speakerViewModel?.fetchSpeakerById(
         widget.speakerUID.toString(),
       );
       if (speaker != null) {
@@ -165,8 +165,8 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 children: [
                   FilledButton(
                     onPressed: () async {
-                      final speaker = await widget.speakerUseCase
-                          ?.getSpeakerById(widget.speakerUID.toString());
+                      final speaker = await widget.speakerViewModel
+                          ?.fetchSpeakerById(widget.speakerUID.toString());
                       if (_formKey.currentState!.validate() &&
                           context.mounted) {
                         Navigator.pop(

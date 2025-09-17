@@ -5,17 +5,17 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
+import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 /// Screen that displays a grid of speakers with their information and social links
 /// Fetches speaker data from the configured data source and displays it in cards
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
-  final SpeakersViewModel viewmodel;
+  final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
   final SpeakerUseCase speakerUseCase = getIt<SpeakerUseCase>();
 
-  SpeakersScreen({super.key, required this.viewmodel});
+  SpeakersScreen({super.key});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
@@ -207,31 +207,38 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                     Positioned(
                       top: 20,
                       right: 30,
-                      child: Row(
-                        children: [
-                          IconWidget(
-                            icon: Icons.edit,
-                            onTap: () async {
-                              final Speaker? updatedSpeaker = await AppRouter
-                                  .router
-                                  .push(
-                                    AppRouter.speakerFormPath,
-                                    extra: speaker.uid,
-                                  );
+                      child: FutureBuilder<bool>(
+                        future: widget.viewmodel.checkToken(),
+                        builder: (context, snapshot) {
+                          Row(
+                            children: [
+                              IconWidget(
+                                icon: Icons.edit,
+                                onTap: () async {
+                                  final Speaker? updatedSpeaker =
+                                      await AppRouter.router.push(
+                                        AppRouter.speakerFormPath,
+                                        extra: speaker.uid,
+                                      );
 
-                              if (updatedSpeaker != null) {
-                                widget.viewmodel.editSpeaker(updatedSpeaker);
-                              }
-                            },
-                          ),
-                          const SizedBox(width: 8),
-                          IconWidget(
-                            icon: Icons.delete,
-                            onTap: () {
-                              widget.viewmodel.removeSpeaker(speaker.uid);
-                            },
-                          ),
-                        ],
+                                  if (updatedSpeaker != null) {
+                                    widget.viewmodel.editSpeaker(
+                                      updatedSpeaker,
+                                    );
+                                  }
+                                },
+                              ),
+                              const SizedBox(width: 8),
+                              IconWidget(
+                                icon: Icons.delete,
+                                onTap: () {
+                                  widget.viewmodel.removeSpeaker(speaker.uid);
+                                },
+                              ),
+                            ],
+                          );
+                          return const SizedBox.shrink();
+                        },
                       ),
                     ),
                   ],

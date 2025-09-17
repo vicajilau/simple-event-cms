@@ -16,35 +16,57 @@ class LoginScreen extends StatefulWidget {
 class _LoginPageState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final Organization organization = getIt<Organization>();
+  String _projectName = '';
   String _token = '';
 
   Future<void> _submit(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
-      // Aquí puedes agregar la lógica de autenticación
+      // Here you can add the authentication logic
       try {
         var github = GitHub(auth: Authentication.withToken(_token));
         final user = await github.users.getCurrentUser();
 
-        // Si la autenticación es exitosa y no hay excepción:
-        if (user.login != null) {
+        // Verify if the project exists in the user's repositories
+        final repositories = github.repositories.listUserRepositories(
+          user.login!,
+        );
+        bool projectExists = false;
+        await for (var repo in repositories) {
+          if (repo.name == _projectName) {
+            projectExists = true;
+            break; // Exit the loop once the project is found
+          }
+        }
+
+        // If authentication is successful and there is no exception:
+        if (user.login != null && projectExists) {
           await SecureInfo.saveGithubKey(
-            GithubData(token: github.auth.token.toString()),
+            GithubData(
+              token: github.auth.token.toString(),
+              projectName: _projectName,
+            ),
           );
-          // Verifica si hay autenticación básica o token
+          // Check if there is basic authentication or token
           if (context.mounted) {
-            // Redirigir a la pantalla de eventos después del login exitoso
+            // Redirect to the events screen after successful login
             context.go('/');
           }
         } else {
-          // Este bloque podría no ser alcanzado si la autenticación falla antes
-          _showErrorSnackbar('Fallo de autenticación desconocido.');
+          // This block might not be reached if authentication fails earlier
+          if (user.login == null) {
+            _showErrorSnackbar('Unknown authentication failure.');
+          } else if (!projectExists) {
+            _showErrorSnackbar(
+              'The project "$_projectName" does not exist in your GitHub repositories.',
+            );
+          }
         }
       } catch (e) {
-        // Captura excepciones comunes de autenticación o de red
+        // Catch common authentication or network exceptions
         // ignore: use_build_context_synchronously
         _showErrorSnackbar(
-          'Credenciales incorrectas o problema de red. Por favor, verifica tu email y contraseña.',
+          'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.',
         );
         debugPrint('Error de autenticación: $e');
       }
@@ -56,7 +78,7 @@ class _LoginPageState extends State<LoginScreen> {
       SnackBar(
         content: Text(message),
         action: SnackBarAction(
-          label: 'Cerrar',
+          label: 'Close',
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
@@ -68,7 +90,7 @@ class _LoginPageState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Inicio de Sesión')),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -77,16 +99,22 @@ class _LoginPageState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
+                decoration: const InputDecoration(labelText: 'Project Name'),
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter the project name' : null,
+                onSaved: (value) => _projectName = value!,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
                 decoration: const InputDecoration(labelText: 'Token'),
-                validator: (value) => value!.isEmpty
-                    ? 'Por favor, ingresa un token de github valido'
-                    : null,
+                validator: (value) =>
+                    value!.isEmpty ? 'Please enter a valid GitHub token' : null,
                 onSaved: (value) => _token = value!,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _submit(context),
-                child: const Text('Iniciar Sesión'),
+                child: const Text('Login'),
               ),
             ],
           ),

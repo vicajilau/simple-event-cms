@@ -21,8 +21,8 @@ class CommonsServices {
     String commitMessage,
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.github_user,
-      organization.project_name,
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService?.token == null) {
@@ -132,8 +132,9 @@ class CommonsServices {
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
-        organization.github_user,
-        organization.project_name,
+        organization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            organization.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,
@@ -167,8 +168,8 @@ class CommonsServices {
       'sha': currentSha, // SHA is required for updates
     };
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.github_user,
-      organization.project_name,
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     // 5. BUILD URL AND MAKE PUT REQUEST
     final apiUrl =

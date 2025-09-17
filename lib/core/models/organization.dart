@@ -3,20 +3,20 @@ import 'package:sec/core/models/github/github_model.dart';
 import '../config/paths_github.dart';
 
 class Organization extends GitHubModel {
-  final String organizationName;
-  final String primaryColorOrganization;
-  final String secondaryColorOrganization;
-  final String github_user;
-  final String project_name;
-  final String year;
+  String organizationName;
+  String primaryColorOrganization;
+  String secondaryColorOrganization;
+  String githubUser;
+  String projectName = "simple-event-cms";
+  String year;
 
   Organization({
     super.uid = "unique-id-organization",
     required this.organizationName,
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
-    required this.github_user,
-    required this.project_name,
+    required this.githubUser,
+    required this.projectName,
     required this.year,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
@@ -26,8 +26,8 @@ class Organization extends GitHubModel {
     organizationName: json["organizationName"],
     primaryColorOrganization: json["primaryColorOrganization"],
     secondaryColorOrganization: json["secondaryColorOrganization"],
-    github_user: json["github_user"],
-    project_name: json["project_name"],
+    githubUser: json["github_user"],
+    projectName: json["project_name"],
     year: json["year"],
   );
 
@@ -37,8 +37,8 @@ class Organization extends GitHubModel {
       "organizationName": organizationName,
       "primaryColorOrganization": primaryColorOrganization,
       "secondaryColorOrganization": secondaryColorOrganization,
-      "github_user": github_user,
-      "project_name": project_name,
+      "github_user": githubUser,
+      "project_name": projectName,
       "year": year,
     };
   }
