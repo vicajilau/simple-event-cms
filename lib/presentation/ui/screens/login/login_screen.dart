@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginScreen> {
               ),
               const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Token'),
+                decoration: const InputDecoration(labelText: 'Token(classic with write permissions)'),
                 validator: (value) =>
                     value!.isEmpty ? 'Please enter a valid GitHub token' : null,
                 onSaved: (value) => _token = value!,
