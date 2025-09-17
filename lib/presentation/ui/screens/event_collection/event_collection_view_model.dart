@@ -49,8 +49,8 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
       _updateEventsToShow();
       viewState.value = ViewState.loadFinished;
     } catch (e) {
-      // TODO: immplementación control de errores (hay que crear los errores)
-      errorMessage = "Error cargando datos";
+      // TODO: implement error handling (errors need to be created)
+      errorMessage = "Error loading data";
       viewState.value = ViewState.error;
     }
   }

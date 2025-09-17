@@ -139,16 +139,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 children: [
                   Text(widget.viewmodel.errorMessage),
                   const SizedBox(height: 16),
-                  /*ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _isLoading = true;
-                        _errorMessage = null;
-                      });
-                      _loadConfiguration();
-                    },
-                    child: const Text('Reintentar'),
-                  ),*/
                 ],
               ),
             );
