@@ -241,7 +241,7 @@ class SessionCards extends StatelessWidget {
             ? [
                 SizedBox(
                   height: 150,
-                  child: Center(child: const Text('No hay sesiones')),
+                  child: Center(child: const Text('No sessions')),
                 ),
               ]
             : List.generate(sessions.length, (index) {
@@ -265,9 +265,9 @@ class SessionCards extends StatelessWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return DeleteDialog(
-                            title: 'Borrar sesión',
+                            title: 'Delete session',
                             message:
-                                '¿Estás seguro de que deseas borrar la sesión??',
+                                'Are you sure you want to delete the session?',
                             onDeletePressed: () {
                               removeSession(sessions[index]);
                             },
