@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:http/http.dart' as http;
+import 'package:github/github.dart' hide Event, Organization;
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/config/config_loader.dart';
@@ -20,20 +21,35 @@ class DataLoader {
   /// [path] The relative path to the data file
   /// Returns a Future containing the parsed JSON data as a dynamic list
   /// Throws an Exception if the data cannot be loaded
-  Future<List<dynamic>> loadData(String path, String year) async {
-    String content = '';
-    if (ConfigLoader.appEnv != 'dev' &&
-        organization.pathUrl.startsWith('http')) {
+  Future<List<dynamic>> loadData(String path) async {
+    String content = "";
+    if (ConfigLoader.appEnv != 'dev') {
       // Remote loading
-      final url = '${organization.pathUrl}/$path';
-      final res = await http.get(Uri.parse(url));
-      if (res.statusCode != 200) {
-        throw Exception("Error loading data from $url");
+      final url = 'events/${organization.year}/$path';
+      var github = GitHub();
+      var repositorySlug = RepositorySlug(
+        organization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            organization.projectName,
+      );
+      final res = await github.repositories.getContents(
+        repositorySlug,
+        url,
+        ref: "feature/refactor_code",
+      );
+      if (res.file == null || res.file!.content == null) {
+        throw Exception(
+          "Error cargando configuración de producción desde $url",
+        );
       }
-      content = res.body;
+      final file = utf8.decode(
+        base64.decode(res.file!.content!.replaceAll("\n", "")),
+      );
+      content =
+          file; // No es necesario codificar a JSON aquí, ya es una cadena JSON
     } else if (ConfigLoader.appEnv == 'dev') {
       // Local loading
-      final localPath = 'events/$year/$path';
+      final localPath = 'events/${organization.year}/$path';
       content = await rootBundle.loadString(localPath);
     }
     if (path == PathsGithub.eventPath) {
@@ -45,8 +61,8 @@ class DataLoader {
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<List<Speaker>> loadSpeakers(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.speakerPath, year);
+  Future<List<Speaker>> loadSpeakers() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.speakerPath);
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
@@ -54,22 +70,22 @@ class DataLoader {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<List<Agenda>> loadAgenda(String year) async {
-    var jsonList = await loadData(PathsGithub.agendaPath, year);
+  Future<List<Agenda>> loadAgenda() async {
+    var jsonList = await loadData(PathsGithub.agendaPath);
     return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<List<Sponsor>> loadSponsors(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath, year);
+  Future<List<Sponsor>> loadSponsors() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 
   /// Loads event information from the events.json file
   /// Returns a Future containing a list of event data
-  Future<List<Event>> loadEvents(String year) async {
-    List<dynamic> jsonList = await loadData(PathsGithub.eventPath, year);
+  Future<List<Event>> loadEvents() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.eventPath);
     return jsonList
         .map<Event>(
           (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),

@@ -10,7 +10,6 @@ import 'github/github_model.dart';
 /// Contains all the essential information needed to configure and display an event_collection
 /// including branding, dates, venue, and deployment settings
 class Event extends GitHubModel {
-
   /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
 
@@ -19,9 +18,6 @@ class Event extends GitHubModel {
 
   /// The year of the event_collection, used for organizing multi-year events
   final String year;
-
-  /// The base URL for data loading (local assets or remote URLs)
-  final String baseUrl;
 
   /// Primary color for the event_collection theme in hex format (e.g., "#4285F4")
   final String primaryColor;
@@ -52,7 +48,6 @@ class Event extends GitHubModel {
     required this.tracks,
     required this.eventName,
     required this.year,
-    required this.baseUrl,
     required this.primaryColor,
     required this.secondaryColor,
     required this.agendaUID,
@@ -89,7 +84,6 @@ class Event extends GitHubModel {
       uid: json["UID"],
       eventName: json['eventName'],
       year: json['year'],
-      baseUrl: json['baseUrl'],
       primaryColor: json['primaryColor'],
       secondaryColor: json['secondaryColor'],
       eventDates: EventDates.fromJson(json['eventDates']),
@@ -106,10 +100,9 @@ class Event extends GitHubModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'uid': uid,
+      'UID': uid,
       'eventName': eventName,
       'year': year,
-      'baseUrl': baseUrl,
       'primaryColor': primaryColor,
       'secondaryColor': secondaryColor,
       'eventDates': eventDates.toJson(),

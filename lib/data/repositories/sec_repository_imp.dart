@@ -14,22 +14,22 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<List<Event>> loadEvents() async {
-    return dataLoader.loadEvents("2025");
+    return dataLoader.loadEvents();
   }
 
   @override
   Future<List<Agenda>> loadEAgendas() async {
-    return await dataLoader.loadAgenda("2025");
+    return await dataLoader.loadAgenda();
   }
 
   @override
   Future<List<Speaker>> loadESpeakers() async {
-    return await dataLoader.loadSpeakers("2025");
+    return await dataLoader.loadSpeakers();
   }
 
   @override
   Future<List<Sponsor>> loadSponsors() async {
-    return await dataLoader.loadSponsors("2025");
+    return await dataLoader.loadSponsors();
   }
 
   @override
@@ -43,6 +43,18 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
+    Agenda? agendaFounded;
+    final agendas = await loadEAgendas();
+    agendaFounded = agendas.firstWhere(
+      (agenda) => agenda.uid == agendaId,
+      orElse: () => throw Exception("Agenda not founded"),
+    );
+    agendaFounded.days.add(agendaDay);
+    await dataUpdateInfo.updateAgenda(agendaFounded);
+  }
+
+  @override
   Future<void> saveSpeaker(Speaker speaker) async {
     await dataUpdateInfo.updateSpeaker(speaker);
   }
@@ -50,5 +62,25 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<void> saveSponsor(Sponsor sponsor) async {
     await dataUpdateInfo.updateSponsors(sponsor);
+  }
+
+  @override
+  Future<void> removeAgenda(String agendaId) async {
+    dataUpdateInfo.removeAgenda(agendaId);
+  }
+
+  @override
+  Future<void> removeAgendaDayById(String agendaDayId, String agendaId) async {
+    dataUpdateInfo.removeAgendaDayById(agendaDayId);
+  }
+
+  @override
+  Future<void> removeSpeaker(String speakerId) async {
+    dataUpdateInfo.removeSpeaker(speakerId);
+  }
+
+  @override
+  Future<void> removeSponsor(String sponsorId) async {
+    dataUpdateInfo.removeSponsors(sponsorId);
   }
 }

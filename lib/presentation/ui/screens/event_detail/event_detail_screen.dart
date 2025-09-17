@@ -4,13 +4,21 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
+
+import '../agenda/agenda_screen.dart';
+import '../speaker/speakers_screen.dart';
+import '../sponsor/add_sponsor_screen.dart';
+import '../sponsor/sponsors_screen.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
   final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
+  final SpeakerViewModel viewmodelSpeaker = getIt<SpeakerViewModel>();
+  final SponsorViewModel viewmodelSponsor = getIt<SponsorViewModel>();
   final String eventId;
 
   EventDetailScreen({super.key, required this.eventId});
@@ -48,15 +56,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     final eventTitle = widget.viewmodel.eventTitle();
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(eventTitle),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.language),
-            onPressed: () => _showLanguageSelector(context),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: Text(eventTitle)),
       body: ValueListenableBuilder<ViewState>(
         valueListenable: widget.viewmodel.viewState,
         builder: (context, viewState, child) {
@@ -91,19 +91,11 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             'No hay eventos programados',
                       ),
                     )
-                  : AgendaScreen(
-                      agendaDays: agendaDays,
-                      editSession: (day, track, session) {
-                        // TODO: Implementar edición de sesión
-                      },
-                      removeSession: (session) {
-                        // TODO: Implementar eliminación de sesión
-                      },
-                    ),
+                  : AgendaScreen(agendaDays: agendaDays),
               // Speakers Tab
-              SpeakersScreen(viewmodel: widget.viewmodel),
+              SpeakersScreen(),
               // Sponsors Tab
-              SponsorsScreen(viewmodel: widget.viewmodel),
+              SponsorsScreen(),
             ],
           );
         },
@@ -128,15 +120,23 @@ class _EventDetailScreenState extends State<EventDetailScreen>
           ),
         ],
       ),
-      floatingActionButton: AddFloatingActionButton(
-        onPressed: () async {
-          if (_selectedIndex == 0) {
-            _addTrackToAgenda();
-          } else if (_selectedIndex == 1) {
-            _addSpeaker();
-          } else if (_selectedIndex == 2) {
-            _addSponsor();
+      floatingActionButton: FutureBuilder<bool>(
+        future: widget.viewmodel.checkToken(),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            AddFloatingActionButton(
+              onPressed: () async {
+                if (_selectedIndex == 0) {
+                  _addTrackToAgenda();
+                } else if (_selectedIndex == 1) {
+                  _addSpeaker();
+                } else if (_selectedIndex == 2) {
+                  _addSponsor();
+                }
+              },
+            );
           }
+          return const SizedBox.shrink();
         },
       ),
     );
@@ -175,7 +175,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
 
     if (newSpeaker != null) {
-      widget.viewmodel.addSpeaker(newSpeaker);
+      widget.viewmodelSpeaker.addSpeaker(newSpeaker);
     }
   }
 
@@ -186,87 +186,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
 
     if (newSponsor != null && newSponsor is Sponsor) {
-      widget.viewmodel.addSponsor(newSponsor);
+      widget.viewmodelSponsor.addSponsor(newSponsor);
     }
-  }
-
-  void _showLanguageSelector(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(
-          AppLocalizations.of(context)?.changeLanguage ?? 'Cambiar Idioma',
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              title: const Text('Español'),
-              leading: const Text('🇪🇸'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('English'),
-              leading: const Text('🇺🇸'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Français'),
-              leading: const Text('🇫🇷'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Italiano'),
-              leading: const Text('🇮🇹'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Português'),
-              leading: const Text('🇵🇹'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Català'),
-              leading: const Text('🏴'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Galego'),
-              leading: const Text('🏴'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-            ListTile(
-              title: const Text('Euskera'),
-              leading: const Text('🏴'),
-              onTap: () {
-                Navigator.pop(context);
-                // TODO: Implementar cambio de idioma global
-              },
-            ),
-          ],
-        ),
-      ),
-    );
   }
 }

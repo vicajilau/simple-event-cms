@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+
+import 'agenda_view_model.dart';
 
 class ExpansionTileState {
   final bool isExpanded;
@@ -14,15 +17,8 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
-  final void Function(String, String, Session) editSession;
-  final void Function(Session) removeSession;
 
-  const AgendaScreen({
-    super.key,
-    required this.agendaDays,
-    required this.editSession,
-    required this.removeSession,
-  });
+  const AgendaScreen({super.key, required this.agendaDays});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -146,8 +142,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
-            editSession: widget.editSession,
-            removeSession: widget.removeSession,
+            editSession: (day, track, session) => {/*TODO edit session*/},
+            removeSession: (session) => {/*TODO remove session*/},
           ),
         ],
       ),
@@ -221,12 +217,13 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 }
 
 class SessionCards extends StatelessWidget {
+  final AgendaViewModel _viewModel = getIt<AgendaViewModel>();
   final String date, track;
   final List<Session> sessions;
   final void Function(String, String, Session) editSession;
   final void Function(Session) removeSession;
 
-  const SessionCards({
+  SessionCards({
     super.key,
     required this.sessions,
     required this.editSession,
@@ -244,7 +241,7 @@ class SessionCards extends StatelessWidget {
             ? [
                 SizedBox(
                   height: 150,
-                  child: Center(child: const Text('No hay sesiones')),
+                  child: Center(child: const Text('No sessions')),
                 ),
               ]
             : List.generate(sessions.length, (index) {
@@ -268,9 +265,9 @@ class SessionCards extends StatelessWidget {
                         context: context,
                         builder: (BuildContext context) {
                           return DeleteDialog(
-                            title: 'Borrar sesión',
+                            title: 'Delete session',
                             message:
-                                '¿Estás seguro de que deseas borrar la sesión??',
+                                'Are you sure you want to delete the session?',
                             onDeletePressed: () {
                               removeSession(sessions[index]);
                             },
@@ -382,12 +379,23 @@ class SessionCards extends StatelessWidget {
                 ),
               ),
             ],
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                onPressed: onDeleteTap,
-                icon: Icon(Icons.delete),
-              ),
+            FutureBuilder<bool>(
+              future: _viewModel.checkToken(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox.shrink();
+                }
+                if (snapshot.hasData && snapshot.data == true) {
+                  return Align(
+                    alignment: Alignment.bottomRight,
+                    child: IconButton(
+                      onPressed: onDeleteTap,
+                      icon: const Icon(Icons.delete),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ],
         ),

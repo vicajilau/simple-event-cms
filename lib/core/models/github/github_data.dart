@@ -3,12 +3,14 @@ import 'dart:convert';
 class GithubData {
   final String? token;
   final String? repo;
-  String branch = "feature/sponsor-screen-with-MVVM";
+  final String? projectName;
+  String branch = "feature/refactor_code";
 
   GithubData({
     this.token,
     this.repo,
-    this.branch = "feature/sponsor-screen-with-MVVM",
+    this.projectName,
+    this.branch = "feature/refactor_code",
   });
 
   factory GithubData.fromJson(String str) {
@@ -16,10 +18,15 @@ class GithubData {
     return GithubData(
       token: json["token"],
       repo: json["repo"],
+      projectName: json["projectName"],
       branch: json["branch"],
     );
   }
 
-  String toJson() =>
-      jsonEncode({"token": token, "repo": repo, "branch": branch});
+  String toJson() => jsonEncode({
+    "token": token,
+    "repo": repo,
+    "projectName": projectName,
+    "branch": branch,
+  });
 }

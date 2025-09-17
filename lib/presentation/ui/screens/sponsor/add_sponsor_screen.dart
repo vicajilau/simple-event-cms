@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/repositories/sec_repository.dart';
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../../../../../core/config/secure_info.dart';
 import '../../../../../core/di/dependency_injection.dart';
 
 class AddSponsorScreen extends StatefulWidget {
   final Sponsor? sponsor;
-  final SecRepository repository = getIt<SecRepository>();
+  final SponsorViewModel sponsorViewModel = getIt<SponsorViewModel>();
   AddSponsorScreen({super.key, this.sponsor});
 
   @override
@@ -124,18 +124,15 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                         final sponsor = Sponsor(
                           uid:
                               widget.sponsor?.uid ??
-                              DateTime.now().millisecondsSinceEpoch.toString(),
+                              'Sponsor_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                           name: _nameController.text,
                           type: _selectedCategory,
                           logo: _logoController.text,
                           website: _websiteController.text,
                         );
-                        var github = (await SecureInfo.getGithubKey());
-                        if (github != null) {
-                          await widget.repository.saveSponsor(sponsor);
-                          if (context.mounted) {
-                            Navigator.pop(context, sponsor);
-                          }
+                        widget.sponsorViewModel.addSponsor(sponsor);
+                        if (context.mounted) {
+                          Navigator.pop(context, sponsor);
                         }
                       }
                     },

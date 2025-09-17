@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {
-  final EventUseCase? eventUseCase = getIt<EventUseCase>();
+  final EventCollectionViewModel eventCollectionViewModel =
+      getIt<EventCollectionViewModel>();
   final String? eventId;
   EventFormScreen({super.key, this.eventId});
 
@@ -41,7 +43,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   void initState() {
     super.initState();
-    event = widget.eventUseCase?.getEventById(widget.eventId.toString());
+    event = widget.eventCollectionViewModel.getEventById(
+      widget.eventId.toString(),
+    );
     _nameController.text = event?.eventName ?? '';
 
     final startDate = event?.eventDates.startDate;
@@ -57,7 +61,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
     _tracks = event?.tracks ?? [];
     _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
-    _baseUrlController.text = event?.baseUrl ?? '';
     _primaryColorController.text = event?.primaryColor ?? '';
     _secondaryColorController.text = event?.secondaryColor ?? '';
     _venueNameController.text = event?.venue?.name ?? '';
@@ -298,14 +301,16 @@ class _EventFormScreenState extends State<EventFormScreen> {
       timezone: _timezoneController.text.isNotEmpty
           ? _timezoneController.text
           : 'Europe/Madrid',
+      uid: 'EventDate_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
     );
 
     final eventModified = Event(
-      uid: event?.uid ?? DateTime.now().toString(),
+      uid:
+          event?.uid ??
+          'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
       eventName: _nameController.text,
       tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,
-      baseUrl: _baseUrlController.text,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       eventDates: eventDates,

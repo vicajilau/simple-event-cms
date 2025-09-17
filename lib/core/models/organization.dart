@@ -3,17 +3,21 @@ import 'package:sec/core/models/github/github_model.dart';
 import '../config/paths_github.dart';
 
 class Organization extends GitHubModel {
-  final String organizationName;
-  final String primaryColorOrganization;
-  final String secondaryColorOrganization;
-  final String baseUrl;
+  String organizationName;
+  String primaryColorOrganization;
+  String secondaryColorOrganization;
+  String githubUser;
+  String projectName = "simple-event-cms";
+  String year;
 
   Organization({
     super.uid = "unique-id-organization",
     required this.organizationName,
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
-    required this.baseUrl,
+    required this.githubUser,
+    required this.projectName,
+    required this.year,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
   });
@@ -22,7 +26,9 @@ class Organization extends GitHubModel {
     organizationName: json["organizationName"],
     primaryColorOrganization: json["primaryColorOrganization"],
     secondaryColorOrganization: json["secondaryColorOrganization"],
-    baseUrl: json["baseUrlOrganization"],
+    githubUser: json["github_user"],
+    projectName: json["project_name"],
+    year: json["year"],
   );
 
   @override
@@ -31,7 +37,9 @@ class Organization extends GitHubModel {
       "organizationName": organizationName,
       "primaryColorOrganization": primaryColorOrganization,
       "secondaryColorOrganization": secondaryColorOrganization,
-      "baseUrlOrganization": baseUrl,
+      "github_user": githubUser,
+      "project_name": projectName,
+      "year": year,
     };
   }
 }

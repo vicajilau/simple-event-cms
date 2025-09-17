@@ -1,37 +1,34 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
+import 'package:sec/core/config/secure_info.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 
 import '../models/models.dart';
 
 class ConfigLoader {
-  static var year = '2025';
-  static var user = 'vicajilau';
-  static var project = 'simple-event-cms';
-
-  // Lee las variables de entorno. Si no se definen, usa valores por defecto.
+  // Read environment variables. If not defined, use default values.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
-    defaultValue: 'dev',
+    defaultValue: 'prod',
   );
 
-  static Future<String> loadBaseUrl() async {
-    final organizationConfigPath = 'events/$year/config/organization.json';
-    final organizationConfigContent = await rootBundle.loadString(
-      organizationConfigPath,
-    );
-    final organizationJsonData = json.decode(organizationConfigContent);
-    return Organization.fromJson(organizationJsonData).baseUrl;
-  }
-
   static Future<Organization> loadOrganization() async {
-    final configUrl = 'events/$year/config/organization.json';
+    final localConfigPath = 'events/organization/organization.json';
+    final String response = await rootBundle.loadString(localConfigPath);
+    final data = await json.decode(response);
+    var localOrganization = Organization.fromJson(data);
+    final configUrl = 'events/organization/organization.json';
     var github = GitHub();
-    var repositorySlug = RepositorySlug(user, project);
     final res = await github.repositories.getContents(
-      repositorySlug,
+      RepositorySlug(
+        localOrganization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            localOrganization.projectName,
+      ),
       configUrl,
+      ref: "feature/refactor_code",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -47,9 +44,14 @@ class ConfigLoader {
   }
 
   static Future<List<Event>> loadConfig() async {
-    final configUrl = 'events/$year/config/site.json';
+    Organization organization = getIt<Organization>();
+    RepositorySlug repositorySlug = RepositorySlug(
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+    );
+
+    final configUrl = 'events/${organization.year}/config/site.json';
     var github = GitHub();
-    var repositorySlug = RepositorySlug(user, project);
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,

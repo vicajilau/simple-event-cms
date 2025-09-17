@@ -4,10 +4,10 @@
       "UID": "df5fd5ds5dsf",
       "eventName": "DevFest Spain 2025",
       "year": "2025",
-      "baseUrl": "https://github.com/vicajilau/simple-event-cms",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
+        "UID": "3428674hgdfedfhjwq",
         "startDate": "2025-03-15",
         "endDate": "2025-03-15",
         "timezone": "Europe/Madrid"
@@ -43,10 +43,10 @@
       "UID": "gfhdfdfgdsfg4dfg",
       "eventName": "DevFest Spain 2026",
       "year": "2026",
-      "baseUrl": "https://vicajilau.github.io/event_flutter_template",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
+        "UID": "gfdsfsdfdsfg4dfg",
         "startDate": "2026-03-14",
         "endDate": "2026-03-15",
         "timezone": "Europe/Madrid"

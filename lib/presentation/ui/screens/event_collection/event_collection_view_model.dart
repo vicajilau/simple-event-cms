@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
@@ -11,12 +12,15 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
+  Event? getEventById(String eventId);
   void editEvent(Event event);
   void deleteEvent(Event event);
 }
 
 class EventCollectionViewModelImp implements EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
+  CheckTokenSavedUseCase checkTokenSavedUseCase =
+      getIt<CheckTokenSavedUseCase>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -46,8 +50,8 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
       _updateEventsToShow();
       viewState.value = ViewState.loadFinished;
     } catch (e) {
-      // TODO: immplementación control de errores (hay que crear los errores)
-      errorMessage = "Error cargando datos";
+      // TODO: implement error handling (errors need to be created)
+      errorMessage = "Error loading data";
       viewState.value = ViewState.error;
     }
   }
@@ -124,4 +128,14 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   @override
   void dispose() {}
+
+  @override
+  Future<bool> checkToken() async {
+    return await checkTokenSavedUseCase.checkToken();
+  }
+
+  @override
+  Event? getEventById(String eventId) {
+    return useCase.getEventById(eventId);
+  }
 }
