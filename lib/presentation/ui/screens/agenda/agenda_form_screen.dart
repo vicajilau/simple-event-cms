@@ -32,7 +32,7 @@ class AgendaEventFormScreen extends StatefulWidget {
   final EventFormData data;
   final String agendaId;
 
-  AgendaEventFormScreen({
+  const AgendaEventFormScreen({
     super.key,
     required this.data,
     required this.agendaId,

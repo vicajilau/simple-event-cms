@@ -10,7 +10,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final String? speakerUID;
-  SpeakerFormScreen({super.key, this.speakerUID});
+  const SpeakerFormScreen({super.key, this.speakerUID});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();

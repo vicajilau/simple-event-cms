@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
@@ -50,7 +51,7 @@ class CommonsServices {
       // If the file is not found (NotFound), the SHA remains null.
       // The logic below will create the file instead of updating it.
       currentSha = null;
-      print("File not found at $pathUrl. A new file will be created.");
+      debugPrint("File not found at $pathUrl. A new file will be created.");
     } catch (e) {
       // Any other error while getting the file.
       throw Exception("Failed to get file contents from $pathUrl: $e");
@@ -87,13 +88,15 @@ class CommonsServices {
 
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
     // This gives you back the raw http.Response you want.
+    String branch =
+        githubService?.branch ?? 'main'; // Default to 'main' if not specified
     final apiUrl =
-        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl';
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
 
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'token ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService?.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(
@@ -172,13 +175,15 @@ class CommonsServices {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     // 5. BUILD URL AND MAKE PUT REQUEST
+    String branch =
+        githubService?.branch ?? 'main'; // Default to 'main' if not specified
     final apiUrl =
-        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl';
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
 
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'token ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService?.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),

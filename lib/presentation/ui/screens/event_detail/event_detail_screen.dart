@@ -136,7 +136,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               },
             );
           }
-          ;
           return const SizedBox.shrink();
         },
       ),

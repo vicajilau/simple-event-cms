@@ -101,7 +101,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         title: GestureDetector(
           onTap: () async {
             _titleTapCount++;
-            if (_titleTapCount >= 5 && await widget.viewmodel.checkToken()) {
+            if (_titleTapCount >= 5 &&
+                await widget.viewmodel.checkToken() &&
+                context.mounted) {
               _titleTapCount = 0;
               context.go('/admin');
             }

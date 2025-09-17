@@ -37,6 +37,7 @@ class EventDates extends GitHubModel {
   }
 
   /// Converts this EventDates instance to a JSON object
+  @override
   Map<String, dynamic> toJson() {
     return {
       'id': uid,
