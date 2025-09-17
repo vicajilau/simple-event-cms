@@ -5,7 +5,7 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
-import 'package:sec/domain/use_cases/agenda_use_case.dart';
+import 'package:sec/presentation/ui/screens/event_detail/agenda/agenda_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormData {
@@ -30,7 +30,6 @@ class EventFormData {
 class AgendaEventFormScreen extends StatefulWidget {
   final EventFormData data;
   final String agendaId;
-  final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
   AgendaEventFormScreen({
     super.key,
@@ -53,6 +52,7 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _timeErrorMessage;
+  final AgendaViewModel agendaViewModel = getIt<AgendaViewModel>();
 
   @override
   void initState() {
@@ -350,10 +350,7 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                 date: _selectedDay,
                 tracks: [track],
               );
-              widget.agendaUseCase.saveAgendaDayById(
-                agendaDay,
-                widget.agendaId,
-              );
+              agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
               Navigator.pop(context, agendaDay);
             }
           },

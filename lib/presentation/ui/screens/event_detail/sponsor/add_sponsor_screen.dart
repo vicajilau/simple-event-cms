@@ -5,6 +5,7 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+
 import '../../../../../core/di/dependency_injection.dart';
 
 class AddSponsorScreen extends StatefulWidget {
@@ -133,7 +134,7 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                         if (context.mounted) {
                           Navigator.pop(context, sponsor);
                         }
-                                            }
+                      }
                     },
                     child: Text(isEditing ? 'Actualizar' : 'Guardar'),
                   ),
