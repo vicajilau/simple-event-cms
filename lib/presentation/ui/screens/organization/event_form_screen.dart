@@ -4,11 +4,12 @@ import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {
-  final EventUseCase? eventUseCase = getIt<EventUseCase>();
+  final EventCollectionViewModel eventCollectionViewModel =
+      getIt<EventCollectionViewModel>();
   final String? eventId;
   EventFormScreen({super.key, this.eventId});
 
@@ -42,7 +43,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   void initState() {
     super.initState();
-    event = widget.eventUseCase?.getEventById(widget.eventId.toString());
+    event = widget.eventCollectionViewModel.getEventById(
+      widget.eventId.toString(),
+    );
     _nameController.text = event?.eventName ?? '';
 
     final startDate = event?.eventDates.startDate;

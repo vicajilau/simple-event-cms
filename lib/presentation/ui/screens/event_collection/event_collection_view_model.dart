@@ -12,6 +12,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
   void addEvent(Event event);
+  Event? getEventById(String eventId);
   void editEvent(Event event);
   void deleteEvent(Event event);
 }
@@ -131,5 +132,10 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   @override
   Future<bool> checkToken() async {
     return await checkTokenSavedUseCase.checkToken();
+  }
+
+  @override
+  Event? getEventById(String eventId) {
+    return useCase.getEventById(eventId);
   }
 }
