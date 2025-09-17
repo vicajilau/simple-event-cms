@@ -3,9 +3,6 @@ import 'package:sec/core/models/github/github_model.dart';
 import '../config/paths_github.dart';
 
 class Sponsor extends GitHubModel {
-  /// Unique identifier of the sponsor
-  final String uid;
-
   /// Name of the sponsor
   final String name;
 
@@ -20,13 +17,13 @@ class Sponsor extends GitHubModel {
 
   /// Creates a new Sponsor instance
   Sponsor({
-    required this.uid,
+    required super.uid,
     required this.name,
     required this.type,
     required this.logo,
     required this.website,
     super.pathUrl = PathsGithub.sponsorPath,
-    super.updateMessage = PathsGithub.sponsorPath,
+    super.updateMessage = PathsGithub.sponsorUpdateMessage,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) => Sponsor(

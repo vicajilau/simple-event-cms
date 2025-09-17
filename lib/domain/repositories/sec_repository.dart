@@ -5,5 +5,13 @@ abstract class SecRepository {
   Future<List<Agenda>> loadEAgendas();
   Future<List<Speaker>> loadESpeakers();
   Future<List<Sponsor>> loadSponsors();
-  Future<void> saveEvents(List<Event> events);
+  Future<void> saveEvent(Event event);
+  Future<void> saveSpeaker(Speaker speaker);
+  Future<void> removeSpeaker(String speakerId);
+  Future<void> saveAgenda(Agenda agenda);
+  Future<void> removeAgenda(String agendaId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<void> removeAgendaDayById(String agendaDayId, String agendaId);
+  Future<void> saveSponsor(Sponsor sponsor);
+  Future<void> removeSponsor(String sponsorId);
 }

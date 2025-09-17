@@ -2,5 +2,7 @@
   "organizationName": "Random Organization",
   "primaryColorOrganization": "#4285F4",
   "secondaryColorOrganization": "#34A853",
-  "baseUrlOrganization": "https://vicajilau.github.io/event_flutter_template"
+  "github_user": "vicajilau",
+  "project_name": "simple-event-cms",
+  "year": "2025"
 }

@@ -3,16 +3,15 @@ import 'package:sec/core/config/paths_github.dart';
 
 import 'github/github_model.dart';
 
-/// Represents a single day in the event agenda
+/// Represents a single day in the event_collection agenda
 /// Contains the date and list of tracks for that day
 /// Day name is automatically derived from the date using localization
 
 class Agenda extends GitHubModel {
-  final String uid;
   final List<AgendaDay> days;
 
   Agenda({
-    required this.uid,
+    required super.uid,
     required this.days,
     super.pathUrl = PathsGithub.agendaPath,
     super.updateMessage = PathsGithub.agendaUpdateMessage,
@@ -31,30 +30,40 @@ class Agenda extends GitHubModel {
   Map<String, dynamic> toJson() => {"UID": uid, "days": days};
 }
 
-class AgendaDay {
-  /// The date of the event day in ISO format (YYYY-MM-DD)
+class AgendaDay extends GitHubModel {
+  /// The date of the event_collection day in ISO format (YYYY-MM-DD)
   final String date;
 
   /// List of tracks/rooms available on this day
   final List<Track> tracks;
 
   /// Creates a new AgendaDay instance
-  AgendaDay({required this.date, required this.tracks});
+  AgendaDay({
+    required super.uid,
+    required this.date,
+    required this.tracks,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
+  });
 
   /// Creates an AgendaDay from JSON data
   /// Parses the tracks array and converts each track to a Track object
   /// The day name is automatically generated from the date using localization
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
+      uid: json['UID'],
       date: json['date'],
       tracks: (json['tracks'] as List)
           .map((track) => Track.fromJson(track))
           .toList(),
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {"UID": uid, "date": date, "tracks": tracks};
 }
 
-/// Represents a track or room within an event day
+/// Represents a track or room within an event_collection day
 /// Contains track information and the sessions scheduled for that track
 class Track {
   /// The name or identifier of the track/room (e.g., "Main Hall", "Room A")
@@ -84,10 +93,7 @@ class Track {
 
 /// Represents an individual session within a track
 /// Contains all the details about a specific presentation, talk, or activity
-class Session {
-  /// UID of the session
-  final String uid;
-
+class Session extends GitHubModel {
   /// The title of the session
   final String title;
 
@@ -105,10 +111,12 @@ class Session {
 
   /// Creates a new Session instance
   Session({
-    required this.uid,
+    required super.uid,
     required this.title,
     required this.time,
     required this.speaker,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
     this.description,
     required this.type,
   });
@@ -125,4 +133,14 @@ class Session {
       type: json['type'],
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+    "UID": uid,
+    "title": title,
+    "time": time,
+    "speaker": speaker,
+    "description": description,
+    "type": type,
+  };
 }

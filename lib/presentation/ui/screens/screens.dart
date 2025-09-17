@@ -1,9 +1,10 @@
+export 'agenda/agenda_form_screen.dart';
 export 'agenda/agenda_screen.dart';
-export 'agenda/event_form_screen.dart';
-export 'event/event_collection_screen.dart';
-export 'event/event_container_screen.dart';
+export 'event_collection/event_collection_screen.dart';
+export 'event_detail/event_detail_screen.dart';
+export 'login/admin_screen.dart';
 export 'login/login_screen.dart';
-export 'organization/organization_form_screen.dart';
+export 'organization/event_form_screen.dart';
 export 'speaker/speaker_form_screen.dart';
 export 'speaker/speakers_screen.dart';
 export 'sponsor/add_sponsor_screen.dart';

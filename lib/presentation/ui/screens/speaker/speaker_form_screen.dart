@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
-  final Speaker? speaker;
-  const SpeakerFormScreen({super.key, this.speaker});
+  final String? speakerUID;
+  const SpeakerFormScreen({super.key, this.speakerUID});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -23,23 +26,50 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _linkedinController = TextEditingController();
   final _websiteController = TextEditingController();
 
+  late final SpeakerViewModel _speakerViewModel;
+  Speaker?
+  _initialSpeakerData; // Added to store fetched speaker data for editing
+
   @override
   void initState() {
     super.initState();
-    final speaker = widget.speaker;
+    _speakerViewModel = getIt<SpeakerViewModel>();
+    _speakerViewModel.setup(); // Call ViewModel setup
+
+    if (widget.speakerUID != null && widget.speakerUID!.isNotEmpty) {
+      _fetchAndPopulateSpeakerData();
+    }
+  }
+
+  void _fetchAndPopulateSpeakerData() async {
+    final speaker = await _speakerViewModel.fetchSpeakerById(
+      widget.speakerUID!,
+    );
     if (speaker != null) {
-      _nameController.text = speaker.name;
-      _imageUrlController.text = speaker.image ?? '';
-      _bioController.text = speaker.bio;
-      _twitterController.text = speaker.social.twitter ?? '';
-      _githubController.text = speaker.social.github ?? '';
-      _linkedinController.text = speaker.social.linkedin ?? '';
-      _websiteController.text = speaker.social.website ?? '';
+      if (mounted) {
+        setState(() {
+          _initialSpeakerData = speaker;
+        });
+        _nameController.text = speaker.name;
+        _imageUrlController.text = speaker.image ?? '';
+        _bioController.text = speaker.bio;
+        _twitterController.text = speaker.social.twitter ?? '';
+        _githubController.text = speaker.social.github ?? '';
+        _linkedinController.text = speaker.social.linkedin ?? '';
+        _websiteController.text = speaker.social.website ?? '';
+      }
+    } else {
+      if (mounted && _speakerViewModel.errorMessage.isNotEmpty) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(_speakerViewModel.errorMessage)));
+      }
     }
   }
 
   @override
   void dispose() {
+    _speakerViewModel.dispose(); // Dispose the ViewModel
     _nameController.dispose();
     _imageUrlController.dispose();
     _bioController.dispose();
@@ -52,6 +82,10 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // You might want to use _speakerViewModel.viewState here to show loading/error states
+    // For example, wrap the FormScreenWrapper or its child in a ValueListenableBuilder
+    // listening to _speakerViewModel.viewState. For brevity, this example omits that.
+
     return FormScreenWrapper(
       pageTitle: AppLocalizations.of(context)?.speakerForm ?? '',
       widgetFormChild: Padding(
@@ -156,14 +190,14 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 children: [
                   FilledButton(
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
+                      if (_formKey.currentState!.validate() &&
+                          context.mounted) {
                         Navigator.pop(
                           context,
                           Speaker(
                             uid:
-                                widget.speaker?.uid ??
-                                DateTime.now().microsecondsSinceEpoch
-                                    .toString(),
+                                _initialSpeakerData?.uid ??
+                                'Speaker_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                             name: _nameController.text,
                             image: _imageUrlController.text,
                             bio: _bioController.text,

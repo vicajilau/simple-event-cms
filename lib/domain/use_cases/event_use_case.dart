@@ -1,18 +1,24 @@
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class EventUseCase {
   Future<List<Event>> getComposedEvents();
-  void saveEvents(List<Event> events);
+  Event? getEventById(String id);
+  void saveEvent(Event event);
 }
 
 class EventUseCaseImp implements EventUseCase {
-  SecRepository repository;
+  SecRepository repository = getIt<SecRepository>();
 
-  EventUseCaseImp({required this.repository});
+  List<Event> events = [];
 
   @override
   Future<List<Event>> getComposedEvents() async {
+    if (events.isNotEmpty) {
+      return events;
+    }
+
     final allEvents = await repository.loadEvents();
     var agenda = await repository.loadEAgendas();
     var speakers = await repository.loadESpeakers();
@@ -52,11 +58,24 @@ class EventUseCaseImp implements EventUseCase {
           .whereType<Sponsor>()
           .toList();
     }
+    events = allEvents;
     return allEvents;
   }
 
   @override
-  void saveEvents(List<Event> events) {
-    // TODO: implement saveEvents
+  Event? getEventById(String id) {
+    if (events.isEmpty) {
+      getComposedEvents();
+    }
+    try {
+      return events.firstWhere((event) => event.uid == id);
+    } on StateError {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> saveEvent(Event event) async {
+    repository.saveEvent(event);
   }
 }

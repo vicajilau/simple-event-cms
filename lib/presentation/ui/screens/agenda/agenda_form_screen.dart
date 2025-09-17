@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+
+import 'agenda_view_model.dart';
 
 class EventFormData {
   final List<String> rooms;
@@ -24,16 +28,21 @@ class EventFormData {
   });
 }
 
-class EventFormScreen extends StatefulWidget {
+class AgendaEventFormScreen extends StatefulWidget {
   final EventFormData data;
+  final String agendaId;
 
-  const EventFormScreen({super.key, required this.data});
+  const AgendaEventFormScreen({
+    super.key,
+    required this.data,
+    required this.agendaId,
+  });
 
   @override
-  State<EventFormScreen> createState() => _EventFormScreenState();
+  State<AgendaEventFormScreen> createState() => _AgendaEventFormScreenState();
 }
 
-class _EventFormScreenState extends State<EventFormScreen> {
+class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
   TimeOfDay? _initSessionTime, _endSessionTime;
   String _selectedDay = '',
       _selectedRoom = '',
@@ -44,6 +53,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _timeErrorMessage;
+  final AgendaViewModel agendaViewModel = getIt<AgendaViewModel>();
 
   @override
   void initState() {
@@ -308,7 +318,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         FilledButton(
-          onPressed: () {
+          onPressed: () async {
             if (!isTimeSelected(_initSessionTime) ||
                 !isTimeSelected(_endSessionTime)) {
               setState(() {
@@ -327,7 +337,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 speaker: _selectedSpeaker,
                 description: _descriptionController.text,
                 type: _selectedTalkType,
-                uid: DateTime.now().toString(),
+                uid:
+                    'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
               );
               Track track = Track(
                 name: _selectedRoom,
@@ -335,9 +346,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 sessions: [session],
               );
               AgendaDay agendaDay = AgendaDay(
+                uid:
+                    'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 date: _selectedDay,
                 tracks: [track],
               );
+              agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
               Navigator.pop(context, agendaDay);
             }
           },
