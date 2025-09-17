@@ -7,6 +7,8 @@ abstract class AgendaUseCase {
   Future<Agenda?> getAgendaById(String id);
   void saveAgenda(Agenda agenda);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  void editSession(String agendaId, String dayId, Session newSession);
+  void deleteSession(String agendaId, String dayId, String sessionId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
@@ -33,5 +35,15 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
     repository.saveAgendaDayById(agendaDay, agendaId);
+  }
+
+  @override
+  void editSession(String agendaId, String dayId, Session newSession) {
+    repository.saveSession(newSession, dayId, agendaId);
+  }
+
+  @override
+  void deleteSession(String agendaId, String dayId, String sessionId) {
+    repository.removeSession(agendaId, dayId, sessionId);
   }
 }

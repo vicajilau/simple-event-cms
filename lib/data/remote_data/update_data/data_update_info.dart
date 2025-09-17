@@ -172,4 +172,89 @@ class DataUpdateInfo {
       agendaToRemove.updateMessage,
     );
   }
+
+  /// Saves a new session or updates an existing one within an agenda day.
+  ///
+  /// This function loads the agenda, finds the specified agenda day,
+  /// and then either adds the new session or updates an existing one
+  /// based on the session's UID.
+  ///
+  /// Parameters:
+  /// - `agendaDayId`: The ID of the agenda day to which the session belongs.
+  /// - `session`: The session object to be saved or updated.
+  ///
+  /// Returns a `Future<http.Response>` indicating the outcome of the operation.
+  Future<http.Response> saveSession(String agendaDayId, Session session) async {
+    var agendaListOriginal = await dataLoader.loadAgenda();
+    Agenda parentAgenda = agendaListOriginal.firstWhere(
+      (agenda) => agenda.days.any((day) => day.uid == agendaDayId),
+    );
+    AgendaDay targetDay = parentAgenda.days.firstWhere(
+      (day) => day.uid == agendaDayId,
+    );
+    Track targetTrack = targetDay.tracks.firstWhere(
+      (track) => track.uid == session.uid,
+    );
+    int sessionIndex = targetTrack.sessions.indexWhere(
+      (s) => s.uid == session.uid,
+    );
+
+    if (sessionIndex != -1) {
+      // Update existing session
+      targetTrack.sessions[sessionIndex] = session;
+    } else {
+      // Add new session
+      targetTrack.sessions.add(session);
+    }
+
+    targetDay.tracks[targetDay.tracks.indexOf(targetTrack)] = targetTrack;
+    parentAgenda.days[parentAgenda.days.indexOf(targetDay)] = targetDay;
+
+    return dataCommons.removeData(
+      agendaListOriginal, // The original list of agendas
+      parentAgenda, // The specific agenda that was modified
+      "events/${organization.year}/${parentAgenda.pathUrl}",
+      parentAgenda
+          .updateMessage, // Or a more specific message for session update
+    );
+  }
+
+  /// Removes a session from a specific agenda day.
+  ///
+  /// This function loads the agenda, finds the specified agenda day,
+  /// and then removes the session with the given `sessionId`.
+  ///
+  /// Parameters:
+  /// - `agendaDayId`: The ID of the agenda day from which the session will be removed.
+  /// - `sessionId`: The ID of the session to remove.
+  ///
+  /// Returns a `Future<http.Response>` indicating the outcome of the operation.
+  Future<http.Response> removeSession(
+    String agendaDayId,
+    String sessionId,
+    String trackId,
+  ) async {
+    var agendaListOriginal = await dataLoader.loadAgenda();
+
+    Agenda parentAgenda = agendaListOriginal.firstWhere(
+      (agenda) => agenda.days.any((day) => day.uid == agendaDayId),
+    );
+    AgendaDay agendaDay = parentAgenda.days.firstWhere(
+      (day) => day.uid == agendaDayId,
+    );
+    Track targetTrack = agendaDay.tracks.firstWhere(
+      (track) => track.uid == trackId,
+    );
+    targetTrack.sessions.removeWhere((session) => session.uid == sessionId);
+
+    agendaDay.tracks[agendaDay.tracks.indexOf(targetTrack)] = targetTrack;
+    parentAgenda.days[parentAgenda.days.indexOf(agendaDay)] = agendaDay;
+
+    return dataCommons.updateData(
+      agendaListOriginal,
+      parentAgenda,
+      "events/${organization.year}/${parentAgenda.pathUrl}",
+      parentAgenda.updateMessage,
+    );
+  }
 }

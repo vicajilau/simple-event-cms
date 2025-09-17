@@ -68,7 +68,15 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   Agenda _createNewAgenda() {
     final List<Track> tracks = event!.tracks
-        .map((e) => Track(name: e, color: '', sessions: []))
+        .map(
+          (e) => Track(
+            uid:
+                'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+            name: e,
+            color: '',
+            sessions: [],
+          ),
+        )
         .toList();
     final List<AgendaDay>
     agendaDays = event!.eventDates.getFormattedDaysInDateRange().map((e) {

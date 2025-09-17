@@ -65,7 +65,7 @@ class AgendaDay extends GitHubModel {
 
 /// Represents a track or room within an event_collection day
 /// Contains track information and the sessions scheduled for that track
-class Track {
+class Track extends GitHubModel {
   /// The name or identifier of the track/room (e.g., "Main Hall", "Room A")
   final String name;
 
@@ -76,12 +76,20 @@ class Track {
   final List<Session> sessions;
 
   /// Creates a new Track instance
-  Track({required this.name, required this.color, required this.sessions});
+  Track({
+    required super.uid,
+    required this.name,
+    required this.color,
+    required this.sessions,
+    super.pathUrl = PathsGithub.agendaPath,
+    super.updateMessage = PathsGithub.agendaUpdateMessage,
+  });
 
   /// Creates a Track from JSON data
   /// Parses the sessions array and converts each session to a Session object
   factory Track.fromJson(Map<String, dynamic> json) {
     return Track(
+      uid: json['UID'],
       name: json['name'],
       color: json['color'],
       sessions: (json['sessions'] as List)
@@ -89,6 +97,20 @@ class Track {
           .toList(),
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      "UID": uid,
+      "name": name,
+      "color": color,
+      "sessions": sessions.map((session) => session.toJson()).toList(),
+    };
+  }
+
+  @override
+  // TODO: implement updateMessage
+  String get updateMessage => throw UnimplementedError();
 }
 
 /// Represents an individual session within a track
