@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+
+import 'add_sponsor_screen.dart';
 
 /// Screen that displays event_collection sponsors in a responsive grid layout
 /// Fetches sponsor data and displays logos with clickable links

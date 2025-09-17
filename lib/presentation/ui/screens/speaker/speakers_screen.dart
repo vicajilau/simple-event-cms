@@ -5,7 +5,7 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 /// Screen that displays a grid of speakers with their information and social links

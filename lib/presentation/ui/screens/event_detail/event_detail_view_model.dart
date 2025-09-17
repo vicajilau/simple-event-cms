@@ -4,8 +4,8 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
-import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
-import 'package:sec/presentation/ui/screens/event_detail/sponsor/sponsor_view_model.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 abstract class EventDetailViewModel implements ViewModelCommon {

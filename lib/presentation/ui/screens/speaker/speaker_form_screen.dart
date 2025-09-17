@@ -5,7 +5,7 @@ import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {

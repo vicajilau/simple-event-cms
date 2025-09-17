@@ -3,7 +3,8 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
-import 'package:sec/presentation/ui/screens/event_detail/agenda/agenda_view_model.dart';
+
+import 'agenda_view_model.dart';
 
 class ExpansionTileState {
   final bool isExpanded;

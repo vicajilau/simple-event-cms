@@ -5,8 +5,9 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
-import 'package:sec/presentation/ui/screens/event_detail/agenda/agenda_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+
+import 'agenda_view_model.dart';
 
 class EventFormData {
   final List<String> rooms;

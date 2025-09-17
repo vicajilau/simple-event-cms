@@ -12,11 +12,12 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/domain/use_cases/sponsor_use_case.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
-import 'package:sec/presentation/ui/screens/event_detail/agenda/agenda_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 // Imports for new ViewModels
-import 'package:sec/presentation/ui/screens/event_detail/speaker/speaker_view_model.dart';
-import 'package:sec/presentation/ui/screens/event_detail/sponsor/sponsor_view_model.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
+
+import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
 
 final GetIt getIt = GetIt.instance;
 
