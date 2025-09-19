@@ -71,17 +71,6 @@ class DataLoader {
     // --- Unified Parsing Logic ---
     // Now, parse the jsonString regardless of its source (local or remote)
     final dynamic jsonData = json.decode(jsonString);
-
-    // Handle the specific structure of events.json, which wraps the list in an "events" key
-    if (path == PathsGithub.eventPath) {
-      if (jsonData is Map<String, dynamic> && jsonData.containsKey('events')) {
-        return jsonData["events"] as List<dynamic>;
-      } else {
-        throw Exception(
-          "Expected '${PathsGithub.eventPath}' to contain a root 'events' key with a list.",
-        );
-      }
-    } else {
       // For all other files (speakers, agenda, etc.), assume the root is a list
       if (jsonData is List<dynamic>) {
         return jsonData;
@@ -90,7 +79,7 @@ class DataLoader {
           "Expected data from '$path' to be a JSON list, but got ${jsonData.runtimeType}.",
         );
       }
-    }
+
   }
 
   /// Loads speaker information from the speakers.json file
