@@ -12,7 +12,7 @@ class GithubData {
     this.repo,
     this.projectName,
     this.branch = "feature/refactor_code",
-    this.githubUser
+    this.githubUser,
   });
 
   factory GithubData.fromJson(String str) {

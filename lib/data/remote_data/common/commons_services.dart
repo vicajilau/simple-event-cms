@@ -38,12 +38,13 @@ class CommonsServices {
       // 1. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
-          repositorySlug, pathUrl,
-          ref: githubService?.branch ??
-              'main' // Specify the branch when getting contents
+        repositorySlug,
+        pathUrl,
+        ref:
+            githubService?.branch ??
+            'feature/refactor_code', // Specify the branch when getting contents
       );
       currentSha = contents.file?.sha;
-
 
       if (currentSha == null) {
         // This case is unlikely if the file exists but helps prevent errors.
@@ -74,17 +75,20 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode(dataInJsonString));
+    final base64Content = base64.encode(
+      utf8.encode("{\"events\":$dataInJsonString}"),
+    );
 
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ??
+        'feature/refactor_code'; // Default to 'feature/refactor_code' if not specified
 
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
     final Map<String, dynamic> requestBody = {
       'message': commitMessage,
       'content': base64Content,
-      'branch' : branch
+      'branch': branch,
     }; // Use Map<String, dynamic> to accommodate both String and null (for SHA if not present)
 
     // Only add the 'sha' for updates, not for creation.
@@ -147,9 +151,12 @@ class CommonsServices {
         (await SecureInfo.getGithubKey()).projectName ??
             organization.projectName,
       );
-      final contents = await github.repositories.getContents(repositorySlug,
+      final contents = await github.repositories.getContents(
+        repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main', // Specify branch here as well
+        ref:
+            githubService?.branch ??
+            'feature/refactor_code', // Specify branch here as well
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -170,14 +177,18 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode(dataInJsonString));
+    final base64Content = base64.encode(
+      utf8.encode("{\"events\":$dataInJsonString}"),
+    );
 
     // 4. PREPARE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
       'content': base64Content,
       'sha': currentSha, // SHA is required for updates
-      'branch': githubService?.branch ?? 'main', // Specify branch for commit
+      'branch':
+          githubService?.branch ??
+          'feature/refactor_code', // Specify branch for commit
     };
     RepositorySlug repositorySlug = RepositorySlug(
       organization.githubUser,

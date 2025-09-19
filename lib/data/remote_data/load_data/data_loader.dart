@@ -14,48 +14,82 @@ import '../../../core/models/models.dart';
 class DataLoader {
   final Organization organization = getIt<Organization>();
 
-  /// Generic method to load data from a specified path
-  /// Automatically determines whether to load from local assets or remote URL
-  /// based on the configuration's base URL
+  /// Generic method to load data from a specified path.
+  /// Automatically determines whether to load from local assets or a remote GitHub URL
+  /// based on the `ConfigLoader.appEnv` configuration.
   ///
-  /// [path] The relative path to the data file
-  /// Returns a Future containing the parsed JSON data as a dynamic list
-  /// Throws an Exception if the data cannot be loaded
+  /// [path] The relative path to the data file (e.g., 'config/events.json').
+  /// Returns a Future containing the parsed JSON data as a dynamic list.
+  /// Throws an Exception if the data cannot be loaded or parsed.
   Future<List<dynamic>> loadData(String path) async {
-    String content = "";
+    String jsonString = "";
+
     if (ConfigLoader.appEnv != 'dev') {
-      // Remote loading
+      // --- Remote Loading from GitHub ---
+      final githubData = await SecureInfo.getGithubKey();
+      final branch =
+          githubData.branch; // Use dynamic branch with a fallback
       final url = 'events/${organization.year}/$path';
-      var github = GitHub();
-      var repositorySlug = RepositorySlug(
+
+      // Initialize authenticated GitHub client
+      final github = GitHub(auth: Authentication.withToken(githubData.token));
+      final repositorySlug = RepositorySlug(
         organization.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ??
-            organization.projectName,
+        githubData.projectName ?? organization.projectName,
       );
-      final res = await github.repositories.getContents(
-        repositorySlug,
-        url,
-        ref: "feature/refactor_code",
-      );
-      if (res.file == null || res.file!.content == null) {
+
+      try {
+        final contents = await github.repositories.getContents(
+          repositorySlug,
+          url,
+          ref: branch, // Use the dynamically fetched branch
+        );
+
+        final file = contents.file;
+        if (file == null || file.content == null) {
+          throw Exception(
+            "The path '$url' on branch '$branch' is not a file or is empty.",
+          );
+        }
+
+        // Decode the Base64 content to a readable JSON string
+        jsonString = utf8.decode(
+          base64.decode(file.content!.replaceAll("\n", "")),
+        );
+      } catch (e) {
+        // Provide more context on the error
         throw Exception(
-          "Error cargando configuración de producción desde $url",
+          "Failed to load remote data from '$url' on branch '$branch': $e",
         );
       }
-      final file = utf8.decode(
-        base64.decode(res.file!.content!.replaceAll("\n", "")),
-      );
-      content =
-          file; // No es necesario codificar a JSON aquí, ya es una cadena JSON
-    } else if (ConfigLoader.appEnv == 'dev') {
-      // Local loading
-      final localPath = 'events/${organization.year}/$path';
-      content = await rootBundle.loadString(localPath);
-    }
-    if (path == PathsGithub.eventPath) {
-      return json.decode(content)["events"];
     } else {
-      return json.decode(content);
+      // --- Local Loading from Assets ---
+      final localPath = 'events/${organization.year}/$path';
+      jsonString = await rootBundle.loadString(localPath);
+    }
+
+    // --- Unified Parsing Logic ---
+    // Now, parse the jsonString regardless of its source (local or remote)
+    final dynamic jsonData = json.decode(jsonString);
+
+    // Handle the specific structure of events.json, which wraps the list in an "events" key
+    if (path == PathsGithub.eventPath) {
+      if (jsonData is Map<String, dynamic> && jsonData.containsKey('events')) {
+        return jsonData["events"] as List<dynamic>;
+      } else {
+        throw Exception(
+          "Expected '${PathsGithub.eventPath}' to contain a root 'events' key with a list.",
+        );
+      }
+    } else {
+      // For all other files (speakers, agenda, etc.), assume the root is a list
+      if (jsonData is List<dynamic>) {
+        return jsonData;
+      } else {
+        throw Exception(
+          "Expected data from '$path' to be a JSON list, but got ${jsonData.runtimeType}.",
+        );
+      }
     }
   }
 
