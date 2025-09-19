@@ -2,12 +2,12 @@
   "events": [
     {
       "UID": "df5fd5ds5dsf",
-      "eventName": "DevFest Spain 2025",
+      "eventName": "DevFest Spain 2028",
       "year": "2025",
       "primaryColor": "#4285F4",
       "secondaryColor": "#34A853",
       "eventDates": {
-        "UID": "3428674hgdfedfhjwq",
+        "UID": "EventDate_20250917_145125",
         "startDate": "2025-03-15",
         "endDate": "2025-03-15",
         "timezone": "Europe/Madrid"
@@ -18,25 +18,24 @@
         "city": "Madrid"
       },
       "description": "El evento tecnológico más importante de España para desarrolladores",
-      "agendaUID": "4564645",
+      "agendaUID": "agenda123",
       "speakersUID": [
-        {"UID": "123456"},
-        {"UID": "123457"},
-        {"UID": "123458"},
-        {"UID": "alfa11212"}
+        {
+          "UID": "speaker123"
+        }
       ],
       "sponsorsUID": [
-        {"UID": "456546456"},
-        {"UID": "654564564"},
-        {"UID": "7233434694"},
-        {"UID": "213467936"},
-        {"UID": "364973197"},
-        {"UID": "726612689"},
-        {"UID": "14575333"}
+        {
+          "UID": "sponsor123"
+        }
       ],
-      "rooms": [
-        {"name": "Sala Principal"},
-        {"name": "Sala iMac"}
+      "room": [
+        {
+          "name": "Sala Principal"
+        },
+        {
+          "name": "Sala iMac"
+        }
       ]
     },
     {
@@ -59,20 +58,20 @@
       "description": "El evento tecnológico más importante de España para desarrolladores",
       "agendaUID": "871674",
       "speakersUID": [
-        {"UID": "123459"},
-        {"UID": "123460"},
-        {"UID": "alfa11212"}
+        { "UID": "123459" },
+        { "UID": "123460" },
+        { "UID": "alfa11212" }
       ],
       "sponsorsUID": [
-        {"UID": "8sad8asdasd"},
-        {"UID": "w8asd9ww8aw"},
-        {"UID": "bn5e8qewerdd"},
-        {"UID": "1ad33dzfdff"},
-        {"UID": "lapw52524669"}
+        { "UID": "8sad8asdasd" },
+        { "UID": "w8asd9ww8aw" },
+        { "UID": "bn5e8qewerdd" },
+        { "UID": "1ad33dzfdff" },
+        { "UID": "lapw52524669" }
       ],
-      "rooms": [
-        {"name": "Sala Principal"},
-        {"name": "Sala iMac"}
+      "room": [
+        { "name": "Sala Principal" },
+        { "name": "Sala iMac" }
       ]
     }
   ]
