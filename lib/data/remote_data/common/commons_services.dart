@@ -40,6 +40,9 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
+        ref:
+            githubService?.branch ??
+            'feature/refactor_code', // Specify the branch when getting contents
       );
       currentSha = contents.file?.sha;
 
@@ -72,14 +75,21 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode(dataInJsonString));
+    final base64Content = base64.encode(
+      utf8.encode("{\"events\":$dataInJsonString}"),
+    );
+
+    String branch =
+        githubService?.branch ??
+        'feature/refactor_code'; // Default to 'feature/refactor_code' if not specified
 
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
-    final requestBody = <String, String>{
+    final Map<String, dynamic> requestBody = {
       'message': commitMessage,
       'content': base64Content,
-    };
+      'branch': branch,
+    }; // Use Map<String, dynamic> to accommodate both String and null (for SHA if not present)
 
     // Only add the 'sha' for updates, not for creation.
     if (currentSha != null) {
@@ -88,10 +98,11 @@ class CommonsServices {
 
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
     // This gives you back the raw http.Response you want.
-    String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+
+    // The 'ref' parameter in the PUT request URL is for specifying the branch where the commit should be made,
+    // not for fetching the current SHA. The SHA of the file being updated is passed in the request body.
     final apiUrl =
-        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl';
 
     final response = await github.client.put(
       Uri.parse(apiUrl),
@@ -100,6 +111,7 @@ class CommonsServices {
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(
+        // Add branch to the request body if you want to commit to a specific branch
         requestBody,
       ), // Encode the final body map to a JSON string
     );
@@ -142,6 +154,9 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
+        ref:
+            githubService?.branch ??
+            'feature/refactor_code', // Specify branch here as well
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -162,23 +177,27 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode(dataInJsonString));
+    final base64Content = base64.encode(
+      utf8.encode("{\"events\":$dataInJsonString}"),
+    );
 
     // 4. PREPARE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
       'content': base64Content,
       'sha': currentSha, // SHA is required for updates
+      'branch':
+          githubService?.branch ??
+          'feature/refactor_code', // Specify branch for commit
     };
     RepositorySlug repositorySlug = RepositorySlug(
       organization.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
-    // 5. BUILD URL AND MAKE PUT REQUEST
-    String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+
+    // Remove 'ref' from URL, use 'branch' in body
     final apiUrl =
-        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl';
 
     final response = await github.client.put(
       Uri.parse(apiUrl),

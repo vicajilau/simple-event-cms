@@ -44,6 +44,7 @@ class _LoginPageState extends State<LoginScreen> {
           await SecureInfo.saveGithubKey(
             GithubData(
               token: github.auth.token.toString(),
+              githubUser: user.login,
               projectName: _projectName,
             ),
           );

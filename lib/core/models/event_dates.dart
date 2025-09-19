@@ -40,7 +40,7 @@ class EventDates extends GitHubModel {
   @override
   Map<String, dynamic> toJson() {
     return {
-      'id': uid,
+      'UID': uid,
       'startDate': startDate,
       'endDate': endDate,
       'timezone': timezone,

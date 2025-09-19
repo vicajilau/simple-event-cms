@@ -55,6 +55,7 @@ class ConfigLoader {
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
+      ref: "feature/refactor_code",
     );
 
     if (res.file == null || res.file!.content == null) {
