@@ -28,7 +28,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "feature/refactor_code",
+      ref: "main",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
