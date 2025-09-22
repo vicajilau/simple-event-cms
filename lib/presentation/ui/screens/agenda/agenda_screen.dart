@@ -16,10 +16,10 @@ class ExpansionTileState {
 /// Screen that displays the event_collection agenda with sessions organized by days and tracks
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
-  final List<AgendaDay> agendaDays;
   final String? agendaId;
+  final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
 
-  const AgendaScreen({super.key, required this.agendaDays, this.agendaId});
+  AgendaScreen({super.key, this.agendaId});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -31,8 +31,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
   @override
   void initState() {
     super.initState();
+    widget.viewmodel.setup(widget.agendaId);
 
-    for (var day in widget.agendaDays) {
+    for (var day in widget.viewmodel.agendaDays.value) {
       _updateTileState(
         key: day.date,
         value: ExpansionTileState(isExpanded: false, tabBarIndex: 0),
@@ -44,9 +45,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: widget.agendaDays.length,
+      itemCount: widget.viewmodel.agendaDays.value.length,
       itemBuilder: (context, index) {
-        final String date = widget.agendaDays[index].date;
+        final String date = widget.viewmodel.agendaDays.value[index].date;
         final bool isExpanded =
             _expansionTilesStates[date]?.isExpanded ?? false;
         final int tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
@@ -69,7 +70,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
           title: _buildTitleExpansionTile(isExpanded, date),
           children: <Widget>[
             _buildExpansionTileBody(
-              widget.agendaDays[index].tracks,
+              widget.viewmodel.agendaDays.value[index].tracks,
               tabBarIndex,
               date,
             ),

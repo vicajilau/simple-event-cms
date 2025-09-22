@@ -85,14 +85,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             controller: _tabController,
             children: [
               // Agenda Tab
-              agendaDays.isEmpty
-                  ? Center(
-                      child: Text(
-                        AppLocalizations.of(context)?.noEventsScheduled ??
-                            'No hay eventos programados',
-                      ),
-                    )
-                  : AgendaScreen(agendaDays: agendaDays),
+              AgendaScreen(agendaId: widget.viewmodel.agendaId),
               // Speakers Tab
               SpeakersScreen(speakers: widget.viewmodel.speakersId),
               // Sponsors Tab
