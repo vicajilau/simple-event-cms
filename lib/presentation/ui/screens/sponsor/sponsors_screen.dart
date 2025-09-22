@@ -13,8 +13,9 @@ import 'add_sponsor_screen.dart';
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
   final SponsorViewModel viewmodel = getIt<SponsorViewModel>();
+  final List<String> sponsors;
 
-  SponsorsScreen({super.key});
+  SponsorsScreen({super.key, required this.sponsors});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -22,6 +23,12 @@ class SponsorsScreen extends StatefulWidget {
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
   final Map<String, List<dynamic>> groupedSponsors = {};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.viewmodel.setup(widget.sponsors);
+  }
 
   @override
   Widget build(BuildContext context) {

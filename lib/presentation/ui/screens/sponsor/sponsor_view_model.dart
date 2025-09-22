@@ -12,7 +12,6 @@ abstract class SponsorViewModel implements ViewModelCommon {
   void removeSponsor(String id);
 }
 
-// Concrete SponsorViewModelImpl (similar to AgendaViewModelImp)
 class SponsorViewModelImpl extends SponsorViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
@@ -26,7 +25,6 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   Future<bool> checkToken() async {
-    // This is based on your AgendaViewModelImp:
     return await checkTokenSavedUseCase.checkToken();
   }
 
@@ -50,11 +48,25 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   void dispose() {
-    // Add any specific disposal logic for SponsorViewModel here
+    sponsors.dispose();
   }
 
   @override
   void setup([Object? argument]) {
-    // Add any specific setup logic for SponsorViewModel here
+    if (argument is List<String>) {
+      _loadEventData(argument);
+    }
+  }
+
+  Future<void> _loadEventData(List<String> sponsorIds) async {
+    try {
+      viewState.value = ViewState.isLoading;
+      sponsors.value = await sponsorUseCase.getSponsorByIds(sponsorIds);
+      viewState.value = ViewState.loadFinished;
+    } catch (e) {
+      // TODO: immplementación control de errores (hay que crear los errores)
+      errorMessage = "Error cargando datos";
+      viewState.value = ViewState.error;
+    }
   }
 }

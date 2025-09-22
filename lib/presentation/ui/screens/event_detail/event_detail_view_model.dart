@@ -4,19 +4,24 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
-import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
-import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
+
+abstract class SpeakersViewModel implements ViewModelCommon {
+  abstract final ValueNotifier<List<Speaker>> speakers;
+  void addSpeaker(Speaker speaker);
+  void editSpeaker(Speaker speaker);
+  void removeSpeaker(String id);
+}
 
 abstract class EventDetailViewModel implements ViewModelCommon {
   String eventTitle();
-  Agenda getAgenda();
+  String get agendaId => '';
+  List<String> get sponsorsId => [];
+  List<String> get speakersId => [];
 }
 
 class EventDetailViewModelImp extends EventDetailViewModel {
   final EventUseCase useCase = getIt<EventUseCase>();
-  final SpeakerViewModel speakerViewModel = getIt<SpeakerViewModel>();
-  final SponsorViewModel sponsorViewModel = getIt<SponsorViewModel>();
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
   Event? event;
@@ -27,10 +32,21 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   String errorMessage = '';
 
-  @override
+  /*@override
   Agenda getAgenda() {
-    return event?.agenda ?? _createNewAgenda();
-  }
+   return event?.agenda ?? _createNewAgenda();
+  }*/
+
+  String _agendaId = "";
+  List<String> _sponsorsId = [], _speakersId = [];
+
+  @override
+  List<String> get sponsorsId => _sponsorsId;
+  @override
+  List<String> get speakersId => _speakersId;
+  @override
+  // TODO: implement agendaId
+  String get agendaId => _agendaId;
 
   @override
   void dispose() {}
@@ -56,8 +72,11 @@ class EventDetailViewModelImp extends EventDetailViewModel {
         (e) => e.uid == eventId,
         orElse: () => events.first, // Fallback al primer evento
       );
-      sponsorViewModel.sponsors.value = event?.sponsors ?? [];
-      speakerViewModel.speakers.value = event?.speakers ?? [];
+
+      _agendaId = event?.agendaUID ?? '';
+      _speakersId = event?.speakersUID ?? [];
+      _sponsorsId = event?.sponsorsUID ?? [];
+
       viewState.value = ViewState.loadFinished;
     } catch (e) {
       // TODO: immplementación control de errores (hay que crear los errores)

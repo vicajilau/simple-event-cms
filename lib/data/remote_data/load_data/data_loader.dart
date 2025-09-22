@@ -35,7 +35,7 @@ class DataLoader {
       final res = await github.repositories.getContents(
         repositorySlug,
         url,
-        ref: "feature/refactor_code",
+        ref: "main",
       );
       if (res.file == null || res.file!.content == null) {
         throw Exception(

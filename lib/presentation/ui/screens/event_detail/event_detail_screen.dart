@@ -78,7 +78,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           }
 
-          final agendaDays = widget.viewmodel.getAgenda().days;
+          final List<AgendaDay> agendaDays =
+              []; // TODO: widget.viewmodel.getAgenda().days;
 
           return TabBarView(
             controller: _tabController,
@@ -95,7 +96,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               // Speakers Tab
               SpeakersScreen(),
               // Sponsors Tab
-              SponsorsScreen(),
+              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
             ],
           );
         },
