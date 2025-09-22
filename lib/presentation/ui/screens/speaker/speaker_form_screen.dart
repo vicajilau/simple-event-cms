@@ -2,15 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
-  final String? speakerUID;
-  const SpeakerFormScreen({super.key, this.speakerUID});
+  const SpeakerFormScreen({super.key});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -26,50 +23,28 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _linkedinController = TextEditingController();
   final _websiteController = TextEditingController();
 
-  late final SpeakerViewModel _speakerViewModel;
   Speaker?
   _initialSpeakerData; // Added to store fetched speaker data for editing
 
   @override
   void initState() {
     super.initState();
-    _speakerViewModel = getIt<SpeakerViewModel>();
-    _speakerViewModel.setup(); // Call ViewModel setup
-
-    if (widget.speakerUID != null && widget.speakerUID!.isNotEmpty) {
-      _fetchAndPopulateSpeakerData();
-    }
   }
 
   void _fetchAndPopulateSpeakerData() async {
-    final speaker = await _speakerViewModel.fetchSpeakerById(
-      widget.speakerUID!,
-    );
-    if (speaker != null) {
-      if (mounted) {
-        setState(() {
-          _initialSpeakerData = speaker;
-        });
-        _nameController.text = speaker.name;
-        _imageUrlController.text = speaker.image ?? '';
-        _bioController.text = speaker.bio;
-        _twitterController.text = speaker.social.twitter ?? '';
-        _githubController.text = speaker.social.github ?? '';
-        _linkedinController.text = speaker.social.linkedin ?? '';
-        _websiteController.text = speaker.social.website ?? '';
-      }
-    } else {
-      if (mounted && _speakerViewModel.errorMessage.isNotEmpty) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(_speakerViewModel.errorMessage)));
-      }
+    if (mounted) {
+      _nameController.text = _initialSpeakerData?.name ?? '';
+      _imageUrlController.text = _initialSpeakerData?.image ?? '';
+      _bioController.text = _initialSpeakerData?.bio ?? '';
+      _twitterController.text = _initialSpeakerData?.social.twitter ?? '';
+      _githubController.text = _initialSpeakerData?.social.github ?? '';
+      _linkedinController.text = _initialSpeakerData?.social.linkedin ?? '';
+      _websiteController.text = _initialSpeakerData?.social.website ?? '';
     }
   }
 
   @override
   void dispose() {
-    _speakerViewModel.dispose(); // Dispose the ViewModel
     _nameController.dispose();
     _imageUrlController.dispose();
     _bioController.dispose();

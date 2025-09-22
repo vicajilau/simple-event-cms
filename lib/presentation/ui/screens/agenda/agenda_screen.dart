@@ -17,8 +17,9 @@ class ExpansionTileState {
 /// Supports multiple days and tracks with color-coded sessions
 class AgendaScreen extends StatefulWidget {
   final List<AgendaDay> agendaDays;
+  final String? agendaId;
 
-  const AgendaScreen({super.key, required this.agendaDays});
+  const AgendaScreen({super.key, required this.agendaDays, this.agendaId});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();

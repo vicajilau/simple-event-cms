@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
-import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -13,15 +12,20 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
-  final SpeakerUseCase speakerUseCase = getIt<SpeakerUseCase>();
-
-  SpeakersScreen({super.key});
+  final List<String> speakers;
+  SpeakersScreen({super.key, required this.speakers});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
 }
 
 class _SpeakersScreenState extends State<SpeakersScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.viewmodel.setup(widget.speakers);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<List<Speaker>>(

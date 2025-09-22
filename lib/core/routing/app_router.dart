@@ -54,14 +54,6 @@ class AppRouter {
           return EventDetailScreen(eventId: eventId);
         },
       ),
-      GoRoute(
-        path: speakerFormPath,
-        name: speakerFormName,
-        builder: (context, state) {
-          final speakerId = state.extra.toString();
-          return SpeakerFormScreen(speakerUID: speakerId);
-        },
-      ),
     ],
   );
 }

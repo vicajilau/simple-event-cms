@@ -48,17 +48,18 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   void dispose() {
+    viewState.dispose();
     sponsors.dispose();
   }
 
   @override
   void setup([Object? argument]) {
     if (argument is List<String>) {
-      _loadEventData(argument);
+      _loadSponsors(argument);
     }
   }
 
-  Future<void> _loadEventData(List<String> sponsorIds) async {
+  Future<void> _loadSponsors(List<String> sponsorIds) async {
     try {
       viewState.value = ViewState.isLoading;
       sponsors.value = await sponsorUseCase.getSponsorByIds(sponsorIds);

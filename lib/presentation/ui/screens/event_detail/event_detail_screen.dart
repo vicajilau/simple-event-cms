@@ -3,7 +3,6 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -13,6 +12,7 @@ import '../agenda/agenda_screen.dart';
 import '../speaker/speakers_screen.dart';
 import '../sponsor/add_sponsor_screen.dart';
 import '../sponsor/sponsors_screen.dart';
+import 'event_detail_view_model.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
@@ -94,7 +94,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     )
                   : AgendaScreen(agendaDays: agendaDays),
               // Speakers Tab
-              SpeakersScreen(),
+              SpeakersScreen(speakers: widget.viewmodel.speakersId),
               // Sponsors Tab
               SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
             ],

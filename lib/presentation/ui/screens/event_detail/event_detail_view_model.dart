@@ -6,13 +6,6 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class SpeakersViewModel implements ViewModelCommon {
-  abstract final ValueNotifier<List<Speaker>> speakers;
-  void addSpeaker(Speaker speaker);
-  void editSpeaker(Speaker speaker);
-  void removeSpeaker(String id);
-}
-
 abstract class EventDetailViewModel implements ViewModelCommon {
   String eventTitle();
   String get agendaId => '';
