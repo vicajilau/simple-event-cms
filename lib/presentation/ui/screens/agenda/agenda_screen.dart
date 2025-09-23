@@ -266,7 +266,7 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              /*TODO edit session*/
+                              _viewModel.removeSession(agendaId, agendaDayId, trackId, session);
                             },
                           );
                         },
