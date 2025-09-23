@@ -59,7 +59,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       _endDateController.text = endtDate;
     }
 
-    _tracks = event?.tracks ?? [];
+    _tracks = event?.tracksUID ?? [];
     _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
     _primaryColorController.text = event?.primaryColor ?? '';
     _secondaryColorController.text = event?.secondaryColor ?? '';
@@ -309,7 +309,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           event?.uid ??
           'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
       eventName: _nameController.text,
-      tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
+      tracksUID: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,

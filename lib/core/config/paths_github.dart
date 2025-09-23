@@ -1,5 +1,6 @@
 class PathsGithub {
   static const String agendaPath = 'config/agenda.json';
+  static const String sessionPath = 'config/agenda.json';
   static const String eventPath = 'config/site.json';
   static const String organizationPath = 'config/organization.json';
   static const String speakerPath = 'speakers/speakers.json';
@@ -12,6 +13,7 @@ class PathsGithub {
       'Update organization from JSON';
   static const String speakerUpdateMessage = 'Update speakers from JSON';
   static const String sponsorUpdateMessage = 'Update sponsors from JSON';
+  static const String sessionUpdateMessage = 'Update sessions from JSON';
 
   // You can add more model paths here as needed
   // static const String anotherModel = 'https://example.com/another_model.pt';

@@ -341,6 +341,7 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                     'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
               );
               Track track = Track(
+                uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 name: _selectedRoom,
                 color: '',
                 sessions: [session],

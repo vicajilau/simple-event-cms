@@ -172,4 +172,41 @@ class DataUpdateInfo {
       agendaToRemove.updateMessage,
     );
   }
+
+  /// Add session information to the sessions.json file
+  /// Returns a Future containing a list of sessions data
+  Future<http.Response> addSession(Session session, String agendaId,String agendaDayId, String trackId) async {
+    var sessionsOriginal = await dataLoader.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
+    return dataCommons.updateData(
+      sessionsOriginal,
+      session,
+      "events/${organization.year}/${session.pathUrl}",
+      session.updateMessage,
+    );
+  }
+  /// Update session information from the sessions.json file
+  /// Returns a Future containing a list of sessions data
+  Future<http.Response> updateSession(Session session, String agendaId,String agendaDayId, String trackId) async {
+    var agendaListOriginal = await dataLoader.loadAgenda();
+    var agendaWithSessionEdited = await dataLoader.editSessionsFromAgendaId(agendaId,agendaDayId,trackId,session);
+    return dataCommons.updateData(
+      agendaListOriginal,
+      agendaWithSessionEdited,
+      "events/${organization.year}/${session.pathUrl}",
+      session.updateMessage,
+    );
+  }
+
+  /// Removes session information from the sessions.json file
+  /// Returns a Future containing a list of sessions data
+  Future<http.Response> removeSession(Session session, String agendaId,String agendaDayId, String trackId) async {
+    var agendaListOriginal = await dataLoader.loadAgenda();
+    var agendaWithoutSession = await dataLoader.removeSessionsFromAgendaId(agendaId,agendaDayId,trackId,session);
+    return dataCommons.removeData(
+      agendaListOriginal,
+      agendaWithoutSession,
+      "events/${organization.year}/${session.pathUrl}",
+      session.updateMessage,
+    );
+  }
 }

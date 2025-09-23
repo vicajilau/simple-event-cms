@@ -8,6 +8,8 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  void editSession(String agendaId,String agendaDayId,String trackId,Session session);
+  void removeSession(String agendaId,String agendaDayId,String trackId,Session session);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -50,4 +52,14 @@ class AgendaViewModelImp extends AgendaViewModel {
     agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
   }
 
+  @override
+  void editSession(String agendaId,String agendaDayId,String trackId,Session session) {
+    agendaUseCase.editSessionInAgendaDay(agendaId,agendaDayId,trackId,session);
+  }
+
+  @override
+  void removeSession(String agendaId,String agendaDayId,String trackId,Session session) {
+    agendaUseCase.deleteSessionFromAgendaDay(agendaId,agendaDayId,trackId,session);
+  }
 }
+

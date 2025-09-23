@@ -12,6 +12,9 @@ abstract class SecRepository {
   Future<void> removeAgenda(String agendaId);
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<void> removeAgendaDayById(String agendaDayId, String agendaId);
+  Future<void> addSessionToAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
+  Future<void> editSessionInAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
+  Future<void> deleteSessionFromAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
   Future<void> saveSponsor(Sponsor sponsor);
   Future<void> removeSponsor(String sponsorId);
 }

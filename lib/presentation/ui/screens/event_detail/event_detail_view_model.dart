@@ -78,27 +78,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     }
   }
 
-  Agenda _createNewAgenda() {
-    final List<Track> tracks = event!.tracks
-        .map((e) => Track(name: e, color: '', sessions: []))
-        .toList();
-    final List<AgendaDay>
-    agendaDays = event!.eventDates.getFormattedDaysInDateRange().map((e) {
-      return AgendaDay(
-        uid:
-            'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-        date: e,
-        tracks: tracks,
-      );
-    }).toList();
-    return Agenda(
-      days: agendaDays,
-      uid: 'Agenda_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-      pathUrl: '',
-      updateMessage: '',
-    );
-  }
-
   @override
   Future<bool> checkToken() async {
     return await checkTokenSavedUseCase.checkToken();

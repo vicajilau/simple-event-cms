@@ -9,8 +9,7 @@ class Event extends GitHubModel {
   /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
 
-  /// the name of the room where the event_collection will take place
-  final List<String> tracks;
+
 
   /// The year of the event_collection, used for organizing multi-year events
   final String year;
@@ -33,11 +32,13 @@ class Event extends GitHubModel {
   final String agendaUID;
   final List<String> speakersUID;
   final List<String> sponsorsUID;
+  /// the name of the room where the event_collection will take place
+  final List<String> tracksUID;
 
   /// Creates a new event instance
   Event({
     required super.uid,
-    required this.tracks,
+    required this.tracksUID,
     required this.eventName,
     required this.year,
     required this.primaryColor,
@@ -68,8 +69,8 @@ class Event extends GitHubModel {
               .map((item) => item['UID'] as String)
               .toList()
         : [];
-    List<String> rooms = (json['rooms'] != null)
-        ? (json['rooms'] as List).map((item) => item['name'] as String).toList()
+    List<String> tracksUID = (json['tracksUID'] != null)
+        ? (json['tracksUID'] as List).map((item) => item['UID'] as String).toList()
         : [];
     var agendaUID = json['agendaUID'];
     return Event(
@@ -84,7 +85,7 @@ class Event extends GitHubModel {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
-      tracks: rooms,
+      tracksUID: tracksUID,
     );
   }
 
@@ -103,7 +104,7 @@ class Event extends GitHubModel {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'room': tracks.map((name) => {'name': name}).toList(),
+      'room': tracksUID.map((name) => {'name': name}).toList(),
     };
   }
 }

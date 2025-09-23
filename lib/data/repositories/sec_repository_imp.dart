@@ -83,4 +83,19 @@ class SecRepositoryImp extends SecRepository {
   Future<void> removeSponsor(String sponsorId) async {
     dataUpdateInfo.removeSponsors(sponsorId);
   }
+
+  @override
+  Future<void> addSessionToAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) async {
+    dataUpdateInfo.addSession(session, agendaId, agendaDayId, trackId);
+  }
+
+  @override
+  Future<void> deleteSessionFromAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) async {
+    dataUpdateInfo.removeSession(session, agendaId, agendaDayId, trackId);
+  }
+
+  @override
+  Future<void> editSessionInAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) async {
+    dataUpdateInfo.updateSession(session, agendaId, agendaDayId, trackId);
+  }
 }
