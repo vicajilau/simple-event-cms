@@ -29,9 +29,10 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchAndPopulateSpeakerData();
   }
 
-  void _fetchAndPopulateSpeakerData() async {
+  void _fetchAndPopulateSpeakerData() {
     if (mounted) {
       _nameController.text = _initialSpeakerData?.name ?? '';
       _imageUrlController.text = _initialSpeakerData?.image ?? '';

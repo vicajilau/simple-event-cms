@@ -78,9 +78,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           }
 
-          final List<AgendaDay> agendaDays =
-              []; // TODO: widget.viewmodel.getAgenda().days;
-
           return TabBarView(
             controller: _tabController,
             children: [
