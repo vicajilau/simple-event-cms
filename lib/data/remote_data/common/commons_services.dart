@@ -72,7 +72,12 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode("{ \"events\":$dataInJsonString}"));
+    var base64Content = "";
+    if(data is Agenda){
+      base64Content = base64.encode(utf8.encode(dataInJsonString));
+    }else{
+      base64Content = base64.encode(utf8.encode("{ \"events\":$dataInJsonString}"));
+    }
 
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
@@ -162,7 +167,12 @@ class CommonsServices {
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    final base64Content = base64.encode(utf8.encode("{ \"events\":$dataInJsonString}"));
+    var base64Content = "";
+    if(dataToRemove is Agenda){
+      base64Content = base64.encode(utf8.encode(dataInJsonString));
+    }else{
+      base64Content = base64.encode(utf8.encode("{ \"events\":$dataInJsonString}"));
+    }
 
     // 4. PREPARE REQUEST BODY
     final requestBody = {
