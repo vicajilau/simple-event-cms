@@ -144,8 +144,6 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
-            editSession: (day, track, session) => {/*TODO edit session*/},
-            removeSession: (session) => {/*TODO remove session*/},
           ),
         ],
       ),
@@ -166,16 +164,12 @@ class CustomTabBarView extends StatefulWidget {
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final void Function(String, String, Session) editSession;
-  final void Function(Session) removeSession;
 
   CustomTabBarView({
     super.key,
     required this.tracks,
     required this.currentIndex,
     required this.onIndexChanged,
-    required this.editSession,
-    required this.removeSession,
     required this.date,
   });
 
@@ -192,8 +186,6 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
         sessions: widget.tracks[index].sessions,
-        editSession: widget.editSession,
-        removeSession: widget.removeSession,
         date: widget.date,
         track: widget.tracks[index].name,
       );
@@ -222,14 +214,10 @@ class SessionCards extends StatelessWidget {
   final AgendaViewModel _viewModel = getIt<AgendaViewModel>();
   final String date, track;
   final List<Session> sessions;
-  final void Function(String, String, Session) editSession;
-  final void Function(Session) removeSession;
 
   SessionCards({
     super.key,
     required this.sessions,
-    required this.editSession,
-    required this.removeSession,
     required this.date,
     required this.track,
   });
@@ -250,7 +238,7 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    editSession(date, track, sessions[index]);
+                    /*TODO delete session*/
                   },
                   child: _buildSessionCard(
                     context,
@@ -271,7 +259,7 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              removeSession(sessions[index]);
+                              /*TODO edit session*/
                             },
                           );
                         },
