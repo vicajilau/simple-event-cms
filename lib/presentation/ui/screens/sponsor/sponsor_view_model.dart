@@ -33,16 +33,26 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   void addSponsor(Sponsor sponsor) async {
+    sponsors.value = [...sponsors.value, sponsor];
     sponsorUseCase.saveSponsor(sponsor);
   }
 
   @override
   void editSponsor(Sponsor sponsor) {
-    sponsorUseCase.saveSponsor(sponsor);
+    final index = sponsors.value.indexWhere((s) => s.uid == sponsor.uid);
+    List<Sponsor> currentSponsors = [...sponsors.value];
+    if (index != -1) {
+      currentSponsors[index] = sponsor;
+      sponsors.value = currentSponsors;
+      sponsorUseCase.saveSponsor(sponsor);
+    }
   }
 
   @override
   void removeSponsor(String id) {
+    List<Sponsor> currentSponsors = [...sponsors.value];
+    currentSponsors.removeWhere((s) => s.uid == id);
+    sponsors.value = currentSponsors;
     sponsorUseCase.removeSponsor(id);
   }
 

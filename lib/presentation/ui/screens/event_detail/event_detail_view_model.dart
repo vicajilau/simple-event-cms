@@ -75,6 +75,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   @override
   Future<bool> checkToken() async {
-    return await checkTokenSavedUseCase.checkToken();
+    final bool tokenSaved = await checkTokenSavedUseCase.checkToken();
+    return tokenSaved;
   }
 }
