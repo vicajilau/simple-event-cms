@@ -44,8 +44,16 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   void _loadAgenda(String agendaId) async {
-    final agenda = await agendaUseCase.getAgendaById(agendaId);
-    agendaDays.value = agenda?.days ?? [];
+    try {
+      viewState.value = ViewState.isLoading;
+      final agenda = await agendaUseCase.getAgendaById(agendaId);
+      agendaDays.value = agenda?.days ?? [];
+      viewState.value = ViewState.loadFinished;
+    } catch (e) {
+      errorMessage = e.toString();
+      viewState.value = ViewState.error;
+      // TODO: implement error control
+    }
   }
 
   @override

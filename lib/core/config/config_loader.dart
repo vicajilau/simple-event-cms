@@ -11,7 +11,7 @@ class ConfigLoader {
   // Read environment variables. If not defined, use default values.
   static const String appEnv = String.fromEnvironment(
     'APP_ENV',
-    defaultValue: 'prod',
+    defaultValue: 'dev',
   );
 
   static Future<Organization> loadOrganization() async {
