@@ -7,7 +7,8 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
-  const SpeakerFormScreen({super.key});
+  final Speaker? speaker;
+  const SpeakerFormScreen({super.key, this.speaker});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -23,9 +24,6 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
   final _linkedinController = TextEditingController();
   final _websiteController = TextEditingController();
 
-  Speaker?
-  _initialSpeakerData; // Added to store fetched speaker data for editing
-
   @override
   void initState() {
     super.initState();
@@ -34,13 +32,13 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
 
   void _fetchAndPopulateSpeakerData() {
     if (mounted) {
-      _nameController.text = _initialSpeakerData?.name ?? '';
-      _imageUrlController.text = _initialSpeakerData?.image ?? '';
-      _bioController.text = _initialSpeakerData?.bio ?? '';
-      _twitterController.text = _initialSpeakerData?.social.twitter ?? '';
-      _githubController.text = _initialSpeakerData?.social.github ?? '';
-      _linkedinController.text = _initialSpeakerData?.social.linkedin ?? '';
-      _websiteController.text = _initialSpeakerData?.social.website ?? '';
+      _nameController.text = widget.speaker?.name ?? '';
+      _imageUrlController.text = widget.speaker?.image ?? '';
+      _bioController.text = widget.speaker?.bio ?? '';
+      _twitterController.text = widget.speaker?.social.twitter ?? '';
+      _githubController.text = widget.speaker?.social.github ?? '';
+      _linkedinController.text = widget.speaker?.social.linkedin ?? '';
+      _websiteController.text = widget.speaker?.social.website ?? '';
     }
   }
 
@@ -172,7 +170,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                           context,
                           Speaker(
                             uid:
-                                _initialSpeakerData?.uid ??
+                                widget.speaker?.uid ??
                                 'Speaker_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                             name: _nameController.text,
                             image: _imageUrlController.text,

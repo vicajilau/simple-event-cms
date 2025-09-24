@@ -82,7 +82,8 @@ class AppRouter {
         path: speakerFormPath,
         name: speakerFormName,
         builder: (context, state) {
-          return SpeakerFormScreen();
+          final speaker = state.extra as Speaker?;
+          return SpeakerFormScreen(speaker: speaker);
         },
       ),
       GoRoute(
@@ -90,7 +91,6 @@ class AppRouter {
         name: sponsorFormName,
         builder: (context, state) {
           final sponsor = state.extra as Sponsor?;
-
           return SponsorFormScreen(sponsor: sponsor);
         },
       ),

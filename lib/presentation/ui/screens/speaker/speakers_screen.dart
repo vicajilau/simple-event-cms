@@ -214,34 +214,37 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                       child: FutureBuilder<bool>(
                         future: widget.viewmodel.checkToken(),
                         builder: (context, snapshot) {
-                          Row(
-                            children: [
-                              IconWidget(
-                                icon: Icons.edit,
-                                onTap: () async {
-                                  final Speaker? updatedSpeaker =
-                                      await AppRouter.router.push(
-                                        AppRouter.speakerFormPath,
-                                        extra: speaker.uid,
-                                      );
+                          return snapshot.data == true
+                              ? Row(
+                                  children: [
+                                    IconWidget(
+                                      icon: Icons.edit,
+                                      onTap: () async {
+                                        final Speaker? updatedSpeaker =
+                                            await AppRouter.router.push(
+                                              AppRouter.speakerFormPath,
+                                              extra: speaker,
+                                            );
 
-                                  if (updatedSpeaker != null) {
-                                    widget.viewmodel.editSpeaker(
-                                      updatedSpeaker,
-                                    );
-                                  }
-                                },
-                              ),
-                              const SizedBox(width: 8),
-                              IconWidget(
-                                icon: Icons.delete,
-                                onTap: () {
-                                  widget.viewmodel.removeSpeaker(speaker.uid);
-                                },
-                              ),
-                            ],
-                          );
-                          return const SizedBox.shrink();
+                                        if (updatedSpeaker != null) {
+                                          widget.viewmodel.editSpeaker(
+                                            updatedSpeaker,
+                                          );
+                                        }
+                                      },
+                                    ),
+                                    const SizedBox(width: 8),
+                                    IconWidget(
+                                      icon: Icons.delete,
+                                      onTap: () {
+                                        widget.viewmodel.removeSpeaker(
+                                          speaker.uid,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : const SizedBox.shrink();
                         },
                       ),
                     ),

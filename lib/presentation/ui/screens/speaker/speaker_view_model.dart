@@ -13,24 +13,19 @@ abstract class SpeakerViewModel implements ViewModelCommon {
   void removeSpeaker(String id);
 }
 
-// Concrete SpeakerViewModelImpl
 class SpeakerViewModelImpl extends SpeakerViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
   final SpeakerUseCase _speakerUseCase = getIt<SpeakerUseCase>();
 
   @override
-  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading); // Default to isLoading
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
   String errorMessage = '';
 
   @override
   Future<bool> checkToken() async {
-    // This is based on your AgendaViewModelImp:
-    // As previously noted, checkTokenSavedUseCase.checkToken() might cause an error
-    // because CheckTokenSavedUseCase has a call() method, not checkToken().
-    // Consider changing to: return await checkTokenSavedUseCase.call();
     return await checkTokenSavedUseCase.checkToken();
   }
 
@@ -39,16 +34,26 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
 
   @override
   void addSpeaker(Speaker speaker) {
+    speakers.value = [...speakers.value, speaker];
     _speakerUseCase.saveSpeaker(speaker);
   }
 
   @override
   void editSpeaker(Speaker speaker) {
-    _speakerUseCase.saveSpeaker(speaker);
+    final index = speakers.value.indexWhere((s) => s.uid == speaker.uid);
+    List<Speaker> currentSpeakers = [...speakers.value];
+    if (index != -1) {
+      currentSpeakers[index] = speaker;
+      speakers.value = currentSpeakers;
+      _speakerUseCase.saveSpeaker(speaker);
+    }
   }
 
   @override
   void removeSpeaker(String id) {
+    List<Speaker> currentSpeakers = [...speakers.value];
+    currentSpeakers.removeWhere((s) => s.uid == id);
+    speakers.value = currentSpeakers;
     _speakerUseCase.removeSpeaker(id);
   }
 
@@ -61,11 +66,11 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   @override
   void setup([Object? argument]) {
     if (argument is List<String>) {
-      _loadSponsors(argument);
+      _loadSpeakers(argument);
     }
   }
 
-  void _loadSponsors(List<String> speakersIds) async {
+  void _loadSpeakers(List<String> speakersIds) async {
     try {
       viewState.value = ViewState.isLoading;
       speakers.value = await _speakerUseCase.getSpeakersById(speakersIds);
