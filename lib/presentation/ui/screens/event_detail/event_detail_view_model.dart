@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
@@ -72,27 +71,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
       errorMessage = "Error cargando datos";
       viewState.value = ViewState.error;
     }
-  }
-
-  Agenda _createNewAgenda() {
-    final List<Track> tracks = event!.tracks
-        .map((e) => Track(name: e, color: '', sessions: []))
-        .toList();
-    final List<AgendaDay>
-    agendaDays = event!.eventDates.getFormattedDaysInDateRange().map((e) {
-      return AgendaDay(
-        uid:
-            'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-        date: e,
-        tracks: tracks,
-      );
-    }).toList();
-    return Agenda(
-      days: agendaDays,
-      uid: 'Agenda_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-      pathUrl: '',
-      updateMessage: '',
-    );
   }
 
   @override
