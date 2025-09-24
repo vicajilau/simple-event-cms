@@ -213,7 +213,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               },
             );
           }
-          return const SizedBox.shrink(); // No muestra nada si no hay token
+          return const SizedBox.shrink();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

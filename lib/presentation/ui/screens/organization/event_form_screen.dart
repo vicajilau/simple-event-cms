@@ -320,9 +320,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
         city: _venueCityController.text,
       ),
       description: _descriptionController.text,
+      // TODO: generar ID correctamente
       agendaUID: "agenda123",
       speakersUID: ["speaker123"],
-      sponsorsUID: ["sponsor123"],
+      sponsorsUID: ["sponsor1233"],
     );
     Navigator.pop(context, eventModified);
   }

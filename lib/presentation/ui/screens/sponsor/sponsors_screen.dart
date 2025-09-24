@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-
-import 'add_sponsor_screen.dart';
 
 /// Screen that displays event_collection sponsors in a responsive grid layout
 /// Fetches sponsor data and displays logos with clickable links
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
   final SponsorViewModel viewmodel = getIt<SponsorViewModel>();
+  final List<String> sponsors;
 
-  SponsorsScreen({super.key});
+  SponsorsScreen({super.key, required this.sponsors});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -22,6 +21,23 @@ class SponsorsScreen extends StatefulWidget {
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
   final Map<String, List<dynamic>> groupedSponsors = {};
+
+  @override
+  void initState() {
+    super.initState();
+    widget.viewmodel.setup(widget.sponsors);
+  }
+
+  void _editSponsor(Sponsor sponsor) async {
+    final Sponsor? newSponsor = await AppRouter.router.push(
+      AppRouter.sponsorFormPath,
+      extra: sponsor
+    );
+
+    if (newSponsor != null) {
+      widget.viewmodel.addSponsor(newSponsor);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,42 +165,33 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                             child: FutureBuilder<bool>(
                               future: widget.viewmodel.checkToken(),
                               builder: (context, snapshot) {
-                                Column(
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, size: 20),
-                                      onPressed: () async {
-                                        final updatedSponsor =
-                                            await Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    AddSponsorScreen(
-                                                      sponsor: sponsor,
-                                                    ),
-                                              ),
-                                            );
+                                return snapshot.data == true
+                                    ? Column(
+                                        children: [
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                            ),
+                                            onPressed: () async {
+                                              _editSponsor(sponsor);
+                                            },
+                                          ),
 
-                                        if (updatedSponsor != null &&
-                                            updatedSponsor is Sponsor) {
-                                          widget.viewmodel.editSponsor(
-                                            updatedSponsor,
-                                          );
-                                        }
-                                      },
-                                    ),
-
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, size: 20),
-                                      onPressed: () {
-                                        widget.viewmodel.removeSponsor(
-                                          sponsor.uid,
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                );
-                                return const SizedBox.shrink();
+                                          IconButton(
+                                            icon: const Icon(
+                                              Icons.delete,
+                                              size: 20,
+                                            ),
+                                            onPressed: () {
+                                              widget.viewmodel.removeSponsor(
+                                                sponsor.uid,
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    : const SizedBox.shrink();
                               },
                             ),
                           ),

@@ -12,7 +12,6 @@ abstract class SponsorViewModel implements ViewModelCommon {
   void removeSponsor(String id);
 }
 
-// Concrete SponsorViewModelImpl (similar to AgendaViewModelImp)
 class SponsorViewModelImpl extends SponsorViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
@@ -26,7 +25,6 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   Future<bool> checkToken() async {
-    // This is based on your AgendaViewModelImp:
     return await checkTokenSavedUseCase.checkToken();
   }
 
@@ -35,26 +33,51 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   void addSponsor(Sponsor sponsor) async {
+    sponsors.value = [...sponsors.value, sponsor];
     sponsorUseCase.saveSponsor(sponsor);
   }
 
   @override
   void editSponsor(Sponsor sponsor) {
-    sponsorUseCase.saveSponsor(sponsor);
+    final index = sponsors.value.indexWhere((s) => s.uid == sponsor.uid);
+    List<Sponsor> currentSponsors = [...sponsors.value];
+    if (index != -1) {
+      currentSponsors[index] = sponsor;
+      sponsors.value = currentSponsors;
+      sponsorUseCase.saveSponsor(sponsor);
+    }
   }
 
   @override
   void removeSponsor(String id) {
+    List<Sponsor> currentSponsors = [...sponsors.value];
+    currentSponsors.removeWhere((s) => s.uid == id);
+    sponsors.value = currentSponsors;
     sponsorUseCase.removeSponsor(id);
   }
 
   @override
   void dispose() {
-    // Add any specific disposal logic for SponsorViewModel here
+    viewState.dispose();
+    sponsors.dispose();
   }
 
   @override
   void setup([Object? argument]) {
-    // Add any specific setup logic for SponsorViewModel here
+    if (argument is List<String>) {
+      _loadSponsors(argument);
+    }
+  }
+
+  Future<void> _loadSponsors(List<String> sponsorIds) async {
+    try {
+      viewState.value = ViewState.isLoading;
+      sponsors.value = await sponsorUseCase.getSponsorByIds(sponsorIds);
+      viewState.value = ViewState.loadFinished;
+    } catch (e) {
+      // TODO: immplementación control de errores (hay que crear los errores)
+      errorMessage = "Error cargando datos";
+      viewState.value = ViewState.error;
+    }
   }
 }

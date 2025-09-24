@@ -19,47 +19,9 @@ class EventUseCaseImp implements EventUseCase {
       return events;
     }
 
-    final allEvents = await repository.loadEvents();
-    var agenda = await repository.loadEAgendas();
-    var speakers = await repository.loadESpeakers();
-    var sponsors = await repository.loadSponsors();
+    events = await repository.loadEvents();
 
-    for (var event in allEvents) {
-      // Find agenda, return null if not found
-      try {
-        event.agenda = agenda.firstWhere(
-          (element) => element.uid == event.agendaUID,
-        );
-      } on StateError {
-        event.agenda = null;
-      }
-
-      // Find speakers, filter out nulls
-      event.speakers = event.speakersUID
-          .map((uid) {
-            try {
-              return speakers.firstWhere((s) => s.uid == uid);
-            } on StateError {
-              return null;
-            }
-          })
-          .whereType<Speaker>()
-          .toList();
-
-      // Find sponsors, filter out nulls
-      event.sponsors = event.sponsorsUID
-          .map((uid) {
-            try {
-              return sponsors.firstWhere((s) => s.uid == uid);
-            } on StateError {
-              return null;
-            }
-          })
-          .whereType<Sponsor>()
-          .toList();
-    }
-    events = allEvents;
-    return allEvents;
+    return events;
   }
 
   @override

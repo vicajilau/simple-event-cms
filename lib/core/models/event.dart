@@ -1,8 +1,4 @@
-import 'package:sec/core/models/speaker.dart';
-import 'package:sec/core/models/sponsor.dart';
-
 import '../config/paths_github.dart';
-import 'agenda.dart';
 import 'event_dates.dart';
 import 'github/github_model.dart';
 
@@ -37,10 +33,6 @@ class Event extends GitHubModel {
   final String agendaUID;
   final List<String> speakersUID;
   final List<String> sponsorsUID;
-
-  Agenda? agenda;
-  List<Speaker>? speakers;
-  List<Sponsor>? sponsors;
 
   /// Creates a new event instance
   Event({
