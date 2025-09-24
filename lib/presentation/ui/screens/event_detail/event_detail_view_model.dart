@@ -25,20 +25,16 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   String errorMessage = '';
 
-  /*@override
-  Agenda getAgenda() {
-   return event?.agenda ?? _createNewAgenda();
-  }*/
-
   String _agendaId = "";
   List<String> _sponsorsId = [], _speakersId = [];
 
   @override
   List<String> get sponsorsId => _sponsorsId;
+
   @override
   List<String> get speakersId => _speakersId;
+
   @override
-  // TODO: implement agendaId
   String get agendaId => _agendaId;
 
   @override
