@@ -8,6 +8,9 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  //TODO NEED TO REVIEW
+  void addTrack(Agenda agenda);
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session);
   void editSession(String agendaId,String agendaDayId,String trackId,Session session);
   void removeSession(String agendaId,String agendaDayId,String trackId,Session session);
 }
@@ -58,6 +61,14 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
     agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
+  }
+  @override
+  void addTrack(Agenda agenda) {
+    // TODO: implement addSession
+  }
+  @override
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session) {
+    agendaUseCase.addSessionToAgendaDay(agendaId,agendaDayId,trackId,session);
   }
 
   @override

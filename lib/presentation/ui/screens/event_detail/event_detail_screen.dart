@@ -141,7 +141,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newAgenda != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.addSession(newAgenda);
+      agendaScreen.viewmodel.addTrack(newAgenda);
     }
   }
 

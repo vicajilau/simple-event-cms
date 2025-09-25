@@ -45,54 +45,56 @@ class _AgendaScreenState extends State<AgendaScreen> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: widget.viewmodel.viewState,
-        builder: (context, value, child) {
-          if (value == ViewState.isLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (value == ViewState.error) {
-            return Center(child: Text(widget.viewmodel.errorMessage));
-          }
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.viewmodel.agendaDays.value.length,
-      itemBuilder: (context, index) {
-        final String agendaDayId = widget.viewmodel.agendaDays.value[index].uid;
-        final String date = widget.viewmodel.agendaDays.value[index].date;
-        final bool isExpanded =
-            _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
-        final int tabBarIndex = _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-        return ExpansionTile(
-          shape: const Border(),
-          initiallyExpanded: isExpanded,
-          showTrailingIcon: false,
-          onExpansionChanged: (value) {
-            setState(() {
-              final tabBarIndex = _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-              _updateTileState(
-                key: agendaDayId,
-                value: ExpansionTileState(
-                  isExpanded: value,
-                  tabBarIndex: tabBarIndex,
+      valueListenable: widget.viewmodel.viewState,
+      builder: (context, value, child) {
+        if (value == ViewState.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (value == ViewState.error) {
+          return Center(child: Text(widget.viewmodel.errorMessage));
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.viewmodel.agendaDays.value.length,
+          itemBuilder: (context, index) {
+            final String agendaDayId =
+                widget.viewmodel.agendaDays.value[index].uid;
+            final String date = widget.viewmodel.agendaDays.value[index].date;
+            final bool isExpanded =
+                _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
+            final int tabBarIndex =
+                _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+            return ExpansionTile(
+              shape: const Border(),
+              initiallyExpanded: isExpanded,
+              showTrailingIcon: false,
+              onExpansionChanged: (value) {
+                setState(() {
+                  final tabBarIndex =
+                      _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+                  _updateTileState(
+                    key: agendaDayId,
+                    value: ExpansionTileState(
+                      isExpanded: value,
+                      tabBarIndex: tabBarIndex,
+                    ),
+                  );
+                });
+              },
+              title: _buildTitleExpansionTile(isExpanded, date),
+              children: <Widget>[
+                _buildExpansionTileBody(
+                  widget.viewmodel.agendaDays.value[index].tracks,
+                  tabBarIndex,
+                  agendaDayId,
+                  widget.agendaId.toString(),
                 ),
-              );
-            });
+              ],
+            );
           },
-          title: _buildTitleExpansionTile(isExpanded, date),
-          children: <Widget>[
-            _buildExpansionTileBody(
-              widget.viewmodel.agendaDays.value[index].tracks,
-              tabBarIndex,
-              agendaDayId,
-              widget.agendaId.toString()
-            ),
-          ],
         );
       },
     );
-  });
-      }
-      }
-
+  }
 
   Widget _buildTitleExpansionTile(bool isExpanded, String dayDate) {
     return Container(
@@ -257,7 +259,12 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    _viewModel.editSession(agendaId, agendaDayId, trackId, session);
+                    _viewModel.editSession(
+                      agendaId,
+                      agendaDayId,
+                      trackId,
+                      session,
+                    );
                   },
                   child: _buildSessionCard(
                     context,
@@ -278,7 +285,12 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              _viewModel.removeSession(agendaId, agendaDayId, trackId, session);
+                              _viewModel.removeSession(
+                                agendaId,
+                                agendaDayId,
+                                trackId,
+                                session,
+                              );
                             },
                           );
                         },
