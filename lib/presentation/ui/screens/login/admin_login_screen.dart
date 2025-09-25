@@ -6,14 +6,14 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginPageState();
+  State<AdminLoginScreen> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginScreen> {
+class _LoginPageState extends State<AdminLoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final Organization organization = getIt<Organization>();
   String _projectName = '';

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+import 'package:sec/presentation/ui/screens/agenda/agenda_form_screen.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import 'agenda_view_model.dart';
@@ -158,8 +160,24 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
-            editSession: (day, track, session) => {/*TODO edit session*/},
-            removeSession: (session) => {/*TODO remove session*/},
+            editSession: (day, track, session) async {
+              final Agenda? agenda = await AppRouter.router.push(
+                AppRouter.agendaFormPath,
+                extra: AgendaFormData(
+                  rooms: widget.viewmodel.rooms,
+                  days: widget.viewmodel.days,
+                  speakers: widget.viewmodel.speakers,
+                  sessionTypes: SessionTypes.allLabels(context),
+                  session: session,
+                  track: track,
+                  day: day,
+                ),
+              );
+              if (agenda != null) widget.viewmodel.editSession(agenda);
+            },
+            removeSession: (session) {
+              widget.viewmodel.removeSession(session.uid);
+            },
           ),
         ],
       ),
