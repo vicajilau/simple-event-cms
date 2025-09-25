@@ -102,7 +102,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             _titleTapCount++;
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
-              AppRouter.router.go(AppRouter.adminPath);
+              AppRouter.router.push(AppRouter.adminPath);
             }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {

@@ -135,6 +135,16 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addTrackToAgenda() async {
+    /*final String location = context.namedLocation(
+      AppRouter.agendaFormName,
+      pathParameters: {
+        'eventId': widget.eventId,
+        'agendaId': widget.viewmodel.agendaId,
+      },
+    );
+
+    AppRouter.router.go(location);*/
+
     final Agenda? newAgenda = await AppRouter.router.push(
       AppRouter.agendaFormPath,
     );
