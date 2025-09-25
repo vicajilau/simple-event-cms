@@ -3,22 +3,17 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
-import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import '../agenda/agenda_screen.dart';
 import '../speaker/speakers_screen.dart';
-import '../sponsor/add_sponsor_screen.dart';
 import '../sponsor/sponsors_screen.dart';
 import 'event_detail_view_model.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
   final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
-  final SpeakerViewModel viewmodelSpeaker = getIt<SpeakerViewModel>();
-  final SponsorViewModel viewmodelSponsor = getIt<SponsorViewModel>();
   final String eventId;
 
   EventDetailScreen({super.key, required this.eventId});
@@ -31,6 +26,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  List<Widget> screens = [];
 
   @override
   void initState() {
@@ -42,6 +38,11 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         _selectedIndex = _tabController.index;
       });
     });
+    screens = [
+      AgendaScreen(agendaId: widget.viewmodel.agendaId),
+      SpeakersScreen(speakers: widget.viewmodel.speakersId),
+      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
+    ];
   }
 
   @override
@@ -115,7 +116,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         future: widget.viewmodel.checkToken(),
         builder: (context, snapshot) {
           if (snapshot.data == true) {
-            AddFloatingActionButton(
+            return AddFloatingActionButton(
               onPressed: () async {
                 if (_selectedIndex == 0) {
                   _addTrackToAgenda();
@@ -134,30 +135,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addTrackToAgenda() async {
-    /*AgendaFormScreen agenda = AgendaFormScreen(
-      data: EventFormData(
-        rooms: [],
-        days: [],
-        speakers: [],
-        sessionTypes: [],
-        session: null,
-        track: '[]',
-        day: 'day',
-      ),
-      /* speakers: _getSpeakers(),
-          rooms: _getRoomNames(),
-          days: _getAgendaDays(),
-          sessionTypes: SessionTypes.allLabels(context),
-          session: session,
-          track: track ?? '',
-          day: day ?? '',*/
+    final Agenda? newAgenda = await AppRouter.router.push(
+      AppRouter.agendaFormPath,
     );
 
-    final newAgendaDay = await Navigator.push<Speaker>(
-      context,
-      MaterialPageRoute(builder: (context) => agenda),
-    );
-    _addNewSession(newAgendaDay: newAgendaDay);*/
+    if (newAgenda != null) {
+      final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
+      agendaScreen.viewmodel.addSession(newAgenda);
+    }
   }
 
   void _addSpeaker() async {
@@ -166,18 +151,19 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
 
     if (newSpeaker != null) {
-      widget.viewmodelSpeaker.addSpeaker(newSpeaker);
+      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker);
     }
   }
 
-  Future<void> _addSponsor() async {
-    final newSponsor = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => AddSponsorScreen()),
+  void _addSponsor() async {
+    final Sponsor? newSponsor = await AppRouter.router.push(
+      AppRouter.sponsorFormPath,
     );
 
-    if (newSponsor != null && newSponsor is Sponsor) {
-      widget.viewmodelSponsor.addSponsor(newSponsor);
+    if (newSponsor != null) {
+      final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
+      sponsorsScreen.viewmodel.addSponsor(newSponsor);
     }
   }
 }

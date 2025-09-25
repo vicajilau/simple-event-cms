@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../../../../../core/di/dependency_injection.dart';
-
-class AddSponsorScreen extends StatefulWidget {
+class SponsorFormScreen extends StatefulWidget {
   final Sponsor? sponsor;
-  final SponsorViewModel sponsorViewModel = getIt<SponsorViewModel>();
-  AddSponsorScreen({super.key, this.sponsor});
+  const SponsorFormScreen({super.key, this.sponsor});
 
   @override
-  State<AddSponsorScreen> createState() => _AddSponsorScreenState();
+  State<SponsorFormScreen> createState() => _SponsorFormScreenState();
 }
 
-class _AddSponsorScreenState extends State<AddSponsorScreen> {
+class _SponsorFormScreenState extends State<SponsorFormScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
   late final TextEditingController _logoController;
@@ -130,9 +127,8 @@ class _AddSponsorScreenState extends State<AddSponsorScreen> {
                           logo: _logoController.text,
                           website: _websiteController.text,
                         );
-                        widget.sponsorViewModel.addSponsor(sponsor);
                         if (context.mounted) {
-                          Navigator.pop(context, sponsor);
+                          context.pop<Sponsor>(sponsor);
                         }
                       }
                     },

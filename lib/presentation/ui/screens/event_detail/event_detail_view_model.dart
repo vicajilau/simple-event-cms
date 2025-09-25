@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
@@ -25,20 +24,16 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   String errorMessage = '';
 
-  /*@override
-  Agenda getAgenda() {
-   return event?.agenda ?? _createNewAgenda();
-  }*/
-
   String _agendaId = "";
   List<String> _sponsorsId = [], _speakersId = [];
 
   @override
   List<String> get sponsorsId => _sponsorsId;
+
   @override
   List<String> get speakersId => _speakersId;
+
   @override
-  // TODO: implement agendaId
   String get agendaId => _agendaId;
 
   @override
@@ -80,6 +75,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   @override
   Future<bool> checkToken() async {
-    return await checkTokenSavedUseCase.checkToken();
+    final bool tokenSaved = await checkTokenSavedUseCase.checkToken();
+    return tokenSaved;
   }
 }

@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+import 'package:sec/presentation/view_model_common.dart';
 
 import 'agenda_view_model.dart';
 
@@ -43,6 +44,14 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return ValueListenableBuilder(
+        valueListenable: widget.viewmodel.viewState,
+        builder: (context, value, child) {
+          if (value == ViewState.isLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (value == ViewState.error) {
+            return Center(child: Text(widget.viewmodel.errorMessage));
+          }
     return ListView.builder(
       shrinkWrap: true,
       itemCount: widget.viewmodel.agendaDays.value.length,
@@ -74,13 +83,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
               widget.viewmodel.agendaDays.value[index].tracks,
               tabBarIndex,
               agendaDayId,
-              widget.agendaId.toString(),
+              widget.agendaId.toString()
             ),
           ],
         );
       },
     );
-  }
+  });
+      }
+      }
+
 
   Widget _buildTitleExpansionTile(bool isExpanded, String dayDate) {
     return Container(
