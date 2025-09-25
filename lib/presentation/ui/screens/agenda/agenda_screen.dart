@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+import 'package:sec/presentation/view_model_common.dart';
 
 import 'agenda_view_model.dart';
 
@@ -43,38 +44,51 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.viewmodel.agendaDays.value.length,
-      itemBuilder: (context, index) {
-        final String date = widget.viewmodel.agendaDays.value[index].date;
-        final bool isExpanded =
-            _expansionTilesStates[date]?.isExpanded ?? false;
-        final int tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
-        return ExpansionTile(
-          shape: const Border(),
-          initiallyExpanded: isExpanded,
-          showTrailingIcon: false,
-          onExpansionChanged: (value) {
-            setState(() {
-              final tabBarIndex = _expansionTilesStates[date]?.tabBarIndex ?? 0;
-              _updateTileState(
-                key: date,
-                value: ExpansionTileState(
-                  isExpanded: value,
-                  tabBarIndex: tabBarIndex,
+    return ValueListenableBuilder(
+      valueListenable: widget.viewmodel.viewState,
+      builder: (context, value, child) {
+        if (value == ViewState.isLoading) {
+          return Center(child: CircularProgressIndicator());
+        } else if (value == ViewState.error) {
+          return Center(child: Text(widget.viewmodel.errorMessage));
+        }
+
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.viewmodel.agendaDays.value.length,
+          itemBuilder: (context, index) {
+            final String date = widget.viewmodel.agendaDays.value[index].date;
+            final bool isExpanded =
+                _expansionTilesStates[date]?.isExpanded ?? false;
+            final int tabBarIndex =
+                _expansionTilesStates[date]?.tabBarIndex ?? 0;
+            return ExpansionTile(
+              shape: const Border(),
+              initiallyExpanded: isExpanded,
+              showTrailingIcon: false,
+              onExpansionChanged: (value) {
+                setState(() {
+                  final tabBarIndex =
+                      _expansionTilesStates[date]?.tabBarIndex ?? 0;
+                  _updateTileState(
+                    key: date,
+                    value: ExpansionTileState(
+                      isExpanded: value,
+                      tabBarIndex: tabBarIndex,
+                    ),
+                  );
+                });
+              },
+              title: _buildTitleExpansionTile(isExpanded, date),
+              children: <Widget>[
+                _buildExpansionTileBody(
+                  widget.viewmodel.agendaDays.value[index].tracks,
+                  tabBarIndex,
+                  date,
                 ),
-              );
-            });
+              ],
+            );
           },
-          title: _buildTitleExpansionTile(isExpanded, date),
-          children: <Widget>[
-            _buildExpansionTileBody(
-              widget.viewmodel.agendaDays.value[index].tracks,
-              tabBarIndex,
-              date,
-            ),
-          ],
         );
       },
     );
