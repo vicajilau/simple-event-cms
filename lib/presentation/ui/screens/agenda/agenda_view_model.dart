@@ -7,6 +7,9 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
+  List<String> get days => [];
+  List<String> get rooms => [];
+  List<String> get speakers => [];
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addSession(Agenda agenda);
   void editSession(Agenda agenda);
@@ -24,6 +27,15 @@ class AgendaViewModelImp extends AgendaViewModel {
   ValueNotifier<List<AgendaDay>> agendaDays = ValueNotifier([]);
 
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
+
+  @override
+  List<String> days = [];
+
+  @override
+  List<String> rooms = [];
+
+  @override
+  List<String> speakers = [];
 
   @override
   String errorMessage = '';
@@ -47,6 +59,21 @@ class AgendaViewModelImp extends AgendaViewModel {
     try {
       viewState.value = ViewState.isLoading;
       final agenda = await agendaUseCase.getAgendaById(agendaId);
+      days = agenda?.days.map((day) => day.date).toList() ?? [];
+      rooms =
+          agenda?.days
+              .map((day) => day.tracks.map((track) => track.name).toList())
+              .expand((element) => element)
+              .toList() ??
+          [];
+      final allSpeakers = agenda?.days
+          .expand((day) => day.tracks)
+          .expand((track) => track.sessions)
+          .map((session) => session.speaker)
+          .where((speaker) => speaker.isNotEmpty)
+          .toSet()
+          .toList();
+      speakers = allSpeakers ?? [];
       agendaDays.value = agenda?.days ?? [];
       viewState.value = ViewState.loadFinished;
     } catch (e) {

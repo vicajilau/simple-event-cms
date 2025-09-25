@@ -55,19 +55,8 @@ class AppRouter {
         path: agendaFormPath,
         name: agendaFormName,
         builder: (context, state) {
-          final agendaId = state.extra.toString();
-          return AgendaFormScreen(
-            agendaId: agendaId,
-            data: EventFormData(
-              rooms: [],
-              days: [],
-              speakers: [],
-              sessionTypes: [],
-              session: null,
-              track: '',
-              day: '',
-            ),
-          );
+          final agendaFormData = state.extra as AgendaFormData;
+          return AgendaFormScreen(data: agendaFormData);
         },
       ),
       GoRoute(

@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/agenda/agenda_form_screen.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
@@ -135,18 +136,18 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addTrackToAgenda() async {
-    /*final String location = context.namedLocation(
-      AppRouter.agendaFormName,
-      pathParameters: {
-        'eventId': widget.eventId,
-        'agendaId': widget.viewmodel.agendaId,
-      },
-    );
-
-    AppRouter.router.go(location);*/
-
+    final agendaViewModel = (screens.first as AgendaScreen).viewmodel;
     final Agenda? newAgenda = await AppRouter.router.push(
       AppRouter.agendaFormPath,
+      extra: AgendaFormData(
+        rooms: agendaViewModel.rooms,
+        days: agendaViewModel.days,
+        speakers: agendaViewModel.speakers,
+        sessionTypes: SessionTypes.allLabels(context),
+        session: null,
+        track: null,
+        day: null,
+      ),
     );
 
     if (newAgenda != null) {
