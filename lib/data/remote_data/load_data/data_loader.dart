@@ -38,9 +38,7 @@ class DataLoader {
         ref: "main",
       );
       if (res.file == null || res.file!.content == null) {
-        throw Exception(
-          "Error loading production configuration from $url",
-        );
+        throw Exception("Error loading production configuration from $url");
       }
       final file = utf8.decode(
         base64.decode(res.file!.content!.replaceAll("\n", "")),
@@ -89,7 +87,7 @@ class DataLoader {
     return jsonList
         .map<Event>(
           (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
-    )
+        )
         .toList();
   }
 
@@ -101,19 +99,28 @@ class DataLoader {
   /// Returns a Future containing a list of [Session] objects.
   /// Returns an empty list if no matching sessions are found.
   Future<List<Agenda>> addSessionIntoAgenda(
-      String agendaId, String agendaDayId, String trackId,Session session) async {
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  ) async {
     final List<Agenda> agendas = await loadAgenda();
     final List<AgendaDay> agendaDays = agendas
         .firstWhere((agenda) => agenda.uid == agendaId)
         .days;
-    final List<Track> tracks = agendaDays.firstWhere((day) => day.uid == agendaDayId).tracks;
+    final List<Track> tracks = agendaDays
+        .firstWhere((day) => day.uid == agendaDayId)
+        .tracks;
     // Find the index of the session to modify
     int sessionIndex = tracks
         .firstWhere((track) => track.uid == trackId)
         .sessions
         .indexWhere((s) => s.uid == session.uid);
     if (sessionIndex != -1) {
-      tracks.firstWhere((track) => track.uid == trackId).sessions[sessionIndex] = session;
+      tracks
+              .firstWhere((track) => track.uid == trackId)
+              .sessions[sessionIndex] =
+          session;
     }
     return agendas;
   }
@@ -130,21 +137,33 @@ class DataLoader {
     if (sessionIndex != -1) {
       tracks.firstWhere((track) => track.uid == trackId).sessions[sessionIndex] = session;
     }
+
     return agenda;
   }
 
-
-  Future<Agenda> removeSessionsFromAgendaId(String agendaId,String agendaDayId,String trackId,Session session) async {
-    final Agenda agenda = (await loadAgenda()).firstWhere((agenda) => agenda.uid == agendaId);
+  Future<Agenda> removeSessionsFromAgendaId(
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  ) async {
+    final Agenda agenda = (await loadAgenda()).firstWhere(
+      (agenda) => agenda.uid == agendaId,
+    );
     final List<AgendaDay> agendaDays = agenda.days;
-    final List<Track> tracks = agendaDays.firstWhere((day) => day.uid == agendaDayId).tracks;
+    final List<Track> tracks = agendaDays
+        .firstWhere((day) => day.uid == agendaDayId)
+        .tracks;
     // Find the index of the session to remove
     int sessionIndex = tracks
         .firstWhere((track) => track.uid == trackId)
         .sessions
         .indexWhere((s) => s.uid == session.uid);
     if (sessionIndex != -1) {
-      tracks.firstWhere((track) => track.uid == trackId).sessions.removeAt(sessionIndex);
+      tracks
+          .firstWhere((track) => track.uid == trackId)
+          .sessions
+          .removeAt(sessionIndex);
     }
     return agenda;
   }
