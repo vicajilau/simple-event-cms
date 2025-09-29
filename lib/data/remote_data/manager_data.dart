@@ -38,20 +38,20 @@ class ManagerData {
       DataLoader dataLoader,
       DataUpdateInfo dataUpdateInfo,
       ) async {
-    switch (item.runtimeType) {
-      case Session _:
+    switch (item.runtimeType.toString()) {
+      case "Session":
         await _addSession(item as Session, dataLoader, dataUpdateInfo,parentId);
         break;
-      case Track _:
+      case "Track":
         await _addTrack(item as Track, dataLoader, dataUpdateInfo,parentId);
         break;
-      case AgendaDay _:
+      case "AgendaDay":
         await _addAgendaDay(item as AgendaDay, dataLoader, dataUpdateInfo,parentId);
         break;
-      case Speaker _:
+      case "Speaker":
         await _addSpeaker(item as Speaker, dataLoader, dataUpdateInfo,parentId);
         break;
-      case Sponsor _:
+      case "Sponsor":
         await _addSponsor(item as Sponsor,dataLoader,dataUpdateInfo,parentId);
         break;
       default:

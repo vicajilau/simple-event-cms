@@ -45,14 +45,7 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    Agenda? agendaFounded;
-    final agendas = await loadEAgendas();
-    agendaFounded = agendas.firstWhere(
-      (agenda) => agenda.uid == agendaId,
-      orElse: () => throw Exception("Agenda not founded"),
-    );
-    agendaFounded.resolvedDays?.add(agendaDay);
-    await dataUpdateInfo.updateAgenda(agendaFounded);
+    await ManagerData.addItemAndAssociations(agendaDay, agendaId, dataLoader, dataUpdateInfo);
   }
 
   @override
