@@ -48,14 +48,14 @@ class AppRouter {
         path: adminEditEventPath,
         name: adminEditEventName,
         builder: (context, state) =>
-            EventFormScreen(eventId: state.extra.toString()),
+            EventFormScreen(eventId: state.pathParameters['eventId'].toString()),
       ),
 
       GoRoute(
         path: eventDetailPath,
         name: eventDetailName,
         builder: (context, state) {
-          final eventId = state.extra.toString();
+          final eventId = state.pathParameters['eventId'].toString();
           return EventDetailScreen(eventId: eventId);
         },
       ),
@@ -63,7 +63,7 @@ class AppRouter {
         path: agendaFormPath,
         name: agendaFormName,
         builder: (context, state) {
-          final agendaId = state.extra.toString();
+          final agendaId = state.pathParameters['agendaId'].toString();
           return AgendaFormScreen(
             agendaId: agendaId,
             data: EventFormData(
