@@ -18,7 +18,7 @@ class Agenda extends GitHubModel {
     return Agenda(
       uid: json["UID"],
       dayUids: (json["days"] as List)
-          .map((dayUid) => dayUid as String)
+          .map((dayUid) => dayUid["UID"] as String)
           .toList(),
       // resolvedDays will be populated by DataLoader
     );

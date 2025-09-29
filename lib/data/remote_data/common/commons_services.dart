@@ -40,7 +40,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "main",
+        ref: "feature/refactor_json_structure",
       );
       currentSha = contents.file?.sha;
 
@@ -145,7 +145,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "main",
+        ref: "feature/refactor_json_structure",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
