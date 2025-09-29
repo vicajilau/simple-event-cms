@@ -36,7 +36,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
 
     if (newSponsor != null) {
-      widget.viewmodel.addSponsor(newSponsor);
+      widget.viewmodel.addSponsor(newSponsor,"");//TODO not have parent id
     }
   }
 

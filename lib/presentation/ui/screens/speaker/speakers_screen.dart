@@ -249,6 +249,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                             if (updatedSpeaker != null) {
                                               widget.viewmodel.editSpeaker(
                                                 updatedSpeaker,
+                                                ""//TODO not have parent id
                                               );
                                             }
                                           },

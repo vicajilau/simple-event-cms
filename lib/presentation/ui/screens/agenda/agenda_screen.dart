@@ -261,6 +261,7 @@ class SessionCards extends StatelessWidget {
                   onTap: () {
                     _viewModel.editSession(
                       session,
+                      trackId
                     );
                   },
                   child: _buildSessionCard(
