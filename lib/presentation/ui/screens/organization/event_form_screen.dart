@@ -323,9 +323,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ),
       description: _descriptionController.text,
       // TODO: generar ID correctamente
-      agendaUID: _agendaUIDController.text,
-      speakersUID: [],
-      sponsorsUID: [],
+      agendaUID: event?.agendaUID ?? "",
+      speakersUID: event?.speakersUID ?? [],
+      sponsorsUID: event?.sponsorsUID ?? [],
     );
     await eventFormViewModel.onSubmit(eventModified);
     if(context.mounted){
