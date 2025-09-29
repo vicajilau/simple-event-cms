@@ -28,7 +28,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "main",
+      ref: "feature/refactor_json_structure",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(

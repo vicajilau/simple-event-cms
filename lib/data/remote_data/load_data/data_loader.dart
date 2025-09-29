@@ -27,11 +27,16 @@ class DataLoader {
         (await SecureInfo.getGithubKey()).projectName ??
             organization.projectName,
       );
-      final res = await github.repositories.getContents(
-        repositorySlug,
-        url,
-        ref: "main",
-      );
+      RepositoryContents res;
+      try{
+        res = await github.repositories.getContents(
+          repositorySlug,
+          url,
+          ref: "feature/refactor_json_structure",
+        );
+      }catch(e){
+        throw Exception("Error loading production configuration from $url");
+      }
       if (res.file == null || res.file!.content == null) {
         throw Exception("Error loading production configuration from $url");
       }
@@ -98,10 +103,10 @@ class DataLoader {
     final String contentBase64 = base64.encode(contentBytes);
 
     // Get the SHA of the existing file to update it
-    final existingFile = await github.repositories.getContents(repositorySlug, 'events/${organization.year}/$path', ref: "main");
+    final existingFile = await github.repositories.getContents(repositorySlug, 'events/${organization.year}/$path', ref: "feature/refactor_json_structure");
 
     await github.repositories.updateFile(
-        repositorySlug, 'events/${organization.year}/$path', 'Update $path', contentBase64, existingFile.file!.sha!, branch: "main");
+        repositorySlug, 'events/${organization.year}/$path', 'Update $path', contentBase64, existingFile.file!.sha!, branch: "feature/refactor_json_structure");
     print("Data saved to GitHub path: $path");
   }
 
