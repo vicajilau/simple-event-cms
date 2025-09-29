@@ -121,9 +121,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                 if (_selectedIndex == 0) {
                   _addTrackToAgenda();
                 } else if (_selectedIndex == 1) {
-                  _addSpeaker(widget.eventId);//TODO not have parent id
+                  _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
-                  _addSponsor(widget.eventId);//TODO not have parent id
+                  _addSponsor(widget.eventId);
                 }
               },
             );
