@@ -115,7 +115,7 @@ class ManagerData {
     debugPrint("Track $trackId and its associations removed.");
   }
   static Future<void> _addAgendaDay(AgendaDay day, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Agenda> allAgendas = await dataLoader.getFullAgendaData();
+    List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
     for (var agenda in allAgendas) {
       if (agenda.uid.contains(parentId)) {
         agenda.dayUids.removeWhere((uid) => uid == day.uid); // Ensure no duplicates
@@ -130,7 +130,7 @@ class ManagerData {
     debugPrint("AgendaDay ${day.uid} added.");
   }
   static Future<void> _deleteAgendaDay(String dayId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
-    List<Agenda> allAgendas = await dataLoader.getFullAgendaData();
+    List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
     for (var agenda in allAgendas) {
       if (agenda.dayUids.contains(dayId)) {
         agenda.dayUids.remove(dayId);

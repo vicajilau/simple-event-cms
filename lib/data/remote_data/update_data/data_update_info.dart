@@ -44,7 +44,7 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(Agenda agenda) async {
-    var agendaOriginal = await dataLoader.getFullAgendaData();
+    var agendaOriginal = await dataLoader.loadAgendaStructures();
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
@@ -96,9 +96,9 @@ class DataUpdateInfo {
   /// Update session information from the sessions.json file
   /// Returns a Future containing a list of sessions data
   Future<http.Response> updateSession(Session session) async {
-    var agendaListOriginal = await dataLoader.getFullAgendaData();
+    var sessionListOriginal = await dataLoader.loadAllSessions();
     return dataCommons.updateData(
-      agendaListOriginal,
+      sessionListOriginal,
       session,
       "events/${organization.year}/${session.pathUrl}",
       session.updateMessage,
@@ -125,7 +125,7 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> removeAgenda(String agendaId,String eventId) async {
-    var agendaOriginal = await dataLoader.getFullAgendaData();
+    var agendaOriginal = await dataLoader.loadAgendaStructures();
     var agendaToRemove = agendaOriginal.firstWhere(
       (agenda) => agenda.uid == agendaId,
     );
