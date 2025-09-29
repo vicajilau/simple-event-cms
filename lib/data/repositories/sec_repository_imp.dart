@@ -39,8 +39,8 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveAgenda(Agenda agenda) async {
-    await dataUpdateInfo.updateAgenda(agenda);
+  Future<void> saveAgenda(Agenda agenda,String eventId) async {
+    await ManagerData.addItemAndAssociations(agenda, eventId, dataLoader, dataUpdateInfo);
   }
 
   @override

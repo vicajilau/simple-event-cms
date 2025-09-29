@@ -29,7 +29,7 @@ class Event extends GitHubModel {
   /// Optional description of the event_collection
   final String? description;
 
-  final String agendaUID;
+  String agendaUID;
   final List<String> speakersUID;
   final List<String> sponsorsUID;
   /// the name of the room where the event_collection will take place

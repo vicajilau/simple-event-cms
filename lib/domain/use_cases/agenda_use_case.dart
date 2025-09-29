@@ -4,7 +4,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class AgendaUseCase {
   Future<Agenda?> getAgendaById(String id);
-  void saveAgenda(Agenda agenda);
+  void saveAgenda(Agenda agenda,String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addSessionIntoAgenda(
       String agendaId,
@@ -26,8 +26,8 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  void saveAgenda(Agenda agenda) {
-    repository.saveAgenda(agenda);
+  void saveAgenda(Agenda agenda,String eventId) {
+    repository.saveAgenda(agenda,eventId);
   }
 
   @override

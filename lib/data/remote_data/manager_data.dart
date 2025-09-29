@@ -11,20 +11,23 @@ class ManagerData {
       DataLoader dataLoader,
       DataUpdateInfo dataUpdateInfo,
       ) async {
-    switch (itemType) {
-      case Session _:
+    switch (itemType.toString()) {
+      case "Agenda":
+        await _deleteAgenda(itemId, dataLoader, dataUpdateInfo);
+        break;
+      case "Session":
         await _deleteSession(itemId, dataLoader, dataUpdateInfo);
         break;
-      case Track _:
+      case "Track" :
         await _deleteTrack(itemId, dataLoader, dataUpdateInfo);
         break;
-      case AgendaDay _:
+      case "AgendaDay" :
         await _deleteAgendaDay(itemId, dataLoader, dataUpdateInfo);
         break;
-      case Speaker _:
+      case "Speaker" :
         await _deleteSpeaker(itemId, dataLoader, dataUpdateInfo);
         break;
-      case Sponsor _:
+      case "Sponsor" :
         await _deleteSponsor(itemId, dataUpdateInfo,dataLoader);
         break;
       default:
@@ -39,6 +42,9 @@ class ManagerData {
       DataUpdateInfo dataUpdateInfo,
       ) async {
     switch (item.runtimeType.toString()) {
+      case "Agenda":
+        await _addAgenda(item as Agenda, dataLoader, dataUpdateInfo,parentId);
+        break;
       case "Session":
         await _addSession(item as Session, dataLoader, dataUpdateInfo,parentId);
         break;
@@ -57,6 +63,30 @@ class ManagerData {
       default:
         throw Exception("Unsupported item type for addition: ${item.runtimeType}");
     }
+  }
+
+  static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
+    List<Event> allEvents = await dataLoader.loadEvents();
+    for (var event in allEvents) {
+      if (event.uid == parentId) {
+        event.agendaUID = agenda.uid; // Ensure no duplicates
+        await dataUpdateInfo.updateEvent(event);
+      }
+    }
+    await dataUpdateInfo.updateAgenda(agenda);
+    debugPrint("Agenda ${agenda.uid} added.");
+  }
+
+  static Future<void> _deleteAgenda(String agendaId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Event> allEvents = await dataLoader.loadEvents();
+    for (var event in allEvents) {
+      if (event.agendaUID == agendaId) {
+        event.agendaUID = ""; // Ensure no duplicates
+        await dataUpdateInfo.updateEvent(event);
+      }
+    }
+    await dataUpdateInfo.removeAgendaDay(agendaId);
+    debugPrint("Agenda $agendaId and its associations removed.");
   }
 
   static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
