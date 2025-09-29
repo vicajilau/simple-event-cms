@@ -75,12 +75,14 @@ class CommonsServices {
     );
     var base64Content = "";
       base64Content = base64.encode(utf8.encode(dataInJsonString));
-
+    String branch =
+        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
     final requestBody = <String, String>{
       'message': commitMessage,
       'content': base64Content,
+      'branch' : branch
     };
 
     // Only add the 'sha' for updates, not for creation.
@@ -90,8 +92,7 @@ class CommonsServices {
 
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
     // This gives you back the raw http.Response you want.
-    String branch =
-        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
+
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
 
@@ -168,20 +169,21 @@ class CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
-
+    String branch =
+        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
     // 4. PREPARE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
       'content': base64Content,
       'sha': currentSha, // SHA is required for updates
+      'branch' : branch
     };
     RepositorySlug repositorySlug = RepositorySlug(
       organization.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     // 5. BUILD URL AND MAKE PUT REQUEST
-    String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
 
