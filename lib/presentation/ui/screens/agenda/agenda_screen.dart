@@ -366,7 +366,7 @@ class SessionCards extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            if (session.speaker.isNotEmpty && session.type != 'break') ...[
+            if (session.speaker.toString().isNotEmpty && session.type != 'break') ...[
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -377,7 +377,7 @@ class SessionCards extends StatelessWidget {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    session.speaker,
+                    session.speaker.toString(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,

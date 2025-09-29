@@ -71,7 +71,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       }
 
       if (widget.data.speakers.contains(session.speaker)) {
-        _selectedSpeaker = session.speaker;
+        _selectedSpeaker = session.speaker.toString();
       }
 
       if (widget.data.sessionTypes.contains(session.type.toUpperCase())) {

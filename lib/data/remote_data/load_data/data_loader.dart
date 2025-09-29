@@ -41,44 +41,48 @@ class DataLoader {
         throw Exception("Error loading production configuration from $url");
       }
       final file = utf8.decode(
-        base64.decode(res.file!.content!.replaceAll("\\n", "")),
+        base64.decode(res.file!.content!.replaceAll("\n", "").replaceAll("\\n", "")),
       );
       content = file;
     } else if (ConfigLoader.appEnv == 'dev') {
       final localPath = 'events/${organization.year}/$path';
       content = await rootBundle.loadString(localPath);
     }
-    // Handle cases where content might be a list or a map containing a list
-    final decodedContent = json.decode(content);
-    if (path == PathsGithub.eventPath && decodedContent is Map) {
-      return decodedContent["events"] as List<dynamic>;
-    } else if (decodedContent is List) {
-      return decodedContent;
-    } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
-      // If it's a single object (like a single agenda structure), wrap it in a list
-      return [decodedContent];
-    }
-    // Fallback or specific handling if the root is not a list
-    // For now, assuming most JSON roots will be lists of objects
-    // or the specific 'events' case handled above.
-    // If you have single objects at the root of other JSONs, adjust accordingly.
-    // For safety, if it's not a list at this point, treat as error or empty.
-    // This part might need adjustment based on actual structure of agenda_days.json, etc.
-    // if they are single objects at root instead of lists.
-    // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
-    if (decodedContent is Map && decodedContent.values.first is List) {
-      // If it's a map with a single key and the value is a list (another common pattern for root objects)
-      return decodedContent.values.first as List<dynamic>;
+    try{
+      // Handle cases where content might be a list or a map containing a list
+      final decodedContent = json.decode(content);
+      if (decodedContent is List) {
+        return decodedContent;
+      } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
+        // If it's a single object (like a single agenda structure), wrap it in a list
+        return [decodedContent];
+      }
+      // Fallback or specific handling if the root is not a list
+      // For now, assuming most JSON roots will be lists of objects
+      // or the specific 'events' case handled above.
+      // If you have single objects at the root of other JSONs, adjust accordingly.
+      // For safety, if it's not a list at this point, treat as error or empty.
+      // This part might need adjustment based on actual structure of agenda_days.json, etc.
+      // if they are single objects at root instead of lists.
+      // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
+      if (decodedContent is Map && decodedContent.values.first is List) {
+        // If it's a map with a single key and the value is a list (another common pattern for root objects)
+        return decodedContent.values.first as List<dynamic>;
+      }
+
+      // If after all checks decodedContent is not a List, and not the special eventPath case,
+      // this indicates an unexpected JSON structure for the given path.
+      // For loadData, we expect a List<dynamic> to be returned for general processing.
+      // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
+      // are single JSON objects at the root rather than arrays, this will need adjustment
+      // or the parsing in the specific _loadAll methods will need to handle it.
+      // For now, this error helps identify such mismatches.
+      throw Exception("Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.");
+    }catch(e){
+      throw Exception("Error loading configuration from $path");
     }
 
-    // If after all checks decodedContent is not a List, and not the special eventPath case,
-    // this indicates an unexpected JSON structure for the given path.
-    // For loadData, we expect a List<dynamic> to be returned for general processing.
-    // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
-    // are single JSON objects at the root rather than arrays, this will need adjustment
-    // or the parsing in the specific _loadAll methods will need to handle it.
-    // For now, this error helps identify such mismatches.
-    throw Exception("Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.");
+
   }
 
   // --- Start of New Data Loading Methods ---

@@ -66,7 +66,7 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-      final List<dynamic> eventDataList = fileJsonData["events"];
+      final List<dynamic> eventDataList = fileJsonData;
 
       return eventDataList
           .map((eventData) => Event.fromJson(eventData))

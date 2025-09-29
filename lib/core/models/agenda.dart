@@ -108,7 +108,7 @@ class Track extends GitHubModel {
 class Session extends GitHubModel {
   final String title;
   final String time;
-  final String speaker;
+  final String? speaker;
   final String? description;
   final String type;
 
