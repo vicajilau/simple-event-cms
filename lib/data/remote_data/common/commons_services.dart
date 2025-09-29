@@ -40,6 +40,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
+        ref: "feature/refactor_json_structure",
       );
       currentSha = contents.file?.sha;
 
@@ -90,7 +91,7 @@ class CommonsServices {
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
     // This gives you back the raw http.Response you want.
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
 
@@ -143,6 +144,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
+        ref: "feature/refactor_json_structure",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
