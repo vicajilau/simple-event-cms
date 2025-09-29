@@ -40,7 +40,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_json_structure",
+        ref: "main",
       );
       currentSha = contents.file?.sha;
 
@@ -76,7 +76,7 @@ class CommonsServices {
     var base64Content = "";
       base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
-        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
+        githubService?.branch ?? 'main'; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
     final requestBody = <String, String>{
@@ -145,7 +145,7 @@ class CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_json_structure",
+        ref: "main",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -170,7 +170,7 @@ class CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch =
-        githubService?.branch ?? 'feature/refactor_json_structure'; // Default to 'main' if not specified
+        githubService?.branch ?? 'main'; // Default to 'main' if not specified
     // 4. PREPARE REQUEST BODY
     final requestBody = {
       'message': commitMessage,

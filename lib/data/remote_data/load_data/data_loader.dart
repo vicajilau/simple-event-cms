@@ -32,7 +32,7 @@ class DataLoader {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/refactor_json_structure",
+          ref: "main",
         );
       }catch(e){
         throw Exception("Error loading production configuration from $url");
