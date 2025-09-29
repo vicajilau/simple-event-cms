@@ -81,35 +81,6 @@ class DataLoader {
     throw Exception("Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.");
   }
 
-  /// Generic method to save data to a specified path in GitHub.
-  Future<void> _saveData(String path, List<dynamic> data) async {
-    if (ConfigLoader.appEnv == 'dev') {
-      print("Data saving is skipped in dev environment for path: $path");
-      // Optionally, simulate saving to a local file for dev testing if needed
-      // final localPath = 'events/${organization.year}/$path';
-      // final File file = File(localPath);
-      // await file.writeAsString(json.encode(data));
-      // print("Simulated saving data to $localPath");
-      return;
-    }
-
-    final github = GitHub();
-    final repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-    );
-    final content = json.encode(data);
-    final contentBytes = utf8.encode(content);
-    final String contentBase64 = base64.encode(contentBytes);
-
-    // Get the SHA of the existing file to update it
-    final existingFile = await github.repositories.getContents(repositorySlug, 'events/${organization.year}/$path', ref: "feature/refactor_json_structure");
-
-    await github.repositories.updateFile(
-        repositorySlug, 'events/${organization.year}/$path', 'Update $path', contentBase64, existingFile.file!.sha!, branch: "feature/refactor_json_structure");
-    print("Data saved to GitHub path: $path");
-  }
-
   // --- Start of New Data Loading Methods ---
 
   Future<List<Session>> loadAllSessions() async {
