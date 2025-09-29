@@ -39,9 +39,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       });
     });
     screens = [
-      AgendaScreen(agendaId: widget.viewmodel.agendaId),
-      SpeakersScreen(speakers: widget.viewmodel.speakersId),
-      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
+      AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
+      SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
+      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
     ];
   }
 
@@ -83,11 +83,11 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             controller: _tabController,
             children: [
               // Agenda Tab
-              AgendaScreen(agendaId: widget.viewmodel.agendaId),
+              AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
               // Speakers Tab
-              SpeakersScreen(speakers: widget.viewmodel.speakersId),
+              SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
               // Sponsors Tab
-              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
+              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
             ],
           );
         },
@@ -121,9 +121,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                 if (_selectedIndex == 0) {
                   _addTrackToAgenda();
                 } else if (_selectedIndex == 1) {
-                  _addSpeaker();
+                  _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
-                  _addSponsor();
+                  _addSponsor(widget.eventId);
                 }
               },
             );
@@ -141,29 +141,29 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newAgenda != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.addSession(newAgenda);
+      agendaScreen.viewmodel.addTrack(newAgenda);
     }
   }
 
-  void _addSpeaker() async {
+  void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
       AppRouter.speakerFormPath,
     );
 
     if (newSpeaker != null) {
       final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker,parentId);
     }
   }
 
-  void _addSponsor() async {
+  void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,
     );
 
     if (newSponsor != null) {
       final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      sponsorsScreen.viewmodel.addSponsor(newSponsor);
+      sponsorsScreen.viewmodel.addSponsor(newSponsor,parentId);
     }
   }
 }

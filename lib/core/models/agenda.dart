@@ -1,18 +1,15 @@
-// ignore: dangling_library_doc_comments
 import 'package:sec/core/config/paths_github.dart';
-
 import 'github/github_model.dart';
 
-/// Represents a single day in the event_collection agenda
-/// Contains the date and list of tracks for that day
-/// Day name is automatically derived from the date using localization
-
+/// Represents the overall structure of the event agenda, linking to days by their UIDs.
 class Agenda extends GitHubModel {
-  final List<AgendaDay> days;
+  List<String> dayUids;
+  List<AgendaDay>? resolvedDays = []; // Field for in-memory resolved objects
 
   Agenda({
     required super.uid,
-    required this.days,
+    required this.dayUids,
+    this.resolvedDays, // Allow initialization
     super.pathUrl = PathsGithub.agendaPath,
     super.updateMessage = PathsGithub.agendaUpdateMessage,
   });
@@ -20,109 +17,112 @@ class Agenda extends GitHubModel {
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(
       uid: json["UID"],
-      days: (json["days"] as List)
-          .map((dayJson) => AgendaDay.fromJson(dayJson))
+      dayUids: (json["days"] as List)
+          .map((dayUid) => dayUid["UID"] as String)
           .toList(),
+      // resolvedDays will be populated by DataLoader
     );
   }
 
   @override
-  Map<String, dynamic> toJson() => {"UID": uid, "days": days};
+  Map<String, dynamic> toJson() => {
+    "UID": uid,
+    "days": dayUids, // Only UIDs are serialized
+  };
 }
 
+/// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
-  /// The date of the event_collection day in ISO format (YYYY-MM-DD)
   final String date;
+  List<String> trackUids;
+  List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
-  /// List of tracks/rooms available on this day
-  final List<Track> tracks;
-
-  /// Creates a new AgendaDay instance
   AgendaDay({
     required super.uid,
     required this.date,
-    required this.tracks,
-    super.pathUrl = PathsGithub.agendaPath,
-    super.updateMessage = PathsGithub.agendaUpdateMessage,
+    required this.trackUids,
+    this.resolvedTracks, // Allow initialization
+    super.pathUrl = PathsGithub.daysPath,
+    super.updateMessage = PathsGithub.daysUpdateMessage,
   });
 
-  /// Creates an AgendaDay from JSON data
-  /// Parses the tracks array and converts each track to a Track object
-  /// The day name is automatically generated from the date using localization
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
       uid: json['UID'],
       date: json['date'],
-      tracks: (json['tracks'] as List)
-          .map((track) => Track.fromJson(track))
+      trackUids: (json['tracks'] as List)
+          .map((trackUid) => trackUid["UID"] as String)
           .toList(),
+      // resolvedTracks will be populated by DataLoader
     );
   }
 
   @override
-  Map<String, dynamic> toJson() => {"UID": uid, "date": date, "tracks": tracks};
+  Map<String, dynamic> toJson() => {
+    "UID": uid,
+    "date": date,
+    "tracks": trackUids, // Only UIDs are serialized
+  };
 }
 
-/// Represents a track or room within an event_collection day
-/// Contains track information and the sessions scheduled for that track
-class Track {
-  /// The name or identifier of the track/room (e.g., "Main Hall", "Room A")
+/// Represents a track or room, linking to sessions by their UIDs.
+class Track extends GitHubModel {
   final String name;
-
-  /// The color associated with this track for UI theming (hex format)
   final String color;
+  List<String> sessionUids;
+  List<Session>? resolvedSessions; // Field for in-memory resolved objects
 
-  /// List of sessions scheduled for this track
-  final List<Session> sessions;
+  Track({
+    required super.uid,
+    required this.name,
+    required this.color,
+    required this.sessionUids,
+    this.resolvedSessions, // Allow initialization
+    super.pathUrl = PathsGithub.tracksPath,
+    super.updateMessage = PathsGithub.tracksUpdateMessage,
+  });
 
-  /// Creates a new Track instance
-  Track({required this.name, required this.color, required this.sessions});
-
-  /// Creates a Track from JSON data
-  /// Parses the sessions array and converts each session to a Session object
   factory Track.fromJson(Map<String, dynamic> json) {
     return Track(
+      uid: json['UID'],
       name: json['name'],
       color: json['color'],
-      sessions: (json['sessions'] as List)
-          .map((session) => Session.fromJson(session))
+      sessionUids: (json['sessions'] as List)
+          .map((sessionUid) => sessionUid["UID"] as String)
           .toList(),
+      // resolvedSessions will be populated by DataLoader
     );
   }
+
+  @override
+  Map<String, dynamic> toJson() => {
+    "UID": uid,
+    "name": name,
+    "color": color,
+    "sessions": sessionUids, // Only UIDs are serialized
+  };
 }
 
-/// Represents an individual session within a track
-/// Contains all the details about a specific presentation, talk, or activity
+/// Represents an individual session within a track.
+/// Its structure remains largely the same, but path and message are updated.
 class Session extends GitHubModel {
-  /// The title of the session
   final String title;
-
-  /// The time slot for the session (e.g., "09:00 - 10:00")
   final String time;
-
-  /// The name of the speaker presenting this session
-  final String speaker;
-
-  /// A detailed description of the session content
+  final String? speaker;
   final String? description;
-
-  /// The type of session (e.g., "keynote", "talk", "workshop", "break")
   final String type;
 
-  /// Creates a new Session instance
   Session({
     required super.uid,
     required this.title,
     required this.time,
     required this.speaker,
-    super.pathUrl = PathsGithub.agendaPath,
-    super.updateMessage = PathsGithub.agendaUpdateMessage,
+    super.pathUrl = PathsGithub.sessionsPath,
+    super.updateMessage = PathsGithub.sessionsUpdateMessage,
     this.description,
     required this.type,
   });
 
-  /// Creates a Session from JSON data
-  /// All fields are required and must be present in the JSON
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
       uid: json['UID'],

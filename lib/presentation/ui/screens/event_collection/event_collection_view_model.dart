@@ -11,9 +11,9 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
-  void addEvent(Event event);
+  Future<void> addEvent(Event event);
   Event? getEventById(String eventId);
-  void editEvent(Event event);
+  Future<void> editEvent(Event event);
   void deleteEvent(Event event);
 }
 
@@ -63,19 +63,19 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   }
 
   @override
-  void addEvent(Event event) {
+  Future<void> addEvent(Event event) async {
     _allEvents.add(event);
     _updateEventsToShow();
-    useCase.saveEvent(event);
+    await useCase.saveEvent(event);
   }
 
   @override
-  void editEvent(Event event) {
+  Future<void> editEvent(Event event) async {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      useCase.saveEvent(event);
+      await useCase.saveEvent(event);
     }
   }
 
@@ -85,7 +85,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
-      useCase.saveEvent(event);
+      await useCase.saveEvent(event);
     }
   }
 

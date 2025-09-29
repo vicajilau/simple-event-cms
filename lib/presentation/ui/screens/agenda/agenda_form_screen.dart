@@ -71,7 +71,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       }
 
       if (widget.data.speakers.contains(session.speaker)) {
-        _selectedSpeaker = session.speaker;
+        _selectedSpeaker = session.speaker.toString();
       }
 
       if (widget.data.sessionTypes.contains(session.type.toUpperCase())) {
@@ -341,15 +341,18 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
               );
               Track track = Track(
+                uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 name: _selectedRoom,
                 color: '',
-                sessions: [session],
+                resolvedSessions: [session],
+                sessionUids: [session.uid],
               );
               AgendaDay agendaDay = AgendaDay(
                 uid:
                     'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 date: _selectedDay,
-                tracks: [track],
+                resolvedTracks: [track],
+                trackUids: [track.uid]
               );
               agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
               Navigator.pop(context, agendaDay);

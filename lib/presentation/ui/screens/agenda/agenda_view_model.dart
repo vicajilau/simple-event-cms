@@ -8,9 +8,10 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addSession(Agenda agenda);
-  void editSession(Agenda agenda);
-  void removeSession(String id);
+  void addTrack(Agenda agenda);
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session);
+  void editSession(Session session,String parentId);
+  void removeSession(String sessionId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -47,7 +48,7 @@ class AgendaViewModelImp extends AgendaViewModel {
     try {
       viewState.value = ViewState.isLoading;
       final agenda = await agendaUseCase.getAgendaById(agendaId);
-      agendaDays.value = agenda?.days ?? [];
+      agendaDays.value = agenda?.resolvedDays ?? [];
       viewState.value = ViewState.loadFinished;
     } catch (e) {
       errorMessage = e.toString();
@@ -60,19 +61,23 @@ class AgendaViewModelImp extends AgendaViewModel {
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
     agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
   }
-
   @override
-  void addSession(Agenda agenda) {
+  void addTrack(Agenda agenda) {
     // TODO: implement addSession
   }
-
   @override
-  void editSession(Agenda agenda) {
-    // TODO: implement editSession
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session) {
+    agendaUseCase.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
   }
 
   @override
-  void removeSession(String id) {
-    // TODO: implement removeSession
+  void editSession(Session session,String parentId) {
+    agendaUseCase.editSession(session,parentId);
+  }
+
+  @override
+  void removeSession(String sessionId) {
+    agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }
+

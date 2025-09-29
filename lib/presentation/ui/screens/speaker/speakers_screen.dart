@@ -14,7 +14,8 @@ class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
   final List<String> speakers;
-  SpeakersScreen({super.key, required this.speakers});
+  final String eventId;
+  SpeakersScreen({super.key, required this.speakers, required this.eventId});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
@@ -249,6 +250,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                             if (updatedSpeaker != null) {
                                               widget.viewmodel.editSpeaker(
                                                 updatedSpeaker,
+                                                widget.eventId
                                               );
                                             }
                                           },

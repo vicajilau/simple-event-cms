@@ -4,7 +4,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class SponsorUseCase {
   Future<List<Sponsor>> getSponsorByIds(List<String> ids);
-  void saveSponsor(Sponsor sponsor);
+  void saveSponsor(Sponsor sponsor,String parentId);
   void removeSponsor(String sponsorId);
 }
 
@@ -22,8 +22,8 @@ class SponsorUseCaseImp implements SponsorUseCase {
   }
 
   @override
-  void saveSponsor(Sponsor sponsor) {
-    repository.saveSponsor(sponsor);
+  void saveSponsor(Sponsor sponsor,String parentId) {
+    repository.saveSponsor(sponsor,parentId);
   }
 
   @override

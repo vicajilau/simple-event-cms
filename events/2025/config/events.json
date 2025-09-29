@@ -1,0 +1,111 @@
+[
+  {
+    "UID": "df5fd5ds5dsf",
+    "eventName": "DevFest Spain 2029",
+    "year": "2025",
+    "primaryColor": "#4285F4",
+    "secondaryColor": "#34A853",
+    "eventDates": {
+      "UID": "EventDate_20250929_121750",
+      "startDate": "2025-03-15",
+      "endDate": "2025-03-15",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "Palacio de Congresos",
+      "address": "Madrid, España",
+      "city": "Madrid"
+    },
+    "description": "El evento tecnológico más importante de España para desarrolladores",
+    "agendaUID": "4564645",
+    "speakersUID": [],
+    "sponsorsUID": [],
+    "room": []
+  },
+  {
+    "UID": "gfhdfdfgdsfg4dfg",
+    "eventName": "DevFest Spain 2026",
+    "year": "2026",
+    "primaryColor": "#4285F4",
+    "secondaryColor": "#34A853",
+    "eventDates": {
+      "UID": "gfdsfsdfdsfg4dfg",
+      "startDate": "2026-03-14",
+      "endDate": "2026-03-15",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "Palacio de Congresos",
+      "address": "Madrid, España",
+      "city": "Madrid"
+    },
+    "description": "El evento tecnológico más importante de España para desarrolladores",
+    "agendaUID": "871674",
+    "speakersUID": [
+      {
+        "UID": "123459"
+      },
+      {
+        "UID": "123460"
+      },
+      {
+        "UID": "alfa11212"
+      }
+    ],
+    "sponsorsUID": [
+      {
+        "UID": "8sad8asdasd"
+      },
+      {
+        "UID": "w8asd9ww8aw"
+      },
+      {
+        "UID": "bn5e8qewerdd"
+      },
+      {
+        "UID": "1ad33dzfdff"
+      },
+      {
+        "UID": "lapw52524669"
+      }
+    ],
+    "room": []
+  },
+  {
+    "UID": "Event_20250929_122411",
+    "eventName": "dfsfa",
+    "year": "2025",
+    "primaryColor": "",
+    "secondaryColor": "",
+    "eventDates": {
+      "UID": "EventDate_20250929_122411",
+      "startDate": "2025-09-30",
+      "endDate": "2025-09-30",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "",
+      "address": "",
+      "city": ""
+    },
+    "description": "",
+    "agendaUID": "",
+    "speakersUID": [
+      {
+        "UID": "Speaker_20250929_142416"
+      },
+      {
+        "UID": "Speaker_20250929_145714"
+      }
+    ],
+    "sponsorsUID": [
+      {
+        "UID": "Sponsor_20250929_142357"
+      },
+      {
+        "UID": "Sponsor_20250929_145803"
+      }
+    ],
+    "room": []
+  }
+]

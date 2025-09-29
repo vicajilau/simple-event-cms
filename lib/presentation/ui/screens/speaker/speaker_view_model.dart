@@ -8,8 +8,8 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class SpeakerViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<Speaker>> speakers;
-  void addSpeaker(Speaker speaker);
-  void editSpeaker(Speaker speaker);
+  void addSpeaker(Speaker speaker,String parentId);
+  void editSpeaker(Speaker speaker,String parentId);
   void removeSpeaker(String id);
 }
 
@@ -33,19 +33,19 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   ValueNotifier<List<Speaker>> speakers = ValueNotifier([]);
 
   @override
-  void addSpeaker(Speaker speaker) {
+  void addSpeaker(Speaker speaker,String parentId) {
     speakers.value = [...speakers.value, speaker];
-    _speakerUseCase.saveSpeaker(speaker);
+    _speakerUseCase.saveSpeaker(speaker,parentId);
   }
 
   @override
-  void editSpeaker(Speaker speaker) {
+  void editSpeaker(Speaker speaker,String parentId) {
     final index = speakers.value.indexWhere((s) => s.uid == speaker.uid);
     List<Speaker> currentSpeakers = [...speakers.value];
     if (index != -1) {
       currentSpeakers[index] = speaker;
       speakers.value = currentSpeakers;
-      _speakerUseCase.saveSpeaker(speaker);
+      _speakerUseCase.saveSpeaker(speaker,parentId);
     }
   }
 

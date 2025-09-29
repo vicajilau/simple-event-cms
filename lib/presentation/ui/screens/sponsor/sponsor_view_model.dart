@@ -7,8 +7,7 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class SponsorViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<Sponsor>> sponsors;
-  void addSponsor(Sponsor sponsor);
-  void editSponsor(Sponsor sponsor);
+  void addSponsor(Sponsor sponsor,String parentId);
   void removeSponsor(String id);
 }
 
@@ -32,20 +31,10 @@ class SponsorViewModelImpl extends SponsorViewModel {
   ValueNotifier<List<Sponsor>> sponsors = ValueNotifier([]);
 
   @override
-  void addSponsor(Sponsor sponsor) async {
+  void addSponsor(Sponsor sponsor,String parentId) async {
+    sponsors.value.removeWhere((s) => s.uid == sponsor.uid);
     sponsors.value = [...sponsors.value, sponsor];
-    sponsorUseCase.saveSponsor(sponsor);
-  }
-
-  @override
-  void editSponsor(Sponsor sponsor) {
-    final index = sponsors.value.indexWhere((s) => s.uid == sponsor.uid);
-    List<Sponsor> currentSponsors = [...sponsors.value];
-    if (index != -1) {
-      currentSponsors[index] = sponsor;
-      sponsors.value = currentSponsors;
-      sponsorUseCase.saveSponsor(sponsor);
-    }
+    sponsorUseCase.saveSponsor(sponsor,parentId);
   }
 
   @override

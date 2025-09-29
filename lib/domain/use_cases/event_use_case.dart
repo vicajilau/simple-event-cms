@@ -5,7 +5,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 abstract class EventUseCase {
   Future<List<Event>> getComposedEvents();
   Event? getEventById(String id);
-  void saveEvent(Event event);
+  Future<void> saveEvent(Event event);
 }
 
 class EventUseCaseImp implements EventUseCase {

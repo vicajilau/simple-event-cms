@@ -1,0 +1,234 @@
+[
+  {
+    "UID": "111133344",
+    "title": "Apertura y Keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "89414233",
+    "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
+    "time": "09:30 - 10:15",
+    "speaker": "Andreu Ibàñez",
+    "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
+    "type": "TALK"
+  },
+  {
+    "UID": "1232333564",
+    "title": "Coffee Break",
+    "time": "10:15 - 10:45",
+    "speaker": "",
+    "description": "Networking y café",
+    "type": "BREAK"
+  },
+  {
+    "UID": "563233334",
+    "title": "Flutter para Web: Mejores prácticas",
+    "time": "10:45 - 11:30",
+    "speaker": "Alfredo Bautista",
+    "description": "Cómo crear aplicaciones web robustas con Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "2423423444",
+    "title": "Firebase y Flutter: Una combinación perfecta",
+    "time": "11:30 - 12:15",
+    "speaker": "Victor Carreras",
+    "description": "Integración completa de Firebase en aplicaciones Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "123233333",
+    "title": "Apertura y Keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "6767677411",
+    "title": "Lunch Break",
+    "time": "12:15 - 13:30",
+    "speaker": "",
+    "description": "Comida y networking",
+    "type": "BREAK"
+  },
+  {
+    "UID": "48235232322",
+    "title": "Open Gateway: Democratizando las APIs de Telecomunicaciones",
+    "time": "13:30 - 14:15",
+    "speaker": "Irene Ruiz",
+    "description": "Descubre cómo Open Gateway de Telefónica está revolucionando el acceso a APIs de telecomunicaciones para developers. Una visión desde DevRel sobre oportunidades y casos de uso.",
+    "type": "TALK"
+  },
+  {
+    "UID": "6347173437",
+    "title": "Machine Learning en Flutter: De la teoría a la práctica",
+    "time": "14:15 - 15:00",
+    "speaker": "Moises Martínez",
+    "description": "Implementando modelos de ML e IA en aplicaciones Flutter. Casos prácticos, TensorFlow Lite y mejores prácticas desde la perspectiva académica y empresarial.",
+    "type": "TALK"
+  },
+  {
+    "UID": "999999999",
+    "title": "Apertura y Keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "333333ww222",
+    "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
+    "time": "09:30 - 10:15",
+    "speaker": "Andreu Ibàñez",
+    "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
+    "type": "TALK"
+  },
+  {
+    "UID": "adase232323",
+    "title": "Coffee Break",
+    "time": "10:15 - 10:45",
+    "speaker": "",
+    "description": "Networking y café",
+    "type": "BREAK"
+  },
+  {
+    "UID": "aa342353536",
+    "title": "Flutter para Web: Mejores prácticas",
+    "time": "10:45 - 11:30",
+    "speaker": "Alfredo Bautista",
+    "description": "Cómo crear aplicaciones web robustas con Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "kfadsaf32323",
+    "title": "Firebase y Flutter: Una combinación perfecta",
+    "time": "11:30 - 12:15",
+    "speaker": "Victor Carreras",
+    "description": "Integración completa de Firebase en aplicaciones Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "6dsfd545353",
+    "title": "Lunch Break",
+    "time": "12:15 - 13:30",
+    "speaker": "",
+    "description": "Comida y networking",
+    "type": "BREAK"
+  },
+  {
+    "UID": "n1asdew4445",
+    "title": "Open Gateway: Democratizando las APIs de Telecomunicaciones",
+    "time": "13:30 - 14:15",
+    "speaker": "Irene Ruiz",
+    "description": "Descubre cómo Open Gateway de Telefónica está revolucionando el acceso a APIs de telecomunicaciones para developers. Una visión desde DevRel sobre oportunidades y casos de uso.",
+    "type": "TALK"
+  },
+  {
+    "UID": "a45443545534",
+    "title": "Machine Learning en Flutter: De la teoría a la práctica",
+    "time": "14:15 - 15:00",
+    "speaker": "Moises Martínez",
+    "description": "Implementando modelos de ML e IA en aplicaciones Flutter. Casos prácticos, TensorFlow Lite y mejores prácticas desde la perspectiva académica y empresarial.",
+    "type": "TALK"
+  },
+  {
+    "UID": "ahdh5dhs5hf",
+    "title": "Apertura y keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "nb5ds4f5fd4d",
+    "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
+    "time": "09:30 - 10:15",
+    "speaker": "Andreu Ibàñez",
+    "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
+    "type": "TALK"
+  },
+  {
+    "UID": "789dfds45fds45f",
+    "title": "Apertura y Keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "jhk4d5hd45d",
+    "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
+    "time": "09:30 - 10:15",
+    "speaker": "Andreu Ibàñez",
+    "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
+    "type": "TALK"
+  },
+  {
+    "UID": "dfsags5as45adf",
+    "title": "Coffee Break",
+    "time": "10:15 - 10:45",
+    "speaker": "",
+    "description": "Networking y café",
+    "type": "BREAK"
+  },
+  {
+    "UID": "7asf6asd6sd",
+    "title": "Flutter para Web: Mejores prácticas",
+    "time": "10:45 - 11:30",
+    "speaker": "Alfredo Bautista",
+    "description": "Cómo crear aplicaciones web robustas con Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "8asdf4asd5sad",
+    "title": "Firebase y Flutter: Una combinación perfecta",
+    "time": "11:30 - 12:15",
+    "speaker": "Victor Carreras",
+    "description": "Integración completa de Firebase en aplicaciones Flutter",
+    "type": "TALK"
+  },
+  {
+    "UID": "1asdasdaa24",
+    "title": "Lunch Break",
+    "time": "12:15 - 13:30",
+    "speaker": "",
+    "description": "Comida y networking",
+    "type": "BREAK"
+  },
+  {
+    "UID": "daf4sd45as2",
+    "title": "Open Gateway: Democratizando las APIs de Telecomunicaciones",
+    "time": "13:30 - 14:15",
+    "speaker": "Irene Ruiz",
+    "description": "Descubre cómo Open Gateway de Telefónica está revolucionando el acceso a APIs de telecomunicaciones para developers. Una visión desde DevRel sobre oportunidades y casos de uso.",
+    "type": "TALK"
+  },
+  {
+    "UID": "ghdh4dfsg45dsf",
+    "title": "Machine Learning en Flutter: De la teoría a la práctica",
+    "time": "14:15 - 15:00",
+    "speaker": "Moises Martínez",
+    "description": "Implementando modelos de ML e IA en aplicaciones Flutter. Casos prácticos, TensorFlow Lite y mejores prácticas desde la perspectiva académica y empresarial.",
+    "type": "TALK"
+  },
+  {
+    "UID": "chjfgdh54gfsdgs",
+    "title": "Apertura y Keynote",
+    "time": "09:00 - 09:30",
+    "speaker": "Equipo organizador",
+    "description": "Bienvenida al DevFest 2025",
+    "type": "KEYNOTE"
+  },
+  {
+    "UID": "234542345sfd",
+    "title": "Google Summer of Code y Becas Google: Tu puerta de entrada al mundo tech",
+    "time": "09:30 - 10:15",
+    "speaker": "Andreu Ibàñez",
+    "description": "Descubre las oportunidades que ofrece Google Summer of Code, becas de investigación y programas de financiación. Experiencias desde el Parque Científico de Lleida y consejos para aplicar con éxito.",
+    "type": "TALK"
+  }
+]
