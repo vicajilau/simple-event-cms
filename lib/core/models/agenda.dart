@@ -51,7 +51,7 @@ class AgendaDay extends GitHubModel {
       uid: json['UID'],
       date: json['date'],
       trackUids: (json['tracks'] as List)
-          .map((trackUid) => trackUid as String)
+          .map((trackUid) => trackUid["UID"] as String)
           .toList(),
       // resolvedTracks will be populated by DataLoader
     );
@@ -88,7 +88,7 @@ class Track extends GitHubModel {
       name: json['name'],
       color: json['color'],
       sessionUids: (json['sessions'] as List)
-          .map((sessionUid) => sessionUid as String)
+          .map((sessionUid) => sessionUid["UID"] as String)
           .toList(),
       // resolvedSessions will be populated by DataLoader
     );

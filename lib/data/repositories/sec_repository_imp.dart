@@ -20,7 +20,7 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<List<Agenda>> loadEAgendas() async {
-    return await dataLoader.loadAgendaStructures();
+    return await dataLoader.getFullAgendaData();
   }
 
   @override
