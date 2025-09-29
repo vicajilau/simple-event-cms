@@ -83,7 +83,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               title: _buildTitleExpansionTile(isExpanded, date),
               children: <Widget>[
                 _buildExpansionTileBody(
-                  widget.viewmodel.agendaDays.value[index].tracks,
+                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
                   tabBarIndex,
                   agendaDayId,
                   widget.agendaId.toString(),
@@ -204,7 +204,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
-        sessions: widget.tracks[index].sessions,
+        sessions: widget.tracks[index].resolvedSessions ?? [],
         trackId: widget.tracks[index].uid,
         agendaId: widget.agendaId,
         agendaDayId: widget.agendaDayId,
@@ -260,9 +260,6 @@ class SessionCards extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     _viewModel.editSession(
-                      agendaId,
-                      agendaDayId,
-                      trackId,
                       session,
                     );
                   },
@@ -286,10 +283,7 @@ class SessionCards extends StatelessWidget {
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
                               _viewModel.removeSession(
-                                agendaId,
-                                agendaDayId,
-                                trackId,
-                                session,
+                                session.uid,
                               );
                             },
                           );

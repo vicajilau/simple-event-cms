@@ -6,9 +6,14 @@ abstract class AgendaUseCase {
   Future<Agenda?> getAgendaById(String id);
   void saveAgenda(Agenda agenda);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addSessionToAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
-  void editSessionInAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
-  void deleteSessionFromAgendaDay(String agendaId,String agendaDayId,String trackId,Session session);
+  void addSessionIntoAgenda(
+      String agendaId,
+      String agendaDayId,
+      String trackId,
+      Session session,
+      );
+  void editSession(Session session,String parentId);
+  void deleteSessionFromAgendaDay(String sessionId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
@@ -31,18 +36,23 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  void addSessionToAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) {
-    repository.addSessionToAgendaDay(agendaId, agendaDayId, trackId, session);
+  void addSessionIntoAgenda(
+      String agendaId,
+      String agendaDayId,
+      String trackId,
+      Session session,
+      ) {
+    repository.addSessionIntoAgenda(agendaId, agendaDayId, trackId,session);
   }
 
   @override
-  void editSessionInAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) {
-    repository.editSessionInAgendaDay(agendaId, agendaDayId, trackId, session);
+  void editSession(Session session,String parentId) {
+    repository.editSession(session,parentId);
   }
 
   @override
-  void deleteSessionFromAgendaDay(String agendaId,String agendaDayId,String trackId,Session session) {
-    repository.deleteSessionFromAgendaDay(agendaId, agendaDayId, trackId, session);
+  void deleteSessionFromAgendaDay(String sessionId) {
+    repository.deleteSessionFromAgendaDay(sessionId);
   }
 }
 

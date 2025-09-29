@@ -344,13 +344,15 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 name: _selectedRoom,
                 color: '',
-                sessions: [session],
+                resolvedSessions: [session],
+                sessionUids: [session.uid],
               );
               AgendaDay agendaDay = AgendaDay(
                 uid:
                     'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 date: _selectedDay,
-                tracks: [track],
+                resolvedTracks: [track],
+                trackUids: [track.uid]
               );
               agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
               Navigator.pop(context, agendaDay);

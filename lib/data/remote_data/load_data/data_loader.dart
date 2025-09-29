@@ -1,7 +1,7 @@
 import 'dart:convert';
-
+import 'dart:async'; // Added for Future.wait
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:github/github.dart' hide Event, Organization;
+import 'package:github/github.dart' hide Event, Organization; // Keep existing hide clauses
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -17,14 +17,9 @@ class DataLoader {
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
-  ///
-  /// [path] The relative path to the data file
-  /// Returns a Future containing the parsed JSON data as a dynamic list
-  /// Throws an Exception if the data cannot be loaded
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
-      // Remote loading
       final url = 'events/${organization.year}/$path';
       var github = GitHub();
       var repositorySlug = RepositorySlug(
@@ -41,130 +36,166 @@ class DataLoader {
         throw Exception("Error loading production configuration from $url");
       }
       final file = utf8.decode(
-        base64.decode(res.file!.content!.replaceAll("\n", "")),
+        base64.decode(res.file!.content!.replaceAll("\\n", "")),
       );
-      content =
-          file; // No es necesario codificar a JSON aquí, ya es una cadena JSON
+      content = file;
     } else if (ConfigLoader.appEnv == 'dev') {
-      // Local loading
       final localPath = 'events/${organization.year}/$path';
       content = await rootBundle.loadString(localPath);
     }
-    if (path == PathsGithub.eventPath) {
-      return json.decode(content)["events"];
-    } else {
-      return json.decode(content);
+    // Handle cases where content might be a list or a map containing a list
+    final decodedContent = json.decode(content);
+    if (path == PathsGithub.eventPath && decodedContent is Map) {
+      return decodedContent["events"] as List<dynamic>;
+    } else if (decodedContent is List) {
+      return decodedContent;
+    } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
+      // If it's a single object (like a single agenda structure), wrap it in a list
+      return [decodedContent];
     }
+    // Fallback or specific handling if the root is not a list
+    // For now, assuming most JSON roots will be lists of objects
+    // or the specific 'events' case handled above.
+    // If you have single objects at the root of other JSONs, adjust accordingly.
+    // For safety, if it's not a list at this point, treat as error or empty.
+    // This part might need adjustment based on actual structure of agenda_days.json, etc.
+    // if they are single objects at root instead of lists.
+    // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
+    if (decodedContent is Map && decodedContent.values.first is List) {
+      // If it's a map with a single key and the value is a list (another common pattern for root objects)
+      return decodedContent.values.first as List<dynamic>;
+    }
+
+    // If after all checks decodedContent is not a List, and not the special eventPath case,
+    // this indicates an unexpected JSON structure for the given path.
+    // For loadData, we expect a List<dynamic> to be returned for general processing.
+    // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
+    // are single JSON objects at the root rather than arrays, this will need adjustment
+    // or the parsing in the specific _loadAll methods will need to handle it.
+    // For now, this error helps identify such mismatches.
+    throw Exception("Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.");
   }
 
+  /// Generic method to save data to a specified path in GitHub.
+  Future<void> _saveData(String path, List<dynamic> data) async {
+    if (ConfigLoader.appEnv == 'dev') {
+      print("Data saving is skipped in dev environment for path: $path");
+      // Optionally, simulate saving to a local file for dev testing if needed
+      // final localPath = 'events/${organization.year}/$path';
+      // final File file = File(localPath);
+      // await file.writeAsString(json.encode(data));
+      // print("Simulated saving data to $localPath");
+      return;
+    }
+
+    final github = GitHub();
+    final repositorySlug = RepositorySlug(
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+    );
+    final content = json.encode(data);
+    final contentBytes = utf8.encode(content);
+    final String contentBase64 = base64.encode(contentBytes);
+
+    // Get the SHA of the existing file to update it
+    final existingFile = await github.repositories.getContents(repositorySlug, 'events/${organization.year}/$path', ref: "main");
+
+    await github.repositories.updateFile(
+        repositorySlug, 'events/${organization.year}/$path', 'Update $path', contentBase64, existingFile.file!.sha!, branch: "main");
+    print("Data saved to GitHub path: $path");
+  }
+
+  // --- Start of New Data Loading Methods ---
+
+  Future<List<Session>> loadAllSessions() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.sessionsPath);
+    return jsonList.map((jsonItem) => Session.fromJson(jsonItem)).toList();
+  }
+
+  Future<List<Track>> loadAllTracks() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.tracksPath);
+    return jsonList.map((jsonItem) => Track.fromJson(jsonItem)).toList();
+  }
+
+  Future<List<AgendaDay>> loadAllDays() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.daysPath);
+    return jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+  }
+
+  Future<List<Agenda>> loadAgendaStructures() async {
+    List<dynamic> jsonList = await loadData(PathsGithub.agendaPath);
+    return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
+  }
+
+  /// Loads and assembles the full agenda data from the new JSON structure.
+  Future<List<Agenda>> getFullAgendaData() async {
+    // Load all data components in parallel
+    final results = await Future.wait([
+      loadAgendaStructures(),
+      loadAllDays(),
+      loadAllTracks(),
+      loadAllSessions(),
+    ]);
+
+    final List<Agenda> agendaStructures = results[0] as List<Agenda>;
+    final List<AgendaDay> allDays = results[1] as List<AgendaDay>;
+    final List<Track> allTracks = results[2] as List<Track>;
+    final List<Session> allSessions = results[3] as List<Session>;
+
+    // Create maps for quick UID lookups
+    final Map<String, AgendaDay> daysMap = {for (var day in allDays) day.uid: day};
+    final Map<String, Track> tracksMap = {for (var track in allTracks) track.uid: track};
+    final Map<String, Session> sessionsMap = {for (var session in allSessions) session.uid: session};
+
+    // Assemble the structure
+    for (var agenda in agendaStructures) {
+      agenda.resolvedDays = agenda.dayUids
+          .map((dayUid) => daysMap[dayUid])
+          .where((day) => day != null) // Filter out nulls if a UID is not found
+          .cast<AgendaDay>()
+          .toList();
+
+      for (var day in agenda.resolvedDays ?? <AgendaDay>[]) {
+        day.resolvedTracks = day.trackUids
+            .map((trackUid) => tracksMap[trackUid])
+            .where((track) => track != null)
+            .cast<Track>()
+            .toList();
+
+        for (var track in day.resolvedTracks ?? <Track>[]) {
+          track.resolvedSessions = track.sessionUids
+              .map((sessionUid) => sessionsMap[sessionUid])
+              .where((session) => session != null)
+              .cast<Session>()
+              .toList();
+        }
+      }
+    }
+    return agendaStructures;
+  }
+
+  // --- End of New Data Loading Methods ---
+
   /// Loads speaker information from the speakers.json file
-  /// Returns a Future containing a list of speaker data
   Future<List<Speaker>> loadSpeakers() async {
     List<dynamic> jsonList = await loadData(PathsGithub.speakerPath);
     return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
   }
 
-  /// Loads event_collection agenda information from the agenda.json file
-  /// Parses the JSON structure and returns a list of AgendaDay objects
-  /// with proper type conversion and validation
-  /// Returns a Future containing a list of AgendaDay models
-  Future<List<Agenda>> loadAgenda() async {
-    var jsonList = await loadData(PathsGithub.agendaPath);
-    return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
-  }
-
   /// Loads sponsor information from the sponsors.json file
-  /// Returns a Future containing a list of sponsor data with logos and details
   Future<List<Sponsor>> loadSponsors() async {
     List<dynamic> jsonList = await loadData(PathsGithub.sponsorPath);
     return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
   }
 
   /// Loads event information from the events.json file
-  /// Returns a Future containing a list of event data
   Future<List<Event>> loadEvents() async {
     List<dynamic> jsonList = await loadData(PathsGithub.eventPath);
     return jsonList
         .map<Event>(
           (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
-        )
+    )
         .toList();
   }
 
-  /// Loads sessions for a specific agenda, day, and track.
-  ///
-  /// This method filters the agenda data to find the sessions
-  /// that match the provided [agendaId], [agendaDayId], and [trackId].
-  ///
-  /// Returns a Future containing a list of [Session] objects.
-  /// Returns an empty list if no matching sessions are found.
-  Future<List<Agenda>> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
-  ) async {
-    final List<Agenda> agendas = await loadAgenda();
-    final List<AgendaDay> agendaDays = agendas
-        .firstWhere((agenda) => agenda.uid == agendaId)
-        .days;
-    final List<Track> tracks = agendaDays
-        .firstWhere((day) => day.uid == agendaDayId)
-        .tracks;
-    // Find the index of the session to modify
-    int sessionIndex = tracks
-        .firstWhere((track) => track.uid == trackId)
-        .sessions
-        .indexWhere((s) => s.uid == session.uid);
-    if (sessionIndex != -1) {
-      tracks
-              .firstWhere((track) => track.uid == trackId)
-              .sessions[sessionIndex] =
-          session;
-    }
-    return agendas;
-  }
-
-  Future<Agenda> editSessionsFromAgendaId(String agendaId,String agendaDayId,String trackId,Session session) async {
-    final Agenda agenda = (await loadAgenda()).firstWhere((agenda) => agenda.uid == agendaId);
-    final List<AgendaDay> agendaDays = agenda.days;
-    final List<Track> tracks = agendaDays.firstWhere((day) => day.uid == agendaDayId).tracks;
-    // Find the index of the session to modify
-    int sessionIndex = tracks
-        .firstWhere((track) => track.uid == trackId)
-        .sessions
-        .indexWhere((s) => s.uid == session.uid);
-    if (sessionIndex != -1) {
-      tracks.firstWhere((track) => track.uid == trackId).sessions[sessionIndex] = session;
-    }
-
-    return agenda;
-  }
-
-  Future<Agenda> removeSessionsFromAgendaId(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
-  ) async {
-    final Agenda agenda = (await loadAgenda()).firstWhere(
-      (agenda) => agenda.uid == agendaId,
-    );
-    final List<AgendaDay> agendaDays = agenda.days;
-    final List<Track> tracks = agendaDays
-        .firstWhere((day) => day.uid == agendaDayId)
-        .tracks;
-    // Find the index of the session to remove
-    int sessionIndex = tracks
-        .firstWhere((track) => track.uid == trackId)
-        .sessions
-        .indexWhere((s) => s.uid == session.uid);
-    if (sessionIndex != -1) {
-      tracks
-          .firstWhere((track) => track.uid == trackId)
-          .sessions
-          .removeAt(sessionIndex);
-    }
-    return agenda;
-  }
 }

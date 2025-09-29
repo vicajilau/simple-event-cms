@@ -50,7 +50,7 @@ class ConfigLoader {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
 
-    final configUrl = 'events/${organization.year}/config/site.json';
+    final configUrl = 'events/${organization.year}/config/events.json';
     var github = GitHub();
     final res = await github.repositories.getContents(
       repositorySlug,

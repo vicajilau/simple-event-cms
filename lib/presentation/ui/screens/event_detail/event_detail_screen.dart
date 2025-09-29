@@ -145,25 +145,25 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     }
   }
 
-  void _addSpeaker() async {
+  void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
       AppRouter.speakerFormPath,
     );
 
     if (newSpeaker != null) {
       final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker,parentId);
     }
   }
 
-  void _addSponsor() async {
+  void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,
     );
 
     if (newSponsor != null) {
       final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      sponsorsScreen.viewmodel.addSponsor(newSponsor);
+      sponsorsScreen.viewmodel.addSponsor(newSponsor,parentId);
     }
   }
 }

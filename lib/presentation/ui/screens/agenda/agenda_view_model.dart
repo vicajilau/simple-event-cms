@@ -8,11 +8,10 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  //TODO NEED TO REVIEW
   void addTrack(Agenda agenda);
   void addSession(String agendaId,String agendaDayId,String trackId,Session session);
-  void editSession(String agendaId,String agendaDayId,String trackId,Session session);
-  void removeSession(String agendaId,String agendaDayId,String trackId,Session session);
+  void editSession(Session session,String parentId);
+  void removeSession(String sessionId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -49,7 +48,7 @@ class AgendaViewModelImp extends AgendaViewModel {
     try {
       viewState.value = ViewState.isLoading;
       final agenda = await agendaUseCase.getAgendaById(agendaId);
-      agendaDays.value = agenda?.days ?? [];
+      agendaDays.value = agenda?.resolvedDays ?? [];
       viewState.value = ViewState.loadFinished;
     } catch (e) {
       errorMessage = e.toString();
@@ -68,17 +67,17 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
   @override
   void addSession(String agendaId,String agendaDayId,String trackId,Session session) {
-    agendaUseCase.addSessionToAgendaDay(agendaId,agendaDayId,trackId,session);
+    agendaUseCase.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
   }
 
   @override
-  void editSession(String agendaId,String agendaDayId,String trackId,Session session) {
-    agendaUseCase.editSessionInAgendaDay(agendaId,agendaDayId,trackId,session);
+  void editSession(Session session,String parentId) {
+    agendaUseCase.editSession(session,parentId);
   }
 
   @override
-  void removeSession(String agendaId,String agendaDayId,String trackId,Session session) {
-    agendaUseCase.deleteSessionFromAgendaDay(agendaId,agendaDayId,trackId,session);
+  void removeSession(String sessionId) {
+    agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }
 

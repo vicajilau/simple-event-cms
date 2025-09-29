@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-
+import '../../../core/config/paths_github.dart';
 import '../../../core/models/models.dart';
 import '../common/commons_services.dart';
 
@@ -11,6 +11,7 @@ class DataUpdateInfo {
   final Organization organization = getIt<Organization>();
 
   DataUpdateInfo({required this.dataCommons});
+
 
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
@@ -25,12 +26,25 @@ class DataUpdateInfo {
     );
   }
 
+  /// Loads track information from the agenda.json file
+  /// Returns a Future containing a list of track data
+  Future<http.Response> updateTrack(Track track) async {
+    var trackOriginal = await dataLoader.loadAllTracks();
+    return dataCommons.updateData(
+      trackOriginal,
+      track,
+      "events/${organization.year}/${PathsGithub.tracksPath}",
+      PathsGithub.tracksUpdateMessage,
+    );
+  }
+
+
   /// Loads event agenda information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgenda(Agenda agenda) async {
-    var agendaOriginal = await dataLoader.loadAgenda();
+    var agendaOriginal = await dataLoader.getFullAgendaData();
     return dataCommons.updateData(
       agendaOriginal,
       agenda,
@@ -44,16 +58,15 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<http.Response> updateAgendaDay(
-    AgendaDay agendaDay,
-    Agenda agenda,
+    AgendaDay agendaDay
   ) async {
-    var agendaOriginal = await dataLoader.loadAgenda();
+    var daysOriginal = await dataLoader.loadAllDays();
 
     return dataCommons.updateData(
-      agendaOriginal,
-      agenda,
-      "events/${organization.year}/${agenda.pathUrl}",
-      agenda.updateMessage,
+      daysOriginal,
+      daysOriginal.firstWhere((day) => day.uid == agendaDay.uid),
+      "events/${organization.year}/${agendaDay.pathUrl}",
+      agendaDay.updateMessage,
     );
   }
 
@@ -80,6 +93,17 @@ class DataUpdateInfo {
       event.updateMessage,
     );
   }
+  /// Update session information from the sessions.json file
+  /// Returns a Future containing a list of sessions data
+  Future<http.Response> updateSession(Session session) async {
+    var agendaListOriginal = await dataLoader.getFullAgendaData();
+    return dataCommons.updateData(
+      agendaListOriginal,
+      session,
+      "events/${organization.year}/${session.pathUrl}",
+      session.updateMessage,
+    );
+  }
 
   /// Removes speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
@@ -100,8 +124,8 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> removeAgenda(String agendaId) async {
-    var agendaOriginal = await dataLoader.loadAgenda();
+  Future<http.Response> removeAgenda(String agendaId,String eventId) async {
+    var agendaOriginal = await dataLoader.getFullAgendaData();
     var agendaToRemove = agendaOriginal.firstWhere(
       (agenda) => agenda.uid == agendaId,
     );
@@ -152,61 +176,39 @@ class DataUpdateInfo {
   /// The path for removal is constructed using the `pathUrl` of the parent `Agenda`.
   /// The update message is also taken from the parent `Agenda`.
   /// Returns a `Future<http.Response>` indicating the outcome of the operation.
-  Future<http.Response> removeAgendaDayById(String agendaDayId) async {
-    var agendaListOriginal = await dataLoader.loadAgenda();
-    Agenda agendaToRemove = agendaListOriginal.firstWhere(
-      (agenda) => agenda.days.any((day) => day.uid == agendaDayId),
-    );
-    AgendaDay agendaDayToRemove = agendaToRemove.days.firstWhere(
-      (day) => day.uid == agendaDayId,
-    );
-    agendaToRemove.days.remove(agendaDayToRemove);
-    // Note: This modifies the parentAgenda's days list, but the actual removal from the remote data
-    // will be handled by dataCommons.removeData logic, which might need adjustment
-    // if it's not designed to handle removal of sub-items within a larger JSON object structure.
-    // For now, we assume dataCommons.removeData can handle this by path.
+  Future<http.Response> removeAgendaDay(String agendaDayId) async {
+    var agendaDaysListOriginal = await dataLoader.loadAllDays();
     return dataCommons.updateData(
-      agendaListOriginal,
-      agendaToRemove,
-      "events/${organization.year}/${agendaToRemove.pathUrl}",
-      agendaToRemove.updateMessage,
-    );
-  }
-
-  /// Add session information to the sessions.json file
-  /// Returns a Future containing a list of sessions data
-  Future<http.Response> addSession(Session session, String agendaId,String agendaDayId, String trackId) async {
-    var sessionsOriginal = await dataLoader.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
-    return dataCommons.updateData(
-      sessionsOriginal,
-      session,
-      "events/${organization.year}/${session.pathUrl}",
-      session.updateMessage,
-    );
-  }
-  /// Update session information from the sessions.json file
-  /// Returns a Future containing a list of sessions data
-  Future<http.Response> updateSession(Session session, String agendaId,String agendaDayId, String trackId) async {
-    var agendaListOriginal = await dataLoader.loadAgenda();
-    var agendaWithSessionEdited = await dataLoader.editSessionsFromAgendaId(agendaId,agendaDayId,trackId,session);
-    return dataCommons.updateData(
-      agendaListOriginal,
-      agendaWithSessionEdited,
-      "events/${organization.year}/${session.pathUrl}",
-      session.updateMessage,
+      agendaDaysListOriginal,
+      agendaDaysListOriginal.firstWhere((day) => day.uid == agendaDayId),
+      "events/${organization.year}/${PathsGithub.daysPath}",
+      PathsGithub.daysUpdateMessage,
     );
   }
 
   /// Removes session information from the sessions.json file
   /// Returns a Future containing a list of sessions data
-  Future<http.Response> removeSession(Session session, String agendaId,String agendaDayId, String trackId) async {
-    var agendaListOriginal = await dataLoader.loadAgenda();
-    var agendaWithoutSession = await dataLoader.removeSessionsFromAgendaId(agendaId,agendaDayId,trackId,session);
+  Future<http.Response> removeSession(String sessionId) async {
+    var sessionListOriginal = await dataLoader.loadAllSessions();
     return dataCommons.removeData(
-      agendaListOriginal,
-      agendaWithoutSession,
-      "events/${organization.year}/${session.pathUrl}",
-      session.updateMessage,
+      sessionListOriginal,
+      sessionListOriginal.firstWhere((session) => session.uid == sessionId),
+      "events/${organization.year}/${PathsGithub.sessionsPath}",
+      PathsGithub.sessionsUpdateMessage,
     );
   }
+
+  /// Removes track information from the agenda.json file
+  /// Returns a Future containing a list of track data
+  Future<http.Response> removeTrack(String trackId) async {
+    var tracksOriginal = await dataLoader.loadAllTracks();
+    return dataCommons.updateData( // Using updateData as we are modifying an existing agenda by removing a track
+      tracksOriginal,
+      tracksOriginal.firstWhere((track) => track.uid == trackId),
+      "events/${organization.year}/${PathsGithub.tracksPath}",
+      PathsGithub.tracksUpdateMessage,
+    );
+  }
+
+
 }
