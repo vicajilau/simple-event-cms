@@ -13,8 +13,9 @@ class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
   final SponsorViewModel viewmodel = getIt<SponsorViewModel>();
   final List<String> sponsors;
+  final String eventId;
 
-  SponsorsScreen({super.key, required this.sponsors});
+  SponsorsScreen({super.key, required this.sponsors, required this.eventId});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -36,7 +37,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
 
     if (newSponsor != null) {
-      widget.viewmodel.addSponsor(newSponsor,"");//TODO not have parent id
+      widget.viewmodel.addSponsor(newSponsor,widget.eventId);
     }
   }
 

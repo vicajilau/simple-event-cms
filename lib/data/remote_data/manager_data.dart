@@ -175,7 +175,7 @@ class ManagerData {
   static Future<void> _addSpeaker(Speaker speaker, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
-      if (event.uid.contains(speaker.uid)) {
+      if (event.uid == parentId) {
         event.speakersUID.removeWhere((uid) => uid == speaker.uid); // Ensure no duplicates
         event.speakersUID.add(speaker.uid); // Ensure no duplicates
         await dataUpdateInfo.updateEvent(event);
@@ -202,7 +202,7 @@ class ManagerData {
   static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
-      if (event.sponsorsUID.contains(sponsor.uid)) {
+      if (event.uid == parentId) {
         event.sponsorsUID.removeWhere((uid) => uid == sponsor.uid); // Ensure no duplicates
         event.sponsorsUID.add(sponsor.uid); // Add, ensuring it's not duplicated
         await dataUpdateInfo.updateEvent(event);

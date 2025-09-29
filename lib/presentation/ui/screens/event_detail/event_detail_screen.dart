@@ -41,7 +41,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     screens = [
       AgendaScreen(agendaId: widget.viewmodel.agendaId),
       SpeakersScreen(speakers: widget.viewmodel.speakersId),
-      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
+      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId,),
     ];
   }
 
@@ -87,7 +87,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               // Speakers Tab
               SpeakersScreen(speakers: widget.viewmodel.speakersId),
               // Sponsors Tab
-              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId),
+              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
             ],
           );
         },
