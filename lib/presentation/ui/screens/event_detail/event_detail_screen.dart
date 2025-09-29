@@ -39,9 +39,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       });
     });
     screens = [
-      AgendaScreen(agendaId: widget.viewmodel.agendaId),
-      SpeakersScreen(speakers: widget.viewmodel.speakersId),
-      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId,),
+      AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
+      SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
+      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
     ];
   }
 
@@ -83,9 +83,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             controller: _tabController,
             children: [
               // Agenda Tab
-              AgendaScreen(agendaId: widget.viewmodel.agendaId),
+              AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
               // Speakers Tab
-              SpeakersScreen(speakers: widget.viewmodel.speakersId),
+              SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
               // Sponsors Tab
               SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
             ],
