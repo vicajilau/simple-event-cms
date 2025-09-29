@@ -19,8 +19,9 @@ class ExpansionTileState {
 class AgendaScreen extends StatefulWidget {
   final String? agendaId;
   final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
+  final String eventId;
 
-  AgendaScreen({super.key, this.agendaId});
+  AgendaScreen({super.key, this.agendaId,required this.eventId});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
