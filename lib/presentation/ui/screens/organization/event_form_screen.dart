@@ -328,7 +328,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       sponsorsUID: event?.sponsorsUID ?? [],
     );
     await eventFormViewModel.onSubmit(eventModified);
-    if(context.mounted){
+    if (mounted) {
       Navigator.pop(context, eventModified);
     }
   }

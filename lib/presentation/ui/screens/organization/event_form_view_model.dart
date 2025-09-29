@@ -1,4 +1,4 @@
-import 'package:flutter/src/foundation/change_notifier.dart';
+import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
