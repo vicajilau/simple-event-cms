@@ -21,7 +21,7 @@ class AgendaScreen extends StatefulWidget {
   final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
   final String eventId;
 
-  AgendaScreen({super.key, this.agendaId,required this.eventId});
+  AgendaScreen({super.key, this.agendaId, required this.eventId});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -260,10 +260,7 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    _viewModel.editSession(
-                      session,
-                      trackId
-                    );
+                    _viewModel.editSession(session, trackId);
                   },
                   child: _buildSessionCard(
                     context,
@@ -284,9 +281,7 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              _viewModel.removeSession(
-                                session.uid,
-                              );
+                              _viewModel.removeSession(session.uid);
                             },
                           );
                         },
@@ -367,7 +362,8 @@ class SessionCards extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            if (session.speaker.toString().isNotEmpty && session.type != 'break') ...[
+            if (session.speaker.toString().isNotEmpty &&
+                session.type != 'break') ...[
               const SizedBox(height: 8),
               Row(
                 children: [
