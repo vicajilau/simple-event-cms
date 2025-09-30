@@ -22,4 +22,5 @@ abstract class SecRepository {
   Future<void> deleteSessionFromAgendaDay(String sessionId);
   Future<void> saveSponsor(Sponsor sponsor,String parentId);
   Future<void> removeSponsor(String sponsorId);
+  Future<void> removeEvent(String eventId);
 }

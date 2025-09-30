@@ -1,18 +1,13 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
-import 'package:sec/data/remote_data/manager_data.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
-
-import '../remote_data/common/commons_services.dart';
-import '../remote_data/update_data/data_update_info.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader = getIt<DataLoader>();
-  final DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-    dataCommons: CommonsServices(),
-  );
 
+  //load items
   @override
   Future<List<Event>> loadEvents() async {
     return dataLoader.loadEvents();
@@ -33,49 +28,30 @@ class SecRepositoryImp extends SecRepository {
     return await dataLoader.loadSponsors();
   }
 
+  //update Items
   @override
   Future<void> saveEvent(Event event) async {
-    await dataUpdateInfo.updateEvent(event);
+    await DataUpdate.addItemAndAssociations(event, event.uid);
   }
 
   @override
   Future<void> saveAgenda(Agenda agenda,String eventId) async {
-    await ManagerData.addItemAndAssociations(agenda, eventId, dataLoader, dataUpdateInfo);
+    await DataUpdate.addItemAndAssociations(agenda, eventId);
   }
 
   @override
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await ManagerData.addItemAndAssociations(agendaDay, agendaId, dataLoader, dataUpdateInfo);
+    await DataUpdate.addItemAndAssociations(agendaDay, agendaId);
   }
 
   @override
   Future<void> saveSpeaker(Speaker speaker,String parentId) async {
-    await ManagerData.addItemAndAssociations(speaker, parentId, dataLoader, dataUpdateInfo);
+    await DataUpdate.addItemAndAssociations(speaker, parentId);
   }
 
   @override
   Future<void> saveSponsor(Sponsor sponsor,String parentId) async {
-    await ManagerData.addItemAndAssociations(sponsor, parentId, dataLoader, dataUpdateInfo);
-  }
-
-  @override
-  Future<void> removeAgenda(String agendaId) async {
-    await ManagerData.deleteItemAndAssociations(agendaId, agendaId.runtimeType, dataLoader, dataUpdateInfo);
-  }
-
-  @override
-  Future<void> removeAgendaDay(String agendaDayId, String agendaId) async {
-    await ManagerData.deleteItemAndAssociations(agendaDayId, AgendaDay, dataLoader, dataUpdateInfo);
-  }
-
-  @override
-  Future<void> removeSpeaker(String speakerId) async {
-    await ManagerData.deleteItemAndAssociations(speakerId, Speaker, dataLoader, dataUpdateInfo);
-  }
-
-  @override
-  Future<void> removeSponsor(String sponsorId) async {
-    ManagerData.deleteItemAndAssociations(sponsorId, Sponsor, dataLoader, dataUpdateInfo);
+    await DataUpdate.addItemAndAssociations(sponsor, parentId);
   }
 
   @override
@@ -85,16 +61,43 @@ class SecRepositoryImp extends SecRepository {
       String trackId,
       Session session,
       ) async {
-    ManagerData.addItemAndAssociations(session,agendaDayId, dataLoader, dataUpdateInfo);
-  }
-
-  @override
-  Future<void> deleteSessionFromAgendaDay(String sessionId) async {
-    ManagerData.deleteItemAndAssociations(sessionId,Session, dataLoader, dataUpdateInfo);
+    DataUpdate.addItemAndAssociations(session,agendaDayId);
   }
 
   @override
   Future<void> editSession(Session session,String parentId) async {
-    ManagerData.addItemAndAssociations(session,parentId, dataLoader, dataUpdateInfo);
+    DataUpdate.addItemAndAssociations(session,parentId);
   }
+
+  //delete items
+  @override
+  Future<void> removeEvent(String eventId) async {
+    await DataUpdate.deleteItemAndAssociations(eventId, Event);
+  }
+
+  @override
+  Future<void> removeAgenda(String agendaId) async {
+    await DataUpdate.deleteItemAndAssociations(agendaId, Agenda);
+  }
+
+  @override
+  Future<void> removeAgendaDay(String agendaDayId, String agendaId) async {
+    await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
+  }
+
+  @override
+  Future<void> removeSpeaker(String speakerId) async {
+    await DataUpdate.deleteItemAndAssociations(speakerId, Speaker);
+  }
+
+  @override
+  Future<void> removeSponsor(String sponsorId) async {
+    DataUpdate.deleteItemAndAssociations(sponsorId, Sponsor);
+  }
+
+  @override
+  Future<void> deleteSessionFromAgendaDay(String sessionId) async {
+    DataUpdate.deleteItemAndAssociations(sessionId,Session);
+  }
+
 }

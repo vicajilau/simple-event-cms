@@ -3,14 +3,14 @@ import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import '../../../core/config/paths_github.dart';
 import '../../../core/models/models.dart';
-import '../common/commons_services.dart';
+import 'commons_API_services.dart';
 
-class DataUpdateInfo {
-  final CommonsServices dataCommons;
+class DataUpdateManager {
+  final CommonsApiServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
   final Organization organization = getIt<Organization>();
 
-  DataUpdateInfo({required this.dataCommons});
+  DataUpdateManager({required this.dataCommons});
 
 
   /// Loads speaker information from the speakers.json file

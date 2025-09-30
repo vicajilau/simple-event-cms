@@ -9,7 +9,7 @@ import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
 
-class CommonsServices {
+class CommonsApiServices {
   GithubData? githubService;
   Organization organization = getIt<Organization>();
 
