@@ -48,7 +48,7 @@ class AppRouter {
         path: adminEditEventPath,
         name: adminEditEventName,
         builder: (context, state) =>
-            EventFormScreen(eventId: state.pathParameters['eventId'].toString()),
+            EventFormScreen(eventId: state.extra.toString()),
       ),
 
       GoRoute(
