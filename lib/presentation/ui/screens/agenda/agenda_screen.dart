@@ -21,7 +21,7 @@ class AgendaScreen extends StatefulWidget {
   final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
   final String eventId;
 
-  AgendaScreen({super.key, this.agendaId,required this.eventId});
+  AgendaScreen({super.key, this.agendaId, required this.eventId});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -163,8 +163,6 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 ),
               );
             },
-            editSession: (day, track, session) => {/*TODO edit session*/},
-            removeSession: (session) => {/*TODO remove session*/},
           ),
         ],
       ),
@@ -237,8 +235,6 @@ class SessionCards extends StatelessWidget {
   final AgendaViewModel _viewModel = getIt<AgendaViewModel>();
   final String agendaId, agendaDayId, trackId;
   final List<Session> sessions;
-  final void Function(String, String, Session) editSession;
-  final void Function(Session) removeSession;
 
   SessionCards({
     super.key,
@@ -264,10 +260,7 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    _viewModel.editSession(
-                      session,
-                      trackId
-                    );
+                    _viewModel.editSession(session, trackId);
                   },
                   child: _buildSessionCard(
                     context,
@@ -288,9 +281,7 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              _viewModel.removeSession(
-                                session.uid,
-                              );
+                              _viewModel.removeSession(session.uid);
                             },
                           );
                         },
@@ -371,7 +362,8 @@ class SessionCards extends StatelessWidget {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            if (session.speaker.toString().isNotEmpty && session.type != 'break') ...[
+            if (session.speaker.toString().isNotEmpty &&
+                session.type != 'break') ...[
               const SizedBox(height: 8),
               Row(
                 children: [
