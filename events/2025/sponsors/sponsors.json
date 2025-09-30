@@ -1,48 +1,48 @@
 [
   {
-    "UID": "456546456",
+    "UID": "text_456546456",
     "name": "Google",
     "type": "Patrocinador Principal",
     "logo": "https://cdn.worldvectorlogo.com/logos/google-1-1.svg",
     "website": "https://google.com"
   },
   {
-    "UID": "654564564",
+    "UID": "text_654564564",
     "name": "Microsoft",
     "type": "Patrocinador Principal",
     "logo": "https://cdn.worldvectorlogo.com/logos/microsoft-5.svg",
     "website": "https://microsoft.com"
   },
   {
-    "UID": "7233434694",
+    "UID": "text_7233434694",
     "name": "Firebase",
     "type": "Patrocinador Gold",
     "logo": "https://cdn.worldvectorlogo.com/logos/firebase-1.svg",
     "website": "https://firebase.google.com"
   },
   {
-    "UID": "213467936",
+    "UID": "text_213467936",
     "name": "Flutter",
     "type": "Patrocinador Gold",
     "logo": "https://cdn.worldvectorlogo.com/logos/flutter-logo.svg",
     "website": "https://flutter.dev"
   },
   {
-    "UID": "364973197",
+    "UID": "text_364973197",
     "name": "GitHub",
     "type": "Patrocinador Gold",
     "logo": "https://cdn.worldvectorlogo.com/logos/github-icon-1.svg",
     "website": "https://github.com"
   },
   {
-    "UID": "726612689",
+    "UID": "text_726612689",
     "name": "JetBrains",
     "type": "Patrocinador Silver",
     "logo": "https://cdn.worldvectorlogo.com/logos/jetbrains-1.svg",
     "website": "https://jetbrains.com"
   },
   {
-    "UID": "14575333",
+    "UID": "text_14575333",
     "name": "Spotify",
     "type": "Patrocinador Silver",
     "logo": "https://cdn.worldvectorlogo.com/logos/spotify-2.svg",

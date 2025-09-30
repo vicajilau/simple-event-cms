@@ -1,6 +1,6 @@
 [
   {
-    "UID": "5647876573443",
+    "UID": "text_5647876573443",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
@@ -14,7 +14,7 @@
     ]
   },
   {
-    "UID": "434322322445",
+    "UID": "text_434322322445",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
@@ -23,7 +23,7 @@
     ]
   },
   {
-    "UID": "8743534674",
+    "UID": "text_8743534674",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
@@ -38,7 +38,7 @@
     ]
   },
   {
-    "UID": "978438943584",
+    "UID": "text_978438943584",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
@@ -47,7 +47,7 @@
     ]
   },
   {
-    "UID": "4789982843898943",
+    "UID": "text_4789982843898943",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
@@ -62,7 +62,7 @@
     ]
   },
   {
-    "UID": "1234432543534",
+    "UID": "text_1234432543534",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
