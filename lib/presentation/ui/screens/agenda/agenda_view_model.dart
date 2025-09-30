@@ -7,13 +7,11 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class AgendaViewModel implements ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
-  List<String> get days => [];
-  List<String> get rooms => [];
-  List<String> get speakers => [];
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addSession(Agenda agenda);
-  void editSession(Agenda agenda);
-  void removeSession(String id);
+  void addTrack(Agenda agenda);
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session);
+  void editSession(Session session,String parentId);
+  void removeSession(String sessionId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -27,15 +25,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   ValueNotifier<List<AgendaDay>> agendaDays = ValueNotifier([]);
 
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
-
-  @override
-  List<String> days = [];
-
-  @override
-  List<String> rooms = [];
-
-  @override
-  List<String> speakers = [];
 
   @override
   String errorMessage = '';
@@ -58,23 +47,8 @@ class AgendaViewModelImp extends AgendaViewModel {
   void _loadAgenda(String agendaId) async {
     try {
       viewState.value = ViewState.isLoading;
-      final agenda = await agendaUseCase.getAgendaById(agendaId);
-      days = agenda?.days.map((day) => day.date).toList() ?? [];
-      rooms =
-          agenda?.days
-              .map((day) => day.tracks.map((track) => track.name).toList())
-              .expand((element) => element)
-              .toList() ??
-          [];
-      final allSpeakers = agenda?.days
-          .expand((day) => day.tracks)
-          .expand((track) => track.sessions)
-          .map((session) => session.speaker)
-          .where((speaker) => speaker.isNotEmpty)
-          .toSet()
-          .toList();
-      speakers = allSpeakers ?? [];
-      agendaDays.value = agenda?.days ?? [];
+      final agenda = await agendaUseCase.getAgendaById(agendaId.toString());
+      agendaDays.value = agenda?.resolvedDays ?? [];
       viewState.value = ViewState.loadFinished;
     } catch (e) {
       errorMessage = e.toString();
@@ -89,17 +63,21 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  void addSession(Agenda agenda) {
+  void addTrack(Agenda agenda) {
     // TODO: implement addSession
   }
-
   @override
-  void editSession(Agenda agenda) {
-    // TODO: implement editSession
+  void addSession(String agendaId,String agendaDayId,String trackId,Session session) {
+    agendaUseCase.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
   }
 
   @override
-  void removeSession(String id) {
-    // TODO: implement removeSession
+  void editSession(Session session,String parentId) {
+    agendaUseCase.editSession(session,parentId);
+  }
+
+  @override
+  void removeSession(String sessionId) {
+    agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }

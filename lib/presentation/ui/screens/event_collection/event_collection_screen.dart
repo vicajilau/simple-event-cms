@@ -205,7 +205,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   AppRouter.eventFormPath,
                 );
                 if (newConfig != null) {
-                  widget.viewmodel.addEvent(newConfig);
+                 await  widget.viewmodel.addEvent(newConfig);
                 }
               },
             );
@@ -262,7 +262,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         extra: item.uid,
                       );
                       if (eventEdited != null) {
-                        widget.viewmodel.editEvent(eventEdited);
+                        await widget.viewmodel.editEvent(eventEdited);
                       }
                     },
                   )

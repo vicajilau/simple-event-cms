@@ -4,7 +4,7 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class SpeakerUseCase {
   Future<List<Speaker>> getSpeakersById(List<String> ids);
-  void saveSpeaker(Speaker speaker);
+  void saveSpeaker(Speaker speaker,String parentId);
   void removeSpeaker(String speakerId);
 }
 
@@ -23,8 +23,8 @@ class SpeakerUseCaseImp implements SpeakerUseCase {
   }
 
   @override
-  void saveSpeaker(Speaker speaker) {
-    repository.saveSpeaker(speaker);
+  void saveSpeaker(Speaker speaker,String parentId) {
+    repository.saveSpeaker(speaker,parentId);
   }
 
   @override

@@ -8,7 +8,7 @@ This guide explains how to configure your event using the JSON files in the `eve
 events/
 └── 2025/                    # Year-based event directory
     ├── config/
-    │   ├── site.json       # Main event configuration
+    │   ├── events.json       # Main event configuration
     │   └── agenda.json     # Event schedule and sessions
     ├── speakers/
     │   └── speakers.json   # Speaker profiles and information
@@ -18,7 +18,7 @@ events/
 
 ## 🔧 Configuration Files
 
-### 1. Site Configuration (`events/2025/config/site.json`)
+### 1. Site Configuration (`events/2025/config/events.json`)
 
 Main event configuration including basic information, dates, venue, and theming:
 
@@ -178,11 +178,11 @@ Common sponsor types:
 ### Step 1: Create Your Event Year
 
 1. Copy the `events/2025/` directory to `events/YYYY/` (your event year)
-2. Update the `year` field in `config/site.json`
+2. Update the `year` field in `config/events.json`
 
 ### Step 2: Configure Basic Information
 
-Edit `events/YYYY/config/site.json`:
+Edit `events/YYYY/config/events.json`:
 
 ```json
 {
@@ -231,7 +231,7 @@ Edit `events/YYYY/sponsors/sponsors.json`:
 
 ### Colors
 
-Update `primaryColor` for theme color and `secondaryColor` for accent color in `site.json`:
+Update `primaryColor` for theme color and `secondaryColor` for accent color in `events.json`:
 
 ```json
 {

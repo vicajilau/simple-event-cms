@@ -5,6 +5,7 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
+import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class EventFormScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class EventFormScreen extends StatefulWidget {
 class _EventFormScreenState extends State<EventFormScreen> {
   final _formKey = GlobalKey<FormState>();
 
+  final eventFormViewModel = getIt<EventFormViewModel>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
@@ -59,7 +61,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       _endDateController.text = endtDate;
     }
 
-    _tracks = event?.tracks ?? [];
+    _tracks = event?.tracksUID ?? [];
     _timezoneController.text = event?.eventDates.timezone ?? 'Europe/Madrid';
     _primaryColorController.text = event?.primaryColor ?? '';
     _secondaryColorController.text = event?.secondaryColor ?? '';
@@ -309,7 +311,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           event?.uid ??
           'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
       eventName: _nameController.text,
-      tracks: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
+      tracksUID: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
@@ -321,10 +323,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ),
       description: _descriptionController.text,
       // TODO: generar ID correctamente
-      agendaUID: "agenda123",
-      speakersUID: ["speaker123"],
-      sponsorsUID: ["sponsor1233"],
+      agendaUID: event?.agendaUID ?? "",
+      speakersUID: event?.speakersUID ?? [],
+      sponsorsUID: event?.sponsorsUID ?? [],
     );
-    Navigator.pop(context, eventModified);
+    await eventFormViewModel.onSubmit(eventModified);
+    if (mounted) {
+      Navigator.pop(context, eventModified);
+    }
   }
 }
