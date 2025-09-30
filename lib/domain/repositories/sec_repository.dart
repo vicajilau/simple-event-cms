@@ -1,7 +1,8 @@
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
 
 abstract class SecRepository {
-  Future<List<Event>> loadEvents();
+  Future<Result<List<Event>>> loadEvents();
   Future<List<Agenda>> loadEAgendas();
   Future<List<Speaker>> loadESpeakers();
   Future<List<Sponsor>> loadSponsors();

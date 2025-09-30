@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -52,24 +53,26 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   }
 
   Future<void> _loadEventData(String eventId) async {
-    try {
-      viewState.value = ViewState.isLoading;
-      final events = await useCase.getComposedEvents();
+    viewState.value = ViewState.isLoading;
+    final result = await useCase.getComposedEvents();
 
-      event = events.firstWhere(
-        (e) => e.uid == eventId,
-        orElse: () => events.first, // Fallback al primer evento
-      );
+    switch (result) {
+      case Ok<List<Event>>():
+        event = result.value.firstWhere(
+          (e) => e.uid == eventId,
+          orElse: () => result.value.first, // Fallback al primer evento
+        );
 
-      _agendaId = event?.agendaUID ?? '';
-      _speakersId = event?.speakersUID ?? [];
-      _sponsorsId = event?.sponsorsUID ?? [];
+        _agendaId = event?.agendaUID ?? '';
+        _speakersId = event?.speakersUID ?? [];
+        _sponsorsId = event?.sponsorsUID ?? [];
 
-      viewState.value = ViewState.loadFinished;
-    } catch (e) {
-      // TODO: immplementación control de errores (hay que crear los errores)
-      errorMessage = "Error cargando datos";
-      viewState.value = ViewState.error;
+        viewState.value = ViewState.loadFinished;
+      case Error():
+        // TODO: immplementación control de errores (hay que crear los errores)
+        final error = result.error;
+        errorMessage = "Error cargando datos: ${result.error.toString()}";
+        viewState.value = ViewState.error;
     }
   }
 

@@ -10,6 +10,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 
 abstract class CommonsServices {
   Future<List<dynamic>> loadData(String path);
@@ -34,6 +35,7 @@ class CommonsServicesImp extends CommonsServices {
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
+  @override
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
@@ -51,11 +53,16 @@ class CommonsServicesImp extends CommonsServices {
           url,
           ref: "feature/refactor_json_structure",
         );
-      } catch (e) {
-        throw Exception("Error loading production configuration from $url");
+      } catch (e, st) {
+        throw NetworkException(
+          "Error en la respuesta",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
       }
       if (res.file == null || res.file!.content == null) {
-        throw Exception("Error loading production configuration from $url");
+        throw NetworkException("El contenido de la respuesta es null");
       }
       final file = utf8.decode(
         base64.decode(
@@ -96,11 +103,15 @@ class CommonsServicesImp extends CommonsServices {
       // are single JSON objects at the root rather than arrays, this will need adjustment
       // or the parsing in the specific _loadAll methods will need to handle it.
       // For now, this error helps identify such mismatches.
-      throw Exception(
+      throw JsonDecodeException(
         "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
       );
-    } catch (e) {
-      throw Exception("Error loading configuration from $path");
+    } catch (e, st) {
+      throw JsonDecodeException(
+        "Error loading configuration from $path",
+        cause: e,
+        stackTrace: st,
+      );
     }
   }
 

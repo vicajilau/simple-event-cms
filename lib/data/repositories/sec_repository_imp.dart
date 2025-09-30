@@ -1,5 +1,8 @@
+import 'dart:core';
+
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/remote_data/manager_data.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -9,13 +12,27 @@ import '../remote_data/update_data/data_update_info.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader = getIt<DataLoader>();
+  List<Event> _events = [];
+
   final DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
     dataCommons: CommonsServicesImp(),
   );
 
   @override
-  Future<List<Event>> loadEvents() async {
-    return dataLoader.loadEvents();
+  Future<Result<List<Event>>> loadEvents() async {
+    try {
+      if (_events.isNotEmpty) {
+        return Result.ok(_events);
+      }
+
+      final events = await dataLoader.loadEvents();
+      _events = events;
+      return Result.ok(events);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
