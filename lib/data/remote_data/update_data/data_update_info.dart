@@ -1,9 +1,8 @@
-import 'package:http/http.dart' as http;
+import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import '../../../core/config/paths_github.dart';
-import '../../../core/models/models.dart';
-import '../common/commons_services.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/data/remote_data/common/commons_services.dart';
 
 class DataUpdateInfo {
   final CommonsServices dataCommons;
@@ -12,13 +11,12 @@ class DataUpdateInfo {
 
   DataUpdateInfo({required this.dataCommons});
 
-
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<http.Response> updateSpeaker(Speaker speakers) async {
+  Future<void> updateSpeaker(Speaker speakers) async {
     var speakersOriginal = await dataLoader.loadSpeakers();
 
-    return dataCommons.updateData(
+    dataCommons.updateData(
       speakersOriginal,
       speakers,
       "events/${organization.year}/${speakers.pathUrl}",
@@ -28,9 +26,9 @@ class DataUpdateInfo {
 
   /// Loads track information from the agenda.json file
   /// Returns a Future containing a list of track data
-  Future<http.Response> updateTrack(Track track) async {
+  Future<void> updateTrack(Track track) async {
     var trackOriginal = await dataLoader.loadAllTracks();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       trackOriginal,
       track,
       "events/${organization.year}/${PathsGithub.tracksPath}",
@@ -38,14 +36,13 @@ class DataUpdateInfo {
     );
   }
 
-
   /// Loads event agenda information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> updateAgenda(Agenda agenda) async {
+  Future<void> updateAgenda(Agenda agenda) async {
     var agendaOriginal = await dataLoader.loadAgendaStructures();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       agendaOriginal,
       agenda,
       "events/${organization.year}/${agenda.pathUrl}",
@@ -57,12 +54,10 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> updateAgendaDay(
-    AgendaDay agendaDay
-  ) async {
+  Future<void> updateAgendaDay(AgendaDay agendaDay) async {
     var daysOriginal = await dataLoader.loadAllDays();
 
-    return dataCommons.updateData(
+    dataCommons.updateData(
       daysOriginal,
       daysOriginal.firstWhere((day) => day.uid == agendaDay.uid),
       "events/${organization.year}/${agendaDay.pathUrl}",
@@ -72,9 +67,9 @@ class DataUpdateInfo {
 
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<http.Response> updateSponsors(Sponsor sponsors) async {
+  Future<void> updateSponsors(Sponsor sponsors) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       sponsorOriginal,
       sponsors,
       "events/${organization.year}/${sponsors.pathUrl}",
@@ -84,20 +79,21 @@ class DataUpdateInfo {
 
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
-  Future<http.Response> updateEvent(Event event) async {
+  Future<void> updateEvent(Event event) async {
     var eventsOriginal = await dataLoader.loadEvents();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       eventsOriginal,
       event,
       "events/${organization.year}/${event.pathUrl}",
       event.updateMessage,
     );
   }
+
   /// Update session information from the sessions.json file
   /// Returns a Future containing a list of sessions data
-  Future<http.Response> updateSession(Session session) async {
+  Future<void> updateSession(Session session) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       sessionListOriginal,
       session,
       "events/${organization.year}/${session.pathUrl}",
@@ -107,12 +103,12 @@ class DataUpdateInfo {
 
   /// Removes speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<http.Response> removeSpeaker(String speakerId) async {
+  Future<void> removeSpeaker(String speakerId) async {
     var speakersOriginal = await dataLoader.loadSpeakers();
     var speakerToRemove = speakersOriginal.firstWhere(
       (agenda) => agenda.uid == speakerId,
     );
-    return dataCommons.removeData(
+    dataCommons.removeData(
       speakersOriginal,
       speakerToRemove,
       "events/${organization.year}/${speakerToRemove.pathUrl}",
@@ -124,12 +120,12 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<http.Response> removeAgenda(String agendaId,String eventId) async {
+  Future<void> removeAgenda(String agendaId, String eventId) async {
     var agendaOriginal = await dataLoader.loadAgendaStructures();
     var agendaToRemove = agendaOriginal.firstWhere(
       (agenda) => agenda.uid == agendaId,
     );
-    return dataCommons.removeData(
+    dataCommons.removeData(
       agendaOriginal,
       agendaToRemove,
       "events/${organization.year}/${agendaToRemove.pathUrl}",
@@ -139,12 +135,12 @@ class DataUpdateInfo {
 
   /// Removes sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
-  Future<http.Response> removeSponsors(String sponsorId) async {
+  Future<void> removeSponsors(String sponsorId) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
     var sponsorToRemove = sponsorOriginal.firstWhere(
       (sponsor) => sponsor.uid == sponsorId,
     );
-    return dataCommons.removeData(
+    dataCommons.removeData(
       sponsorOriginal,
       sponsorToRemove,
       "events/${organization.year}/${sponsorToRemove.pathUrl}",
@@ -154,12 +150,12 @@ class DataUpdateInfo {
 
   /// Remove events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
-  Future<http.Response> removeEvent(String eventId) async {
+  Future<void> removeEvent(String eventId) async {
     var eventsOriginal = await dataLoader.loadEvents();
     var eventToRemove = eventsOriginal.firstWhere(
       (event) => event.uid == eventId,
     );
-    return dataCommons.removeData(
+    dataCommons.removeData(
       eventsOriginal,
       eventToRemove,
       "events/${organization.year}/${eventToRemove.pathUrl}",
@@ -176,9 +172,9 @@ class DataUpdateInfo {
   /// The path for removal is constructed using the `pathUrl` of the parent `Agenda`.
   /// The update message is also taken from the parent `Agenda`.
   /// Returns a `Future<http.Response>` indicating the outcome of the operation.
-  Future<http.Response> removeAgendaDay(String agendaDayId) async {
+  Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
-    return dataCommons.updateData(
+    dataCommons.updateData(
       agendaDaysListOriginal,
       agendaDaysListOriginal.firstWhere((day) => day.uid == agendaDayId),
       "events/${organization.year}/${PathsGithub.daysPath}",
@@ -188,9 +184,9 @@ class DataUpdateInfo {
 
   /// Removes session information from the sessions.json file
   /// Returns a Future containing a list of sessions data
-  Future<http.Response> removeSession(String sessionId) async {
+  Future<void> removeSession(String sessionId) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
-    return dataCommons.removeData(
+    dataCommons.removeData(
       sessionListOriginal,
       sessionListOriginal.firstWhere((session) => session.uid == sessionId),
       "events/${organization.year}/${PathsGithub.sessionsPath}",
@@ -200,15 +196,14 @@ class DataUpdateInfo {
 
   /// Removes track information from the agenda.json file
   /// Returns a Future containing a list of track data
-  Future<http.Response> removeTrack(String trackId) async {
+  Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
-    return dataCommons.updateData( // Using updateData as we are modifying an existing agenda by removing a track
+    dataCommons.updateData(
+      // Using updateData as we are modifying an existing agenda by removing a track
       tracksOriginal,
       tracksOriginal.firstWhere((track) => track.uid == trackId),
       "events/${organization.year}/${PathsGithub.tracksPath}",
       PathsGithub.tracksUpdateMessage,
     );
   }
-
-
 }

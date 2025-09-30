@@ -10,7 +10,7 @@ import '../remote_data/update_data/data_update_info.dart';
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader = getIt<DataLoader>();
   final DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
-    dataCommons: CommonsServices(),
+    dataCommons: CommonsServicesImp(),
   );
 
   @override
@@ -39,62 +39,117 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveAgenda(Agenda agenda,String eventId) async {
-    await ManagerData.addItemAndAssociations(agenda, eventId, dataLoader, dataUpdateInfo);
+  Future<void> saveAgenda(Agenda agenda, String eventId) async {
+    await ManagerData.addItemAndAssociations(
+      agenda,
+      eventId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await ManagerData.addItemAndAssociations(agendaDay, agendaId, dataLoader, dataUpdateInfo);
+    await ManagerData.addItemAndAssociations(
+      agendaDay,
+      agendaId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
-  Future<void> saveSpeaker(Speaker speaker,String parentId) async {
-    await ManagerData.addItemAndAssociations(speaker, parentId, dataLoader, dataUpdateInfo);
+  Future<void> saveSpeaker(Speaker speaker, String parentId) async {
+    await ManagerData.addItemAndAssociations(
+      speaker,
+      parentId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
-  Future<void> saveSponsor(Sponsor sponsor,String parentId) async {
-    await ManagerData.addItemAndAssociations(sponsor, parentId, dataLoader, dataUpdateInfo);
+  Future<void> saveSponsor(Sponsor sponsor, String parentId) async {
+    await ManagerData.addItemAndAssociations(
+      sponsor,
+      parentId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> removeAgenda(String agendaId) async {
-    await ManagerData.deleteItemAndAssociations(agendaId, agendaId.runtimeType, dataLoader, dataUpdateInfo);
+    await ManagerData.deleteItemAndAssociations(
+      agendaId,
+      agendaId.runtimeType,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> removeAgendaDay(String agendaDayId, String agendaId) async {
-    await ManagerData.deleteItemAndAssociations(agendaDayId, AgendaDay, dataLoader, dataUpdateInfo);
+    await ManagerData.deleteItemAndAssociations(
+      agendaDayId,
+      AgendaDay,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> removeSpeaker(String speakerId) async {
-    await ManagerData.deleteItemAndAssociations(speakerId, Speaker, dataLoader, dataUpdateInfo);
+    await ManagerData.deleteItemAndAssociations(
+      speakerId,
+      Speaker,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> removeSponsor(String sponsorId) async {
-    ManagerData.deleteItemAndAssociations(sponsorId, Sponsor, dataLoader, dataUpdateInfo);
+    ManagerData.deleteItemAndAssociations(
+      sponsorId,
+      Sponsor,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> addSessionIntoAgenda(
-      String agendaId,
-      String agendaDayId,
-      String trackId,
-      Session session,
-      ) async {
-    ManagerData.addItemAndAssociations(session,agendaDayId, dataLoader, dataUpdateInfo);
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  ) async {
+    ManagerData.addItemAndAssociations(
+      session,
+      agendaDayId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
   Future<void> deleteSessionFromAgendaDay(String sessionId) async {
-    ManagerData.deleteItemAndAssociations(sessionId,Session, dataLoader, dataUpdateInfo);
+    ManagerData.deleteItemAndAssociations(
+      sessionId,
+      Session,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 
   @override
-  Future<void> editSession(Session session,String parentId) async {
-    ManagerData.addItemAndAssociations(session,parentId, dataLoader, dataUpdateInfo);
+  Future<void> editSession(Session session, String parentId) async {
+    ManagerData.addItemAndAssociations(
+      session,
+      parentId,
+      dataLoader,
+      dataUpdateInfo,
+    );
   }
 }

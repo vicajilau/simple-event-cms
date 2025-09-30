@@ -1,17 +1,108 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
+import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
 
-class CommonsServices {
+abstract class CommonsServices {
+  Future<List<dynamic>> loadData(String path);
+  Future<http.Response> updateData<T extends GitHubModel>(
+    List<T> dataOriginal,
+    T data,
+    String pathUrl,
+    String commitMessage,
+  );
+  Future<http.Response> removeData<T extends GitHubModel>(
+    List<T> dataOriginal,
+    T dataToRemove,
+    String pathUrl,
+    String commitMessage,
+  );
+}
+
+class CommonsServicesImp extends CommonsServices {
   GithubData? githubService;
   Organization organization = getIt<Organization>();
+
+  /// Generic method to load data from a specified path
+  /// Automatically determines whether to load from local assets or remote URL
+  /// based on the configuration's base URL
+  Future<List<dynamic>> loadData(String path) async {
+    String content = "";
+    if (ConfigLoader.appEnv != 'dev') {
+      final url = 'events/${organization.year}/$path';
+      var github = GitHub();
+      var repositorySlug = RepositorySlug(
+        organization.githubUser,
+        (await SecureInfo.getGithubKey()).projectName ??
+            organization.projectName,
+      );
+      RepositoryContents res;
+      try {
+        res = await github.repositories.getContents(
+          repositorySlug,
+          url,
+          ref: "feature/refactor_json_structure",
+        );
+      } catch (e) {
+        throw Exception("Error loading production configuration from $url");
+      }
+      if (res.file == null || res.file!.content == null) {
+        throw Exception("Error loading production configuration from $url");
+      }
+      final file = utf8.decode(
+        base64.decode(
+          res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+        ),
+      );
+      content = file;
+    } else if (ConfigLoader.appEnv == 'dev') {
+      final localPath = 'events/${organization.year}/$path';
+      content = await rootBundle.loadString(localPath);
+    }
+    try {
+      // Handle cases where content might be a list or a map containing a list
+      final decodedContent = json.decode(content);
+      if (decodedContent is List) {
+        return decodedContent;
+      } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
+        // If it's a single object (like a single agenda structure), wrap it in a list
+        return [decodedContent];
+      }
+      // Fallback or specific handling if the root is not a list
+      // For now, assuming most JSON roots will be lists of objects
+      // or the specific 'events' case handled above.
+      // If you have single objects at the root of other JSONs, adjust accordingly.
+      // For safety, if it's not a list at this point, treat as error or empty.
+      // This part might need adjustment based on actual structure of agenda_days.json, etc.
+      // if they are single objects at root instead of lists.
+      // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
+      if (decodedContent is Map && decodedContent.values.first is List) {
+        // If it's a map with a single key and the value is a list (another common pattern for root objects)
+        return decodedContent.values.first as List<dynamic>;
+      }
+
+      // If after all checks decodedContent is not a List, and not the special eventPath case,
+      // this indicates an unexpected JSON structure for the given path.
+      // For loadData, we expect a List<dynamic> to be returned for general processing.
+      // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
+      // are single JSON objects at the root rather than arrays, this will need adjustment
+      // or the parsing in the specific _loadAll methods will need to handle it.
+      // For now, this error helps identify such mismatches.
+      throw Exception(
+        "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
+      );
+    } catch (e) {
+      throw Exception("Error loading configuration from $path");
+    }
+  }
 
   /// Generic function to update or create data on GitHub.
   /// Returns an http.Response for consistency.
@@ -74,7 +165,7 @@ class CommonsServices {
       dataOriginal.map((item) => item.toJson()).toList(),
     );
     var base64Content = "";
-      base64Content = base64.encode(utf8.encode(dataInJsonString));
+    base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
         githubService?.branch ?? 'main'; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
@@ -82,7 +173,7 @@ class CommonsServices {
     final requestBody = <String, String>{
       'message': commitMessage,
       'content': base64Content,
-      'branch' : branch
+      'branch': branch,
     };
 
     // Only add the 'sha' for updates, not for creation.
@@ -176,7 +267,7 @@ class CommonsServices {
       'message': commitMessage,
       'content': base64Content,
       'sha': currentSha, // SHA is required for updates
-      'branch' : branch
+      'branch': branch,
     };
     RepositorySlug repositorySlug = RepositorySlug(
       organization.githubUser,
