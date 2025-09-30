@@ -24,9 +24,9 @@ class DeleteDialog extends StatelessWidget {
         ),
         TextButton(
           child: const Text("Delete"),
-          onPressed: () {
-            Navigator.of(context).pop();
+          onPressed: () async {
             onDeletePressed();
+            Navigator.of(context).pop();
           },
         ),
       ],
