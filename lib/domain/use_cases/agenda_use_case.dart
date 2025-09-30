@@ -22,7 +22,7 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<Agenda?> getAgendaById(String id) async {
     final agendas = await repository.loadEAgendas();
-    return agendas.firstWhere((event) => event.uid == id);
+    return agendas.firstWhere((agenda) => agenda.uid == id);
   }
 
   @override
