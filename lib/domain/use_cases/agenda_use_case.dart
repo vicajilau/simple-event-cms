@@ -61,3 +61,4 @@ class AgendaUseCaseImpl implements AgendaUseCase {
     repository.deleteSessionFromAgendaDay(sessionId);
   }
 }
+

@@ -93,3 +93,4 @@ class AgendaViewModelImp extends AgendaViewModel {
     agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }
+

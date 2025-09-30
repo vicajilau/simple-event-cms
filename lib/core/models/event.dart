@@ -61,20 +61,20 @@ class Event extends GitHubModel {
   factory Event.fromJson(Map<String, dynamic> json) {
     List<String> speakers = (json['speakersUID'] != null)
         ? (json['speakersUID'] as List)
-              .map((item) => item['UID'] as String)
+              .map((item) => item['UID'].toString())
               .toList()
         : [];
     List<String> sponsors = (json['sponsorsUID'] != null)
         ? (json['sponsorsUID'] as List)
-              .map((item) => item['UID'] as String)
+              .map((item) => item['UID'].toString())
               .toList()
         : [];
     List<String> tracksUID = (json['tracksUID'] != null)
-        ? (json['tracksUID'] as List).map((item) => item['UID'] as String).toList()
+        ? (json['tracksUID'] as List).map((item) => item['UID'].toString()).toList()
         : [];
-    var agendaUID = json['agendaUID'];
+    var agendaUID = json['agendaUID'].toString();
     return Event(
-      uid: json["UID"],
+      uid: json["UID"].toString(),
       eventName: json['eventName'],
       year: json['year'],
       primaryColor: json['primaryColor'],

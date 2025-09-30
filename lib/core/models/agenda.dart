@@ -16,9 +16,9 @@ class Agenda extends GitHubModel {
 
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(
-      uid: json["UID"],
+      uid: json["UID"].toString(),
       dayUids: (json["days"] as List)
-          .map((dayUid) => dayUid["UID"] as String)
+          .map((dayUid) => dayUid["UID"].toString())
           .toList(),
       // resolvedDays will be populated by DataLoader
     );
@@ -48,10 +48,10 @@ class AgendaDay extends GitHubModel {
 
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
-      uid: json['UID'],
+      uid: json['UID'].toString(),
       date: json['date'],
       trackUids: (json['tracks'] as List)
-          .map((trackUid) => trackUid["UID"] as String)
+          .map((trackUid) => trackUid["UID"].toString())
           .toList(),
       // resolvedTracks will be populated by DataLoader
     );
@@ -84,11 +84,11 @@ class Track extends GitHubModel {
 
   factory Track.fromJson(Map<String, dynamic> json) {
     return Track(
-      uid: json['UID'],
+      uid: json['UID'].toString(),
       name: json['name'],
       color: json['color'],
       sessionUids: (json['sessions'] as List)
-          .map((sessionUid) => sessionUid["UID"] as String)
+          .map((sessionUid) => sessionUid.toString())
           .toList(),
       // resolvedSessions will be populated by DataLoader
     );
@@ -125,7 +125,7 @@ class Session extends GitHubModel {
 
   factory Session.fromJson(Map<String, dynamic> json) {
     return Session(
-      uid: json['UID'],
+      uid: json['UID'].toString(),
       title: json['title'],
       time: json['time'],
       speaker: json['speaker'],
