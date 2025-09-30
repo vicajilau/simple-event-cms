@@ -61,6 +61,7 @@ class AgendaViewModelImp extends AgendaViewModel {
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
     agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
   }
+
   @override
   void addTrack(Agenda agenda) {
     // TODO: implement addSession
@@ -80,4 +81,3 @@ class AgendaViewModelImp extends AgendaViewModel {
     agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }
-

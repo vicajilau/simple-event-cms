@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import 'agenda_view_model.dart';
-
-class EventFormData {
+class AgendaFormData {
   final List<String> rooms;
   final List<String> days;
   final List<String> speakers;
   final List<String> sessionTypes;
-  final String track, day;
+  final String? track, day;
   final Session? session;
 
-  EventFormData({
+  AgendaFormData({
     required this.rooms,
     required this.days,
     required this.speakers,
@@ -29,14 +26,9 @@ class EventFormData {
 }
 
 class AgendaFormScreen extends StatefulWidget {
-  final EventFormData data;
-  final String agendaId;
+  final AgendaFormData data;
 
-  const AgendaFormScreen({
-    super.key,
-    required this.data,
-    required this.agendaId,
-  });
+  const AgendaFormScreen({super.key, required this.data});
 
   @override
   State<AgendaFormScreen> createState() => _AgendaFormScreenState();
@@ -53,7 +45,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _timeErrorMessage;
-  final AgendaViewModel agendaViewModel = getIt<AgendaViewModel>();
 
   @override
   void initState() {
@@ -62,12 +53,14 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     if (session != null) {
       _titleController.text = session.title;
 
-      if (widget.data.days.contains(widget.data.day)) {
-        _selectedDay = widget.data.day;
+      if (widget.data.day != null &&
+          widget.data.days.contains(widget.data.day)) {
+        _selectedDay = widget.data.day!;
       }
 
-      if (widget.data.track.contains(widget.data.track)) {
-        _selectedRoom = widget.data.track;
+      if (widget.data.track != null &&
+          widget.data.rooms.contains(widget.data.track!)) {
+        _selectedRoom = widget.data.track!;
       }
 
       if (widget.data.speakers.contains(session.speaker)) {
@@ -354,7 +347,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 resolvedTracks: [track],
                 trackUids: [track.uid]
               );
-              agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
               Navigator.pop(context, agendaDay);
             }
           },

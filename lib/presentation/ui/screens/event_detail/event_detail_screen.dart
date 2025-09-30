@@ -39,9 +39,18 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       });
     });
     screens = [
-      AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
-      SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
-      SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
+      AgendaScreen(
+        agendaId: widget.viewmodel.agendaId,
+        eventId: widget.eventId,
+      ),
+      SpeakersScreen(
+        speakers: widget.viewmodel.speakersId,
+        eventId: widget.eventId,
+      ),
+      SponsorsScreen(
+        sponsors: widget.viewmodel.sponsorsId,
+        eventId: widget.eventId,
+      ),
     ];
   }
 
@@ -83,11 +92,20 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             controller: _tabController,
             children: [
               // Agenda Tab
-              AgendaScreen(agendaId: widget.viewmodel.agendaId,eventId: widget.eventId),
+              AgendaScreen(
+                agendaId: widget.viewmodel.agendaId,
+                eventId: widget.eventId,
+              ),
               // Speakers Tab
-              SpeakersScreen(speakers: widget.viewmodel.speakersId,eventId: widget.eventId),
+              SpeakersScreen(
+                speakers: widget.viewmodel.speakersId,
+                eventId: widget.eventId,
+              ),
               // Sponsors Tab
-              SponsorsScreen(sponsors: widget.viewmodel.sponsorsId,eventId: widget.eventId),
+              SponsorsScreen(
+                sponsors: widget.viewmodel.sponsorsId,
+                eventId: widget.eventId,
+              ),
             ],
           );
         },
@@ -152,7 +170,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newSpeaker != null) {
       final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker,parentId);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
     }
   }
 
@@ -163,7 +181,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newSponsor != null) {
       final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      sponsorsScreen.viewmodel.addSponsor(newSponsor,parentId);
+      sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
     }
   }
 }
