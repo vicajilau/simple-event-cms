@@ -1,73 +1,73 @@
 [
   {
-    "UID":"UID_5647876573443",
+    "UID":"5647876573443",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_1232333564"},
-      {"UID":"UID_563233334"},
-      {"UID":"UID_2423423444"},
-      {"UID":"UID_123233333"},
-      {"UID":"UID_6767677411"},
-      {"UID":"UID_48235232322"},
-      {"UID":"UID_6347173437"}
+      {"UID":"1232333564"},
+      {"UID":"563233334"},
+      {"UID":"2423423444"},
+      {"UID":"123233333"},
+      {"UID":"6767677411"},
+      {"UID":"48235232322"},
+      {"UID":"6347173437"}
     ]
   },
   {
-    "UID":"UID_434322322445",
+    "UID":"434322322445",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_111133344"},
-      {"UID":"UID_89414233"}
+      {"UID":"111133344"},
+      {"UID":"89414233"}
     ]
   },
   {
-    "UID":"UID_8743534674",
+    "UID":"8743534674",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_999999999"},
-      {"UID":"UID_333333ww222"},
-      {"UID":"UID_adase232323"},
-      {"UID":"UID_aa342353536"},
-      {"UID":"UID_kfadsaf32323"},
-      {"UID":"UID_6dsfd545353"},
-      {"UID":"UID_n1asdew4445"},
-      {"UID":"UID_a45443545534"}
+      {"UID":"999999999"},
+      {"UID":"333333ww222"},
+      {"UID":"adase232323"},
+      {"UID":"aa342353536"},
+      {"UID":"kfadsaf32323"},
+      {"UID":"6dsfd545353"},
+      {"UID":"n1asdew4445"},
+      {"UID":"a45443545534"}
     ]
   },
   {
-    "UID":"UID_978438943584",
+    "UID":"978438943584",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_ahdh5dhs5hf"},
-      {"UID":"UID_nb5ds4f5fd4d"}
+      {"UID":"ahdh5dhs5hf"},
+      {"UID":"nb5ds4f5fd4d"}
     ]
   },
   {
-    "UID":"UID_4789982843898943",
+    "UID":"4789982843898943",
     "name": "Sala Principal",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_789dfds45fds45f"},
-      {"UID":"UID_jhk4d5hd45d"},
-      {"UID":"UID_dfsags5as45adf"},
-      {"UID":"UID_7asf6asd6sd"},
-      {"UID":"UID_8asdf4asd5sad"},
-      {"UID":"UID_1asdasdaa24"},
-      {"UID":"UID_daf4sd45as2"},
-      {"UID":"UID_ghdh4dfsg45dsf"}
+      {"UID":"789dfds45fds45f"},
+      {"UID":"jhk4d5hd45d"},
+      {"UID":"dfsags5as45adf"},
+      {"UID":"7asf6asd6sd"},
+      {"UID":"8asdf4asd5sad"},
+      {"UID":"1asdasdaa24"},
+      {"UID":"daf4sd45as2"},
+      {"UID":"ghdh4dfsg45dsf"}
     ]
   },
   {
-    "UID":"UID_1234432543534",
+    "UID":"1234432543534",
     "name": "Sala iMac",
     "color": "#4285F4",
     "sessions": [
-      {"UID":"UID_chjfgdh54gfsdgs"},
-      {"UID":"UID_234542345sfd"}
+      {"UID":"chjfgdh54gfsdgs"},
+      {"UID":"234542345sfd"}
     ]
   }
 ]
