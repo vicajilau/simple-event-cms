@@ -36,18 +36,39 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<List<Agenda>> loadEAgendas() async {
-    return await dataLoader.getFullAgendaData();
+  Future<Result<List<Agenda>>> loadEAgendas() async {
+    try {
+      final agenda = await dataLoader.getFullAgendaData();
+      return Result.ok(agenda);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<List<Speaker>> loadESpeakers() async {
-    return await dataLoader.loadSpeakers();
+  Future<Result<List<Speaker>>> loadESpeakers() async {
+    try {
+      final speakers = await dataLoader.loadSpeakers();
+      return Result.ok(speakers);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<List<Sponsor>> loadSponsors() async {
-    return await dataLoader.loadSponsors();
+  Future<Result<List<Sponsor>>> loadSponsors() async {
+    try {
+      final sponsors = await dataLoader.loadSponsors();
+      return Result.ok(sponsors);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override

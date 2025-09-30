@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
@@ -37,6 +36,13 @@ class CommonsServicesImp extends CommonsServices {
   /// based on the configuration's base URL
   @override
   Future<List<dynamic>> loadData(String path) async {
+    if (path.contains('agenda'))
+      throw NetworkException("message");
+    else if (path.contains('sponsor'))
+      throw JsonDecodeException("message");
+    else if (path.contains('speaker'))
+      throw GithubException("message");
+
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/${organization.year}/$path';
@@ -117,6 +123,7 @@ class CommonsServicesImp extends CommonsServices {
 
   /// Generic function to update or create data on GitHub.
   /// Returns an http.Response for consistency.
+  @override
   Future<http.Response> updateData<T extends GitHubModel>(
     List<T> dataOriginal,
     T data,
@@ -148,16 +155,24 @@ class CommonsServicesImp extends CommonsServices {
 
       if (currentSha == null) {
         // This case is unlikely if the file exists but helps prevent errors.
-        throw Exception("Could not get the SHA of the existing file.");
+        throw GithubException("Could not get the SHA of the existing file.");
       }
-    } on NotFound {
+    } on NotFound catch (e, st) {
       // If the file is not found (NotFound), the SHA remains null.
       // The logic below will create the file instead of updating it.
       currentSha = null;
-      debugPrint("File not found at $pathUrl. A new file will be created.");
-    } catch (e) {
+      throw GithubException(
+        "File not found at $pathUrl. A new file will be created.",
+        cause: e,
+        stackTrace: st,
+      );
+    } catch (e, st) {
       // Any other error while getting the file.
-      throw Exception("Failed to get file contents from $pathUrl: $e");
+      throw GithubException(
+        "Failed to get file contents from $pathUrl: $e",
+        cause: e,
+        stackTrace: st,
+      );
     }
 
     // 2. MODIFY THE DATA LIST (Your current logic)
@@ -188,9 +203,7 @@ class CommonsServicesImp extends CommonsServices {
     };
 
     // Only add the 'sha' for updates, not for creation.
-    if (currentSha != null) {
-      requestBody['sha'] = currentSha;
-    }
+    requestBody['sha'] = currentSha;
 
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
     // This gives you back the raw http.Response you want.
@@ -212,13 +225,16 @@ class CommonsServicesImp extends CommonsServices {
     // Check the response status and throw an exception on failure.
     if (response.statusCode != 200 && response.statusCode != 201) {
       // 200 for update, 201 for create
-      throw Exception("Failed to update data at $pathUrl: ${response.body}");
+      throw NetworkException(
+        "Failed to update data at $pathUrl: ${response.body}",
+      );
     }
 
     return response;
   }
 
   /// Generic function to remove data from GitHub
+  @override
   Future<http.Response> removeData<T extends GitHubModel>(
     List<T> dataOriginal,
     T dataToRemove,
@@ -231,7 +247,7 @@ class CommonsServicesImp extends CommonsServices {
 
     githubService = await SecureInfo.getGithubKey();
     if (githubService?.token == null) {
-      throw Exception("GitHub token is not available.");
+      throw GithubException("GitHub token is not available.");
     }
 
     var github = GitHub(auth: Authentication.withToken(githubService!.token));
@@ -251,13 +267,19 @@ class CommonsServicesImp extends CommonsServices {
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
-    } on NotFound {
+    } on NotFound catch (e, st) {
       // If the file doesn't exist, we can't remove anything from it.
-      throw Exception(
+      throw GithubException(
         "Cannot remove item because file does not exist at $pathUrl.",
+        cause: e,
+        stackTrace: st,
       );
-    } catch (e) {
-      throw Exception("Failed to get file for removal: $e");
+    } catch (e, st) {
+      throw GithubException(
+        "Failed to get file for removal: $e",
+        cause: e,
+        stackTrace: st,
+      );
     }
 
     // 2. REMOVE THE ITEM FROM THE LIST
@@ -299,7 +321,7 @@ class CommonsServicesImp extends CommonsServices {
     );
 
     if (response.statusCode != 200) {
-      throw Exception(
+      throw NetworkException(
         "Failed to save updated data after removal at $pathUrl: ${response.body}",
       );
     }
