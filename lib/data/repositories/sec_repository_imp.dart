@@ -100,4 +100,17 @@ class SecRepositoryImp extends SecRepository {
     DataUpdate.deleteItemAndAssociations(sessionId,Session);
   }
 
+  @override
+  Future<AgendaDay> loadAgendaDayById(String agendaDayById) async {
+    var agendaDays = await dataLoader.loadAllDays();
+    return agendaDays.firstWhere((agendaDay) => agendaDay.uid == agendaDayById);
+  }
+
+  @override
+  Future<Track> loadTrackById(String trackId) async {
+    var tracks = await dataLoader.loadAllTracks();
+    return tracks.firstWhere((track) => track.uid == trackId);
+  }
+
+
 }

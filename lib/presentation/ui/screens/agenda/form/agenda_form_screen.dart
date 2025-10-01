@@ -2,26 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/config/app_decorations.dart';
 import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
+import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class AgendaFormData {
-  final List<String> rooms;
-  final List<String> days;
-  final List<String> speakers;
+  final List<String> tracksUIDS;
+  final List<String> agendaDaysUID;
+  final List<String> speakersUID;
   final List<String> sessionTypes;
   final String? track, day;
   final Session? session;
 
   AgendaFormData({
-    required this.rooms,
-    required this.days,
-    required this.speakers,
+    required this.tracksUIDS,
+    required this.agendaDaysUID,
+    required this.speakersUID,
     required this.sessionTypes,
-    required this.session,
-    required this.track,
-    required this.day,
+    this.session,
+    this.track,
+    this.day,
   });
 }
 
@@ -46,6 +48,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   final _formKey = GlobalKey<FormState>();
   String? _timeErrorMessage;
 
+
+  final AgendaFormViewModel agendaFormViewModel = getIt<AgendaFormViewModel>();
+
   @override
   void initState() {
     super.initState();
@@ -54,16 +59,16 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       _titleController.text = session.title;
 
       if (widget.data.day != null &&
-          widget.data.days.contains(widget.data.day)) {
+          widget.data.agendaDaysUID.contains(widget.data.day)) {
         _selectedDay = widget.data.day!;
       }
 
       if (widget.data.track != null &&
-          widget.data.rooms.contains(widget.data.track!)) {
+          widget.data.tracksUIDS.contains(widget.data.track!)) {
         _selectedRoom = widget.data.track!;
       }
 
-      if (widget.data.speakers.contains(session.speaker)) {
+      if (widget.data.speakersUID.contains(session.speaker)) {
         _selectedSpeaker = session.speaker.toString();
       }
 
@@ -130,7 +135,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         decoration: InputDecoration(
                           hintText: 'Selecciona un día',
                         ),
-                        items: widget.data.days
+                        items: widget.data.agendaDaysUID
                             .map(
                               (day) => DropdownMenuItem(
                                 value: day,
@@ -159,7 +164,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         decoration: InputDecoration(
                           hintText: 'Selecciona una sala',
                         ),
-                        items: widget.data.rooms
+                        items: widget.data.tracksUIDS
                             .map(
                               (room) => DropdownMenuItem(
                                 value: room,
@@ -233,7 +238,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         decoration: InputDecoration(
                           hintText: 'Selecciona un speaker',
                         ),
-                        items: widget.data.speakers
+                        items: widget.data.speakersUID
                             .map(
                               (speaker) => DropdownMenuItem(
                                 value: speaker,

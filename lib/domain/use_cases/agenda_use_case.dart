@@ -3,9 +3,11 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class AgendaUseCase {
-  Future<Agenda?> getAgendaById(String id);
+  Future<Agenda> getAgendaById(String id);
   void saveAgenda(Agenda agenda,String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<AgendaDay> getAgendaDayById(String agendaDayId);
+  Future<Track> getTrackById(String trackId);
   void addSessionIntoAgenda(
       String agendaId,
       String agendaDayId,
@@ -20,7 +22,7 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   final SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Agenda?> getAgendaById(String id) async {
+  Future<Agenda> getAgendaById(String id) async {
     final agendas = await repository.loadEAgendas();
     return agendas.firstWhere((agenda) => agenda.uid == id);
   }
@@ -53,6 +55,16 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   void deleteSessionFromAgendaDay(String sessionId) {
     repository.deleteSessionFromAgendaDay(sessionId);
+  }
+
+  @override
+  Future<AgendaDay> getAgendaDayById(String agendaDayId) {
+    return repository.loadAgendaDayById(agendaDayId);
+  }
+
+  @override
+  Future<Track> getTrackById(String trackId) {
+    return repository.loadTrackById(trackId);
   }
 }
 

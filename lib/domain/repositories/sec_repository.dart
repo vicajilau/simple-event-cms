@@ -5,6 +5,8 @@ abstract class SecRepository {
   Future<List<Agenda>> loadEAgendas();
   Future<List<Speaker>> loadESpeakers();
   Future<List<Sponsor>> loadSponsors();
+  Future<AgendaDay> loadAgendaDayById(String agendaDayId);
+  Future<Track> loadTrackById(String trackId);
   Future<void> saveEvent(Event event);
   Future<void> saveSpeaker(Speaker speaker,String parentId);
   Future<void> removeSpeaker(String speakerId);
