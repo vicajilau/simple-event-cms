@@ -1,16 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class AgendaViewModel implements ViewModelCommon {
+abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addTrack(Agenda agenda);
-  void addSession(String agendaId,String agendaDayId,String trackId,Session session);
-  void editSession(Session session,String parentId);
+  void addSession(
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  );
+  void editSession(Session session, String parentId);
   void removeSession(String sessionId);
 }
 
@@ -27,7 +33,7 @@ class AgendaViewModelImp extends AgendaViewModel {
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   Future<bool> checkToken() async {
@@ -45,15 +51,15 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   void _loadAgenda(String agendaId) async {
-    try {
-      viewState.value = ViewState.isLoading;
-      final agenda = await agendaUseCase.getAgendaById(agendaId.toString());
-      agendaDays.value = agenda?.resolvedDays ?? [];
-      viewState.value = ViewState.loadFinished;
-    } catch (e) {
-      errorMessage = e.toString();
-      viewState.value = ViewState.error;
-      // TODO: implement error control
+    viewState.value = ViewState.isLoading;
+    final result = await agendaUseCase.getAgendaById(agendaId);
+    switch (result) {
+      case Ok<Agenda?>():
+        agendaDays.value = result.value?.resolvedDays ?? [];
+        viewState.value = ViewState.loadFinished;
+      case Error():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
     }
   }
 
@@ -67,13 +73,18 @@ class AgendaViewModelImp extends AgendaViewModel {
     // TODO: implement addSession
   }
   @override
-  void addSession(String agendaId,String agendaDayId,String trackId,Session session) {
-    agendaUseCase.addSessionIntoAgenda(agendaId,agendaDayId,trackId,session);
+  void addSession(
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  ) {
+    agendaUseCase.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
   }
 
   @override
-  void editSession(Session session,String parentId) {
-    agendaUseCase.editSession(session,parentId);
+  void editSession(Session session, String parentId) {
+    agendaUseCase.editSession(session, parentId);
   }
 
   @override

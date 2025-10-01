@@ -116,12 +116,6 @@ abstract class AppLocalizations {
   /// **'Loading agenda...'**
   String get loadingAgenda;
 
-  /// Error message when agenda fails to load
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading agenda: {error}'**
-  String errorLoadingAgenda(String error);
-
   /// Button text to retry an operation
   ///
   /// In en, this message translates to:
@@ -140,12 +134,6 @@ abstract class AppLocalizations {
   /// **'Loading speakers...'**
   String get loadingSpeakers;
 
-  /// Error message when speakers fail to load
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading speakers'**
-  String get errorLoadingSpeakers;
-
   /// Message when no speakers are available
   ///
   /// In en, this message translates to:
@@ -157,12 +145,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Loading sponsors...'**
   String get loadingSponsors;
-
-  /// Error message when sponsors fail to load
-  ///
-  /// In en, this message translates to:
-  /// **'Error loading sponsors'**
-  String get errorLoadingSponsors;
 
   /// Message when no sponsors are available
   ///
@@ -373,6 +355,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Save'**
   String get saveButton;
+
+  /// No description provided for @errorLoadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading data'**
+  String get errorLoadingData;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown error'**
+  String get errorUnknown;
 }
 
 class _AppLocalizationsDelegate

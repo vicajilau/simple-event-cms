@@ -9,17 +9,17 @@ import '../../../../core/models/event.dart';
 abstract class EventFormViewModel extends ViewModelCommon {
   Future<void> onSubmit(Event event);
 }
+
 class EventFormViewModelImpl extends EventFormViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
-  getIt<CheckTokenSavedUseCase>();
+      getIt<CheckTokenSavedUseCase>();
   final eventFormUseCase = getIt<EventUseCase>();
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
-
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   Future<bool> checkToken() async {
@@ -30,12 +30,10 @@ class EventFormViewModelImpl extends EventFormViewModel {
   void dispose() {}
 
   @override
-  void setup([Object? argument]) {
-  }
+  void setup([Object? argument]) {}
 
   @override
   Future<void> onSubmit(Event event) async {
     await eventFormUseCase.saveEvent(event);
   }
-
 }
