@@ -41,6 +41,7 @@
   "linkedinHint": "Inserisci l'URL di LinkedIn",
   "websiteHint": "Inserisci l'URL del sito web",
   "saveButton": "Salva",
+  "loadingAgenda": "Caricamento agenda...",
   "errorLoadingData": "Errore durante il caricamento dei dati",
   "errorUnknown": "Errore sconosciuto"
 }
