@@ -37,7 +37,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
 
     if (newSponsor != null) {
-      widget.viewmodel.addSponsor(newSponsor,widget.eventId);
+      widget.viewmodel.addSponsor(newSponsor, widget.eventId);
     }
   }
 
@@ -49,7 +49,9 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          return Center(child: Text(widget.viewmodel.errorMessage));
+          return Center(
+            child: ErrorView(errorType: widget.viewmodel.errorType),
+          );
         }
 
         return ValueListenableBuilder(

@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 // Added imports for Speaker model and SpeakerUseCase
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class SpeakerViewModel implements ViewModelCommon {
+abstract class SpeakerViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Speaker>> speakers;
-  void addSpeaker(Speaker speaker,String parentId);
-  void editSpeaker(Speaker speaker,String parentId);
+  void addSpeaker(Speaker speaker, String parentId);
+  void editSpeaker(Speaker speaker, String parentId);
   void removeSpeaker(String id);
 }
 
@@ -22,7 +23,7 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   Future<bool> checkToken() async {
@@ -33,19 +34,19 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   ValueNotifier<List<Speaker>> speakers = ValueNotifier([]);
 
   @override
-  void addSpeaker(Speaker speaker,String parentId) {
+  void addSpeaker(Speaker speaker, String parentId) {
     speakers.value = [...speakers.value, speaker];
-    _speakerUseCase.saveSpeaker(speaker,parentId);
+    _speakerUseCase.saveSpeaker(speaker, parentId);
   }
 
   @override
-  void editSpeaker(Speaker speaker,String parentId) {
+  void editSpeaker(Speaker speaker, String parentId) {
     final index = speakers.value.indexWhere((s) => s.uid == speaker.uid);
     List<Speaker> currentSpeakers = [...speakers.value];
     if (index != -1) {
       currentSpeakers[index] = speaker;
       speakers.value = currentSpeakers;
-      _speakerUseCase.saveSpeaker(speaker,parentId);
+      _speakerUseCase.saveSpeaker(speaker, parentId);
     }
   }
 
@@ -71,14 +72,15 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   }
 
   void _loadSpeakers(List<String> speakersIds) async {
-    try {
-      viewState.value = ViewState.isLoading;
-      speakers.value = await _speakerUseCase.getSpeakersById(speakersIds);
-      viewState.value = ViewState.loadFinished;
-    } catch (e) {
-      // TODO: immplementación control de errores (hay que crear los errores)
-      errorMessage = "Error cargando datos";
-      viewState.value = ViewState.error;
+    viewState.value = ViewState.isLoading;
+    final result = await _speakerUseCase.getSpeakersById(speakersIds);
+    switch (result) {
+      case Ok<List<Speaker>>():
+        speakers.value = result.value;
+        viewState.value = ViewState.loadFinished;
+      case Error():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
     }
   }
 }

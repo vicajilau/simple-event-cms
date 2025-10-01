@@ -12,11 +12,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loadingAgenda => 'Chargement de l\'agenda...';
 
   @override
-  String errorLoadingAgenda(String error) {
-    return 'Erreur lors du chargement de l\'agenda : $error';
-  }
-
-  @override
   String get retry => 'Réessayer';
 
   @override
@@ -26,17 +21,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get loadingSpeakers => 'Chargement des intervenants...';
 
   @override
-  String get errorLoadingSpeakers =>
-      'Erreur lors du chargement des intervenants';
-
-  @override
   String get noSpeakersRegistered => 'Aucun intervenant enregistré';
 
   @override
   String get loadingSponsors => 'Chargement des sponsors...';
-
-  @override
-  String get errorLoadingSponsors => 'Erreur lors du chargement des sponsors';
 
   @override
   String get noSponsorsRegistered => 'Aucun sponsor enregistré';
@@ -142,4 +130,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get saveButton => 'Enregistrer';
+
+  @override
+  String get errorLoadingData => 'Erreur lors du chargement des données';
+
+  @override
+  String get errorUnknown => 'Erreur inconnue';
 }

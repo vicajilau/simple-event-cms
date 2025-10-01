@@ -43,9 +43,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   Event? event;
 
   @override
-  void initState() {
+  void initState() async {
     super.initState();
-    event = widget.eventCollectionViewModel.getEventById(
+    event = await widget.eventCollectionViewModel.getEventById(
       widget.eventId.toString(),
     );
     _nameController.text = event?.eventName ?? '';
