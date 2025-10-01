@@ -4,7 +4,7 @@ import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class EventUseCase {
-  Future<Result<List<Event>>> getComposedEvents();
+  Future<Result<List<Event>>> getEvents();
   Future<Event?> getEventById(String id);
   Future<void> saveEvent(Event event);
 }
@@ -13,7 +13,7 @@ class EventUseCaseImp implements EventUseCase {
   SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Result<List<Event>>> getComposedEvents() async {
+  Future<Result<List<Event>>> getEvents() async {
     return repository.loadEvents();
   }
 

@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+import 'package:sec/presentation/ui/widgets/error_view.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import 'agenda_view_model.dart';
@@ -51,7 +52,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          return Center(child: Text(widget.viewmodel.errorMessage));
+          return ErrorView(errorType: widget.viewmodel.errorType);
         }
         return ListView.builder(
           shrinkWrap: true,

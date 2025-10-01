@@ -18,7 +18,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   void deleteEvent(Event event);
 }
 
-class EventCollectionViewModelImp implements EventCollectionViewModel {
+class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
@@ -32,7 +32,7 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   EventFilter currentFilter = EventFilter.all;
@@ -46,17 +46,15 @@ class EventCollectionViewModelImp implements EventCollectionViewModel {
 
   void loadEvents() async {
     viewState.value = ViewState.isLoading;
-    final result = await useCase.getComposedEvents();
+    final result = await useCase.getEvents();
     switch (result) {
       case Ok<List<Event>>():
         _allEvents = result.value;
         _updateEventsToShow();
         viewState.value = ViewState.loadFinished;
       case Error():
-        final error = result.error;
-        errorMessage = "Error loading data";
+        setErrorKey(result.error);
         viewState.value = ViewState.error;
-      // TODO : implement error handling (errors need to be created)
     }
   }
 

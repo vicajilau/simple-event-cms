@@ -136,7 +136,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.viewmodel.errorMessage),
+                  ErrorView(errorType: widget.viewmodel.errorType),
                   const SizedBox(height: 16),
                 ],
               ),

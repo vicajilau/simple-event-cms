@@ -4,16 +4,6 @@
   "@loadingAgenda": {
     "description": "Loading message for agenda screen"
   },
-  "errorLoadingAgenda": "Error loading agenda: {error}",
-  "@errorLoadingAgenda": {
-    "description": "Error message when agenda fails to load",
-    "placeholders": {
-      "error": {
-        "type": "String",
-        "description": "The error message"
-      }
-    }
-  },
   "retry": "Retry",
   "@retry": {
     "description": "Button text to retry an operation"
@@ -26,10 +16,6 @@
   "@loadingSpeakers": {
     "description": "Loading message for speakers screen"
   },
-  "errorLoadingSpeakers": "Error loading speakers",
-  "@errorLoadingSpeakers": {
-    "description": "Error message when speakers fail to load"
-  },
   "noSpeakersRegistered": "No speakers registered",
   "@noSpeakersRegistered": {
     "description": "Message when no speakers are available"
@@ -37,10 +23,6 @@
   "loadingSponsors": "Loading sponsors...",
   "@loadingSponsors": {
     "description": "Loading message for sponsors screen"
-  },
-  "errorLoadingSponsors": "Error loading sponsors",
-  "@errorLoadingSponsors": {
-    "description": "Error message when sponsors fail to load"
   },
   "noSponsorsRegistered": "No sponsors registered",
   "@noSponsorsRegistered": {
@@ -181,5 +163,7 @@
   "saveButton": "Save",
   "@saveButton": {
     "description": "Button text to save the speaker form"
-  }
+  },
+  "errorLoadingData": "Error loading data",
+  "errorUnknown": "Unknown error"
 }

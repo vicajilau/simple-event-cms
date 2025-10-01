@@ -12,11 +12,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get loadingAgenda => 'Agenda kargatzen...';
 
   @override
-  String errorLoadingAgenda(String error) {
-    return 'Errorea agenda kargatzean: $error';
-  }
-
-  @override
   String get retry => 'Berriro saiatu';
 
   @override
@@ -26,16 +21,10 @@ class AppLocalizationsEu extends AppLocalizations {
   String get loadingSpeakers => 'Hizlariak kargatzen...';
 
   @override
-  String get errorLoadingSpeakers => 'Errorea hizlariak kargatzean';
-
-  @override
   String get noSpeakersRegistered => 'Ez dago hiztun erregistraturik';
 
   @override
   String get loadingSponsors => 'Babesleak kargatzen...';
-
-  @override
-  String get errorLoadingSponsors => 'Errorea babesleak kargatzean';
 
   @override
   String get noSponsorsRegistered => 'Ez dago babesle erregistraturik';
@@ -141,4 +130,10 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get saveButton => 'Gorde';
+
+  @override
+  String get errorLoadingData => 'Errorea datuak kargatzean';
+
+  @override
+  String get errorUnknown => 'Errore ezezaguna';
 }

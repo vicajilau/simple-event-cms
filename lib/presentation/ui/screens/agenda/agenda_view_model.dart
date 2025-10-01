@@ -6,7 +6,7 @@ import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class AgendaViewModel implements ViewModelCommon {
+abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addTrack(Agenda agenda);
@@ -33,7 +33,7 @@ class AgendaViewModelImp extends AgendaViewModel {
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   Future<bool> checkToken() async {
@@ -58,9 +58,8 @@ class AgendaViewModelImp extends AgendaViewModel {
         agendaDays.value = result.value?.resolvedDays ?? [];
         viewState.value = ViewState.loadFinished;
       case Error():
-        errorMessage = result.error.toString();
+        setErrorKey(result.error);
         viewState.value = ViewState.error;
-      // TODO: implement error control
     }
   }
 
@@ -93,4 +92,3 @@ class AgendaViewModelImp extends AgendaViewModel {
     agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 }
-

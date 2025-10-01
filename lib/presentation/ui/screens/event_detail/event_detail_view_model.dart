@@ -6,7 +6,7 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class EventDetailViewModel implements ViewModelCommon {
+abstract class EventDetailViewModel extends ViewModelCommon {
   String eventTitle();
   String get agendaId => '';
   List<String> get sponsorsId => [];
@@ -23,7 +23,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   String _agendaId = "";
   List<String> _sponsorsId = [], _speakersId = [];
@@ -54,7 +54,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   Future<void> _loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result = await useCase.getComposedEvents();
+    final result = await useCase.getEvents();
 
     switch (result) {
       case Ok<List<Event>>():
@@ -69,9 +69,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
         viewState.value = ViewState.loadFinished;
       case Error():
-        // TODO: immplementación control de errores (hay que crear los errores)
-        final error = result.error;
-        errorMessage = "Error cargando datos: ${result.error.toString()}";
+        setErrorKey(result.error);
         viewState.value = ViewState.error;
     }
   }

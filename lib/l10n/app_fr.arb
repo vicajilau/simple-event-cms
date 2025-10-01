@@ -1,14 +1,11 @@
 {
   "@@locale": "fr",
   "loadingAgenda": "Chargement de l'agenda...",
-  "errorLoadingAgenda": "Erreur lors du chargement de l'agenda : {error}",
   "retry": "Réessayer",
   "noEventsScheduled": "Aucun événement programmé",
   "loadingSpeakers": "Chargement des intervenants...",
-  "errorLoadingSpeakers": "Erreur lors du chargement des intervenants",
   "noSpeakersRegistered": "Aucun intervenant enregistré",
   "loadingSponsors": "Chargement des sponsors...",
-  "errorLoadingSponsors": "Erreur lors du chargement des sponsors",
   "noSponsorsRegistered": "Aucun sponsor enregistré",
   "loading": "Chargement...",
   "errorLoadingImage": "Erreur lors du chargement de l'image",
@@ -43,5 +40,7 @@
   "githubHint": "Entrez l'URL de GitHub",
   "linkedinHint": "Entrez l'URL de LinkedIn",
   "websiteHint": "Entrez l'URL du site web",
-  "saveButton": "Enregistrer"
+  "saveButton": "Enregistrer",
+  "errorLoadingData": "Erreur lors du chargement des données",
+  "errorUnknown": "Erreur inconnue"
 }

@@ -6,7 +6,7 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/sponsor_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-abstract class SponsorViewModel implements ViewModelCommon {
+abstract class SponsorViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Sponsor>> sponsors;
   void addSponsor(Sponsor sponsor, String parentId);
   void removeSponsor(String id);
@@ -21,7 +21,7 @@ class SponsorViewModelImpl extends SponsorViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  String errorMessage = '';
+  ErrorType errorType = ErrorType.none;
 
   @override
   Future<bool> checkToken() async {
@@ -67,8 +67,7 @@ class SponsorViewModelImpl extends SponsorViewModel {
         sponsors.value = result.value;
         viewState.value = ViewState.loadFinished;
       case Error<List<Sponsor>>():
-        // TODO: immplementación control de errores (hay que crear los errores)
-        errorMessage = "Error cargando datos";
+        setErrorKey(result.error);
         viewState.value = ViewState.error;
     }
   }
