@@ -104,7 +104,7 @@ class Event extends GitHubModel {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'room': tracksUID.map((name) => {'name': name}).toList(),
+      'tracksUID': tracksUID.map((uid) => {'UID': uid}).toList(),
     };
   }
 }
