@@ -52,7 +52,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          return ErrorView(errorType: widget.viewmodel.errorType);
+          return Center(child: ErrorView(errorType: widget.viewmodel.errorType));
         }
         return ListView.builder(
           shrinkWrap: true,

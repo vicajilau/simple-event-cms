@@ -36,13 +36,6 @@ class CommonsServicesImp extends CommonsServices {
   /// based on the configuration's base URL
   @override
   Future<List<dynamic>> loadData(String path) async {
-    if (path.contains('agenda'))
-      throw NetworkException("message");
-    else if (path.contains('sponsor'))
-      throw JsonDecodeException("message");
-    else if (path.contains('speaker'))
-      throw GithubException("message");
-
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/${organization.year}/$path';
