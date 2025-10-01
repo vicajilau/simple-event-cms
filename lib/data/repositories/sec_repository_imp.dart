@@ -35,7 +35,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveAgenda(Agenda agenda,String eventId) async {
+  Future<void> saveAgenda(Agenda agenda, String eventId) async {
     await DataUpdate.addItemAndAssociations(agenda, eventId);
   }
 
@@ -45,28 +45,28 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveSpeaker(Speaker speaker,String parentId) async {
+  Future<void> saveSpeaker(Speaker speaker, String parentId) async {
     await DataUpdate.addItemAndAssociations(speaker, parentId);
   }
 
   @override
-  Future<void> saveSponsor(Sponsor sponsor,String parentId) async {
+  Future<void> saveSponsor(Sponsor sponsor, String parentId) async {
     await DataUpdate.addItemAndAssociations(sponsor, parentId);
   }
 
   @override
   Future<void> addSessionIntoAgenda(
-      String agendaId,
-      String agendaDayId,
-      String trackId,
-      Session session,
-      ) async {
-    DataUpdate.addItemAndAssociations(session,agendaDayId);
+    String agendaId,
+    String agendaDayId,
+    String trackId,
+    Session session,
+  ) async {
+    DataUpdate.addItemAndAssociations(session, agendaDayId);
   }
 
   @override
-  Future<void> editSession(Session session,String parentId) async {
-    DataUpdate.addItemAndAssociations(session,parentId);
+  Future<void> editSession(Session session, String parentId) async {
+    DataUpdate.addItemAndAssociations(session, parentId);
   }
 
   //delete items
@@ -97,7 +97,7 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<void> deleteSessionFromAgendaDay(String sessionId) async {
-    DataUpdate.deleteItemAndAssociations(sessionId,Session);
+    DataUpdate.deleteItemAndAssociations(sessionId, Session);
   }
 
   @override
@@ -112,5 +112,27 @@ class SecRepositoryImp extends SecRepository {
     return tracks.firstWhere((track) => track.uid == trackId);
   }
 
+  @override
+  Future<List<AgendaDay>> loadAgendaDayByListId(
+    List<String> agendaDayIds,
+  ) async {
+    var agendaDays = await dataLoader.loadAllDays();
+    return agendaDays
+        .where((agendaDay) => agendaDayIds.contains(agendaDay.uid))
+        .toList();
+  }
 
+  @override
+  Future<List<Track>> loadTracksByListId(List<String> tracksIds) async {
+    var tracks = await dataLoader.loadAllTracks();
+    return tracks.where((track) => tracksIds.contains(track.uid)).toList();
+  }
+
+  @override
+  Future<List<Session>> loadSessionsByListId(List<String> sessionsIds) async {
+    var sessions = await dataLoader.loadAllSessions();
+    return sessions
+        .where((session) => sessionsIds.contains(session.uid))
+        .toList();
+  }
 }

@@ -7,6 +7,9 @@ abstract class AgendaUseCase {
   void saveAgenda(Agenda agenda,String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<AgendaDay> getAgendaDayById(String agendaDayId);
+  Future<List<AgendaDay>> getAgendaDayByListId(List<String> agendaDayIds);
+  Future<List<Session>> getSessionsByListId(List<String> sessionsIds);
+  Future<List<Track>> getTracksByListId(List<String> tracksIds);
   Future<Track> getTrackById(String trackId);
   void addSessionIntoAgenda(
       String agendaId,
@@ -16,6 +19,7 @@ abstract class AgendaUseCase {
       );
   void editSession(Session session,String parentId);
   void deleteSessionFromAgendaDay(String sessionId);
+  Future<Event> loadEvent(String eventId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
@@ -65,6 +69,26 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<Track> getTrackById(String trackId) {
     return repository.loadTrackById(trackId);
+  }
+
+  @override
+  Future<Event> loadEvent(String eventId) {
+    return repository.loadEvents().then((eventS) => eventS.firstWhere((event) => event.uid == eventId));
+  }
+
+  @override
+  Future<List<AgendaDay>> getAgendaDayByListId(List<String> agendaDayIds) {
+    return repository.loadAgendaDayByListId(agendaDayIds);
+  }
+
+  @override
+  Future<List<Track>> getTracksByListId(List<String> tracksIds) {
+    return repository.loadTracksByListId(tracksIds);
+  }
+
+  @override
+  Future<List<Session>> getSessionsByListId(List<String> sessionsIds) {
+    return repository.loadSessionsByListId(sessionsIds);
   }
 }
 

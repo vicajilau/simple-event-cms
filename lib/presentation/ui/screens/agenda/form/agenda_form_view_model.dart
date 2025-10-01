@@ -7,10 +7,15 @@ import 'package:sec/presentation/view_model_common.dart';
 
 
 abstract class AgendaFormViewModel implements ViewModelCommon {
+  Future<Event> loadEvent(String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addAgenda(Agenda agenda,String eventId);
+  Future<Agenda> getAgenda(String agendaId);
   Future<Track?> getTrackById(String trackId);
   Future<AgendaDay?> getAgendaDayById(String agendaDayId);
+  Future<List<AgendaDay>?> getAgendaDayByListId(List<String> agendaDayIds);
+  Future<List<Track>> getTracksByListId(List<String> trackIds);
+  Future<List<Session>> getSessionsByListId(List<String> sessionIds);
   void addSession(String agendaId,String agendaDayId,String trackId,Session session);
 }
 
@@ -66,5 +71,30 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
 
   @override
   void dispose() {
+  }
+
+  @override
+  Future<Event> loadEvent(String eventId) {
+    return agendaUseCase.loadEvent(eventId);
+  }
+
+  @override
+  Future<List<AgendaDay>?> getAgendaDayByListId(List<String> agendaDayIds) async {
+    return await agendaUseCase.getAgendaDayByListId(agendaDayIds);
+  }
+
+  @override
+  Future<List<Session>> getSessionsByListId(List<String> sessionIds) async {
+    return await agendaUseCase.getSessionsByListId(sessionIds);
+  }
+
+  @override
+  Future<List<Track>> getTracksByListId(List<String> trackIds) async {
+    return await agendaUseCase.getTracksByListId(trackIds);
+  }
+
+  @override
+  Future<Agenda> getAgenda(String agendaId) {
+    return agendaUseCase.getAgendaById(agendaId);
   }
 }

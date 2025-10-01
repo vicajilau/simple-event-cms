@@ -7,6 +7,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import '../agenda/agenda_screen.dart';
+import '../agenda/form/agenda_form_screen.dart';
 import '../speaker/speakers_screen.dart';
 import '../sponsor/sponsors_screen.dart';
 import 'event_detail_view_model.dart';
@@ -154,7 +155,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addTrackToAgenda(String agendaId) async {
     final Agenda? newAgenda = await AppRouter.router.push(
-      AppRouter.agendaFormPath,extra: agendaId
+      AppRouter.agendaFormPath,extra: AgendaFormData(eventId: agendaId)
     );
 
     if (newAgenda != null) {
