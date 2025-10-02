@@ -9,7 +9,7 @@ class AppLocalizationsIt extends AppLocalizations {
   AppLocalizationsIt([String locale = 'it']) : super(locale);
 
   @override
-  String get loadingAgenda => 'Loading agenda...';
+  String get loadingAgenda => 'Caricamento agenda...';
 
   @override
   String get retry => 'Riprova';

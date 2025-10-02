@@ -132,8 +132,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get saveButton => 'Salvar';
 
   @override
-  String get errorLoadingData => 'Error loading data';
+  String get errorLoadingData => 'Erro ao carregar os dados';
 
   @override
-  String get errorUnknown => 'Unknown error';
+  String get errorUnknown => 'Erro desconhecido';
 }
