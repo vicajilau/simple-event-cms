@@ -1,12 +1,20 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
+import '../../core/utils/result.dart';
+
 abstract class AgendaUseCase {
-  Future<Result<Agenda?>> getAgendaById(String id);
+  Future<Result<Agenda>> getAgendaById(String id);
   void saveAgenda(Agenda agenda, String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
+  Future<Result<List<AgendaDay>>> getAgendaDayByListId(
+    List<String> agendaDayIds,
+  );
+  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
+  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds);
+  Future<Result<Track>> getTrackById(String trackId);
   void addSessionIntoAgenda(
     String agendaId,
     String agendaDayId,
@@ -15,13 +23,14 @@ abstract class AgendaUseCase {
   );
   void editSession(Session session, String parentId);
   void deleteSessionFromAgendaDay(String sessionId);
+  Future<Result<Event>> loadEvent(String eventId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
   final SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Result<Agenda?>> getAgendaById(String id) async {
+  Future<Result<Agenda>> getAgendaById(String id) async {
     final result = await repository.loadEAgendas();
     switch (result) {
       case Ok<List<Agenda>>():
@@ -60,5 +69,36 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   void deleteSessionFromAgendaDay(String sessionId) {
     repository.deleteSessionFromAgendaDay(sessionId);
   }
-}
 
+  @override
+  Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId) async {
+    return repository.loadAgendaDayById(agendaDayId);
+  }
+
+  @override
+  Future<Result<Track>> getTrackById(String trackId) {
+    return repository.loadTrackById(trackId);
+  }
+
+  @override
+  Future<Result<Event>> loadEvent(String eventId) {
+    return repository.loadEventById(eventId);
+  }
+
+  @override
+  Future<Result<List<AgendaDay>>> getAgendaDayByListId(
+    List<String> agendaDayIds,
+  ) {
+    return repository.loadAgendaDayByListId(agendaDayIds);
+  }
+
+  @override
+  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds) {
+    return repository.loadTracksByListId(tracksIds);
+  }
+
+  @override
+  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds) {
+    return repository.loadSessionsByListId(sessionsIds);
+  }
+}

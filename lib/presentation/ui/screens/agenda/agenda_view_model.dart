@@ -9,7 +9,7 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addTrack(Agenda agenda);
+  void addTrack(Agenda agenda,String eventId);
   void addSession(
     String agendaId,
     String agendaDayId,
@@ -54,8 +54,8 @@ class AgendaViewModelImp extends AgendaViewModel {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaById(agendaId);
     switch (result) {
-      case Ok<Agenda?>():
-        agendaDays.value = result.value?.resolvedDays ?? [];
+      case Ok<Agenda>():
+        agendaDays.value = result.value.resolvedDays ?? [];
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);
@@ -69,8 +69,8 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  void addTrack(Agenda agenda) {
-    // TODO: implement addSession
+  void addTrack(Agenda agenda,String eventId) {
+    agendaUseCase.saveAgenda(agenda, eventId);
   }
   @override
   void addSession(
