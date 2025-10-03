@@ -7,8 +7,8 @@ import 'package:sec/data/remote_data/common/data_update_manager.dart';
 
 class DataUpdate {
   static DataLoader dataLoader = getIt<DataLoader>();
-  static DataUpdateManager dataUpdateInfo = DataUpdateManager(
-    dataCommons: CommonsApiServices(),
+  static DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+    dataCommons: CommonsServicesImp(),
   );
 
   static Future<void> deleteItemAndAssociations(
@@ -73,17 +73,17 @@ class DataUpdate {
     }
   }
 
-  static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     await dataUpdateInfo.updateEvent(event);
     debugPrint("Event ${event.uid} added.");
   }
 
-  static Future<void> _deleteEvent(String eventId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteEvent(String eventId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     await dataUpdateInfo.removeEvent(eventId);
     debugPrint("Event $eventId deleted.");
   }
 
-  static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.uid == parentId) {
@@ -95,7 +95,7 @@ class DataUpdate {
     debugPrint("Agenda ${agenda.uid} added.");
   }
 
-  static Future<void> _deleteAgenda(String agendaId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteAgenda(String agendaId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.agendaUID == agendaId) {
@@ -107,7 +107,7 @@ class DataUpdate {
     debugPrint("Agenda $agendaId and its associations removed.");
   }
 
-  static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
     for (var track in allTracks) {
       if (track.uid == parentId) {
@@ -121,7 +121,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSession(session);
     debugPrint("Session ${session.uid} added.");
   }
-  static Future<void> _deleteSession(String sessionId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteSession(String sessionId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
@@ -134,7 +134,7 @@ class DataUpdate {
     debugPrint("Session $sessionId and its associations removed.");
   }
 
-  static Future<void> _addTrack(Track track, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addTrack(Track track, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
       if (day.uid == parentId) {
@@ -150,7 +150,7 @@ class DataUpdate {
     debugPrint("Track ${track.uid} added.");
   }
 
-  static Future<void> _deleteTrack(String trackId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteTrack(String trackId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
       if (day.trackUids.contains(trackId)) {
@@ -162,7 +162,7 @@ class DataUpdate {
     await dataUpdateInfo.removeTrack(trackId);
     debugPrint("Track $trackId and its associations removed.");
   }
-  static Future<void> _addAgendaDay(AgendaDay day, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addAgendaDay(AgendaDay day, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
     for (var agenda in allAgendas) {
       if (agenda.uid.contains(parentId)) {
@@ -177,7 +177,7 @@ class DataUpdate {
     await dataUpdateInfo.updateAgendaDay(day);
     debugPrint("AgendaDay ${day.uid} added.");
   }
-  static Future<void> _deleteAgendaDay(String dayId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteAgendaDay(String dayId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
     for (var agenda in allAgendas) {
       if (agenda.dayUids.contains(dayId)) {
@@ -190,7 +190,7 @@ class DataUpdate {
     debugPrint("AgendaDay $dayId and its associations removed.");
   }
 
-  static Future<void> _addSpeaker(Speaker speaker, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addSpeaker(Speaker speaker, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.uid == parentId) {
@@ -203,7 +203,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSpeaker(speaker);
     debugPrint("Speaker ${speaker.uid} added.");
   }
-  static Future<void> _deleteSpeaker(String speakerId, DataLoader dataLoader, DataUpdateManager dataUpdateInfo) async {
+  static Future<void> _deleteSpeaker(String speakerId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.speakersUID.contains(speakerId)) {
@@ -217,7 +217,7 @@ class DataUpdate {
     await dataUpdateInfo.removeSpeaker(speakerId);
     debugPrint("Speaker $speakerId and its associations removed.");
   }
-  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateManager dataUpdateInfo, String parentId) async {
+  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.uid == parentId) {
@@ -229,7 +229,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSponsors(sponsor);
     debugPrint("Sponsor ${sponsor.uid} added.");
   }
-  static Future<void> _deleteSponsor(String sponsorId, DataUpdateManager dataUpdateInfo,DataLoader dataLoader) async {
+  static Future<void> _deleteSponsor(String sponsorId, DataUpdateInfo dataUpdateInfo,DataLoader dataLoader) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.sponsorsUID.contains(sponsorId)) {

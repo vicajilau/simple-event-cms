@@ -3,6 +3,7 @@ import 'package:sec/core/utils/result.dart';
 
 abstract class SecRepository {
   Future<Result<List<Event>>> loadEvents();
+  Future<Result<Event>> loadEventById(String eventId);
   Future<Result<List<Agenda>>> loadEAgendas();
   Future<Result<List<Speaker>>> loadESpeakers();
   Future<Result<List<Sponsor>>> loadSponsors();

@@ -11,7 +11,6 @@ import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 
-class CommonsApiServices {
 abstract class CommonsServices {
   Future<List<dynamic>> loadData(String path);
   Future<http.Response> updateData<T extends GitHubModel>(

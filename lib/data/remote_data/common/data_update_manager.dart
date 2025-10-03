@@ -5,7 +5,7 @@ import 'package:sec/data/remote_data/common/commons_API_services.dart';
 import 'package:sec/core/models/models.dart';
 
 class DataUpdateInfo {
-  final CommonsApiServices dataCommons;
+  final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
   final Organization organization = getIt<Organization>();
 

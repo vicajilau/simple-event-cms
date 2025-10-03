@@ -54,10 +54,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
   Future<void> _loadInitialData() async {
     var event = await agendaFormViewModel.loadEvent(widget.data.eventId);
-    var agenda = await agendaFormViewModel.getAgenda(event.agendaUID);
+    var agenda = await agendaFormViewModel.getAgenda(event!.agendaUID.toString());
     setState(() {
-      agendaDays = agenda.resolvedDays ?? [];
-      tracks = ((agenda.resolvedDays?..expand((day) => day.resolvedTracks ?? [])) ?? []).cast<Track>();
+      agendaDays = agenda?.resolvedDays ?? [];
+      tracks = ((agenda?.resolvedDays?..expand((day) => day.resolvedTracks ?? [])) ?? []).cast<Track>();
       speakers = tracks.expand((track) => track.resolvedSessions ?? []).toList().cast<Speaker>();
     });
 
@@ -100,215 +100,218 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FormScreenWrapper(
-      pageTitle: 'Creación evento',
-      widgetFormChild: Padding(
-        padding: EdgeInsetsGeometry.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 18,
-            children: [
-              _buildTitle(),
-              SectionInputForm(
-                label: 'Título*',
-                childInput: TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  maxLines: 1,
-                  decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce título de la charla',
+    return FutureBuilder(future: _loadInitialData(), builder: (BuildContext context, AsyncSnapshot snapshot) {
+      return FormScreenWrapper(
+        pageTitle: 'Creación evento',
+        widgetFormChild: Padding(
+          padding: EdgeInsetsGeometry.all(16),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: 18,
+              children: [
+                _buildTitle(),
+                SectionInputForm(
+                  label: 'Título*',
+                  childInput: TextFormField(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    maxLines: 1,
+                    decoration: AppDecorations.textFieldDecoration.copyWith(
+                      hintText: 'Introduce título de la charla',
+                    ),
+                    controller: _titleController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, introduce un título de la charla';
+                      }
+                      return null;
+                    },
                   ),
-                  controller: _titleController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, introduce un título de la charla';
-                    }
-                    return null;
-                  },
                 ),
-              ),
-              Row(
-                spacing: spacingForRowDropdown,
-                children: [
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Día del evento*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedDay.isEmpty
-                            ? null
-                            : _selectedDay,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona un día',
-                        ),
-                        items: agendaDays
-                            .map(
-                              (day) => DropdownMenuItem(
-                                value: day.uid,
-                                child: Text(day.date),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (day) => _selectedDay = day ?? '',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, selecciona un día';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Sala*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTrack.isEmpty
-                            ? null
-                            : _selectedTrack,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona una sala',
-                        ),
-                        items: tracks
-                            .map(
-                              (track) => DropdownMenuItem(
-                                value: track.uid,
-                                child: Text(track.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (room) => _selectedTrack = room ?? '',
-                        validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona una sala'
-                              : null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    spacing: spacingForRowTime,
-                    children: [
-                      _timeSelector(
-                        label: 'Hora de inicio:\t\t',
-                        currentTime: _initSessionTime,
-                        onIndexChanged: (value) {
-                          setState(() {
-                            _initSessionTime = value;
-                          });
-                        },
-                        isStartTime: true,
-                      ),
-                      _timeSelector(
-                        label: 'Hora final:\t\t',
-                        currentTime: _endSessionTime,
-                        onIndexChanged: (value) {
-                          setState(() {
-                            _endSessionTime = value;
-                          });
-                        },
-                        isStartTime: false,
-                      ),
-                    ],
-                  ),
-                  if (_timeErrorMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        _timeErrorMessage!,
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 194, 67, 58),
-                          fontSize: 12,
+                Row(
+                  spacing: spacingForRowDropdown,
+                  children: [
+                    Expanded(
+                      child: SectionInputForm(
+                        label: 'Día del evento*',
+                        childInput: DropdownButtonFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          initialValue: _selectedDay.isEmpty
+                              ? null
+                              : _selectedDay,
+                          decoration: InputDecoration(
+                            hintText: 'Selecciona un día',
+                          ),
+                          items: agendaDays
+                              .map(
+                                (day) => DropdownMenuItem(
+                              value: day.uid,
+                              child: Text(day.date),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (day) => _selectedDay = day ?? '',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, selecciona un día';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),
-                ],
-              ),
-              Row(
-                spacing: spacingForRowDropdown,
-                children: [
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Speaker*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedSpeaker.isEmpty
-                            ? null
-                            : _selectedSpeaker,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona un speaker',
+                    Expanded(
+                      child: SectionInputForm(
+                        label: 'Sala*',
+                        childInput: DropdownButtonFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          initialValue: _selectedTrack.isEmpty
+                              ? null
+                              : _selectedTrack,
+                          decoration: InputDecoration(
+                            hintText: 'Selecciona una sala',
+                          ),
+                          items: tracks
+                              .map(
+                                (track) => DropdownMenuItem(
+                              value: track.uid,
+                              child: Text(track.name),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (room) => _selectedTrack = room ?? '',
+                          validator: (value) {
+                            return value == null || value.isEmpty
+                                ? 'Por favor, selecciona una sala'
+                                : null;
+                          },
                         ),
-                        items: speakers
-                            .map(
-                              (speaker) => DropdownMenuItem(
-                                value: speaker.uid,
-                                child: Text(speaker.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (speaker) =>
-                            _selectedSpeaker = speaker ?? '',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, selecciona un speaker';
-                          }
-                          return null;
-                        },
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Tipo de charla*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTalkType.isEmpty
-                            ? null
-                            : _selectedTalkType,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona el tipo de charla',
-                        ),
-                        items: sessionTypes
-                            .map(
-                              (type) => DropdownMenuItem(
-                                value: type,
-                                child: Text(type),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (type) => _selectedTalkType = type ?? '',
-                        validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona el tipo de charla'
-                              : null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SectionInputForm(
-                label: 'Descripción',
-                childInput: TextFormField(
-                  maxLines: 4,
-                  decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce la descripción...',
-                  ),
-                  controller: _descriptionController,
+                  ],
                 ),
-              ),
-              _buildFooter(),
-            ],
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      spacing: spacingForRowTime,
+                      children: [
+                        _timeSelector(
+                          label: 'Hora de inicio:\t\t',
+                          currentTime: _initSessionTime,
+                          onIndexChanged: (value) {
+                            setState(() {
+                              _initSessionTime = value;
+                            });
+                          },
+                          isStartTime: true,
+                        ),
+                        _timeSelector(
+                          label: 'Hora final:\t\t',
+                          currentTime: _endSessionTime,
+                          onIndexChanged: (value) {
+                            setState(() {
+                              _endSessionTime = value;
+                            });
+                          },
+                          isStartTime: false,
+                        ),
+                      ],
+                    ),
+                    if (_timeErrorMessage != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Text(
+                          _timeErrorMessage!,
+                          style: TextStyle(
+                            color: const Color.fromARGB(255, 194, 67, 58),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+                Row(
+                  spacing: spacingForRowDropdown,
+                  children: [
+                    Expanded(
+                      child: SectionInputForm(
+                        label: 'Speaker*',
+                        childInput: DropdownButtonFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          initialValue: _selectedSpeaker.isEmpty
+                              ? null
+                              : _selectedSpeaker,
+                          decoration: InputDecoration(
+                            hintText: 'Selecciona un speaker',
+                          ),
+                          items: speakers
+                              .map(
+                                (speaker) => DropdownMenuItem(
+                              value: speaker.uid,
+                              child: Text(speaker.name),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (speaker) =>
+                          _selectedSpeaker = speaker ?? '',
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Por favor, selecciona un speaker';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: SectionInputForm(
+                        label: 'Tipo de charla*',
+                        childInput: DropdownButtonFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          initialValue: _selectedTalkType.isEmpty
+                              ? null
+                              : _selectedTalkType,
+                          decoration: InputDecoration(
+                            hintText: 'Selecciona el tipo de charla',
+                          ),
+                          items: sessionTypes
+                              .map(
+                                (type) => DropdownMenuItem(
+                              value: type,
+                              child: Text(type),
+                            ),
+                          )
+                              .toList(),
+                          onChanged: (type) => _selectedTalkType = type ?? '',
+                          validator: (value) {
+                            return value == null || value.isEmpty
+                                ? 'Por favor, selecciona el tipo de charla'
+                                : null;
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SectionInputForm(
+                  label: 'Descripción',
+                  childInput: TextFormField(
+                    maxLines: 4,
+                    decoration: AppDecorations.textFieldDecoration.copyWith(
+                      hintText: 'Introduce la descripción...',
+                    ),
+                    controller: _descriptionController,
+                  ),
+                ),
+                _buildFooter(),
+              ],
+            ),
           ),
         ),
-      ),
+      );
+    }
     );
     /*);
  );*/
