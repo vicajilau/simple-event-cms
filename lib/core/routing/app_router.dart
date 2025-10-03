@@ -49,7 +49,9 @@ class AppRouter {
         path: eventFormPath,
         name: eventFormName,
         builder: (context, state) =>
-            EventFormScreen(eventId: state.extra.toString()),
+        state.extra == null
+            ? EventFormScreen()
+            :EventFormScreen(eventId: state.extra.toString()),
       ),
       GoRoute(
         path: agendaFormPath,
