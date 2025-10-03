@@ -35,9 +35,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _venueAddressController = TextEditingController();
   final TextEditingController _venueCityController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _agendaUIDController = TextEditingController();
-  final TextEditingController _speakersUIDController = TextEditingController();
-  final TextEditingController _sponsorsUIDController = TextEditingController();
 
   bool _hasEndDate = true;
   List<String> _tracks = [];
