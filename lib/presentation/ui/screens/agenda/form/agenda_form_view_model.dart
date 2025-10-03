@@ -8,7 +8,7 @@ import 'package:sec/presentation/view_model_common.dart';
 import '../../../../../core/utils/result.dart';
 
 
-abstract class AgendaFormViewModel implements ViewModelCommon {
+abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<Event?> loadEvent(String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   void addAgenda(Agenda agenda,String eventId);
@@ -27,6 +27,10 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
   getIt<CheckTokenSavedUseCase>();
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
+
+
+  @override
+  ErrorType errorType = ErrorType.none;
 
 
   @override
@@ -96,7 +100,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
       case Ok<Event>():
         viewState.value = ViewState.loadFinished;
         return result.value;
-      case Error<EventException>():
+      case Error():
         setErrorKey(result.error);
         viewState.value = ViewState.error;
         return null;

@@ -54,8 +54,8 @@ class AgendaViewModelImp extends AgendaViewModel {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaById(agendaId);
     switch (result) {
-      case Ok<Agenda?>():
-        agendaDays.value = result.value?.resolvedDays ?? [];
+      case Ok<Agenda>():
+        agendaDays.value = result.value.resolvedDays ?? [];
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);
