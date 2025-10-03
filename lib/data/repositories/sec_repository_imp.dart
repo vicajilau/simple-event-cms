@@ -2,7 +2,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
-import 'package:sec/data/remote_data/update_data/data_update.dart';
+import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 class SecRepositoryImp extends SecRepository {
