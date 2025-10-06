@@ -232,11 +232,10 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
   }
 }
 
-class SessionCards extends StatelessWidget {
+class SessionCards extends StatefulWidget {
   final AgendaViewModel _viewModel = getIt<AgendaViewModel>();
   final String agendaId, agendaDayId, trackId;
   final List<Session> sessions;
-
   SessionCards({
     super.key,
     required this.sessions,
@@ -245,6 +244,17 @@ class SessionCards extends StatelessWidget {
     required this.trackId,
   });
 
+  @override
+  State<SessionCards> createState() => _SessionCardsState();
+}
+
+class _SessionCardsState extends State<SessionCards> {
+  late List<Session> sessions;
+  @override
+  void initState() {
+    super.initState();
+    sessions = List.from(widget.sessions);
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -261,7 +271,7 @@ class SessionCards extends StatelessWidget {
                 final session = sessions[index];
                 return GestureDetector(
                   onTap: () {
-                    _viewModel.editSession(session, trackId);
+                    widget._viewModel.editSession(session, widget.trackId);
                   },
                   child: _buildSessionCard(
                     context,
@@ -282,7 +292,10 @@ class SessionCards extends StatelessWidget {
                             message:
                                 'Are you sure you want to delete the session?',
                             onDeletePressed: () {
-                              _viewModel.removeSession(session.uid);
+                              setState(() {
+                                sessions.removeAt(index);
+                              });
+                              widget._viewModel.removeSession(session.uid);
                             },
                           );
                         },
@@ -394,7 +407,7 @@ class SessionCards extends StatelessWidget {
               ),
             ],
             FutureBuilder<bool>(
-              future: _viewModel.checkToken(),
+              future: widget._viewModel.checkToken(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink();
