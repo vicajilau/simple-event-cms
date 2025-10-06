@@ -88,7 +88,7 @@ class Track extends GitHubModel {
       name: json['name'],
       color: json['color'],
       sessionUids: (json['sessions'] as List)
-          .map((sessionUid) => sessionUid.toString())
+          .map((sessionUid) => sessionUid['UID'].toString())
           .toList(),
       // resolvedSessions will be populated by DataLoader
     );
@@ -99,7 +99,7 @@ class Track extends GitHubModel {
     "UID": uid,
     "name": name,
     "color": color,
-    "sessions": sessionUids, // Only UIDs are serialized
+    "sessions": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 

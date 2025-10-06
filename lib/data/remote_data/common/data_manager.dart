@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/core.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/remote_data/update_data/data_update_info.dart';
+import 'package:sec/data/remote_data/common/commons_api_services.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 
-class ManagerData {
+class DataUpdate {
+  static DataLoader dataLoader = getIt<DataLoader>();
+  static DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+    dataCommons: CommonsServicesImp(),
+  );
 
   static Future<void> deleteItemAndAssociations(
       String itemId,
-      Type itemType,
-      DataLoader dataLoader,
-      DataUpdateInfo dataUpdateInfo,
+      Type itemType
       ) async {
     switch (itemType.toString()) {
+      case "Event":
+        await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
+        break;
       case "Agenda":
         await _deleteAgenda(itemId, dataLoader, dataUpdateInfo);
         break;
@@ -38,10 +45,11 @@ class ManagerData {
   static Future<void> addItemAndAssociations(
       dynamic item, // Can be Session, Track, AgendaDay, Speaker, Sponsor
       String parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
-      DataLoader dataLoader,
-      DataUpdateInfo dataUpdateInfo,
       ) async {
     switch (item.runtimeType.toString()) {
+      case "Event":
+        await _addEvent(item as Event, dataLoader, dataUpdateInfo);
+        break;
       case "Agenda":
         await _addAgenda(item as Agenda, dataLoader, dataUpdateInfo,parentId);
         break;
@@ -63,6 +71,16 @@ class ManagerData {
       default:
         throw Exception("Unsupported item type for addition: ${item.runtimeType}");
     }
+  }
+
+  static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    await dataUpdateInfo.updateEvent(event);
+    debugPrint("Event ${event.uid} added.");
+  }
+
+  static Future<void> _deleteEvent(String eventId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    await dataUpdateInfo.removeEvent(eventId);
+    debugPrint("Event $eventId deleted.");
   }
 
   static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
