@@ -1,7 +1,7 @@
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/data/remote_data/common/commons_API_services.dart';
+import 'package:sec/data/remote_data/common/commons_api_services.dart';
 import 'package:sec/core/models/models.dart';
 
 class DataUpdateInfo {

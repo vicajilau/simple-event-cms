@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/remote_data/common/commons_API_services.dart';
+import 'package:sec/data/remote_data/common/commons_api_services.dart';
 import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class DataUpdate {

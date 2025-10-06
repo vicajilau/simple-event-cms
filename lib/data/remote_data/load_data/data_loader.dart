@@ -4,7 +4,7 @@ import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/models/models.dart';
-import '../common/commons_API_services.dart';
+import '../common/commons_api_services.dart';
 
 /// Service class responsible for loading event_collection data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
