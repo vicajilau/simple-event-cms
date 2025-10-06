@@ -50,7 +50,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/refactor_json_structure",
+          ref: "develop",
         );
       } catch (e, st) {
         throw NetworkException(
@@ -142,7 +142,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_json_structure",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
 
@@ -256,7 +256,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_json_structure",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
