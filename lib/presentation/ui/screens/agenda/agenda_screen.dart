@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
+import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
 import 'package:sec/presentation/ui/widgets/error_view.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
@@ -52,7 +54,9 @@ class _AgendaScreenState extends State<AgendaScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          return Center(child: ErrorView(errorType: widget.viewmodel.errorType));
+          return Center(
+            child: ErrorView(errorType: widget.viewmodel.errorType),
+          );
         }
         return ListView.builder(
           shrinkWrap: true,
@@ -89,6 +93,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   tabBarIndex,
                   agendaDayId,
                   widget.agendaId.toString(),
+                  widget.eventId.toString(),
                 ),
               ],
             );
@@ -136,6 +141,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
     int tabBarIndex,
     String agendaDayId,
     String agendaId,
+    String eventId,
   ) {
     return DefaultTabController(
       initialIndex: tabBarIndex,
@@ -153,6 +159,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             agendaDayId: agendaDayId,
             tracks: tracks,
             currentIndex: tabBarIndex,
+            eventId: eventId,
             onIndexChanged: (value) {
               final isExpanded =
                   _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
@@ -183,7 +190,7 @@ class CustomTabBarView extends StatefulWidget {
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final String agendaId, agendaDayId;
+  final String agendaId, agendaDayId, eventId;
 
   CustomTabBarView({
     super.key,
@@ -192,6 +199,7 @@ class CustomTabBarView extends StatefulWidget {
     required this.onIndexChanged,
     required this.agendaId,
     required this.agendaDayId,
+    required this.eventId,
   });
 
   @override
@@ -210,6 +218,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
         trackId: widget.tracks[index].uid,
         agendaId: widget.agendaId,
         agendaDayId: widget.agendaDayId,
+        eventId: widget.eventId,
       );
     });
   }
@@ -233,8 +242,8 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 }
 
 class SessionCards extends StatefulWidget {
-  final AgendaViewModel _viewModel = getIt<AgendaViewModel>();
-  final String agendaId, agendaDayId, trackId;
+  final AgendaViewModel viewModel = getIt<AgendaViewModel>();
+  final String agendaId, agendaDayId, trackId, eventId;
   final List<Session> sessions;
   SessionCards({
     super.key,
@@ -242,6 +251,7 @@ class SessionCards extends StatefulWidget {
     required this.agendaId,
     required this.agendaDayId,
     required this.trackId,
+    required this.eventId,
   });
 
   @override
@@ -255,6 +265,7 @@ class _SessionCardsState extends State<SessionCards> {
     super.initState();
     sessions = List.from(widget.sessions);
   }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -269,16 +280,31 @@ class _SessionCardsState extends State<SessionCards> {
               ]
             : List.generate(sessions.length, (index) {
                 final session = sessions[index];
-                return GestureDetector(
-                  onTap: () {
-                    widget._viewModel.editSession(session, widget.trackId);
+                return InkWell(
+                  onTap: () async {
+                    final Agenda? newAgenda = await AppRouter.router.push(
+                      AppRouter.agendaFormPath,
+                      extra: AgendaFormData(
+                        agendaId: widget.agendaId,
+                        eventId: widget.eventId,
+                        session: session,
+                      ),
+                    );
+
+                    if (newAgenda != null) {
+                      widget.viewModel.addAgendaToEvent(
+                        newAgenda,
+                        widget.eventId,
+                      );
+                      widget.viewModel.setup(widget.agendaId);
+                    }
                   },
                   child: _buildSessionCard(
                     context,
                     Session(
                       title: session.title,
                       time: session.time,
-                      speaker: session.speaker,
+                      speakerUID: session.speakerUID,
                       description: session.description,
                       type: session.type,
                       uid: session.uid,
@@ -295,7 +321,7 @@ class _SessionCardsState extends State<SessionCards> {
                               setState(() {
                                 sessions.removeAt(index);
                               });
-                              widget._viewModel.removeSession(session.uid);
+                              widget.viewModel.removeSession(session.uid);
                             },
                           );
                         },
@@ -376,7 +402,7 @@ class _SessionCardsState extends State<SessionCards> {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            if (session.speaker.toString().isNotEmpty &&
+            if (session.speakerUID.toString().isNotEmpty &&
                 session.type != 'break') ...[
               const SizedBox(height: 8),
               Row(
@@ -388,7 +414,7 @@ class _SessionCardsState extends State<SessionCards> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    session.speaker.toString(),
+                    session.speakerUID.toString(),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,
@@ -407,7 +433,7 @@ class _SessionCardsState extends State<SessionCards> {
               ),
             ],
             FutureBuilder<bool>(
-              future: widget._viewModel.checkToken(),
+              future: widget.viewModel.checkToken(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox.shrink();

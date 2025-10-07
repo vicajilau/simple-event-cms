@@ -1,4 +1,5 @@
 import '../config/paths_github.dart';
+import 'agenda.dart';
 import 'event_dates.dart';
 import 'github/github_model.dart';
 
@@ -33,12 +34,12 @@ class Event extends GitHubModel {
   final List<String> speakersUID;
   final List<String> sponsorsUID;
   /// the name of the room where the event_collection will take place
-  final List<String> tracksUID;
+  final List<Track> tracks;
 
   /// Creates a new event instance
   Event({
     required super.uid,
-    required this.tracksUID,
+    required this.tracks,
     required this.eventName,
     required this.year,
     required this.primaryColor,
@@ -69,8 +70,10 @@ class Event extends GitHubModel {
               .map((item) => item['UID'].toString())
               .toList()
         : [];
-    List<String> tracksUID = (json['tracksUID'] != null)
-        ? (json['tracksUID'] as List).map((item) => item['UID'].toString()).toList()
+    List<Track> tracks = (json['tracks'] != null)
+        ? (json['tracks'] as List)
+            .map((item) => Track.fromJson(item))
+            .toList()
         : [];
     var agendaUID = json['agendaUID'].toString();
     return Event(
@@ -85,7 +88,7 @@ class Event extends GitHubModel {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
-      tracksUID: tracksUID,
+      tracks: tracks,
     );
   }
 
@@ -104,7 +107,7 @@ class Event extends GitHubModel {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'tracksUID': tracksUID.map((uid) => {'UID': uid}).toList(),
+      'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }
 }

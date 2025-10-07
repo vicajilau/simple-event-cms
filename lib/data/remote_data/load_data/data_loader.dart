@@ -50,12 +50,14 @@ class DataLoader {
       loadAllDays(),
       loadAllTracks(),
       loadAllSessions(),
+      loadSpeakers(),
     ]);
 
     final List<Agenda> agendaStructures = results[0] as List<Agenda>;
     final List<AgendaDay> allDays = results[1] as List<AgendaDay>;
     final List<Track> allTracks = results[2] as List<Track>;
     final List<Session> allSessions = results[3] as List<Session>;
+    final List<Speaker> allSpeakers = results[4] as List<Speaker>;
 
     // Create maps for quick UID lookups
     final Map<String, AgendaDay> daysMap = {
@@ -66,6 +68,9 @@ class DataLoader {
     };
     final Map<String, Session> sessionsMap = {
       for (var session in allSessions) session.uid: session,
+    };
+    final Map<String, Speaker> speakersMap = {
+      for (var speaker in allSpeakers) speaker.uid: speaker,
     };
 
     // Assemble the structure
@@ -89,8 +94,13 @@ class DataLoader {
               .where((session) => session != null)
               .cast<Session>()
               .toList();
+          track.resolvedSessions = track.resolvedSessions?.map((session) {
+            session.speakerUID = speakersMap[session.speakerUID]?.uid;
+            return session;
+          }).toList();
         }
       }
+
     }
     return agendaStructures;
   }

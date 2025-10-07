@@ -30,4 +30,6 @@ abstract class SecRepository {
   Future<void> saveSponsor(Sponsor sponsor, String parentId);
   Future<void> removeSponsor(String sponsorId);
   Future<void> removeEvent(String eventId);
+
+  Future<List<Speaker>> getSpeakersForEventId(String eventId);
 }
