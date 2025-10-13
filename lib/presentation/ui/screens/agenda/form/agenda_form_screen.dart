@@ -274,7 +274,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       label: 'Speaker*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        value: _selectedSpeaker,
+                        initialValue: _selectedSpeaker,
                         decoration: InputDecoration(
                           hintText: 'Selecciona un speaker',
                         ),
