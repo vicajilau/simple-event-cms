@@ -37,8 +37,11 @@ class AgendaUseCaseImpl implements AgendaUseCase {
     final result = await repository.loadEAgendas();
     switch (result) {
       case Ok<List<Agenda>>():
-        if(result.value.isEmpty) return Result.error(NetworkException("No agendas found"));
+        if(result.value.isEmpty  || result.value.indexWhere((agenda) => agenda.uid == id) == -1){
+          return Result.error(NetworkException("No agendas found"));
+        }
         return Result.ok(result.value.firstWhere((event) => event.uid == id));
+
       case Error():
         return Result.error(result.error);
     }
