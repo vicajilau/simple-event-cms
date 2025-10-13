@@ -50,7 +50,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/sessions_update",
+          ref: "develop",
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -167,7 +167,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/sessions_update",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
 
@@ -280,7 +280,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/sessions_update",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
