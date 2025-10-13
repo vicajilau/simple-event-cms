@@ -1,6 +1,3 @@
-import 'package:sec/core/models/speaker.dart';
-import 'package:sec/core/models/sponsor.dart';
-
 import '../config/paths_github.dart';
 import 'agenda.dart';
 import 'event_dates.dart';
@@ -13,8 +10,7 @@ class Event extends GitHubModel {
   /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
 
-  /// the name of the room where the event_collection will take place
-  final List<String> tracks;
+
 
   /// The year of the event_collection, used for organizing multi-year events
   final String year;
@@ -34,13 +30,11 @@ class Event extends GitHubModel {
   /// Optional description of the event_collection
   final String? description;
 
-  final String agendaUID;
+  String agendaUID;
   final List<String> speakersUID;
   final List<String> sponsorsUID;
-
-  Agenda? agenda;
-  List<Speaker>? speakers;
-  List<Sponsor>? sponsors;
+  /// the name of the room where the event_collection will take place
+  final List<Track> tracks;
 
   /// Creates a new event instance
   Event({
@@ -62,26 +56,28 @@ class Event extends GitHubModel {
 
   /// Creates a event from JSON data with additional parameters
   ///
-  /// The [json] parameter contains the configuration data from site.json
+  /// The [json] parameter contains the configuration data from events.json
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {
     List<String> speakers = (json['speakersUID'] != null)
         ? (json['speakersUID'] as List)
-              .map((item) => item['UID'] as String)
+              .map((item) => item['UID'].toString())
               .toList()
         : [];
     List<String> sponsors = (json['sponsorsUID'] != null)
         ? (json['sponsorsUID'] as List)
-              .map((item) => item['UID'] as String)
+              .map((item) => item['UID'].toString())
               .toList()
         : [];
-    List<String> rooms = (json['rooms'] != null)
-        ? (json['rooms'] as List).map((item) => item['name'] as String).toList()
+    List<Track> tracks = (json['tracks'] != null)
+        ? (json['tracks'] as List)
+            .map((item) => Track.fromJson(item))
+            .toList()
         : [];
-    var agendaUID = json['agendaUID'];
+    var agendaUID = json['agendaUID'].toString();
     return Event(
-      uid: json["UID"],
+      uid: json["UID"].toString(),
       eventName: json['eventName'],
       year: json['year'],
       primaryColor: json['primaryColor'],
@@ -92,7 +88,7 @@ class Event extends GitHubModel {
       agendaUID: agendaUID,
       speakersUID: speakers,
       sponsorsUID: sponsors,
-      tracks: rooms,
+      tracks: tracks,
     );
   }
 
@@ -111,7 +107,7 @@ class Event extends GitHubModel {
       'agendaUID': agendaUID,
       'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
       'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
-      'room': tracks.map((name) => {'name': name}).toList(),
+      'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }
 }

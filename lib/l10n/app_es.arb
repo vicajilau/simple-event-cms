@@ -1,14 +1,11 @@
 {
   "@@locale": "es",
   "loadingAgenda": "Cargando agenda...",
-  "errorLoadingAgenda": "Error cargando agenda: {error}",
   "retry": "Reintentar",
   "noEventsScheduled": "No hay eventos programados",
   "loadingSpeakers": "Cargando ponentes...",
-  "errorLoadingSpeakers": "Error cargando ponentes",
   "noSpeakersRegistered": "No hay ponentes registrados",
   "loadingSponsors": "Cargando patrocinadores...",
-  "errorLoadingSponsors": "Error cargando patrocinadores",
   "noSponsorsRegistered": "No hay patrocinadores registrados",
   "loading": "Cargando...",
   "errorLoadingImage": "Error al cargar imagen",
@@ -43,5 +40,7 @@
   "githubHint": "Introduce la URL de GitHub",
   "linkedinHint": "Introduce la URL de LinkedIn",
   "websiteHint": "Introduce la URL de la web",
-  "saveButton": "Guardar"
+  "saveButton": "Guardar",
+  "errorLoadingData": "Error cargando los datos",
+  "errorUnknown": "Error desconocido"
 }

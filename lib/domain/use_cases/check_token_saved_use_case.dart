@@ -6,9 +6,10 @@ abstract class CheckTokenSavedUseCase {
 }
 
 class CheckTokenSavedUseCaseImpl implements CheckTokenSavedUseCase {
+  TokenRepository repository = getIt<TokenRepository>();
+
   @override
   Future<bool> checkToken() async {
-    TokenRepository repository = getIt<TokenRepository>();
     return await repository.isTokenSaved();
   }
 }

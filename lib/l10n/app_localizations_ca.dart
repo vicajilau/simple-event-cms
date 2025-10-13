@@ -12,11 +12,6 @@ class AppLocalizationsCa extends AppLocalizations {
   String get loadingAgenda => 'Carregant agenda...';
 
   @override
-  String errorLoadingAgenda(String error) {
-    return 'Error carregant agenda: $error';
-  }
-
-  @override
   String get retry => 'Tornar a intentar';
 
   @override
@@ -26,16 +21,10 @@ class AppLocalizationsCa extends AppLocalizations {
   String get loadingSpeakers => 'Carregant ponents...';
 
   @override
-  String get errorLoadingSpeakers => 'Error carregant ponents';
-
-  @override
   String get noSpeakersRegistered => 'No hi ha ponents registrats';
 
   @override
   String get loadingSponsors => 'Carregant patrocinadors...';
-
-  @override
-  String get errorLoadingSponsors => 'Error carregant patrocinadors';
 
   @override
   String get noSponsorsRegistered => 'No hi ha patrocinadors registrats';
@@ -141,4 +130,10 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get saveButton => 'Desa';
+
+  @override
+  String get errorLoadingData => 'Error carregant les dades';
+
+  @override
+  String get errorUnknown => 'Error desconegut';
 }

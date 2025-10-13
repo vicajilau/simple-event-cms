@@ -1,14 +1,11 @@
 {
   "@@locale": "ca",
   "loadingAgenda": "Carregant agenda...",
-  "errorLoadingAgenda": "Error carregant agenda: {error}",
   "retry": "Tornar a intentar",
   "noEventsScheduled": "No hi ha esdeveniments programats",
   "loadingSpeakers": "Carregant ponents...",
-  "errorLoadingSpeakers": "Error carregant ponents",
   "noSpeakersRegistered": "No hi ha ponents registrats",
   "loadingSponsors": "Carregant patrocinadors...",
-  "errorLoadingSponsors": "Error carregant patrocinadors",
   "noSponsorsRegistered": "No hi ha patrocinadors registrats",
   "loading": "Carregant...",
   "errorLoadingImage": "Error en carregar la imatge",
@@ -43,5 +40,7 @@
   "githubHint": "Introdueix la URL de GitHub",
   "linkedinHint": "Introdueix la URL de LinkedIn",
   "websiteHint": "Introdueix la URL del lloc web",
-  "saveButton": "Desa"
+  "saveButton": "Desa",
+  "errorLoadingData": "Error carregant les dades",
+  "errorUnknown": "Error desconegut"
 }

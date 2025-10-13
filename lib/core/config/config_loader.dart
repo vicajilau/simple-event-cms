@@ -28,7 +28,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "main",
+      ref: "develop",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -50,11 +50,12 @@ class ConfigLoader {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
 
-    final configUrl = 'events/${organization.year}/config/site.json';
+    final configUrl = 'events/${organization.year}/config/events.json';
     var github = GitHub();
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
+      ref: "develop",
     );
 
     if (res.file == null || res.file!.content == null) {
@@ -66,7 +67,7 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-      final List<dynamic> eventDataList = fileJsonData["events"];
+      final List<dynamic> eventDataList = fileJsonData;
 
       return eventDataList
           .map((eventData) => Event.fromJson(eventData))

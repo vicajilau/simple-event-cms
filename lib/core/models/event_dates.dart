@@ -29,7 +29,7 @@ class EventDates extends GitHubModel {
   /// All date fields are required and must be in ISO format
   factory EventDates.fromJson(Map<String, dynamic> json) {
     return EventDates(
-      uid: json['UID'],
+      uid: json['UID'].toString(),
       startDate: json['startDate'],
       endDate: json['endDate'],
       timezone: json['timezone'],

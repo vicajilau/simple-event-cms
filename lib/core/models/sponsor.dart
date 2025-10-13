@@ -27,7 +27,7 @@ class Sponsor extends GitHubModel {
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) => Sponsor(
-    uid: json["UID"],
+    uid: json["UID"].toString(),
     name: json["name"],
     type: json["type"],
     logo: json["logo"],

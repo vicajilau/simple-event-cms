@@ -3,22 +3,18 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
-import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
-import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import '../agenda/agenda_screen.dart';
+import '../agenda/form/agenda_form_screen.dart';
 import '../speaker/speakers_screen.dart';
-import '../sponsor/add_sponsor_screen.dart';
 import '../sponsor/sponsors_screen.dart';
+import 'event_detail_view_model.dart';
 
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
   final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
-  final SpeakerViewModel viewmodelSpeaker = getIt<SpeakerViewModel>();
-  final SponsorViewModel viewmodelSponsor = getIt<SponsorViewModel>();
   final String eventId;
 
   EventDetailScreen({super.key, required this.eventId});
@@ -31,6 +27,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  List<Widget> screens = [];
 
   @override
   void initState() {
@@ -42,6 +39,20 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         _selectedIndex = _tabController.index;
       });
     });
+    screens = [
+      AgendaScreen(
+        agendaId: widget.viewmodel.agendaId,
+        eventId: widget.eventId,
+      ),
+      SpeakersScreen(
+        speakers: widget.viewmodel.speakersId,
+        eventId: widget.eventId,
+      ),
+      SponsorsScreen(
+        sponsors: widget.viewmodel.sponsorsId,
+        eventId: widget.eventId,
+      ),
+    ];
   }
 
   @override
@@ -67,7 +78,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.viewmodel.errorMessage),
+                  ErrorView(errorType: widget.viewmodel.errorType),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: widget.viewmodel.setup,
@@ -78,24 +89,24 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           }
 
-          final agendaDays = widget.viewmodel.getAgenda().days;
-
           return TabBarView(
             controller: _tabController,
             children: [
               // Agenda Tab
-              agendaDays.isEmpty
-                  ? Center(
-                      child: Text(
-                        AppLocalizations.of(context)?.noEventsScheduled ??
-                            'No hay eventos programados',
-                      ),
-                    )
-                  : AgendaScreen(agendaDays: agendaDays),
+              AgendaScreen(
+                agendaId: widget.viewmodel.agendaId,
+                eventId: widget.eventId,
+              ),
               // Speakers Tab
-              SpeakersScreen(),
+              SpeakersScreen(
+                speakers: widget.viewmodel.speakersId,
+                eventId: widget.eventId,
+              ),
               // Sponsors Tab
-              SponsorsScreen(),
+              SponsorsScreen(
+                sponsors: widget.viewmodel.sponsorsId,
+                eventId: widget.eventId,
+              ),
             ],
           );
         },
@@ -124,14 +135,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         future: widget.viewmodel.checkToken(),
         builder: (context, snapshot) {
           if (snapshot.data == true) {
-            AddFloatingActionButton(
+            return AddFloatingActionButton(
               onPressed: () async {
                 if (_selectedIndex == 0) {
-                  _addTrackToAgenda();
+                  _addTrackToAgenda(widget.viewmodel.agendaId,widget.eventId);
                 } else if (_selectedIndex == 1) {
-                  _addSpeaker();
+                  _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
-                  _addSponsor();
+                  _addSponsor(widget.eventId);
                 }
               },
             );
@@ -142,51 +153,37 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
   }
 
-  void _addTrackToAgenda() async {
-    /*AgendaFormScreen agenda = AgendaFormScreen(
-      data: EventFormData(
-        rooms: [],
-        days: [],
-        speakers: [],
-        sessionTypes: [],
-        session: null,
-        track: '[]',
-        day: 'day',
-      ),
-      /* speakers: _getSpeakers(),
-          rooms: _getRoomNames(),
-          days: _getAgendaDays(),
-          sessionTypes: SessionTypes.allLabels(context),
-          session: session,
-          track: track ?? '',
-          day: day ?? '',*/
+  void _addTrackToAgenda(String agendaId, String eventId) async {
+    final Agenda? newAgenda = await AppRouter.router.push(
+      AppRouter.agendaFormPath,extra: AgendaFormData(agendaId: agendaId,eventId: eventId)
     );
 
-    final newAgendaDay = await Navigator.push<Speaker>(
-      context,
-      MaterialPageRoute(builder: (context) => agenda),
-    );
-    _addNewSession(newAgendaDay: newAgendaDay);*/
+    if (newAgenda != null) {
+      final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
+      agendaScreen.viewmodel.addAgendaToEvent(newAgenda,eventId);
+      agendaScreen.viewmodel.setup(agendaId);
+    }
   }
 
-  void _addSpeaker() async {
+  void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
       AppRouter.speakerFormPath,
     );
 
     if (newSpeaker != null) {
-      widget.viewmodelSpeaker.addSpeaker(newSpeaker);
+      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
     }
   }
 
-  Future<void> _addSponsor() async {
-    final newSponsor = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (_) => AddSponsorScreen()),
+  void _addSponsor(String parentId) async {
+    final Sponsor? newSponsor = await AppRouter.router.push(
+      AppRouter.sponsorFormPath,
     );
 
-    if (newSponsor != null && newSponsor is Sponsor) {
-      widget.viewmodelSponsor.addSponsor(newSponsor);
+    if (newSponsor != null) {
+      final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
+      sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
     }
   }
 }

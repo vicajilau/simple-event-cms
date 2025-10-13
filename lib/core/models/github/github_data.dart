@@ -4,13 +4,13 @@ class GithubData {
   final String? token;
   final String? repo;
   final String? projectName;
-  String branch = "main";
+  String branch = "develop";
 
   GithubData({
     this.token,
     this.repo,
     this.projectName,
-    this.branch = "main",
+    this.branch = "develop",
   });
 
   factory GithubData.fromJson(String str) {

@@ -5,76 +5,106 @@ import 'package:sec/core/config/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
+import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import 'agenda_view_model.dart';
+import '../agenda_view_model.dart';
 
-class EventFormData {
-  final List<String> rooms;
-  final List<String> days;
-  final List<String> speakers;
-  final List<String> sessionTypes;
-  final String track, day;
+class AgendaFormData {
+  final String agendaId;
+  final String? track, day, eventId;
   final Session? session;
 
-  EventFormData({
-    required this.rooms,
-    required this.days,
-    required this.speakers,
-    required this.sessionTypes,
-    required this.session,
-    required this.track,
-    required this.day,
+  AgendaFormData({
+    required this.agendaId,
+    this.session,
+    this.track,
+    this.day,
+    required this.eventId,
   });
 }
 
-class AgendaEventFormScreen extends StatefulWidget {
-  final EventFormData data;
-  final String agendaId;
+class AgendaFormScreen extends StatefulWidget {
+  final AgendaFormData data;
+  final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
 
-  const AgendaEventFormScreen({
-    super.key,
-    required this.data,
-    required this.agendaId,
-  });
+  AgendaFormScreen({super.key, required this.data});
 
   @override
-  State<AgendaEventFormScreen> createState() => _AgendaEventFormScreenState();
+  State<AgendaFormScreen> createState() => _AgendaFormScreenState();
 }
 
-class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
+class _AgendaFormScreenState extends State<AgendaFormScreen> {
+  Agenda? agenda;
   TimeOfDay? _initSessionTime, _endSessionTime;
-  String _selectedDay = '',
-      _selectedRoom = '',
-      _selectedSpeaker = '',
-      _selectedTalkType = '';
+  String _selectedDay = '';
+  String _selectedTrack = '';
+  Speaker? _selectedSpeaker;
+  String _selectedTalkType = '';
   final double spacingForRowDropdown = 40, spacingForRowTime = 40;
+  bool _isLoading = true;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String? _timeErrorMessage;
-  final AgendaViewModel agendaViewModel = getIt<AgendaViewModel>();
+
+  List<Track> tracks = [];
+  List<AgendaDay> agendaDays = [];
+  List<Speaker> speakers = [];
+  final List<String> sessionTypes = SessionType.values
+      .map((e) => e.name)
+      .toList();
+
+  final AgendaFormViewModel agendaFormViewModel = getIt<AgendaFormViewModel>();
 
   @override
   void initState() {
     super.initState();
+    _loadInitialData();
+  }
+
+  Future<void> _loadInitialData() async {
+    agenda = await agendaFormViewModel.getAgenda(widget.data.agendaId);
+    var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
+      widget.data.eventId.toString(),
+    );
+
+    setState(() {
+      agendaDays = agenda?.resolvedDays ?? [];
+      final allTracks =
+          ((agenda?.resolvedDays?.map((day) => day.resolvedTracks) ?? [])
+                  .map((track) => track ?? [])
+                  .expand((tracks) => tracks)
+                  .whereType<Track>());
+
+      final uniqueTracks = <String, Track>{};
+      for (final track in allTracks.toList()) {
+        uniqueTracks[track.uid] = track;
+      }
+      tracks = uniqueTracks.values.toList();
+      speakers = fetchedSpeakers;
+    });
+
     final session = widget.data.session;
     if (session != null) {
       _titleController.text = session.title;
 
-      if (widget.data.days.contains(widget.data.day)) {
-        _selectedDay = widget.data.day;
+      if (widget.data.day != null &&
+          agendaDays.map((day) => day.uid).contains(widget.data.day)) {
+        _selectedDay = widget.data.day!;
       }
 
-      if (widget.data.track.contains(widget.data.track)) {
-        _selectedRoom = widget.data.track;
+      if (widget.data.track != null &&
+          tracks.map((track) => track.uid).contains(widget.data.track!)) {
+        _selectedTrack = widget.data.track!;
       }
 
-      if (widget.data.speakers.contains(session.speaker)) {
-        _selectedSpeaker = session.speaker;
+      final initialSpeaker = speakers.cast<Speaker?>().firstWhere((s) => s?.uid == session.speakerUID, orElse: () => null);
+      if (initialSpeaker != null) {
+        _selectedSpeaker = initialSpeaker;
       }
 
-      if (widget.data.sessionTypes.contains(session.type.toUpperCase())) {
+      if (sessionTypes.contains(session.type.toUpperCase())) {
         _selectedTalkType = session.type;
       }
 
@@ -83,6 +113,10 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
       final parts = session.time.split(' - ');
       _initSessionTime = TimeUtils.parseTime(parts.first);
       _endSessionTime = TimeUtils.parseTime(parts.last);
+    }
+
+    if (mounted) {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -95,6 +129,12 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const FormScreenWrapper(
+        pageTitle: 'Creación evento',
+        widgetFormChild: Center(child: CircularProgressIndicator()),
+      );
+    }
     return FormScreenWrapper(
       pageTitle: 'Creación evento',
       widgetFormChild: Padding(
@@ -137,11 +177,11 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                         decoration: InputDecoration(
                           hintText: 'Selecciona un día',
                         ),
-                        items: widget.data.days
+                        items: agendaDays
                             .map(
                               (day) => DropdownMenuItem(
-                                value: day,
-                                child: Text(day),
+                                value: day.uid,
+                                child: Text(day.date),
                               ),
                             )
                             .toList(),
@@ -160,21 +200,21 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                       label: 'Sala*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedRoom.isEmpty
+                        initialValue: _selectedTrack.isEmpty
                             ? null
-                            : _selectedRoom,
+                            : _selectedTrack,
                         decoration: InputDecoration(
                           hintText: 'Selecciona una sala',
                         ),
-                        items: widget.data.rooms
+                        items: tracks
                             .map(
-                              (room) => DropdownMenuItem(
-                                value: room,
-                                child: Text(room),
+                              (track) => DropdownMenuItem(
+                                value: track.uid,
+                                child: Text(track.name),
                               ),
                             )
                             .toList(),
-                        onChanged: (room) => _selectedRoom = room ?? '',
+                        onChanged: (room) => _selectedTrack = room ?? '',
                         validator: (value) {
                           return value == null || value.isEmpty
                               ? 'Por favor, selecciona una sala'
@@ -234,24 +274,22 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                       label: 'Speaker*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedSpeaker.isEmpty
-                            ? null
-                            : _selectedSpeaker,
+                        initialValue: _selectedSpeaker,
                         decoration: InputDecoration(
                           hintText: 'Selecciona un speaker',
                         ),
-                        items: widget.data.speakers
+                        items: speakers
                             .map(
                               (speaker) => DropdownMenuItem(
-                                value: speaker,
-                                child: Text(speaker),
+                                value: speaker, // The value is the Speaker object
+                                child: Text(speaker.name),
                               ),
                             )
                             .toList(),
                         onChanged: (speaker) =>
-                            _selectedSpeaker = speaker ?? '',
+                            _selectedSpeaker = speaker,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
+                          if (value == null) { // value is a Speaker object or null
                             return 'Por favor, selecciona un speaker';
                           }
                           return null;
@@ -270,7 +308,7 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
                         decoration: InputDecoration(
                           hintText: 'Selecciona el tipo de charla',
                         ),
-                        items: widget.data.sessionTypes
+                        items: sessionTypes
                             .map(
                               (type) => DropdownMenuItem(
                                 value: type,
@@ -305,8 +343,6 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
         ),
       ),
     );
-    /*);
- );*/
   }
 
   Widget _buildTitle() {
@@ -333,26 +369,31 @@ class _AgendaEventFormScreenState extends State<AgendaEventFormScreen> {
               Session session = Session(
                 title: _titleController.text,
                 time:
-                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
-                speaker: _selectedSpeaker,
+                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}', // _selectedSpeaker is a String here, which is wrong
+                speakerUID: _selectedSpeaker?.uid.toString(),
                 description: _descriptionController.text,
                 type: _selectedTalkType,
                 uid:
                     'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
               );
               Track track = Track(
-                name: _selectedRoom,
+                uid:
+                    'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+                name: _selectedTrack,
                 color: '',
-                sessions: [session],
+                resolvedSessions: [session],
+                sessionUids: [session.uid],
               );
               AgendaDay agendaDay = AgendaDay(
                 uid:
                     'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 date: _selectedDay,
-                tracks: [track],
+                resolvedTracks: [track],
+                trackUids: [track.uid],
               );
-              agendaViewModel.saveAgendaDayById(agendaDay, widget.agendaId);
-              Navigator.pop(context, agendaDay);
+              agenda?.dayUids.add(agendaDay.uid);
+              widget.viewmodel.saveAgendaDayById(agendaDay, agenda!.uid.toString());
+              Navigator.pop(context, agenda);
             }
           },
           child: const Text('Guardar'),

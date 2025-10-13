@@ -1,14 +1,11 @@
 {
   "@@locale": "eu",
   "loadingAgenda": "Agenda kargatzen...",
-  "errorLoadingAgenda": "Errorea agenda kargatzean: {error}",
   "retry": "Berriro saiatu",
   "noEventsScheduled": "Ez dago gertaera programaturik",
   "loadingSpeakers": "Hizlariak kargatzen...",
-  "errorLoadingSpeakers": "Errorea hizlariak kargatzean",
   "noSpeakersRegistered": "Ez dago hiztun erregistraturik",
   "loadingSponsors": "Babesleak kargatzen...",
-  "errorLoadingSponsors": "Errorea babesleak kargatzean",
   "noSponsorsRegistered": "Ez dago babesle erregistraturik",
   "loading": "Kargatzen...",
   "errorLoadingImage": "Errorea irudia kargatzean",
@@ -43,5 +40,7 @@
   "githubHint": "Sartu GitHub URLa",
   "linkedinHint": "Sartu LinkedIn URLa",
   "websiteHint": "Sartu webgunearen URLa",
-  "saveButton": "Gorde"
+  "saveButton": "Gorde",
+  "errorLoadingData": "Errorea datuak kargatzean",
+  "errorUnknown": "Errore ezezaguna"
 }

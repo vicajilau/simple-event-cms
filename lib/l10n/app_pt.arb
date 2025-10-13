@@ -43,5 +43,8 @@
   "githubHint": "Insira a URL do GitHub",
   "linkedinHint": "Insira a URL do LinkedIn",
   "websiteHint": "Insira a URL do site",
-  "saveButton": "Salvar"
+  "saveButton": "Salvar",
+"errorLoadingData": "Erro ao carregar os dados",
+"errorUnknown": "Erro desconhecido"
+
 }

@@ -11,8 +11,10 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/domain/use_cases/sponsor_use_case.dart';
+import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
+import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
 // Imports for new ViewModels
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
@@ -36,6 +38,7 @@ Future<void> setupDependencies() async {
     () => CheckTokenSavedUseCaseImpl(),
   );
 
+
   // Use Cases
   getIt.registerLazySingleton<EventUseCase>(() => EventUseCaseImp());
   getIt.registerLazySingleton<AgendaUseCase>(() => AgendaUseCaseImpl());
@@ -52,6 +55,8 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<EventDetailViewModel>(
     () => EventDetailViewModelImp(),
   );
+  getIt.registerLazySingleton<EventFormViewModel>(() => EventFormViewModelImpl());
+  getIt.registerLazySingleton<AgendaFormViewModel>(() => AgendaFormViewModelImpl());
 }
 
 /// Clears all registered dependencies

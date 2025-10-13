@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -101,11 +100,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         title: GestureDetector(
           onTap: () async {
             _titleTapCount++;
-            if (_titleTapCount >= 5 &&
-                await widget.viewmodel.checkToken() &&
-                context.mounted) {
+            if (_titleTapCount >= 5) {
               _titleTapCount = 0;
-              context.go('/admin');
+              AppRouter.router.push(AppRouter.adminPath);
             }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
@@ -139,7 +136,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(widget.viewmodel.errorMessage),
+                  ErrorView(errorType: widget.viewmodel.errorType),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -205,15 +202,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             return AddFloatingActionButton(
               onPressed: () async {
                 final Event? newConfig = await AppRouter.router.push(
-                  AppRouter.adminCreateEventPath,
+                  AppRouter.eventFormPath
                 );
                 if (newConfig != null) {
-                  widget.viewmodel.addEvent(newConfig);
+                 await  widget.viewmodel.addEvent(newConfig);
                 }
               },
             );
           }
-          return const SizedBox.shrink(); // No muestra nada si no hay token
+          return const SizedBox.shrink();
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -223,7 +220,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildEventCard(BuildContext context, Event item, bool isAdmin) {
     return GestureDetector(
       onTap: () {
-        context.go('/event/${item.uid}');
+        AppRouter.router.pushNamed(
+          AppRouter.eventDetailName,
+          pathParameters: {'eventId': item.uid},
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -258,11 +258,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     icon: const Icon(Icons.edit),
                     onPressed: () async {
                       final Event? eventEdited = await AppRouter.router.push(
-                        AppRouter.adminEditEventPath,
+                        AppRouter.eventFormPath,
                         extra: item.uid,
                       );
                       if (eventEdited != null) {
-                        widget.viewmodel.editEvent(eventEdited);
+                        await widget.viewmodel.editEvent(eventEdited);
                       }
                     },
                   )

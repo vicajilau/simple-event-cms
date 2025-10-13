@@ -26,7 +26,7 @@ class Speaker extends GitHubModel {
   });
 
   factory Speaker.fromJson(Map<String, dynamic> json) => Speaker(
-    uid: json["UID"],
+    uid: json["UID"].toString(),
     name: json["name"],
     bio: json["bio"],
     image: json["image"],
