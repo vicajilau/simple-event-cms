@@ -13,9 +13,6 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<List<Event>>> loadEvents() async {
     try {
-      if (_events.isNotEmpty) {
-        return Result.ok(_events);
-      }
 
       final events = await dataLoader.loadEvents();
       _events = events;

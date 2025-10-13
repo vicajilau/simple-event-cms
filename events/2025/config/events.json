@@ -1,1 +1,111 @@
-[{"UID":"df5fd5ds5dsf","eventName":"DevFest Spain 2029","year":"2025","primaryColor":"#4285F4","secondaryColor":"#34A853","eventDates":{"UID":"EventDate_20250929_121750","startDate":"2025-03-15","endDate":"2025-03-15","timezone":"Europe/Madrid"},"venue":{"name":"Palacio de Congresos","address":"Madrid, España","city":"Madrid"},"description":"El evento tecnológico más importante de España para desarrolladores","agendaUID":"4564645","speakersUID":[],"sponsorsUID":[],"tracks":[]},{"UID":"gfhdfdfgdsfg4dfg","eventName":"DevFest Spain 2026","year":"2026","primaryColor":"#4285F4","secondaryColor":"#34A853","eventDates":{"UID":"EventDate_20250930_153441","startDate":"2026-03-14","endDate":"2026-03-15","timezone":"Europe/Madrid"},"venue":{"name":"Palacio de Congresos","address":"Madrid, España","city":"Madrid"},"description":"El evento tecnológico más importante de España para desarrolladores","agendaUID":"871674","speakersUID":[{"UID":"123459"},{"UID":"123460"},{"UID":"alfa11212"}],"sponsorsUID":[{"UID":"8sad8asdasd"},{"UID":"w8asd9ww8aw"},{"UID":"bn5e8qewerdd"},{"UID":"lapw52524669"},{"UID":"1ad33dzfdff"}],"tracks":[]},{"UID":"Event_20250929_122411","eventName":"devfest test 2030","year":"2030","primaryColor":"","secondaryColor":"","eventDates":{"UID":"EventDate_20250930_151910","startDate":"2030-10-30","endDate":"2030-10-30","timezone":"Europe/Madrid"},"venue":{"name":"","address":"","city":""},"description":"","agendaUID":"","speakersUID":[{"UID":"Speaker_20250929_142416"},{"UID":"Speaker_20250929_145714"}],"sponsorsUID":[{"UID":"Sponsor_20250929_142357"},{"UID":"Sponsor_20250930_144929"}],"tracks":[]},{"UID":"Event_20251013_110915","eventName":"test evento ","year":"2025","primaryColor":"","secondaryColor":"","eventDates":{"UID":"EventDate_20251013_110915","startDate":"2025-10-19","endDate":"2025-10-31","timezone":"Europe/Madrid"},"venue":{"name":"","address":"","city":""},"description":"","agendaUID":"","speakersUID":[],"sponsorsUID":[],"tracks":[{"UID":"Track_20251013_110859","name":"","color":"","sessions":[]},{"UID":"Track_20251013_110906","name":"","color":"","sessions":[]}]}]
+[
+  {
+    "UID": "df5fd5ds5dsf",
+    "eventName": "DevFest Spain 2029",
+    "year": "2025",
+    "primaryColor": "#4285F4",
+    "secondaryColor": "#34A853",
+    "eventDates": {
+      "UID": "EventDate_20250929_121750",
+      "startDate": "2025-03-15",
+      "endDate": "2025-03-15",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "Palacio de Congresos",
+      "address": "Madrid, España",
+      "city": "Madrid"
+    },
+    "description": "El evento tecnológico más importante de España para desarrolladores",
+    "agendaUID": "4564645",
+    "speakersUID": [],
+    "sponsorsUID": [],
+    "tracksUID": []
+  },
+  {
+    "UID": "gfhdfdfgdsfg4dfg",
+    "eventName": "DevFest Spain 2026",
+    "year": "2026",
+    "primaryColor": "#4285F4",
+    "secondaryColor": "#34A853",
+    "eventDates": {
+      "UID": "EventDate_20250930_153441",
+      "startDate": "2026-03-14",
+      "endDate": "2026-03-15",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "Palacio de Congresos",
+      "address": "Madrid, España",
+      "city": "Madrid"
+    },
+    "description": "El evento tecnológico más importante de España para desarrolladores",
+    "agendaUID": "871674",
+    "speakersUID": [
+      {
+        "UID": "123459"
+      },
+      {
+        "UID": "123460"
+      },
+      {
+        "UID": "alfa11212"
+      }
+    ],
+    "sponsorsUID": [
+      {
+        "UID": "8sad8asdasd"
+      },
+      {
+        "UID": "w8asd9ww8aw"
+      },
+      {
+        "UID": "bn5e8qewerdd"
+      },
+      {
+        "UID": "lapw52524669"
+      },
+      {
+        "UID": "1ad33dzfdff"
+      }
+    ],
+    "tracksUID": []
+  },
+  {
+    "UID": "Event_20250929_122411",
+    "eventName": "devfest test 2030",
+    "year": "2030",
+    "primaryColor": "",
+    "secondaryColor": "",
+    "eventDates": {
+      "UID": "EventDate_20250930_151910",
+      "startDate": "2030-10-30",
+      "endDate": "2030-10-30",
+      "timezone": "Europe/Madrid"
+    },
+    "venue": {
+      "name": "",
+      "address": "",
+      "city": ""
+    },
+    "description": "",
+    "agendaUID": "",
+    "speakersUID": [
+      {
+        "UID": "Speaker_20250929_142416"
+      },
+      {
+        "UID": "Speaker_20250929_145714"
+      }
+    ],
+    "sponsorsUID": [
+      {
+        "UID": "Sponsor_20250929_142357"
+      },
+      {
+        "UID": "Sponsor_20250930_144929"
+      }
+    ],
+    "tracksUID": []
+  }
+]
