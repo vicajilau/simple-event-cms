@@ -232,7 +232,7 @@ class SecRepositoryImp extends SecRepository {
       }
 
       return speakersEvent.toList();
-    } on Exception catch (e) {
+    } on Exception catch (_) {
       return [];
     } catch (e) {
       return [];
