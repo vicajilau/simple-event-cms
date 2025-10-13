@@ -53,12 +53,17 @@ class CommonsServicesImp extends CommonsServices {
           ref: "develop",
         );
       } catch (e, st) {
-        throw NetworkException(
-          "Error en la respuesta",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
+        if (e is GitHubError && e.message == "Not Found") {
+          return [].toList();
+        } else {
+          // Handle other potential network or API errors during fetch.
+          throw NetworkException(
+            "Error fetching data from GitHub: $e",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        }
       }
       if (res.file == null || res.file!.content == null) {
         throw NetworkException("El contenido de la respuesta es null");
@@ -136,41 +141,10 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService!.token));
 
     String? currentSha;
-    try {
-      // 1. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
-      // This is mandatory for updates.
-      final contents = await github.repositories.getContents(
-        repositorySlug,
-        pathUrl,
-        ref: "develop",
-      );
-      currentSha = contents.file?.sha;
-
-      if (currentSha == null) {
-        // This case is unlikely if the file exists but helps prevent errors.
-        throw GithubException("Could not get the SHA of the existing file.");
-      }
-    } on NotFound catch (e, st) {
-      // If the file is not found (NotFound), the SHA remains null.
-      // The logic below will create the file instead of updating it.
-      currentSha = null;
-      throw GithubException(
-        "File not found at $pathUrl. A new file will be created.",
-        cause: e,
-        stackTrace: st,
-      );
-    } catch (e, st) {
-      // Any other error while getting the file.
-      throw GithubException(
-        "Failed to get file contents from $pathUrl: $e",
-        cause: e,
-        stackTrace: st,
-      );
-    }
 
     // 2. MODIFY THE DATA LIST (Your current logic)
     int indexElementFounded = dataOriginal.indexWhere(
-      (item) => item.uid == data.uid,
+          (item) => item.uid == data.uid,
     );
 
     if (indexElementFounded != -1) {
@@ -187,6 +161,56 @@ class CommonsServicesImp extends CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
         githubService?.branch ?? 'main'; // Default to 'main' if not specified
+    try {
+      // 1. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
+      // This is mandatory for updates.
+      final contents = await github.repositories.getContents(
+        repositorySlug,
+        pathUrl,
+        ref: "develop",
+      );
+      currentSha = contents.file?.sha;
+
+      if (currentSha == null) {
+        // This case is unlikely if the file exists but helps prevent errors.
+        throw GithubException("Could not get the SHA of the existing file.");
+      }
+    } catch (e, st) {
+      if (e is GitHubError && e.message == "Not Found") {
+        // If the file is not found, create it with an empty list.
+        final response = await github.repositories.createFile(
+            repositorySlug,
+            CreateFile(
+              path: pathUrl,
+              content: base64Content,
+              message: 'feat: create file at $pathUrl',
+              branch: branch,
+            ));
+        if (response.content != null) {
+          return http.Response(
+            response.content?.content.toString() ?? "",
+            200,
+          );
+        }else{
+          // Any other error while getting the file.
+          throw GithubException(
+            "Failed to create file contents from $pathUrl: $e",
+            cause: e,
+            stackTrace: st,
+          );
+        }
+        // Return an empty list since the file was just created empty.
+
+      } else {
+        // Any other error while getting the file.
+        throw GithubException(
+          "Failed to get file contents from $pathUrl: $e",
+          cause: e,
+          stackTrace: st,
+        );
+      }
+    }
+
     // 4. PREPARE THE REQUEST BODY FOR THE GITHUB API
     // The body requires the message, content, and the sha (for updates).
     final requestBody = <String, String>{

@@ -37,7 +37,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _descriptionController = TextEditingController();
 
   bool _hasEndDate = true;
-  List<String> _tracks = [];
+  List<Track> _tracks = [];
   Event? event;
 
   @override
@@ -100,7 +100,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           if (endDate != null && _hasEndDate) {
             _endDateController.text = endDate;
           }
-          _tracks = event?.tracksUID ?? [];
+          _tracks = event?.tracks ?? [];
           _timezoneController.text =
               event?.eventDates.timezone ?? 'Europe/Madrid';
           _primaryColorController.text = event?.primaryColor ?? '';
@@ -209,10 +209,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   childInput: SizedBox(
                     height: 200,
                     child: AddRoom(
-                      rooms: _tracks,
-                      editedRooms: (List<String> currentRooms) {
+                      rooms: _tracks.toList(),
+                      editedRooms: (List<Track> currentRooms) {
                         _tracks = currentRooms;
-                      },
+                      }
                     ),
                   ),
                 ),
@@ -322,12 +322,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
       uid: 'EventDate_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
     );
 
+    final eventId =  event?.uid ??
+        'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
     final eventModified = Event(
-      uid:
-          event?.uid ??
-          'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+      uid: eventId,
       eventName: _nameController.text,
-      tracksUID: _tracks.isEmpty ? ['Sala Principal'] : _tracks,
+      tracks: _tracks,
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,

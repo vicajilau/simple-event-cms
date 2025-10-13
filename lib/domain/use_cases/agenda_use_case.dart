@@ -1,5 +1,6 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 import '../../core/utils/result.dart';
@@ -24,6 +25,8 @@ abstract class AgendaUseCase {
   void editSession(Session session, String parentId);
   void deleteSessionFromAgendaDay(String sessionId);
   Future<Result<Event>> loadEvent(String eventId);
+
+  Future<List<Speaker>> getSpeakersForEventId(String eventId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
@@ -34,6 +37,7 @@ class AgendaUseCaseImpl implements AgendaUseCase {
     final result = await repository.loadEAgendas();
     switch (result) {
       case Ok<List<Agenda>>():
+        if(result.value.isEmpty) return Result.error(NetworkException("No agendas found"));
         return Result.ok(result.value.firstWhere((event) => event.uid == id));
       case Error():
         return Result.error(result.error);
@@ -46,8 +50,8 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
-    repository.saveAgendaDayById(agendaDay, agendaId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
+    await repository.saveAgendaDayById(agendaDay, agendaId);
   }
 
   @override
@@ -100,5 +104,10 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds) {
     return repository.loadSessionsByListId(sessionsIds);
+  }
+
+  @override
+  Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
+    return await repository.getSpeakersForEventId(eventId);
   }
 }

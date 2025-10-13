@@ -27,7 +27,7 @@ class Agenda extends GitHubModel {
   @override
   Map<String, dynamic> toJson() => {
     "UID": uid,
-    "days": dayUids, // Only UIDs are serialized
+    "days": dayUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 
@@ -108,7 +108,7 @@ class Track extends GitHubModel {
 class Session extends GitHubModel {
   final String title;
   final String time;
-  final String? speaker;
+  String? speakerUID;
   final String? description;
   final String type;
 
@@ -116,7 +116,7 @@ class Session extends GitHubModel {
     required super.uid,
     required this.title,
     required this.time,
-    required this.speaker,
+    required this.speakerUID,
     super.pathUrl = PathsGithub.sessionsPath,
     super.updateMessage = PathsGithub.sessionsUpdateMessage,
     this.description,
@@ -128,7 +128,7 @@ class Session extends GitHubModel {
       uid: json['UID'].toString(),
       title: json['title'],
       time: json['time'],
-      speaker: json['speaker'],
+      speakerUID: json['speakerUID'],
       description: json['description'],
       type: json['type'],
     );
@@ -139,7 +139,7 @@ class Session extends GitHubModel {
     "UID": uid,
     "title": title,
     "time": time,
-    "speaker": speaker,
+    "speakerUID": speakerUID,
     "description": description,
     "type": type,
   };

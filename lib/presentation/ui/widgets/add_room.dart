@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sec/core/models/agenda.dart';
 
 class AddRoom extends StatefulWidget {
-  final List<String> rooms;
-  final void Function(List<String>) editedRooms;
+  final List<Track> rooms;
+  final void Function(List<Track>) editedRooms;
   const AddRoom({super.key, required this.rooms, required this.editedRooms});
 
   @override
@@ -10,25 +12,37 @@ class AddRoom extends StatefulWidget {
 }
 
 class _AddRoomState extends State<AddRoom> {
+  List<Track> _tracks = [];
   List<TextEditingController> _controllers = [];
+
 
   @override
   void initState() {
     super.initState();
+    _tracks = List.generate(widget.rooms.length, (index) {
+      return widget.rooms[index];
+    });
     _controllers = List.generate(widget.rooms.length, (index) {
-      return TextEditingController(text: widget.rooms[index]);
+      return TextEditingController(text: widget.rooms[index].name);
     });
   }
 
   void _notifyCurrentRooms() {
-    final List<String> rooms = _controllers.map((e) => e.text).toList();
-    widget.editedRooms(rooms);
+    widget.editedRooms(_tracks);
   }
 
   void _addOption() {
     _notifyCurrentRooms();
     setState(() {
       _controllers.add(TextEditingController());
+      _tracks.add(
+        Track(
+            uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+            name: TextEditingController().text,
+            color: "",
+            sessionUids: []
+        )
+          );
     });
   }
 
@@ -49,6 +63,7 @@ class _AddRoomState extends State<AddRoom> {
                 setState(() {
                   _controllers[index].dispose();
                   _controllers.removeAt(index);
+                  _tracks.removeAt(index);
                 });
                 _notifyCurrentRooms();
                 Navigator.pop(context);
@@ -67,9 +82,9 @@ class _AddRoomState extends State<AddRoom> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: _controllers.length + 1, // +1 para incluir el botón
+      itemCount: _tracks.length + 1, // +1 para incluir el botón
       itemBuilder: (context, index) {
-        if (index == _controllers.length) {
+        if (index == _tracks.length) {
           // El último item será el botón
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
