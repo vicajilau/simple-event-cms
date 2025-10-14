@@ -67,7 +67,7 @@ class AgendaDay extends GitHubModel {
 
 /// Represents a track or room, linking to sessions by their UIDs.
 class Track extends GitHubModel {
-  final String name;
+  String name;
   final String color;
   List<String> sessionUids;
   List<Session>? resolvedSessions; // Field for in-memory resolved objects
