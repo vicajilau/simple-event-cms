@@ -49,7 +49,7 @@ class EventUseCaseImp implements EventUseCase {
     if (startDate != null && endDate != null) {
       final difference = endDate.difference(startDate).inDays;
       List<AgendaDay> days = [];
-      for (int i = 0; i <= difference; i++) {
+      for (int i = 1; i <= difference; i++) {
         days.add(
           AgendaDay(
             uid:
