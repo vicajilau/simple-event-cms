@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
@@ -7,9 +8,9 @@ abstract class EventUseCase {
   Future<Result<List<Event>>> getEvents();
   Future<Event?> getEventById(String id);
   Future<void> saveEvent(Event event);
+  Future<void> prepareAgendaDays(Event event);
   Future<void> saveAgendaDays(List<AgendaDay> days);
-
-  }
+}
 
 class EventUseCaseImp implements EventUseCase {
   SecRepository repository = getIt<SecRepository>();
@@ -38,5 +39,29 @@ class EventUseCaseImp implements EventUseCase {
   @override
   Future<void> saveAgendaDays(List<AgendaDay> days) async {
     await repository.saveAgendaDays(days);
+  }
+
+  @override
+  Future<void> prepareAgendaDays(Event event) async {
+    final startDate = DateTime.tryParse(event.eventDates.startDate);
+    final endDate = DateTime.tryParse(event.eventDates.endDate);
+
+    if (startDate != null && endDate != null) {
+      final difference = endDate.difference(startDate).inDays;
+      List<AgendaDay> days = [];
+      for (int i = 0; i <= difference; i++) {
+        days.add(
+          AgendaDay(
+            uid:
+                'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+            date: DateFormat(
+              'yyyy-MM-dd',
+            ).format(startDate.add(Duration(days: i))),
+            trackUids: event.tracks.map((track) => track.uid).toList(),
+          ),
+        );
+      }
+      await repository.saveAgendaDays(days);
+    }
   }
 }

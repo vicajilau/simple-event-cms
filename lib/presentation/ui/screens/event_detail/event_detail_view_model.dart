@@ -11,6 +11,7 @@ abstract class EventDetailViewModel extends ViewModelCommon {
   String get agendaId => '';
   List<String> get sponsorsId => [];
   List<String> get speakersId => [];
+  Future<void> loadEventData(String eventId);
 }
 
 class EventDetailViewModelImp extends EventDetailViewModel {
@@ -43,7 +44,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   void setup([Object? argument]) {
     if (argument is String) {
-      _loadEventData(argument);
+      loadEventData(argument);
     }
   }
 
@@ -52,7 +53,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     return event?.eventName ?? '';
   }
 
-  Future<void> _loadEventData(String eventId) async {
+  Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
 

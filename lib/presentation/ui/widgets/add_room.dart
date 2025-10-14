@@ -46,6 +46,7 @@ class _AddRoomState extends State<AddRoom> {
           sessionUids: [],
         ),
       );
+      _controllers.add(controller);
     });
   }
 

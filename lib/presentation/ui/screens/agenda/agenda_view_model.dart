@@ -9,6 +9,7 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<void> saveSpeaker(Speaker speaker,String eventId);
   Future<void> addAgendaToEvent(Agenda agenda,String eventId);
   void addSession(
     String agendaId,
@@ -67,6 +68,11 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
     await agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
+  }
+
+  @override
+  Future<void> saveSpeaker(Speaker speaker,String eventId) async {
+    await agendaUseCase.saveSpeaker(speaker,eventId);
   }
 
   @override

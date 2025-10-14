@@ -34,7 +34,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     super.initState();
     widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
+    _tabController.addListener(() async {
+      await widget.viewmodel.loadEventData(widget.eventId);
       setState(() {
         _selectedIndex = _tabController.index;
       });

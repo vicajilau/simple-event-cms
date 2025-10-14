@@ -86,7 +86,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveSpeaker(Speaker speaker, String parentId) async {
+  Future<void> saveSpeaker(Speaker speaker, String? parentId) async {
     await DataUpdate.addItemAndAssociations(speaker, parentId);
   }
 
@@ -243,5 +243,11 @@ class SecRepositoryImp extends SecRepository {
     } catch (e) {
       return [];
     }
+  }
+
+  @override
+  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker) async {
+    return await DataUpdate.addItemAndAssociations(speaker, agendaId);
+
   }
 }

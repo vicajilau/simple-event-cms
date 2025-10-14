@@ -149,7 +149,7 @@ class CommonsServicesImp extends CommonsServices {
 
     // 2. MODIFY THE DATA LIST (Your current logic)
     int indexElementFounded = dataOriginal.indexWhere(
-          (item) => item.uid == data.uid,
+      (item) => item.uid == data.uid,
     );
 
     if (indexElementFounded != -1) {
@@ -184,19 +184,17 @@ class CommonsServicesImp extends CommonsServices {
       if (e is GitHubError && e.message == "Not Found") {
         // If the file is not found, create it with an empty list.
         final response = await github.repositories.createFile(
-            repositorySlug,
-            CreateFile(
-              path: pathUrl,
-              content: base64Content,
-              message: 'feat: create file at $pathUrl',
-              branch: branch,
-            ));
+          repositorySlug,
+          CreateFile(
+            path: pathUrl,
+            content: base64Content,
+            message: 'feat: create file at $pathUrl',
+            branch: branch,
+          ),
+        );
         if (response.content != null) {
-          return http.Response(
-            response.content?.content.toString() ?? "",
-            200,
-          );
-        }else{
+          return http.Response(response.content?.content.toString() ?? "", 200);
+        } else {
           // Any other error while getting the file.
           throw GithubException(
             "Failed to create file contents from $pathUrl: $e",
@@ -205,7 +203,6 @@ class CommonsServicesImp extends CommonsServices {
           );
         }
         // Return an empty list since the file was just created empty.
-
       } else {
         // Any other error while getting the file.
         throw GithubException(
@@ -399,13 +396,14 @@ class CommonsServicesImp extends CommonsServices {
       if (e is GitHubError && e.message == "Not Found") {
         // If the file is not found, create it.
         final response = await github.repositories.createFile(
-            repositorySlug,
-            CreateFile(
-              path: pathUrl,
-              content: base64Content,
-              message: 'feat: create file at $pathUrl',
-              branch: branch,
-            ));
+          repositorySlug,
+          CreateFile(
+            path: pathUrl,
+            content: base64Content,
+            message: 'feat: create file at $pathUrl',
+            branch: branch,
+          ),
+        );
         if (response.content != null) {
           return http.Response(
             response.content?.content.toString() ?? "",
