@@ -74,19 +74,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
 
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
+    tracks = await widget.viewmodel.getTracksByEventId(widget.data?.eventId.toString() ?? "") ?? [];
 
     setState(() {
       agendaDays = agenda?.resolvedDays ?? [];
-      final allTracks =
-          ((agenda?.resolvedDays?.map((day) => day.resolvedTracks).expand((e) => e ?? [])) ?? [])
-              .whereType<Track>()
-              .toList();
-
-      final uniqueTracks = <String, Track>{};
-      for (final track in allTracks) {
-        uniqueTracks[track.uid] = track;
-      }
-      tracks = uniqueTracks.values.toList();
       speakers = fetchedSpeakers;
     });
 

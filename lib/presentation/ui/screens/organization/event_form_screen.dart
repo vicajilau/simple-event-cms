@@ -212,7 +212,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       rooms: _tracks.toList(),
                       editedRooms: (List<Track> currentRooms) {
                         _tracks = currentRooms;
-                      }
+                      },
+                      eventUid: widget.eventId.toString(),
                     ),
                   ),
                 ),

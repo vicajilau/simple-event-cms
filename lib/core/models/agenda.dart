@@ -71,6 +71,7 @@ class AgendaDay extends GitHubModel {
 /// Represents a track or room, linking to sessions by their UIDs.
 class Track extends GitHubModel {
   String name;
+  String eventUid;
   final String color;
   List<String> sessionUids;
   List<Session>? resolvedSessions; // Field for in-memory resolved objects
@@ -80,6 +81,7 @@ class Track extends GitHubModel {
     required this.name,
     required this.color,
     required this.sessionUids,
+    required this.eventUid,
     this.resolvedSessions, // Allow initialization
     super.pathUrl = PathsGithub.tracksPath,
     super.updateMessage = PathsGithub.tracksUpdateMessage,
@@ -90,6 +92,7 @@ class Track extends GitHubModel {
       uid: json['UID'].toString(),
       name: json['name'],
       color: json['color'],
+      eventUid: json['eventUid'],
       sessionUids: (json['sessions'] as List)
           .map((sessionUid) => sessionUid['UID'].toString())
           .toList(),
@@ -103,6 +106,7 @@ class Track extends GitHubModel {
     "name": name,
     "color": color,
     "sessions": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "eventUid": eventUid
   };
 }
 

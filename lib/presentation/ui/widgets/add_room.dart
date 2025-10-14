@@ -5,7 +5,9 @@ import 'package:sec/core/models/agenda.dart';
 class AddRoom extends StatefulWidget {
   final List<Track> rooms;
   final void Function(List<Track>) editedRooms;
-  const AddRoom({super.key, required this.rooms, required this.editedRooms});
+  final String eventUid;
+
+  const AddRoom({super.key, required this.rooms, required this.editedRooms, required this.eventUid});
 
   @override
   State<AddRoom> createState() => _AddRoomState();
@@ -44,6 +46,7 @@ class _AddRoomState extends State<AddRoom> {
           name: controller.text,
           color: "",
           sessionUids: [],
+          eventUid: widget.eventUid,
         ),
       );
       _controllers.add(controller);

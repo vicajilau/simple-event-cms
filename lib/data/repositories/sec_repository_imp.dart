@@ -182,11 +182,11 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<Track>>> loadTracksByListId(List<String> tracksIds) async {
+  Future<Result<List<Track>>> loadTracksByEventId(eventId) async {
     try {
       var tracks = await dataLoader.loadAllTracks();
 
-      return Result.ok(tracks.where((track) => tracksIds.contains(track.uid)).toList());
+      return Result.ok(tracks.where((track) => eventId == track.eventUid).toList());
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {

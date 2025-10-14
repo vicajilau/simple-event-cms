@@ -17,7 +17,7 @@ abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<Track?> getTrackById(String trackId);
   Future<AgendaDay?> getAgendaDayById(String agendaDayId);
   Future<List<AgendaDay>?> getAgendaDayByListId(List<String> agendaDayIds);
-  Future<List<Track>?> getTracksByListId(List<String> trackIds);
+  Future<List<Track>?> getTracksByEventId(String eventId);
   Future<List<Session>?> getSessionsByListId(List<String> sessionIds);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
   Future<void> addSession(String agendaId,String agendaDayId,String trackId,Session session);
@@ -140,8 +140,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<List<Track>?> getTracksByListId(List<String> trackIds) async {
-    final result = await agendaUseCase.getTracksByListId(trackIds);
+  Future<List<Track>?> getTracksByEventId(String eventId) async {
+    final result = await agendaUseCase.getTracksByEventId(eventId);
     switch (result) {
       case Ok<List<Track>>():
         return result.value;

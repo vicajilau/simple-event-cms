@@ -11,7 +11,7 @@ abstract class SecRepository {
   Future<Result<List<AgendaDay>>> loadAgendaDayByListId(
     List<String> agendaDayIds,
   );
-  Future<Result<List<Track>>> loadTracksByListId(List<String> tracksIds);
+  Future<Result<List<Track>>> loadTracksByEventId(String eventId);
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds);
   Future<Result<Track>> loadTrackById(String trackId);
   Future<void> saveEvent(Event event);
