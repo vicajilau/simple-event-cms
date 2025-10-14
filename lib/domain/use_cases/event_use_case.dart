@@ -53,7 +53,7 @@ class EventUseCaseImp implements EventUseCase {
         days.add(
           AgendaDay(
             uid:
-                'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+                'AgendaDay_$i${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
             date: DateFormat(
               'yyyy-MM-dd',
             ).format(startDate.add(Duration(days: i))),
