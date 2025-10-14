@@ -55,7 +55,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/refactor_agenda_form",
+          ref: "develop",
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -116,11 +116,15 @@ class CommonsServicesImp extends CommonsServices {
         "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
       );
     } catch (e, st) {
-      throw JsonDecodeException(
-        "Error loading configuration from $path",
-        cause: e,
-        stackTrace: st,
-      );
+      if (e.toString().contains("No element")) {
+        return [].toList();
+      } else {
+        throw JsonDecodeException(
+          "Error loading configuration from $path",
+          cause: e,
+          stackTrace: st,
+        );
+      }
     }
   }
 
@@ -172,7 +176,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_agenda_form",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
 
@@ -282,7 +286,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_agenda_form",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -384,7 +388,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_agenda_form",
+        ref: "develop",
       );
       currentSha = contents.file?.sha;
 

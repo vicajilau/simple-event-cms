@@ -75,7 +75,7 @@ class Event extends GitHubModel {
             .map((item) => Track.fromJson(item))
             .toList()
         : [];
-    var agendaUID = json['agendaUID'].toString();
+    var agendaUID = json['agendaUID'];
     return Event(
       uid: json["UID"].toString(),
       eventName: json['eventName'],
