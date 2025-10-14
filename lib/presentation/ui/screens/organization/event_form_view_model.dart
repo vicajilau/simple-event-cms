@@ -34,7 +34,6 @@ class EventFormViewModelImpl extends EventFormViewModel {
 
   @override
   Future<void> onSubmit(Event event) async {
-    await eventFormUseCase.saveTracks(event.tracks);
     await eventFormUseCase.saveEvent(event);
   }
 }

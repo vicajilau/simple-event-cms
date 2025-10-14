@@ -101,6 +101,7 @@ class DataUpdate {
   }
 
   static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    await addItemListAndAssociations(event.tracks);
     await dataUpdateInfo.updateEvent(event);
     debugPrint("Event ${event.uid} added.");
   }
