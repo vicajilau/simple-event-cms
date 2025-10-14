@@ -57,6 +57,7 @@ class EventUseCaseImp implements EventUseCase {
             date: DateFormat(
               'yyyy-MM-dd',
             ).format(startDate.add(Duration(days: i))),
+            eventUID: event.uid,
             trackUids: event.tracks.map((track) => track.uid).toList(),
           ),
         );

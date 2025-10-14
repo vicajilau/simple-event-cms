@@ -33,7 +33,7 @@ class Agenda extends GitHubModel {
 
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
-  final String date;
+  final String date,eventUID;
   List<String> trackUids;
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
@@ -41,6 +41,7 @@ class AgendaDay extends GitHubModel {
     required super.uid,
     required this.date,
     required this.trackUids,
+    required this.eventUID,
     this.resolvedTracks, // Allow initialization
     super.pathUrl = PathsGithub.daysPath,
     super.updateMessage = PathsGithub.daysUpdateMessage,
@@ -50,6 +51,7 @@ class AgendaDay extends GitHubModel {
     return AgendaDay(
       uid: json['UID'].toString(),
       date: json['date'],
+      eventUID: json['eventUID'],
       trackUids: (json['tracks'] as List)
           .map((trackUid) => trackUid["UID"].toString())
           .toList(),
@@ -61,6 +63,7 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
+    "eventUID": eventUID, // Only UIDs are serialized
     "tracks": trackUids, // Only UIDs are serialized
   };
 }
