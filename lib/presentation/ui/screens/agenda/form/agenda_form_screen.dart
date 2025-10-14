@@ -74,7 +74,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
 
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
-    var fechedTracks = await widget.viewmodel.getTracksByEventId(data.eventId!) ?? [];
+    var fechedTracks = await widget.viewmodel.getTracks() ?? [];
     var fetchedAgendaDays = await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
 
     setState(() {

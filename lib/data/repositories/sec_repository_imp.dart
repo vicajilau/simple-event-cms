@@ -195,6 +195,19 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
+  Future<Result<List<Track>>> loadTracks() async {
+    try {
+      var tracks = await dataLoader.loadAllTracks();
+
+      return Result.ok(tracks);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds) async {
     try {
       var sessions = await dataLoader.loadAllSessions();
