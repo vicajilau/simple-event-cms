@@ -32,11 +32,11 @@ class EventUseCaseImp implements EventUseCase {
 
   @override
   Future<void> saveEvent(Event event) async {
-    repository.saveEvent(event);
+    await repository.saveEvent(event);
   }
 
   @override
   Future<void> saveAgendaDays(List<AgendaDay> days) async {
-    repository.saveAgendaDays(days);
+    await repository.saveAgendaDays(days);
   }
 }
