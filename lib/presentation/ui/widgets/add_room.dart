@@ -22,8 +22,8 @@ class _AddRoomState extends State<AddRoom> {
     _tracks = List.generate(widget.rooms.length, (index) {
       return widget.rooms[index];
     });
-    _controllers = List.generate(widget.rooms.length, (index) {
-      return TextEditingController(text: widget.rooms[index].name);
+    _controllers = List.generate(_tracks.length, (index) {
+      return TextEditingController(text: _tracks[index].name);
     });
   }
 
