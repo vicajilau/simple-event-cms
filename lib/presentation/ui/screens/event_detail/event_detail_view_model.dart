@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -53,22 +54,28 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     return event?.eventName ?? '';
   }
 
+  @override
   Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
 
     switch (result) {
       case Ok<List<Event>>():
-        event = result.value.firstWhere(
-          (e) => e.uid == eventId,
-          orElse: () => result.value.first, // Fallback al primer evento
-        );
+        if(result.value.isEmpty){
+          setErrorKey(NetworkException("there aren,t any events to show"));
+          viewState.value = ViewState.error;
+        }else{
+          event = result.value.firstWhere(
+                (e) => e.uid == eventId,
+            orElse: () => result.value.first, // Fallback al primer evento
+          );
 
-        _agendaId = event?.agendaUID ?? '';
-        _speakersId = event?.speakersUID ?? [];
-        _sponsorsId = event?.sponsorsUID ?? [];
+          _agendaId = event?.agendaUID ?? '';
+          _speakersId = event?.speakersUID ?? [];
+          _sponsorsId = event?.sponsorsUID ?? [];
 
-        viewState.value = ViewState.loadFinished;
+          viewState.value = ViewState.loadFinished;
+        }
       case Error():
         setErrorKey(result.error);
         viewState.value = ViewState.error;

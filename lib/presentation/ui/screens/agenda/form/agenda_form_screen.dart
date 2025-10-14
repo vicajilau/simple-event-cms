@@ -407,7 +407,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   session,
                   );
 
-              Navigator.pop(context, true); // Return true to indicate success
+              if (mounted) Navigator.pop(context, true); // Return true to indicate success
             }
           },
           child: const Text('Guardar'),
