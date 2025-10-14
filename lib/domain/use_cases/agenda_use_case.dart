@@ -7,8 +7,8 @@ import '../../core/utils/result.dart';
 
 abstract class AgendaUseCase {
   Future<Result<Agenda>> getAgendaById(String id);
-  void saveAgenda(Agenda agenda, String eventId);
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<void> saveAgenda(Agenda agenda, String eventId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByListId(
     List<String> agendaDayIds,
@@ -48,8 +48,8 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  void saveAgenda(Agenda agenda, String eventId) {
-    repository.saveAgenda(agenda, eventId);
+  Future<void> saveAgenda(Agenda agenda, String eventId) async {
+    await repository.saveAgenda(agenda, eventId);
   }
 
   @override

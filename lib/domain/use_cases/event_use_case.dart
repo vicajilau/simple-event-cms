@@ -7,7 +7,10 @@ abstract class EventUseCase {
   Future<Result<List<Event>>> getEvents();
   Future<Event?> getEventById(String id);
   Future<void> saveEvent(Event event);
-}
+  Future<void> saveTracks(List<Track> tracks);
+  Future<void> saveAgendaDays(List<AgendaDay> days);
+
+  }
 
 class EventUseCaseImp implements EventUseCase {
   SecRepository repository = getIt<SecRepository>();
@@ -31,5 +34,14 @@ class EventUseCaseImp implements EventUseCase {
   @override
   Future<void> saveEvent(Event event) async {
     repository.saveEvent(event);
+  }
+
+  @override
+  Future<void> saveTracks(List<Track> tracks) async {
+    repository.saveTracks(tracks);
+  }
+  @override
+  Future<void> saveAgendaDays(List<AgendaDay> days) async {
+    repository.saveAgendaDays(days);
   }
 }

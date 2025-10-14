@@ -73,6 +73,33 @@ class DataUpdate {
     }
   }
 
+  static Future<void> addItemListAndAssociations(
+      List<dynamic> items, // Can be a list of Session, Track, AgendaDay, Speaker, Sponsor
+      ) async {
+    if (items.isEmpty) return;
+
+    String itemType = items.first.runtimeType.toString();
+    switch (itemType) {
+      case "Session":
+        await _addSessions(items.cast<Session>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Track":
+        await _addTracks(items.cast<Track>(), dataLoader, dataUpdateInfo);
+        break;
+      case "AgendaDay":
+        await _addAgendaDays(items.cast<AgendaDay>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Speaker":
+        await _addSpeakers(items.cast<Speaker>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Sponsor":
+        await _addSponsors(items.cast<Sponsor>(), dataLoader, dataUpdateInfo);
+        break;
+      default:
+        throw Exception("Unsupported item type for addition: ${items.first.runtimeType}");
+    }
+  }
+
   static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     await dataUpdateInfo.updateEvent(event);
     debugPrint("Event ${event.uid} added.");
@@ -121,6 +148,15 @@ class DataUpdate {
     await dataUpdateInfo.updateSession(session);
     debugPrint("Session ${session.uid} added.");
   }
+
+  static Future<void> _addSessions(List<Session> sessions, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Session> allSessions = await dataLoader.loadAllSessions();
+    final sessionMap = { for (var s in allSessions) s.uid : s };
+    for (var session in sessions) {
+      sessionMap[session.uid] = session;
+    }
+    await dataUpdateInfo.updateSessions(sessionMap.values.toList());
+  }
   static Future<void> _deleteSession(String sessionId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
     for (var track in allTracks) {
@@ -150,6 +186,15 @@ class DataUpdate {
     debugPrint("Track ${track.uid} added.");
   }
 
+  static Future<void> _addTracks(List<Track> tracks, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Track> allTracks = await dataLoader.loadAllTracks();
+    final trackMap = { for (var t in allTracks) t.uid : t };
+    for (var track in tracks) {
+      trackMap[track.uid] = track;
+    }
+    await dataUpdateInfo.updateTracks(trackMap.values.toList());
+  }
+
   static Future<void> _deleteTrack(String trackId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
@@ -177,6 +222,15 @@ class DataUpdate {
     await dataUpdateInfo.updateAgendaDay(day);
     debugPrint("AgendaDay ${day.uid} added.");
   }
+
+  static Future<void> _addAgendaDays(List<AgendaDay> days, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<AgendaDay> allAgendaDays = await dataLoader.loadAllDays();
+    final dayMap = { for (var d in allAgendaDays) d.uid : d };
+    for (var day in days) {
+      dayMap[day.uid] = day;
+    }
+    await dataUpdateInfo.updateAgendaDays(dayMap.values.toList());
+  }
   static Future<void> _deleteAgendaDay(String dayId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
     for (var agenda in allAgendas) {
@@ -203,6 +257,16 @@ class DataUpdate {
     await dataUpdateInfo.updateSpeaker(speaker);
     debugPrint("Speaker ${speaker.uid} added.");
   }
+
+  static Future<void> _addSpeakers(List<Speaker> speakers, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Speaker> allSpeakers = await dataLoader.loadSpeakers();
+    final speakerMap = { for (var s in allSpeakers) s.uid : s };
+    for (var speaker in speakers) {
+      speakerMap[speaker.uid] = speaker;
+    }
+    await dataUpdateInfo.updateSpeakers(speakerMap.values.toList());
+
+  }
   static Future<void> _deleteSpeaker(String speakerId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
@@ -217,7 +281,7 @@ class DataUpdate {
     await dataUpdateInfo.removeSpeaker(speakerId);
     debugPrint("Speaker $speakerId and its associations removed.");
   }
-  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
+  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfom, String parentId) async {
     List<Event> allEvents = await dataLoader.loadEvents();
     for (var event in allEvents) {
       if (event.uid == parentId) {
@@ -228,6 +292,15 @@ class DataUpdate {
     }
     await dataUpdateInfo.updateSponsors(sponsor);
     debugPrint("Sponsor ${sponsor.uid} added.");
+  }
+
+  static Future<void> _addSponsors(List<Sponsor> sponsors, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Sponsor> allSponsors = await dataLoader.loadSponsors();
+    final sponsorMap = { for (var s in allSponsors) s.uid : s };
+    for (var sponsor in sponsors) {
+      sponsorMap[sponsor.uid] = sponsor;
+    }
+    await dataUpdateInfo.updateSponsorsList(sponsorMap.values.toList());
   }
   static Future<void> _deleteSponsor(String sponsorId, DataUpdateInfo dataUpdateInfo,DataLoader dataLoader) async {
     List<Event> allEvents = await dataLoader.loadEvents();

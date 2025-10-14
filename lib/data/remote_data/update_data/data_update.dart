@@ -24,6 +24,16 @@ class DataUpdateInfo {
     );
   }
 
+  /// Loads speaker information from the speakers.json file
+  /// Returns a Future containing a list of speaker data
+  Future<void> updateSpeakers(List<Speaker> speakers) async {
+    await dataCommons.updateDataList(
+      speakers,
+      "events/${organization.year}/${PathsGithub.speakerPath}",
+      PathsGithub.speakerUpdateMessage,
+    );
+  }
+
   /// Loads track information from the agenda.json file
   /// Returns a Future containing a list of track data
   Future<void> updateTrack(Track track) async {
@@ -31,6 +41,16 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       trackOriginal,
       track,
+      "events/${organization.year}/${PathsGithub.tracksPath}",
+      PathsGithub.tracksUpdateMessage,
+    );
+  }
+
+  /// Loads track information from the agenda.json file
+  /// Returns a Future containing a list of track data
+  Future<void> updateTracks(List<Track> tracks) async {
+    await dataCommons.updateDataList(
+      tracks,
       "events/${organization.year}/${PathsGithub.tracksPath}",
       PathsGithub.tracksUpdateMessage,
     );
@@ -50,6 +70,18 @@ class DataUpdateInfo {
     );
   }
 
+  /// Loads event agenda information from the agenda.json file
+  /// Parses the JSON structure and returns a list of AgendaDay objects
+  /// with proper type conversion and validation
+  /// Returns a Future containing a list of AgendaDay models
+  Future<void> updateAgendas(List<Agenda> agendas) async {
+    await dataCommons.updateDataList(
+      agendas,
+      "events/${organization.year}/${PathsGithub.agendaPath}",
+      PathsGithub.agendaUpdateMessage,
+    );
+  }
+
   /// Loads event agenda day information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
@@ -59,9 +91,21 @@ class DataUpdateInfo {
 
     await dataCommons.updateData(
       daysOriginal,
-      daysOriginal.firstWhere((day) => day.uid == agendaDay.uid),
+      agendaDay,
       "events/${organization.year}/${agendaDay.pathUrl}",
       agendaDay.updateMessage,
+    );
+  }
+
+  /// Loads event agenda day information from the agenda.json file
+  /// Parses the JSON structure and returns a list of AgendaDay objects
+  /// with proper type conversion and validation
+  /// Returns a Future containing a list of AgendaDay models
+  Future<void> updateAgendaDays(List<AgendaDay> agendaDays) async {
+    await dataCommons.updateDataList(
+      agendaDays,
+      "events/${organization.year}/${PathsGithub.daysPath}",
+      PathsGithub.daysUpdateMessage,
     );
   }
 
@@ -77,6 +121,16 @@ class DataUpdateInfo {
     );
   }
 
+  /// Loads sponsor information from the sponsors.json file
+  /// Returns a Future containing a list of sponsor data with logos and details
+  Future<void> updateSponsorsList(List<Sponsor> sponsors) async {
+    await dataCommons.updateDataList(
+      sponsors,
+      "events/${organization.year}/${PathsGithub.sponsorPath}",
+      PathsGithub.sponsorUpdateMessage,
+    );
+  }
+
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<void> updateEvent(Event event) async {
@@ -89,6 +143,16 @@ class DataUpdateInfo {
     );
   }
 
+  /// Update events information from the events.json file
+  /// Returns a Future containing a list of events data with logos and details
+  Future<void> updateEvents(List<Event> events) async {
+    await dataCommons.updateDataList(
+      events,
+      "events/${organization.year}/${PathsGithub.eventPath}",
+      PathsGithub.eventUpdateMessage,
+    );
+  }
+
   /// Update session information from the sessions.json file
   /// Returns a Future containing a list of sessions data
   Future<void> updateSession(Session session) async {
@@ -98,6 +162,16 @@ class DataUpdateInfo {
       session,
       "events/${organization.year}/${session.pathUrl}",
       session.updateMessage,
+    );
+  }
+
+  /// Update session information from the sessions.json file
+  /// Returns a Future containing a list of sessions data
+  Future<void> updateSessions(List<Session> sessions) async {
+    await dataCommons.updateDataList(
+      sessions,
+      "events/${organization.year}/${PathsGithub.sessionsPath}",
+      PathsGithub.sessionsUpdateMessage,
     );
   }
 

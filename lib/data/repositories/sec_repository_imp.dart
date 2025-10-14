@@ -65,6 +65,15 @@ class SecRepositoryImp extends SecRepository {
   Future<void> saveEvent(Event event) async {
     await DataUpdate.addItemAndAssociations(event, event.uid);
   }
+  @override
+  Future<void> saveTracks(List<Track> tracks) async {
+    await DataUpdate.addItemListAndAssociations(tracks);
+  }
+
+  @override
+  Future<void> saveAgendaDays(List<AgendaDay> agendaDays) async {
+    await DataUpdate.addItemListAndAssociations(agendaDays);
+  }
 
   @override
   Future<void> saveAgenda(Agenda agenda, String eventId) async {

@@ -392,7 +392,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 trackUids: [track.uid],
               );
               agenda?.dayUids.add(agendaDay.uid);
-              widget.viewmodel.saveAgendaDayById(agendaDay, agenda!.uid.toString());
+              await widget.viewmodel.saveAgendaDayById(agendaDay, agenda!.uid.toString());
               Navigator.pop(context, agenda);
             }
           },
