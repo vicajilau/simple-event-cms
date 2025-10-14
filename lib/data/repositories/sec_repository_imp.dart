@@ -13,9 +13,6 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<List<Event>>> loadEvents() async {
     try {
-      if (_events.isNotEmpty) {
-        return Result.ok(_events);
-      }
 
       final events = await dataLoader.loadEvents();
       _events = events;
@@ -68,6 +65,15 @@ class SecRepositoryImp extends SecRepository {
   Future<void> saveEvent(Event event) async {
     await DataUpdate.addItemAndAssociations(event, event.uid);
   }
+  @override
+  Future<void> saveTracks(List<Track> tracks) async {
+    await DataUpdate.addItemListAndAssociations(tracks);
+  }
+
+  @override
+  Future<void> saveAgendaDays(List<AgendaDay> agendaDays) async {
+    await DataUpdate.addItemListAndAssociations(agendaDays);
+  }
 
   @override
   Future<void> saveAgenda(Agenda agenda, String eventId) async {
@@ -80,7 +86,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveSpeaker(Speaker speaker, String parentId) async {
+  Future<void> saveSpeaker(Speaker speaker, String? parentId) async {
     await DataUpdate.addItemAndAssociations(speaker, parentId);
   }
 
@@ -176,11 +182,11 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<Track>>> loadTracksByListId(List<String> tracksIds) async {
+  Future<Result<List<Track>>> loadTracksByEventId(eventId) async {
     try {
       var tracks = await dataLoader.loadAllTracks();
 
-      return Result.ok(tracks.where((track) => tracksIds.contains(track.uid)).toList());
+      return Result.ok(tracks.where((track) => eventId == track.eventUid).toList());
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -237,5 +243,11 @@ class SecRepositoryImp extends SecRepository {
     } catch (e) {
       return [];
     }
+  }
+
+  @override
+  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker) async {
+    return await DataUpdate.addItemAndAssociations(speaker, agendaId);
+
   }
 }

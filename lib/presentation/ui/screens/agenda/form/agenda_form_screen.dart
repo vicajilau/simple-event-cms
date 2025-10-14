@@ -8,7 +8,7 @@ import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
-import '../agenda_view_model.dart';
+import '../../speaker/speaker_form_screen.dart';
 
 class AgendaFormData {
   final String agendaId;
@@ -25,23 +25,25 @@ class AgendaFormData {
 }
 
 class AgendaFormScreen extends StatefulWidget {
-  final AgendaFormData data;
-  final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
+  final AgendaFormData? data;
+  final AgendaFormViewModel viewmodel = getIt<AgendaFormViewModel>();
 
-  AgendaFormScreen({super.key, required this.data});
+  AgendaFormScreen({super.key, this.data});
 
   @override
   State<AgendaFormScreen> createState() => _AgendaFormScreenState();
 }
 
 class _AgendaFormScreenState extends State<AgendaFormScreen> {
+  Event? event;
   Agenda? agenda;
   TimeOfDay? _initSessionTime, _endSessionTime;
   String _selectedDay = '';
-  String _selectedTrack = '';
+  String _selectedTrackUid = '';
   Speaker? _selectedSpeaker;
   String _selectedTalkType = '';
-  final double spacingForRowDropdown = 40, spacingForRowTime = 40;
+  final double _spacing = 24;
+  final double _spacingForRowDropdown = 40, _spacingForRowTime = 40;
   bool _isLoading = true;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
@@ -51,9 +53,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   List<Track> tracks = [];
   List<AgendaDay> agendaDays = [];
   List<Speaker> speakers = [];
-  final List<String> sessionTypes = SessionType.values
-      .map((e) => e.name)
-      .toList();
+  final List<String> sessionTypes = SessionType.values.map((e) => e.name).toList();
 
   final AgendaFormViewModel agendaFormViewModel = getIt<AgendaFormViewModel>();
 
@@ -64,60 +64,60 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   Future<void> _loadInitialData() async {
-    agenda = await agendaFormViewModel.getAgenda(widget.data.agendaId);
-    var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
-      widget.data.eventId.toString(),
-    );
+    final data = widget.data;
+    if (data == null) {
+      // Handling creation of a new session from scratch if needed.
+      // For now, let's assume `data` is always provided.
+      setState(() => _isLoading = false);
+      return;
+    }
+
+
+    var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
+    tracks = await widget.viewmodel.getTracksByEventId(widget.data?.eventId.toString() ?? "") ?? [];
 
     setState(() {
       agendaDays = agenda?.resolvedDays ?? [];
-      final allTracks =
-          ((agenda?.resolvedDays?.map((day) => day.resolvedTracks) ?? [])
-                  .map((track) => track ?? [])
-                  .expand((tracks) => tracks)
-                  .whereType<Track>());
-
-      final uniqueTracks = <String, Track>{};
-      for (final track in allTracks.toList()) {
-        uniqueTracks[track.uid] = track;
-      }
-      tracks = uniqueTracks.values.toList();
       speakers = fetchedSpeakers;
     });
 
-    final session = widget.data.session;
+    final session = data.session;
     if (session != null) {
+      // Editing existing session
       _titleController.text = session.title;
 
-      if (widget.data.day != null &&
-          agendaDays.map((day) => day.uid).contains(widget.data.day)) {
-        _selectedDay = widget.data.day!;
+      if (data.day != null && agendaDays.map((day) => day.uid).contains(data.day)) {
+        _selectedDay = data.day!;
       }
 
-      if (widget.data.track != null &&
-          tracks.map((track) => track.uid).contains(widget.data.track!)) {
-        _selectedTrack = widget.data.track!;
+      if (data.track != null && tracks.map((track) => track.uid).contains(data.track!)) {
+        _selectedTrackUid = data.track!;
       }
 
-      final initialSpeaker = speakers.cast<Speaker?>().firstWhere((s) => s?.uid == session.speakerUID, orElse: () => null);
+      final initialSpeaker =
+          speakers.cast<Speaker?>().firstWhere((s) => s?.uid == session.speakerUID, orElse: () => null);
       if (initialSpeaker != null) {
         _selectedSpeaker = initialSpeaker;
       }
 
-      if (sessionTypes.contains(session.type.toUpperCase())) {
+      if (sessionTypes.contains(session.type)) {
         _selectedTalkType = session.type;
       }
 
       _descriptionController.text = session.description ?? '';
 
-      final parts = session.time.split(' - ');
-      _initSessionTime = TimeUtils.parseTime(parts.first);
-      _endSessionTime = TimeUtils.parseTime(parts.last);
+      if (session.time.isNotEmpty) {
+        final parts = session.time.split(' - ');
+        if (parts.length == 2) {
+          _initSessionTime = TimeUtils.parseTime(parts.first);
+          _endSessionTime = TimeUtils.parseTime(parts.last);
+        }
+      }
+    } else {
+      // Creating a new session
     }
 
-    if (mounted) {
-      setState(() => _isLoading = false);
-    }
+    setState(() => _isLoading = false);
   }
 
   @override
@@ -131,20 +131,22 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   Widget build(BuildContext context) {
     if (_isLoading) {
       return const FormScreenWrapper(
-        pageTitle: 'Creación evento',
+        pageTitle: 'Cargando...',
         widgetFormChild: Center(child: CircularProgressIndicator()),
       );
     }
+    final title = widget.data?.session == null ? 'Crear Sesión' : 'Editar Sesión';
     return FormScreenWrapper(
-      pageTitle: 'Creación evento',
+      pageTitle: title,
       widgetFormChild: Padding(
-        padding: EdgeInsetsGeometry.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            spacing: 18,
             children: [
+              Text(title, style: AppFonts.titleHeadingForm),
+              SizedBox(height: _spacing),
               _buildTitle(),
               SectionInputForm(
                 label: 'Título*',
@@ -163,8 +165,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   },
                 ),
               ),
+              SizedBox(height: _spacing),
               Row(
-                spacing: spacingForRowDropdown,
+                spacing: _spacingForRowDropdown,
                 children: [
                   Expanded(
                     child: SectionInputForm(
@@ -172,9 +175,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedDay.isEmpty
-                            ? null
-                            : _selectedDay,
-                        decoration: InputDecoration(
+                            ? null : _selectedDay,
+                        decoration: const InputDecoration(
                           hintText: 'Selecciona un día',
                         ),
                         items: agendaDays
@@ -200,11 +202,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       label: 'Sala*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTrack.isEmpty
-                            ? null
-                            : _selectedTrack,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona una sala',
+                        initialValue: _selectedTrackUid.isEmpty ? null : _selectedTrackUid,
+                        decoration: const InputDecoration(
+                          hintText: 'Selecciona una sala', // This is track
                         ),
                         items: tracks
                             .map(
@@ -214,22 +214,20 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                               ),
                             )
                             .toList(),
-                        onChanged: (room) => _selectedTrack = room ?? '',
+                        onChanged: (trackUid) => _selectedTrackUid = trackUid ?? '',
                         validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona una sala'
-                              : null;
+                          return value == null || value.isEmpty ? 'Por favor, selecciona una sala' : null;
                         },
                       ),
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: _spacing),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    spacing: spacingForRowTime,
+                children: [                  Row(
+                    spacing: _spacingForRowTime,
                     children: [
                       _timeSelector(
                         label: 'Hora de inicio:\t\t',
@@ -266,34 +264,59 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     ),
                 ],
               ),
+              SizedBox(height: _spacing),
               Row(
-                spacing: spacingForRowDropdown,
+                spacing: _spacingForRowDropdown,
                 children: [
                   Expanded(
                     child: SectionInputForm(
                       label: 'Speaker*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedSpeaker,
-                        decoration: InputDecoration(
-                          hintText: 'Selecciona un speaker',
-                        ),
-                        items: speakers
-                            .map(
-                              (speaker) => DropdownMenuItem(
-                                value: speaker, // The value is the Speaker object
-                                child: Text(speaker.name),
-                              ),
+                      childInput: speakers.isEmpty
+                          ? Row(children: [
+                                const Text('No hay speakers. Añade uno.'),
+                                IconButton(
+                                  icon: Icon(Icons.add_circle, color: Theme.of(context).primaryColor),
+                                   onPressed: () async { // Allow adding a new speaker
+                                    final newSpeaker = await Navigator.push<Speaker>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SpeakerFormScreen(),
+                                      ),
+                                    );
+                                    if (newSpeaker != null) {
+                                      await widget.viewmodel.addSpeaker(widget.data!.agendaId,newSpeaker);
+                                      setState(() {
+                                        speakers.add(newSpeaker);
+                                        _selectedSpeaker = newSpeaker;
+                                      });
+                                    }
+                                  },
+                                ),
+                              ],
                             )
-                            .toList(),
-                        onChanged: (speaker) =>
-                            _selectedSpeaker = speaker,
-                        validator: (value) {
-                          if (value == null) { // value is a Speaker object or null
-                            return 'Por favor, selecciona un speaker';
-                          }
-                          return null;
-                        },
+                          : DropdownButtonFormField<Speaker>(
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              initialValue: _selectedSpeaker,
+                              decoration: const InputDecoration(
+                                hintText: 'Selecciona un speaker', // Now shows Speaker's name
+                              ),
+                              items: speakers
+                                  .map(
+                                    (speaker) => DropdownMenuItem<Speaker>(
+                                      value: speaker, // The value is the Speaker object
+                                      child: Text(speaker.name),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (speaker) => setState(() {
+                                _selectedSpeaker = speaker;
+                              }),
+                              validator: (value) {
+                                if (value == null) { // value is a Speaker object or null
+                                  return 'Por favor, selecciona un speaker';
+                                }
+                                return null;
+                              },
                       ),
                     ),
                   ),
@@ -302,10 +325,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       label: 'Tipo de charla*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTalkType.isEmpty
-                            ? null
-                            : _selectedTalkType,
-                        decoration: InputDecoration(
+                        initialValue: _selectedTalkType.isEmpty ? null : _selectedTalkType,
+                        decoration: const InputDecoration(
                           hintText: 'Selecciona el tipo de charla',
                         ),
                         items: sessionTypes
@@ -318,25 +339,25 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             .toList(),
                         onChanged: (type) => _selectedTalkType = type ?? '',
                         validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona el tipo de charla'
-                              : null;
+                          return value == null || value.isEmpty ? 'Por favor, selecciona el tipo de charla' : null;
                         },
                       ),
                     ),
                   ),
                 ],
               ),
+              SizedBox(height: _spacing),
               SectionInputForm(
                 label: 'Descripción',
                 childInput: TextFormField(
                   maxLines: 4,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce la descripción...',
+                    hintText: 'Introduce descripción de la charla...',
                   ),
                   controller: _descriptionController,
                 ),
               ),
+              SizedBox(height: _spacing + 10),
               _buildFooter(),
             ],
           ),
@@ -346,54 +367,47 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   Widget _buildTitle() {
-    return Text('Creando evento', style: AppFonts.titleHeadingForm);
+    // Title is now at the top of the form
+    return const SizedBox.shrink();
   }
 
   Widget _buildFooter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+        const SizedBox(width: 16),
         FilledButton(
           onPressed: () async {
-            if (!isTimeSelected(_initSessionTime) ||
-                !isTimeSelected(_endSessionTime)) {
+            setState(() => _timeErrorMessage = null);
+            bool isTimeValid = true;
+            if (_initSessionTime == null || _endSessionTime == null) {
               setState(() {
-                _timeErrorMessage =
-                    'Por favor, seleccionar ambas horas: inicio y final.';
+                _timeErrorMessage = 'Por favor, seleccionar ambas horas: inicio y final.';
               });
+              isTimeValid = false;
+            } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
+              isTimeValid = false; // Error message is already set by the time picker logic
             }
-            if (_formKey.currentState!.validate()) {
-              if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-                return;
-              }
+
+            if (_formKey.currentState!.validate() && isTimeValid) {
               Session session = Session(
+                uid: widget.data?.session?.uid ?? 'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 title: _titleController.text,
-                time:
-                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}', // _selectedSpeaker is a String here, which is wrong
-                speakerUID: _selectedSpeaker?.uid.toString(),
+                time: '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
+                speakerUID: _selectedSpeaker!.uid.toString(),
                 description: _descriptionController.text,
                 type: _selectedTalkType,
-                uid:
-                    'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
               );
-              Track track = Track(
-                uid:
-                    'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-                name: _selectedTrack,
-                color: '',
-                resolvedSessions: [session],
-                sessionUids: [session.uid],
-              );
-              AgendaDay agendaDay = AgendaDay(
-                uid:
-                    'AgendaDay_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-                date: _selectedDay,
-                resolvedTracks: [track],
-                trackUids: [track.uid],
-              );
-              agenda?.dayUids.add(agendaDay.uid);
-              widget.viewmodel.saveAgendaDayById(agendaDay, agenda!.uid.toString());
-              Navigator.pop(context, agenda);
+
+              await widget.viewmodel.addSession(
+                  widget.data!.agendaId,
+                  _selectedDay,
+                  _selectedTrackUid,
+                  session,
+                  );
+
+              if (mounted) Navigator.pop(context, true); // Return true to indicate success
             }
           },
           child: const Text('Guardar'),
@@ -408,9 +422,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     required ValueChanged<TimeOfDay> onIndexChanged,
     required bool isStartTime,
   }) {
-    return Row(
-      children: [
-        Text(
+    return Row(children: [        Text(
           label,
           style: Theme.of(
             context,
@@ -432,14 +444,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               if (newStartTime != null && newEndTime != null) {
                 bool isValid = isTimeRangeValid(newStartTime, newEndTime);
 
-                setState(() {
-                  _timeErrorMessage = isValid
-                      ? null
-                      : (isStartTime
-                            ? 'La hora de inicio debe ser antes que la hora final.'
-                            : 'La hora final debe ser después de la hora de inicio.');
+                setState(() { // Set error message for time range validation
+                  _timeErrorMessage = isValid ? null : 'La hora de inicio debe ser anterior a la hora final.';
                 });
               } else {
+                // Clear message if one of the times is not set yet
                 setState(() {
                   _timeErrorMessage = null;
                 });
@@ -455,8 +464,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             child: Text(currentTime?.format(context) ?? '00:00'),
           ),
         ),
-      ],
-    );
+      ],);
   }
 
   bool isTimeRangeValid(TimeOfDay? startTime, TimeOfDay? endTime) {
@@ -469,6 +477,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   bool isTimeSelected(TimeOfDay? time) {
-    return time != null && !(time.hour == 0 && time.minute == 0);
+    return time != null; // Simpler check
   }
 }

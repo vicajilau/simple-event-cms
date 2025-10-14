@@ -34,7 +34,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     super.initState();
     widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
+    _tabController.addListener(() async {
+      await widget.viewmodel.loadEventData(widget.eventId);
       setState(() {
         _selectedIndex = _tabController.index;
       });
@@ -160,7 +161,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newAgenda != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.addAgendaToEvent(newAgenda,eventId);
+      await agendaScreen.viewmodel.addAgendaToEvent(newAgenda,eventId);
       agendaScreen.viewmodel.setup(agendaId);
     }
   }

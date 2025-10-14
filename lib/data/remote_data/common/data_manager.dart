@@ -44,7 +44,7 @@ class DataUpdate {
 
   static Future<void> addItemAndAssociations(
       dynamic item, // Can be Session, Track, AgendaDay, Speaker, Sponsor
-      String parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
+      String? parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
       ) async {
     switch (item.runtimeType.toString()) {
       case "Event":
@@ -73,7 +73,35 @@ class DataUpdate {
     }
   }
 
+  static Future<void> addItemListAndAssociations(
+      List<dynamic> items, // Can be a list of Session, Track, AgendaDay, Speaker, Sponsor
+      ) async {
+    if (items.isEmpty) return;
+
+    String itemType = items.first.runtimeType.toString();
+    switch (itemType) {
+      case "Session":
+        await _addSessions(items.cast<Session>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Track":
+        await _addTracks(items.cast<Track>(), dataLoader, dataUpdateInfo);
+        break;
+      case "AgendaDay":
+        await _addAgendaDays(items.cast<AgendaDay>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Speaker":
+        await _addSpeakers(items.cast<Speaker>(), dataLoader, dataUpdateInfo);
+        break;
+      case "Sponsor":
+        await _addSponsors(items.cast<Sponsor>(), dataLoader, dataUpdateInfo);
+        break;
+      default:
+        throw Exception("Unsupported item type for addition: ${items.first.runtimeType}");
+    }
+  }
+
   static Future<void> _addEvent(Event event, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    await addItemListAndAssociations(event.tracks);
     await dataUpdateInfo.updateEvent(event);
     debugPrint("Event ${event.uid} added.");
   }
@@ -83,12 +111,14 @@ class DataUpdate {
     debugPrint("Event $eventId deleted.");
   }
 
-  static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Event> allEvents = await dataLoader.loadEvents();
-    for (var event in allEvents) {
-      if (event.uid == parentId) {
-        event.agendaUID = agenda.uid; // Ensure no duplicates
-        await dataUpdateInfo.updateEvent(event);
+  static Future<void> _addAgenda(Agenda agenda, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty) {
+      List<Event> allEvents = await dataLoader.loadEvents();
+      for (var event in allEvents) {
+        if (event.uid == parentId) {
+          event.agendaUID = agenda.uid; // Ensure no duplicates
+          await dataUpdateInfo.updateEvent(event);
+        }
       }
     }
     await dataUpdateInfo.updateAgenda(agenda);
@@ -107,19 +137,32 @@ class DataUpdate {
     debugPrint("Agenda $agendaId and its associations removed.");
   }
 
-  static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Track> allTracks = await dataLoader.loadAllTracks();
-    for (var track in allTracks) {
-      if (track.uid == parentId) {
-        track.sessionUids.removeWhere((uid) => uid == session.uid); // Ensure no duplicates
-        track.sessionUids.add(session.uid);
-        track.resolvedSessions?.removeWhere((s) => s.uid == session.uid); // Ensure no duplicates
-        track.resolvedSessions?.add(session);
-        await dataUpdateInfo.updateTrack(track);
+  static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty) {
+      List<Track> allTracks = await dataLoader.loadAllTracks();
+      for (var track in allTracks) {
+        if (track.uid == parentId) {
+          track.sessionUids.removeWhere((uid) =>
+          uid == session.uid); // Ensure no duplicates
+          track.sessionUids.add(session.uid);
+          track.resolvedSessions?.removeWhere((s) =>
+          s.uid == session.uid); // Ensure no duplicates
+          track.resolvedSessions?.add(session);
+          await dataUpdateInfo.updateTrack(track);
+        }
       }
     }
     await dataUpdateInfo.updateSession(session);
     debugPrint("Session ${session.uid} added.");
+  }
+
+  static Future<void> _addSessions(List<Session> sessions, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Session> allSessions = await dataLoader.loadAllSessions();
+    final sessionMap = { for (var s in allSessions) s.uid : s };
+    for (var session in sessions) {
+      sessionMap[session.uid] = session;
+    }
+    await dataUpdateInfo.updateSessions(sessionMap.values.toList());
   }
   static Future<void> _deleteSession(String sessionId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
@@ -134,20 +177,33 @@ class DataUpdate {
     debugPrint("Session $sessionId and its associations removed.");
   }
 
-  static Future<void> _addTrack(Track track, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<AgendaDay> allDays = await dataLoader.loadAllDays();
-    for (var day in allDays) {
-      if (day.uid == parentId) {
-        day.trackUids.removeWhere((uid) => uid == track.uid); // Ensure no duplicates
-        day.trackUids.add(track.uid);
-        day.resolvedTracks?.removeWhere((t) => t.uid == track.uid); // Ensure no duplicates
-        day.resolvedTracks?.add(track);
-        await dataUpdateInfo.updateAgendaDay(day);
+  static Future<void> _addTrack(Track track, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty) {
+      List<AgendaDay> allDays = await dataLoader.loadAllDays();
+      for (var day in allDays) {
+        if (day.uid == parentId) {
+          day.trackUids.removeWhere((uid) =>
+          uid == track.uid); // Ensure no duplicates
+          day.trackUids.add(track.uid);
+          day.resolvedTracks?.removeWhere((t) =>
+          t.uid == track.uid); // Ensure no duplicates
+          day.resolvedTracks?.add(track);
+          await dataUpdateInfo.updateAgendaDay(day);
+        }
       }
     }
     // Similar to sessions, if tracks are associated with agenda days, update the agenda day.
     await dataUpdateInfo.updateTrack(track);
     debugPrint("Track ${track.uid} added.");
+  }
+
+  static Future<void> _addTracks(List<Track> tracks, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Track> allTracks = await dataLoader.loadAllTracks();
+    final trackMap = { for (var t in allTracks) t.uid : t };
+    for (var track in tracks) {
+      trackMap[track.uid] = track;
+    }
+    await dataUpdateInfo.updateTracks(trackMap.values.toList());
   }
 
   static Future<void> _deleteTrack(String trackId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
@@ -162,20 +218,33 @@ class DataUpdate {
     await dataUpdateInfo.removeTrack(trackId);
     debugPrint("Track $trackId and its associations removed.");
   }
-  static Future<void> _addAgendaDay(AgendaDay day, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
-    for (var agenda in allAgendas) {
-      if (agenda.uid.contains(parentId)) {
-        agenda.dayUids.removeWhere((uid) => uid == day.uid); // Ensure no duplicates
-        agenda.dayUids.add(day.uid);
-        agenda.resolvedDays?.removeWhere((d) => d.uid == day.uid); // Ensure no duplicates
-        agenda.resolvedDays?.add(day);
-        await dataUpdateInfo.updateAgenda(agenda);
+  static Future<void> _addAgendaDay(AgendaDay day, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty) {
+      List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
+      for (var agenda in allAgendas) {
+        if (agenda.uid.contains(parentId)) {
+          agenda.dayUids.removeWhere((uid) =>
+          uid == day.uid); // Ensure no duplicates
+          agenda.dayUids.add(day.uid);
+          agenda.resolvedDays?.removeWhere((d) =>
+          d.uid == day.uid); // Ensure no duplicates
+          agenda.resolvedDays?.add(day);
+          await dataUpdateInfo.updateAgenda(agenda);
+        }
       }
     }
     // If agenda days are associated with an agenda, update the agenda.
     await dataUpdateInfo.updateAgendaDay(day);
     debugPrint("AgendaDay ${day.uid} added.");
+  }
+
+  static Future<void> _addAgendaDays(List<AgendaDay> days, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<AgendaDay> allAgendaDays = await dataLoader.loadAllDays();
+    final dayMap = { for (var d in allAgendaDays) d.uid : d };
+    for (var day in days) {
+      dayMap[day.uid] = day;
+    }
+    await dataUpdateInfo.updateAgendaDays(dayMap.values.toList());
   }
   static Future<void> _deleteAgendaDay(String dayId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Agenda> allAgendas = await dataLoader.loadAgendaStructures();
@@ -190,18 +259,31 @@ class DataUpdate {
     debugPrint("AgendaDay $dayId and its associations removed.");
   }
 
-  static Future<void> _addSpeaker(Speaker speaker, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Event> allEvents = await dataLoader.loadEvents();
-    for (var event in allEvents) {
-      if (event.uid == parentId) {
-        event.speakersUID.removeWhere((uid) => uid == speaker.uid); // Ensure no duplicates
-        event.speakersUID.add(speaker.uid); // Ensure no duplicates
-        await dataUpdateInfo.updateEvent(event);
+  static Future<void> _addSpeaker(Speaker speaker, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty){
+      List<Event> allEvents = await dataLoader.loadEvents();
+      for (var event in allEvents) {
+        if (event.uid == parentId) {
+          event.speakersUID.removeWhere((uid) => uid == speaker.uid); // Ensure no duplicates
+          event.speakersUID.add(speaker.uid); // Ensure no duplicates
+          await dataUpdateInfo.updateEvent(event);
+        }
       }
     }
+
     // If speakers are associated with events, you might need to update the event.
     await dataUpdateInfo.updateSpeaker(speaker);
     debugPrint("Speaker ${speaker.uid} added.");
+  }
+
+  static Future<void> _addSpeakers(List<Speaker> speakers, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Speaker> allSpeakers = await dataLoader.loadSpeakers();
+    final speakerMap = { for (var s in allSpeakers) s.uid : s };
+    for (var speaker in speakers) {
+      speakerMap[speaker.uid] = speaker;
+    }
+    await dataUpdateInfo.updateSpeakers(speakerMap.values.toList());
+
   }
   static Future<void> _deleteSpeaker(String speakerId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Event> allEvents = await dataLoader.loadEvents();
@@ -217,17 +299,29 @@ class DataUpdate {
     await dataUpdateInfo.removeSpeaker(speakerId);
     debugPrint("Speaker $speakerId and its associations removed.");
   }
-  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String parentId) async {
-    List<Event> allEvents = await dataLoader.loadEvents();
-    for (var event in allEvents) {
-      if (event.uid == parentId) {
-        event.sponsorsUID.removeWhere((uid) => uid == sponsor.uid); // Ensure no duplicates
-        event.sponsorsUID.add(sponsor.uid); // Add, ensuring it's not duplicated
-        await dataUpdateInfo.updateEvent(event);
+  static Future<void> _addSponsor(Sponsor sponsor, DataLoader dataLoader, DataUpdateInfo dataUpdateInfom, String? parentId) async {
+    if(parentId != null && parentId.isNotEmpty){
+      List<Event> allEvents = await dataLoader.loadEvents();
+      for (var event in allEvents) {
+        if (event.uid == parentId) {
+          event.sponsorsUID.removeWhere((uid) => uid == sponsor.uid); // Ensure no duplicates
+          event.sponsorsUID.add(sponsor.uid); // Add, ensuring it's not duplicated
+          await dataUpdateInfo.updateEvent(event);
+        }
       }
     }
+
     await dataUpdateInfo.updateSponsors(sponsor);
     debugPrint("Sponsor ${sponsor.uid} added.");
+  }
+
+  static Future<void> _addSponsors(List<Sponsor> sponsors, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
+    List<Sponsor> allSponsors = await dataLoader.loadSponsors();
+    final sponsorMap = { for (var s in allSponsors) s.uid : s };
+    for (var sponsor in sponsors) {
+      sponsorMap[sponsor.uid] = sponsor;
+    }
+    await dataUpdateInfo.updateSponsorsList(sponsorMap.values.toList());
   }
   static Future<void> _deleteSponsor(String sponsorId, DataUpdateInfo dataUpdateInfo,DataLoader dataLoader) async {
     List<Event> allEvents = await dataLoader.loadEvents();

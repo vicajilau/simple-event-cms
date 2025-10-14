@@ -34,6 +34,7 @@ class EventFormViewModelImpl extends EventFormViewModel {
 
   @override
   Future<void> onSubmit(Event event) async {
+    await eventFormUseCase.prepareAgendaDays(event);
     await eventFormUseCase.saveEvent(event);
   }
 }

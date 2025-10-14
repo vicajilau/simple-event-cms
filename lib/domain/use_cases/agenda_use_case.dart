@@ -7,21 +7,23 @@ import '../../core/utils/result.dart';
 
 abstract class AgendaUseCase {
   Future<Result<Agenda>> getAgendaById(String id);
-  void saveAgenda(Agenda agenda, String eventId);
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<void> saveAgenda(Agenda agenda, String eventId);
+  Future<void> saveSpeaker(Speaker speaker,String eventId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByListId(
     List<String> agendaDayIds,
   );
   Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
-  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds);
+  Future<Result<List<Track>>> getTracksByEventId(String eventId);
   Future<Result<Track>> getTrackById(String trackId);
-  void addSessionIntoAgenda(
+  Future<void> addSessionIntoAgenda(
     String agendaId,
     String agendaDayId,
     String trackId,
     Session session,
   );
+  Future<void> addSpeakerIntoAgenda(String agendaId, Speaker speaker);
   void editSession(Session session, String parentId);
   void deleteSessionFromAgendaDay(String sessionId);
   Future<Result<Event>> loadEvent(String eventId);
@@ -37,16 +39,24 @@ class AgendaUseCaseImpl implements AgendaUseCase {
     final result = await repository.loadEAgendas();
     switch (result) {
       case Ok<List<Agenda>>():
-        if(result.value.isEmpty) return Result.error(NetworkException("No agendas found"));
+        if(result.value.isEmpty  || result.value.indexWhere((agenda) => agenda.uid == id) == -1){
+          return Result.error(NetworkException("No agendas found"));
+        }
         return Result.ok(result.value.firstWhere((event) => event.uid == id));
+
       case Error():
         return Result.error(result.error);
     }
   }
 
   @override
-  void saveAgenda(Agenda agenda, String eventId) {
-    repository.saveAgenda(agenda, eventId);
+  Future<void> saveAgenda(Agenda agenda, String eventId) async {
+    await repository.saveAgenda(agenda, eventId);
+  }
+
+  @override
+  Future<void> saveSpeaker(Speaker speaker,String eventId) async {
+    await repository.saveSpeaker(speaker,eventId);
   }
 
   @override
@@ -55,13 +65,13 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  void addSessionIntoAgenda(
+  Future<void> addSessionIntoAgenda(
     String agendaId,
     String agendaDayId,
     String trackId,
     Session session,
-  ) {
-    repository.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
+  ) async {
+    await repository.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
   }
 
   @override
@@ -97,8 +107,8 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds) {
-    return repository.loadTracksByListId(tracksIds);
+  Future<Result<List<Track>>> getTracksByEventId(String eventId) {
+    return repository.loadTracksByEventId(eventId);
   }
 
   @override
@@ -109,5 +119,10 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
     return await repository.getSpeakersForEventId(eventId);
+  }
+
+  @override
+  Future<void> addSpeakerIntoAgenda(String agendaId, Speaker speaker) async {
+    return await repository.addSpeakerIntoAgenda(agendaId, speaker);
   }
 }

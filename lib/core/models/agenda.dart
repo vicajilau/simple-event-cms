@@ -33,7 +33,7 @@ class Agenda extends GitHubModel {
 
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
-  final String date;
+  final String date,eventUID;
   List<String> trackUids;
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
@@ -41,6 +41,7 @@ class AgendaDay extends GitHubModel {
     required super.uid,
     required this.date,
     required this.trackUids,
+    required this.eventUID,
     this.resolvedTracks, // Allow initialization
     super.pathUrl = PathsGithub.daysPath,
     super.updateMessage = PathsGithub.daysUpdateMessage,
@@ -50,6 +51,7 @@ class AgendaDay extends GitHubModel {
     return AgendaDay(
       uid: json['UID'].toString(),
       date: json['date'],
+      eventUID: json['eventUID'],
       trackUids: (json['tracks'] as List)
           .map((trackUid) => trackUid["UID"].toString())
           .toList(),
@@ -61,13 +63,15 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
+    "eventUID": eventUID, // Only UIDs are serialized
     "tracks": trackUids, // Only UIDs are serialized
   };
 }
 
 /// Represents a track or room, linking to sessions by their UIDs.
 class Track extends GitHubModel {
-  final String name;
+  String name;
+  String eventUid;
   final String color;
   List<String> sessionUids;
   List<Session>? resolvedSessions; // Field for in-memory resolved objects
@@ -77,6 +81,7 @@ class Track extends GitHubModel {
     required this.name,
     required this.color,
     required this.sessionUids,
+    required this.eventUid,
     this.resolvedSessions, // Allow initialization
     super.pathUrl = PathsGithub.tracksPath,
     super.updateMessage = PathsGithub.tracksUpdateMessage,
@@ -87,6 +92,7 @@ class Track extends GitHubModel {
       uid: json['UID'].toString(),
       name: json['name'],
       color: json['color'],
+      eventUid: json['eventUid'],
       sessionUids: (json['sessions'] as List)
           .map((sessionUid) => sessionUid['UID'].toString())
           .toList(),
@@ -100,6 +106,7 @@ class Track extends GitHubModel {
     "name": name,
     "color": color,
     "sessions": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "eventUid": eventUid
   };
 }
 
