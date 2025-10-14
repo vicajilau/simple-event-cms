@@ -74,11 +74,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
 
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
-    tracks = await widget.viewmodel.getTracksByEventId(widget.data?.eventId.toString() ?? "") ?? [];
+    var fechedTracks = await widget.viewmodel.getTracksByEventId(data.eventId!) ?? [];
+    var fetchedAgendaDays = await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
 
     setState(() {
-      agendaDays = agenda?.resolvedDays ?? [];
       speakers = fetchedSpeakers;
+      tracks = fechedTracks;
+      agendaDays = fetchedAgendaDays;
     });
 
     final session = data.session;

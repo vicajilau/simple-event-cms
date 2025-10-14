@@ -17,7 +17,7 @@ class Agenda extends GitHubModel {
   factory Agenda.fromJson(Map<String, dynamic> json) {
     return Agenda(
       uid: json["UID"].toString(),
-      dayUids: (json["days"] as List)
+      dayUids: (json["days"])
           .map((dayUid) => dayUid["UID"].toString())
           .toList(),
       // resolvedDays will be populated by DataLoader
@@ -49,11 +49,11 @@ class AgendaDay extends GitHubModel {
 
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
-      uid: json['UID'].toString(),
+      uid: json['UID'],
       date: json['date'],
       eventUID: json['eventUID'],
       trackUids: (json['tracks'] as List)
-          .map((trackUid) => trackUid["UID"].toString())
+          .map((trackUid) => trackUid['UID'].toString())
           .toList(),
       // resolvedTracks will be populated by DataLoader
     );
@@ -63,8 +63,8 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
-    "eventUID": eventUID, // Only UIDs are serialized
-    "tracks": trackUids, // Only UIDs are serialized
+    "eventUID": eventUID,
+    "tracks": trackUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 

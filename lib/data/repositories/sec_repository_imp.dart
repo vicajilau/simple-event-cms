@@ -166,13 +166,13 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<AgendaDay>>> loadAgendaDayByListId(
-    List<String> agendaDayIds,
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventId(
+    String eventId,
   ) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(agendaDays
-          .where((agendaDay) => agendaDayIds.contains(agendaDay.uid))
+          .where((agendaDay) => eventId == agendaDay.eventUID)
           .toList());
     } on Exception catch (e) {
       return Result.error(e);

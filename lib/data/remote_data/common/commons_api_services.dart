@@ -116,11 +116,15 @@ class CommonsServicesImp extends CommonsServices {
         "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
       );
     } catch (e, st) {
-      throw JsonDecodeException(
-        "Error loading configuration from $path",
-        cause: e,
-        stackTrace: st,
-      );
+      if (e.toString().contains("No element")) {
+        return [].toList();
+      } else {
+        throw JsonDecodeException(
+          "Error loading configuration from $path",
+          cause: e,
+          stackTrace: st,
+        );
+      }
     }
   }
 

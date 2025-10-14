@@ -8,8 +8,8 @@ abstract class SecRepository {
   Future<Result<List<Speaker>>> loadESpeakers();
   Future<Result<List<Sponsor>>> loadSponsors();
   Future<Result<AgendaDay>> loadAgendaDayById(String agendaDayId);
-  Future<Result<List<AgendaDay>>> loadAgendaDayByListId(
-    List<String> agendaDayIds,
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventId(
+    String eventId,
   );
   Future<Result<List<Track>>> loadTracksByEventId(String eventId);
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds);
