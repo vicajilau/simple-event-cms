@@ -6,13 +6,13 @@ import '../../core/utils/result.dart';
 abstract class AgendaUseCase {
   Future<void> saveEvent(Event event);
   Future<void> saveSpeaker(Speaker speaker,String eventId);
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String eventId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId);
   Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
   Future<Result<List<Track>>> getTracks();
   Future<Result<Track>> getTrackById(String trackId);
-  Future<void> addSessionIntoAgenda(
+  Future<void> addSession(
     Session session,
   );
   Future<void> addSpeaker(String eventId, Speaker speaker);
@@ -32,15 +32,15 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await repository.saveAgendaDayById(agendaDay, agendaId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String eventId) async {
+    await repository.saveAgendaDayById(agendaDay, eventId);
   }
 
   @override
-  Future<void> addSessionIntoAgenda(
+  Future<void> addSession(
     Session session,
   ) async {
-    await repository.addSessionIntoAgenda(session);
+    await repository.addSession(session);
   }
 
   @override

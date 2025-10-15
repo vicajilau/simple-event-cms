@@ -64,8 +64,8 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await DataUpdate.addItemAndAssociations(agendaDay, agendaId);
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String eventId) async {
+    await DataUpdate.addItemAndAssociations(agendaDay, eventId);
   }
 
   @override
@@ -79,7 +79,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> addSessionIntoAgenda(
+  Future<void> addSession(
     Session session,
   ) async {
     DataUpdate.addItemAndAssociations(session,null);
@@ -97,7 +97,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> removeAgendaDay(String agendaDayId, String agendaId) async {
+  Future<void> removeAgendaDay(String agendaDayId) async {
     await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
   }
 

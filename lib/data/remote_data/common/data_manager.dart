@@ -19,9 +19,6 @@ class DataUpdate {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
         break;
-      case "Agenda":
-        await _deleteAgenda(itemId, dataLoader, dataUpdateInfo);
-        break;
       case "Session":
         await _deleteSession(itemId, dataLoader, dataUpdateInfo);
         break;
@@ -106,18 +103,6 @@ class DataUpdate {
   static Future<void> _deleteEvent(String eventId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     await dataUpdateInfo.removeEvent(eventId);
     debugPrint("Event $eventId deleted.");
-  }
-
-  static Future<void> _deleteAgenda(String agendaId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
-    List<Event> allEvents = await dataLoader.loadEvents();
-    for (var event in allEvents) {
-      if (event.agendaUID == agendaId) {
-        event.agendaUID = ""; // Ensure no duplicates
-        await dataUpdateInfo.updateEvent(event);
-      }
-    }
-    await dataUpdateInfo.removeAgendaDay(agendaId);
-    debugPrint("Agenda $agendaId and its associations removed.");
   }
 
   static Future<void> _addSession(Session session, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo, String? parentId) async {

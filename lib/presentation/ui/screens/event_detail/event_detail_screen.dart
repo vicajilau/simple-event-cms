@@ -42,7 +42,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     });
     screens = [
       AgendaScreen(
-        agendaId: widget.viewmodel.agendaId,
         eventId: widget.eventId,
       ),
       SpeakersScreen(
@@ -93,7 +92,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             children: [
               // Agenda Tab
               AgendaScreen(
-                agendaId: widget.viewmodel.agendaId,
                 eventId: widget.eventId,
               ),
               // Speakers Tab

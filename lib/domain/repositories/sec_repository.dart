@@ -19,9 +19,9 @@ abstract class SecRepository {
   Future<void> saveAgendaDays(List<AgendaDay> agendaDays);
   Future<void> saveSpeaker(Speaker speaker, String? parentId);
   Future<void> removeSpeaker(String speakerId);
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  Future<void> removeAgendaDay(String agendaDayId, String agendaId);
-  Future<void> addSessionIntoAgenda(
+  Future<void> saveAgendaDayById(AgendaDay agendaDay, String eventId);
+  Future<void> removeAgendaDay(String agendaDayId);
+  Future<void> addSession(
     Session session,
   );
   Future<void> addSpeaker(String eventId,Speaker speaker);
