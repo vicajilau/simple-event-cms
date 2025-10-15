@@ -400,12 +400,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 speakerUID: _selectedSpeaker!.uid.toString(),
                 description: _descriptionController.text,
                 type: _selectedTalkType,
+                eventUID: widget.data!.eventId.toString()
               );
 
               await widget.viewmodel.addSession(
-                  widget.data!.eventId.toString(),
-                  _selectedDay,
-                  _selectedTrackUid,
                   session,
                   );
 

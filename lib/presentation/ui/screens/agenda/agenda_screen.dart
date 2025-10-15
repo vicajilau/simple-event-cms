@@ -214,7 +214,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
-        sessions: widget.tracks[index].resolvedSessions ?? [],
+        sessions: widget.tracks[index].resolvedSessions?.where((session) => session.eventUID == widget.eventId).toList() ?? [],
         trackId: widget.tracks[index].uid,
         agendaId: widget.agendaId,
         agendaDayId: widget.agendaDayId,
@@ -302,6 +302,7 @@ class _SessionCardsState extends State<SessionCards> {
                       description: session.description,
                       type: session.type,
                       uid: session.uid,
+                      eventUID: session.eventUID,
                     ),
                     onDeleteTap: () {
                       showDialog(

@@ -16,9 +16,6 @@ abstract class AgendaUseCase {
   Future<Result<List<Track>>> getTracks();
   Future<Result<Track>> getTrackById(String trackId);
   Future<void> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
     Session session,
   );
   Future<void> addSpeaker(String eventId, Speaker speaker);
@@ -64,12 +61,9 @@ class AgendaUseCaseImpl implements AgendaUseCase {
 
   @override
   Future<void> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
     Session session,
   ) async {
-    await repository.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
+    await repository.addSessionIntoAgenda(session);
   }
 
   @override

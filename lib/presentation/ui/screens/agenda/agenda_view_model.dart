@@ -12,9 +12,6 @@ abstract class AgendaViewModel extends ViewModelCommon {
   Future<void> saveSpeaker(Speaker speaker,String eventId);
   Future<void> addAgendaToEvent(Agenda agenda,String eventId);
   void addSession(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
     Session session,
   );
   void editSession(Session session, String parentId);
@@ -81,12 +78,9 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
   @override
   void addSession(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
     Session session,
   ) {
-    agendaUseCase.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
+    agendaUseCase.addSessionIntoAgenda(session);
   }
 
   @override

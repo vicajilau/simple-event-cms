@@ -118,12 +118,14 @@ class Session extends GitHubModel {
   String? speakerUID;
   final String? description;
   final String type;
+  final String eventUID;
 
   Session({
     required super.uid,
     required this.title,
     required this.time,
     required this.speakerUID,
+    required this.eventUID,
     super.pathUrl = PathsGithub.sessionsPath,
     super.updateMessage = PathsGithub.sessionsUpdateMessage,
     this.description,
@@ -138,6 +140,7 @@ class Session extends GitHubModel {
       speakerUID: json['speakerUID'],
       description: json['description'],
       type: json['type'],
+      eventUID: json['eventUID'],
     );
   }
 
@@ -149,5 +152,6 @@ class Session extends GitHubModel {
     "speakerUID": speakerUID,
     "description": description,
     "type": type,
+    "eventUID": eventUID,
   };
 }

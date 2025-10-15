@@ -97,12 +97,9 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<void> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
     Session session,
   ) async {
-    DataUpdate.addItemAndAssociations(session, agendaDayId);
+    DataUpdate.addItemAndAssociations(session,null);
   }
 
   @override

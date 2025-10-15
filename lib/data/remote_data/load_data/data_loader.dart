@@ -34,7 +34,9 @@ class DataLoader {
     );
     // Load all data components in parallel
     final List<Track> allTracks = await loadAllTracks();
-    var agendaDay =  jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    final List<Session> allSessions = await loadAllSessions();
+    allTracks.map((track) => track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList());
+    var agendaDay = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
     agendaDay.map((day) => day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList());
     return agendaDay;
   }
@@ -52,15 +54,11 @@ class DataLoader {
     final results = await Future.wait([
       loadAgendaStructures(),
       loadAllDays(),
-      loadAllTracks(),
-      loadAllSessions(),
       loadSpeakers(),
     ]);
 
     final List<Agenda> agendaStructures = results[0] as List<Agenda>;
     final List<AgendaDay> allDays = results[1] as List<AgendaDay>;
-    final List<Track> allTracks = results[2] as List<Track>;
-    final List<Session> allSessions = results[3] as List<Session>;
     final List<Speaker> allSpeakers = results[4] as List<Speaker>;
 
     // Create maps for quick UID lookups
@@ -68,10 +66,10 @@ class DataLoader {
       for (var day in allDays) day.uid: day,
     };
     final Map<String, Track> tracksMap = {
-      for (var track in allTracks) track.uid: track,
+      for (var track in daysMap.values.expand((day) => day.resolvedTracks ?? <Track>[])) track.uid: track,
     };
     final Map<String, Session> sessionsMap = {
-      for (var session in allSessions) session.uid: session,
+      for (var session in daysMap.values.expand((day) => day.resolvedTracks ?? <Track>[]).expand((track) => track.resolvedSessions ?? <Session>[])) session.uid: session,
     };
     final Map<String, Speaker> speakersMap = {
       for (var speaker in allSpeakers) speaker.uid: speaker,
