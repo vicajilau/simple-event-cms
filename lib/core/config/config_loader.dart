@@ -28,7 +28,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "feature/refactor_agenda_form",
+      ref: "develop",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -55,7 +55,7 @@ class ConfigLoader {
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
-      ref: "feature/refactor_agenda_form",
+      ref: "develop",
     );
 
     if (res.file == null || res.file!.content == null) {
