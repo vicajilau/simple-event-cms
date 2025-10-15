@@ -58,13 +58,17 @@ class _AgendaScreenState extends State<AgendaScreen> {
             child: ErrorView(errorType: widget.viewmodel.errorType),
           );
         }
+        final filteredAgendaDays = widget.viewmodel.agendaDays.value
+            .where((day) =>
+                day.resolvedTracks != null && day.resolvedTracks!.isNotEmpty)
+            .toList();
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: widget.viewmodel.agendaDays.value.length,
+          itemCount: filteredAgendaDays.length,
           itemBuilder: (context, index) {
             final String agendaDayId =
-                widget.viewmodel.agendaDays.value[index].uid;
-            final String date = widget.viewmodel.agendaDays.value[index].date;
+                filteredAgendaDays[index].uid;
+            final String date = filteredAgendaDays[index].date;
             final bool isExpanded =
                 _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
             final int tabBarIndex =
@@ -89,7 +93,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               title: _buildTitleExpansionTile(isExpanded, date),
               children: <Widget>[
                 _buildExpansionTileBody(
-                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
+                  filteredAgendaDays[index].resolvedTracks ?? [],
                   tabBarIndex,
                   agendaDayId,
                   widget.agendaId.toString(),

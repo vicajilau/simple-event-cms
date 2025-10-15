@@ -11,12 +11,10 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 import '../../speaker/speaker_form_screen.dart';
 
 class AgendaFormData {
-  final String agendaId;
   final String? track, day, eventId;
   final Session? session;
 
   AgendaFormData({
-    required this.agendaId,
     this.session,
     this.track,
     this.day,
@@ -36,7 +34,6 @@ class AgendaFormScreen extends StatefulWidget {
 
 class _AgendaFormScreenState extends State<AgendaFormScreen> {
   Event? event;
-  Agenda? agenda;
   TimeOfDay? _initSessionTime, _endSessionTime;
   String _selectedDay = '';
   String _selectedTrackUid = '';
@@ -76,6 +73,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
     var fechedTracks = await widget.viewmodel.getTracks() ?? [];
     var fetchedAgendaDays = await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
+    event = await widget.viewmodel.getEventById(data.eventId!);
 
     setState(() {
       speakers = fetchedSpeakers;
@@ -407,7 +405,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   session,
                   );
 
-              if (mounted) Navigator.pop(context, event); // Return true to indicate success
+              var selectedTrack = tracks.firstWhere((track) => track.uid == _selectedTrackUid);
+              selectedTrack.eventUid = event!.uid.toString();
+              event?.tracks.add(selectedTrack);
+              await widget.viewmodel.updateEvent(event!);
+
+              if (mounted) Navigator.pop(context,event); // Return true to indicate success
             }
           },
           child: const Text('Guardar'),
