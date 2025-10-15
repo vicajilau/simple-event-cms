@@ -339,7 +339,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
         city: _venueCityController.text,
       ),
       description: _descriptionController.text,
-      agendaUID: event?.agendaUID ?? "",
     );
     await eventFormViewModel.onSubmit(eventModified);
     if (mounted) {
