@@ -46,11 +46,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         eventId: widget.eventId,
       ),
       SpeakersScreen(
-        speakers: widget.viewmodel.speakersId,
         eventId: widget.eventId,
       ),
       SponsorsScreen(
-        sponsors: widget.viewmodel.sponsorsId,
         eventId: widget.eventId,
       ),
     ];
@@ -100,12 +98,10 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               ),
               // Speakers Tab
               SpeakersScreen(
-                speakers: widget.viewmodel.speakersId,
                 eventId: widget.eventId,
               ),
               // Sponsors Tab
               SponsorsScreen(
-                sponsors: widget.viewmodel.sponsorsId,
                 eventId: widget.eventId,
               ),
             ],
@@ -168,7 +164,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
+      AppRouter.speakerFormPath,extra: {'eventId':parentId}
     );
 
     if (newSpeaker != null) {
@@ -179,7 +175,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,
+      AppRouter.sponsorFormPath,extra: {'eventId':parentId}
     );
 
     if (newSponsor != null) {

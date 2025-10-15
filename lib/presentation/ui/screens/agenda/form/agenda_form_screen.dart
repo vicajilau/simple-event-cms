@@ -282,7 +282,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                     final newSpeaker = await Navigator.push<Speaker>(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SpeakerFormScreen(),
+                                        builder: (context) => SpeakerFormScreen(eventUID: widget.data!.eventId.toString(),),
                                       ),
                                     );
                                     if (newSpeaker != null) {
@@ -403,13 +403,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               );
 
               await widget.viewmodel.addSession(
-                  widget.data!.agendaId,
+                  widget.data!.eventId.toString(),
                   _selectedDay,
                   _selectedTrackUid,
                   session,
                   );
 
-              if (mounted) Navigator.pop(context, agenda); // Return true to indicate success
+              if (mounted) Navigator.pop(context, event); // Return true to indicate success
             }
           },
           child: const Text('Guardar'),

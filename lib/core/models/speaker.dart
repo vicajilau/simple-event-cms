@@ -14,6 +14,8 @@ class Speaker extends GitHubModel {
   /// Social media links of the speaker
   final Social social;
 
+  String eventUID;
+
   /// Creates a new Speaker instance
   Speaker({
     required super.uid,
@@ -21,6 +23,7 @@ class Speaker extends GitHubModel {
     required this.bio,
     required this.image,
     required this.social,
+    required this.eventUID,
     super.pathUrl = PathsGithub.speakerPath,
     super.updateMessage = PathsGithub.speakerUpdateMessage,
   });
@@ -30,6 +33,7 @@ class Speaker extends GitHubModel {
     name: json["name"],
     bio: json["bio"],
     image: json["image"],
+    eventUID: json["eventUID"],
     social: Social.fromJson(json["social"]),
   );
 
@@ -40,6 +44,7 @@ class Speaker extends GitHubModel {
     "bio": bio,
     "image": image,
     "social": social.toJson(),
+    "eventUID": eventUID,
   };
 }
 

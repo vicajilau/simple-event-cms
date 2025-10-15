@@ -31,8 +31,6 @@ class Event extends GitHubModel {
   final String? description;
 
   String agendaUID;
-  final List<String> speakersUID;
-  final List<String> sponsorsUID;
   /// the name of the room where the event_collection will take place
   final List<Track> tracks;
 
@@ -45,8 +43,6 @@ class Event extends GitHubModel {
     required this.primaryColor,
     required this.secondaryColor,
     required this.agendaUID,
-    required this.speakersUID,
-    required this.sponsorsUID,
     required this.eventDates,
     this.venue,
     this.description,
@@ -60,16 +56,6 @@ class Event extends GitHubModel {
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {
-    List<String> speakers = (json['speakersUID'] != null)
-        ? (json['speakersUID'] as List)
-              .map((item) => item['UID'].toString())
-              .toList()
-        : [];
-    List<String> sponsors = (json['sponsorsUID'] != null)
-        ? (json['sponsorsUID'] as List)
-              .map((item) => item['UID'].toString())
-              .toList()
-        : [];
     List<Track> tracks = (json['tracks'] != null)
         ? (json['tracks'] as List)
             .map((item) => Track.fromJson(item))
@@ -86,8 +72,6 @@ class Event extends GitHubModel {
       venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
       description: json['description'],
       agendaUID: agendaUID,
-      speakersUID: speakers,
-      sponsorsUID: sponsors,
       tracks: tracks,
     );
   }
@@ -105,8 +89,6 @@ class Event extends GitHubModel {
       'venue': venue?.toJson(),
       'description': description,
       'agendaUID': agendaUID,
-      'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
-      'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }

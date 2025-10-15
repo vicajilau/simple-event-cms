@@ -4,7 +4,7 @@ import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class SpeakerUseCase {
-  Future<Result<List<Speaker>>> getSpeakersById(List<String> ids);
+  Future<Result<List<Speaker>>> getSpeakersById(String eventId);
   void saveSpeaker(Speaker speaker, String parentId);
   void removeSpeaker(String speakerId);
 }
@@ -13,13 +13,13 @@ class SpeakerUseCaseImp implements SpeakerUseCase {
   final SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Result<List<Speaker>>> getSpeakersById(List<String> ids) async {
+  Future<Result<List<Speaker>>> getSpeakersById(String eventId) async {
     final result = await repository.loadESpeakers();
 
     switch (result) {
       case Ok<List<Speaker>>():
         final filteredSpeakers = result.value
-            .where((sponsor) => ids.contains(sponsor.uid))
+            .where((speaker) => speaker.eventUID == eventId)
             .toList();
 
         return Result.ok(filteredSpeakers);

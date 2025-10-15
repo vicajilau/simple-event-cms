@@ -15,6 +15,8 @@ class Sponsor extends GitHubModel {
   /// Official website of the sponsor
   final String website;
 
+  String eventUID;
+
   /// Creates a new Sponsor instance
   Sponsor({
     required super.uid,
@@ -22,6 +24,7 @@ class Sponsor extends GitHubModel {
     required this.type,
     required this.logo,
     required this.website,
+    required this.eventUID,
     super.pathUrl = PathsGithub.sponsorPath,
     super.updateMessage = PathsGithub.sponsorUpdateMessage,
   });
@@ -32,6 +35,7 @@ class Sponsor extends GitHubModel {
     type: json["type"],
     logo: json["logo"],
     website: json["website"],
+    eventUID: json["eventUID"],
   );
 
   @override
@@ -41,5 +45,6 @@ class Sponsor extends GitHubModel {
     "type": type,
     "logo": logo,
     "website": website,
+    "eventUID": eventUID,
   };
 }

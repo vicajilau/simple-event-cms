@@ -54,14 +54,14 @@ class SponsorViewModelImpl extends SponsorViewModel {
 
   @override
   void setup([Object? argument]) {
-    if (argument is List<String>) {
+    if (argument is String) {
       _loadSponsors(argument);
     }
   }
 
-  Future<void> _loadSponsors(List<String> sponsorIds) async {
+  Future<void> _loadSponsors(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result = await sponsorUseCase.getSponsorByIds(sponsorIds);
+    final result = await sponsorUseCase.getSponsorByIds(eventId);
     switch (result) {
       case Ok<List<Sponsor>>():
         sponsors.value = result.value;

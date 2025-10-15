@@ -8,7 +8,8 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SpeakerFormScreen extends StatefulWidget {
   final Speaker? speaker;
-  const SpeakerFormScreen({super.key, this.speaker});
+  final String eventUID;
+  const SpeakerFormScreen({super.key, this.speaker, required this.eventUID});
 
   @override
   State<SpeakerFormScreen> createState() => _SpeakerFormScreenState();
@@ -181,6 +182,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                               linkedin: _linkedinController.text,
                               website: _websiteController.text,
                             ),
+                            eventUID: widget.eventUID,
                           ),
                         );
                       }

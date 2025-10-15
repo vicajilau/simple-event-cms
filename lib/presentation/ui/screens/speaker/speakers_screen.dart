@@ -13,9 +13,8 @@ import 'package:sec/presentation/view_model_common.dart';
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
-  final List<String> speakers;
   final String eventId;
-  SpeakersScreen({super.key, required this.speakers, required this.eventId});
+  SpeakersScreen({super.key,required this.eventId});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
@@ -25,7 +24,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup(widget.speakers);
+    widget.viewmodel.setup(widget.eventId);
   }
 
   @override
@@ -241,10 +240,14 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                         IconWidget(
                                           icon: Icons.edit,
                                           onTap: () async {
+                                            Map<String, dynamic> arguments  = {
+                                              'speaker': speaker,
+                                              'eventId': widget.eventId,
+                                            };
                                             final Speaker? updatedSpeaker =
                                                 await AppRouter.router.push(
                                                   AppRouter.speakerFormPath,
-                                                  extra: speaker,
+                                                  extra: arguments
                                                 );
 
                                             if (updatedSpeaker != null) {

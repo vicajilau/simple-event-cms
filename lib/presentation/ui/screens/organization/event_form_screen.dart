@@ -340,8 +340,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ),
       description: _descriptionController.text,
       agendaUID: event?.agendaUID ?? "",
-      speakersUID: event?.speakersUID ?? [],
-      sponsorsUID: event?.sponsorsUID ?? [],
     );
     await eventFormViewModel.onSubmit(eventModified);
     if (mounted) {

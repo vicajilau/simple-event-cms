@@ -10,8 +10,6 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class EventDetailViewModel extends ViewModelCommon {
   String eventTitle();
   String get agendaId => '';
-  List<String> get sponsorsId => [];
-  List<String> get speakersId => [];
   Future<void> loadEventData(String eventId);
 }
 
@@ -28,13 +26,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   ErrorType errorType = ErrorType.none;
 
   String _agendaId = "";
-  List<String> _sponsorsId = [], _speakersId = [];
 
-  @override
-  List<String> get sponsorsId => _sponsorsId;
-
-  @override
-  List<String> get speakersId => _speakersId;
 
   @override
   String get agendaId => _agendaId;
@@ -71,8 +63,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
           );
 
           _agendaId = event?.agendaUID ?? '';
-          _speakersId = event?.speakersUID ?? [];
-          _sponsorsId = event?.sponsorsUID ?? [];
 
           viewState.value = ViewState.loadFinished;
         }

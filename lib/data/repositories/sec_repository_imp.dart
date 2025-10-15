@@ -242,15 +242,8 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
     try {
-      List<Speaker> speakersEvent = [];
       final speakers = await dataLoader.loadSpeakers();
-      final events = await dataLoader.loadEvents();
-      final event = events.firstWhere((event) => event.uid == eventId);
-      for (var uidSpeaker in event.speakersUID) {
-        speakersEvent.add(speakers.firstWhere((speaker) => speaker.uid == uidSpeaker));
-      }
-
-      return speakersEvent.toList();
+      return speakers.where((speaker) => speaker.eventUID == eventId).toList();
     } on Exception catch (_) {
       return [];
     } catch (e) {

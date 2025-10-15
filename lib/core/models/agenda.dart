@@ -33,7 +33,7 @@ class Agenda extends GitHubModel {
 
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
-  final String date,eventUID;
+  String date,eventUID;
   List<String> trackUids;
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
