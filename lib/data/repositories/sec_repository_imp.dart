@@ -259,8 +259,8 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker) async {
-    return await DataUpdate.addItemAndAssociations(speaker, agendaId);
+  Future<void> addSpeaker(String eventId,Speaker speaker) async {
+    return await DataUpdate.addItemAndAssociations(speaker, eventId);
 
   }
 }

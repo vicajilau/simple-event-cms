@@ -30,7 +30,7 @@ abstract class SecRepository {
     String trackId,
     Session session,
   );
-  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker);
+  Future<void> addSpeaker(String eventId,Speaker speaker);
   Future<void> editSession(Session session, String parentId);
   Future<void> deleteSessionFromAgendaDay(String sessionId);
   Future<void> saveSponsor(Sponsor sponsor, String parentId);

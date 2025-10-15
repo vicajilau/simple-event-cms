@@ -286,7 +286,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                       ),
                                     );
                                     if (newSpeaker != null) {
-                                      await widget.viewmodel.addSpeaker(widget.data!.agendaId,newSpeaker);
+                                      await widget.viewmodel.addSpeaker(widget.data!.eventId.toString(),newSpeaker);
                                       setState(() {
                                         speakers.add(newSpeaker);
                                         _selectedSpeaker = newSpeaker;

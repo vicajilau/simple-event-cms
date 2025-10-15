@@ -176,8 +176,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> addSpeaker(String agendaId, Speaker speaker) {
-    return agendaUseCase.addSpeakerIntoAgenda(agendaId,speaker);
+  Future<void> addSpeaker(String eventId, Speaker speaker) {
+    return agendaUseCase.addSpeaker(eventId,speaker);
   }
 
 

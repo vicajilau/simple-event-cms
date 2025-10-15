@@ -36,7 +36,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup(widget.agendaId);
+    widget.viewmodel.setup(widget.eventId);
 
     for (var day in widget.viewmodel.agendaDays.value) {
       _updateTileState(

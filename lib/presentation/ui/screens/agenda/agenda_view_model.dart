@@ -48,16 +48,16 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   void setup([Object? argument]) {
     if (argument is String) {
-      _loadAgenda(argument);
+      _loadAgendaDays(argument);
     }
   }
 
-  void _loadAgenda(String agendaId) async {
+  void _loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result = await agendaUseCase.getAgendaById(agendaId);
+    final result = await agendaUseCase.getAgendaDayByEventId(eventId);
     switch (result) {
-      case Ok<Agenda>():
-        agendaDays.value = result.value.resolvedDays ?? [];
+      case Ok<List<AgendaDay>>():
+        agendaDays.value = result.value;
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);

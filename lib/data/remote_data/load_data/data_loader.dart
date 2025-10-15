@@ -32,7 +32,11 @@ class DataLoader {
     List<dynamic> jsonList = await commonsServices.loadData(
       PathsGithub.daysPath,
     );
-    return jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    // Load all data components in parallel
+    final List<Track> allTracks = await loadAllTracks();
+    var agendaDay =  jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    agendaDay.map((day) => day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList());
+    return agendaDay;
   }
 
   Future<List<Agenda>> loadAgendaStructures() async {
