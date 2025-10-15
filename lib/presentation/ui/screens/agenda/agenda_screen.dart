@@ -237,6 +237,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 
   @override
   Widget build(BuildContext context) {
+    if(sessionCards.isEmpty) return const SizedBox.shrink();
     return sessionCards[widget.currentIndex];
   }
 }
