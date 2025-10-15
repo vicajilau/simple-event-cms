@@ -282,7 +282,7 @@ class _SessionCardsState extends State<SessionCards> {
                 final session = sessions[index];
                 return InkWell(
                   onTap: () async {
-                    final Agenda? newAgenda = await AppRouter.router.push(
+                    await AppRouter.router.push(
                       AppRouter.agendaFormPath,
                       extra: AgendaFormData(
                         agendaId: widget.agendaId,
@@ -290,14 +290,8 @@ class _SessionCardsState extends State<SessionCards> {
                         session: session,
                       ),
                     );
+                  widget.viewModel.setup(widget.agendaId);
 
-                    if (newAgenda != null) {
-                      widget.viewModel.addAgendaToEvent(
-                        newAgenda,
-                        widget.eventId,
-                      );
-                      widget.viewModel.setup(widget.agendaId);
-                    }
                   },
                   child: _buildSessionCard(
                     context,
