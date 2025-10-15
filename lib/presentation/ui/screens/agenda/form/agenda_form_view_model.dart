@@ -11,8 +11,6 @@ import '../../../../../core/utils/result.dart';
 abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<Event?> loadEvent(String eventId);
   void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addAgenda(Agenda agenda,String eventId);
-  Future<Agenda?> getAgenda(String agendaId);
   Future<Event?> getEventById(String eventId);
   Future<Track?> getTrackById(String trackId);
   Future<AgendaDay?> getAgendaDayById(String agendaDayId);
@@ -57,10 +55,6 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
   }
 
-  @override
-  void addAgenda(Agenda agenda,String eventId) {
-    agendaUseCase.saveAgenda(agenda, eventId);
-  }
   @override
   Future<void> addSession(Session session) async {
     await agendaUseCase.addSessionIntoAgenda(session);
@@ -145,18 +139,6 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     final result = await agendaUseCase.getTracks();
     switch (result) {
       case Ok<List<Track>>():
-        return result.value;
-      case Error():
-        setErrorKey(result.error);
-        return null;
-    }
-  }
-
-  @override
-  Future<Agenda?> getAgenda(String agendaId) async {
-    final result =  await agendaUseCase.getAgendaById(agendaId);
-    switch (result) {
-      case Ok<Agenda>():
         return result.value;
       case Error():
         setErrorKey(result.error);

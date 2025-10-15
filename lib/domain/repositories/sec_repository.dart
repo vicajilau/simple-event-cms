@@ -4,7 +4,6 @@ import 'package:sec/core/utils/result.dart';
 abstract class SecRepository {
   Future<Result<List<Event>>> loadEvents();
   Future<Result<Event>> loadEventById(String eventId);
-  Future<Result<List<Agenda>>> loadEAgendas();
   Future<Result<List<Speaker>>> loadESpeakers();
   Future<Result<List<Sponsor>>> loadSponsors();
   Future<Result<AgendaDay>> loadAgendaDayById(String agendaDayId);
@@ -20,8 +19,6 @@ abstract class SecRepository {
   Future<void> saveAgendaDays(List<AgendaDay> agendaDays);
   Future<void> saveSpeaker(Speaker speaker, String? parentId);
   Future<void> removeSpeaker(String speakerId);
-  Future<void> saveAgenda(Agenda agenda, String eventId);
-  Future<void> removeAgenda(String agendaId);
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<void> removeAgendaDay(String agendaDayId, String agendaId);
   Future<void> addSessionIntoAgenda(

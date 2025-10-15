@@ -10,7 +10,6 @@ abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
   Future<void> saveSpeaker(Speaker speaker,String eventId);
-  Future<void> addAgendaToEvent(Agenda agenda,String eventId);
   void addSession(
     Session session,
   );
@@ -72,10 +71,6 @@ class AgendaViewModelImp extends AgendaViewModel {
     await agendaUseCase.saveSpeaker(speaker,eventId);
   }
 
-  @override
-  Future<void> addAgendaToEvent(Agenda agenda,String eventId) async {
-    await agendaUseCase.saveAgenda(agenda, eventId);
-  }
   @override
   void addSession(
     Session session,

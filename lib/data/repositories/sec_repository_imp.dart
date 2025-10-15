@@ -25,18 +25,6 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<Agenda>>> loadEAgendas() async {
-    try {
-      final agenda = await dataLoader.getFullAgendaData();
-      return Result.ok(agenda);
-    } on Exception catch (e) {
-      return Result.error(e);
-    } catch (e) {
-      return Result.error(Exception('Something really unknown: $e'));
-    }
-  }
-
-  @override
   Future<Result<List<Speaker>>> loadESpeakers() async {
     try {
       final speakers = await dataLoader.loadSpeakers();
@@ -76,11 +64,6 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<void> saveAgenda(Agenda agenda, String eventId) async {
-    await DataUpdate.addItemAndAssociations(agenda, eventId);
-  }
-
-  @override
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
     await DataUpdate.addItemAndAssociations(agendaDay, agendaId);
   }
@@ -111,11 +94,6 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<void> removeEvent(String eventId) async {
     await DataUpdate.deleteItemAndAssociations(eventId, Event);
-  }
-
-  @override
-  Future<void> removeAgenda(String agendaId) async {
-    await DataUpdate.deleteItemAndAssociations(agendaId, Agenda);
   }
 
   @override

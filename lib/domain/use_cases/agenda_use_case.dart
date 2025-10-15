@@ -1,13 +1,9 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
-
 import '../../core/utils/result.dart';
 
 abstract class AgendaUseCase {
-  Future<Result<Agenda>> getAgendaById(String id);
-  Future<void> saveAgenda(Agenda agenda, String eventId);
   Future<void> saveEvent(Event event);
   Future<void> saveSpeaker(Speaker speaker,String eventId);
   Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
@@ -29,26 +25,6 @@ abstract class AgendaUseCase {
 
 class AgendaUseCaseImpl implements AgendaUseCase {
   final SecRepository repository = getIt<SecRepository>();
-
-  @override
-  Future<Result<Agenda>> getAgendaById(String id) async {
-    final result = await repository.loadEAgendas();
-    switch (result) {
-      case Ok<List<Agenda>>():
-        if(result.value.isEmpty  || result.value.indexWhere((agenda) => agenda.uid == id) == -1){
-          return Result.error(NetworkException("No agendas found"));
-        }
-        return Result.ok(result.value.firstWhere((event) => event.uid == id));
-
-      case Error():
-        return Result.error(result.error);
-    }
-  }
-
-  @override
-  Future<void> saveAgenda(Agenda agenda, String eventId) async {
-    await repository.saveAgenda(agenda, eventId);
-  }
 
   @override
   Future<void> saveSpeaker(Speaker speaker,String eventId) async {

@@ -290,7 +290,6 @@ class _SessionCardsState extends State<SessionCards> {
                     await AppRouter.router.push(
                       AppRouter.agendaFormPath,
                       extra: AgendaFormData(
-                        agendaId: widget.agendaId,
                         eventId: widget.eventId,
                         session: session,
                       ),

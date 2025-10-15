@@ -1,36 +1,6 @@
 import 'package:sec/core/config/paths_github.dart';
 import 'github/github_model.dart';
 
-/// Represents the overall structure of the event agenda, linking to days by their UIDs.
-class Agenda extends GitHubModel {
-  List<String> dayUids;
-  List<AgendaDay>? resolvedDays = []; // Field for in-memory resolved objects
-
-  Agenda({
-    required super.uid,
-    required this.dayUids,
-    this.resolvedDays, // Allow initialization
-    super.pathUrl = PathsGithub.agendaPath,
-    super.updateMessage = PathsGithub.agendaUpdateMessage,
-  });
-
-  factory Agenda.fromJson(Map<String, dynamic> json) {
-    return Agenda(
-      uid: json["UID"].toString(),
-      dayUids: (json["days"])
-          .map((dayUid) => dayUid["UID"].toString())
-          .toList(),
-      // resolvedDays will be populated by DataLoader
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() => {
-    "UID": uid,
-    "days": dayUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
-  };
-}
-
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
   String date,eventUID;
