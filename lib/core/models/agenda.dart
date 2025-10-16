@@ -4,13 +4,13 @@ import 'github/github_model.dart';
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
   String date,eventUID;
-  List<String> trackUids;
+  List<String>? trackUids = [];
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
   AgendaDay({
     required super.uid,
     required this.date,
-    required this.trackUids,
+    this.trackUids,
     required this.eventUID,
     this.resolvedTracks, // Allow initialization
     super.pathUrl = PathsGithub.daysPath,
@@ -34,7 +34,7 @@ class AgendaDay extends GitHubModel {
     "UID": uid,
     "date": date,
     "eventUID": eventUID,
-    "tracks": trackUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "tracks": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 

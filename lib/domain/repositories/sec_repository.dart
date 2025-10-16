@@ -20,7 +20,7 @@ abstract class SecRepository {
   Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays);
   Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId);
   Future<Result<void>> removeSpeaker(String speakerId);
-  Future<Result<void>> saveAgendaDayById(AgendaDay agendaDay, String eventId);
+  Future<Result<void>> saveAgendaDay(AgendaDay agendaDay);
   Future<Result<void>> removeAgendaDay(String agendaDayId);
   Future<Result<void>> addSession(
     Session session,

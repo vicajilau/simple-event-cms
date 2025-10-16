@@ -85,21 +85,6 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveAgendaDayById(
-    AgendaDay agendaDay,
-    String eventId,
-  ) async {
-    try{
-    await DataUpdate.addItemAndAssociations(agendaDay, eventId);
-    return Result.ok(null);
-    } on Exception catch (e) {
-      return Result.error(e);
-    } catch (e) {
-      return Result.error(Exception('Something really unknown: $e'));
-    }
-  }
-
-  @override
   Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId) async {
     try {
       await DataUpdate.addItemAndAssociations(speaker, parentId);
@@ -341,6 +326,18 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(
         speakers.where((speaker) => speaker.eventUID == eventId).toList(),
       );
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> saveAgendaDay(AgendaDay agendaDay) async {
+    try {
+      DataUpdate.addItemAndAssociations(agendaDay,null);
+      return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {

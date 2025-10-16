@@ -60,10 +60,18 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
           valueListenable: widget.viewmodel.sponsors,
           builder: (context, sponsors, child) {
             if (sponsors.isEmpty) {
-              Center(
-                child: Text(
-                  AppLocalizations.of(context)?.noSponsorsRegistered ??
-                      'No hay patrocinadores registrados',
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.people_outline,
+                      size: 64,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(AppLocalizations.of(context)!.noSponsorsRegistered),
+                  ],
                 ),
               );
             }

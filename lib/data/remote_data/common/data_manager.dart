@@ -150,9 +150,9 @@ class DataUpdate {
       List<AgendaDay> allDays = await dataLoader.loadAllDays();
       for (var day in allDays) {
         if (day.uid == parentId) {
-          day.trackUids.removeWhere((uid) =>
+          day.trackUids?.removeWhere((uid) =>
           uid == track.uid); // Ensure no duplicates
-          day.trackUids.add(track.uid);
+          day.trackUids?.add(track.uid);
           day.resolvedTracks?.removeWhere((t) =>
           t.uid == track.uid); // Ensure no duplicates
           day.resolvedTracks?.add(track);
@@ -177,8 +177,8 @@ class DataUpdate {
   static Future<void> _deleteTrack(String trackId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
-      if (day.trackUids.contains(trackId)) {
-        day.trackUids.remove(trackId);
+      if (day.trackUids?.contains(trackId) == true) {
+        day.trackUids?.remove(trackId);
         day.resolvedTracks?.removeWhere((track) => track.uid == trackId);
         await dataUpdateInfo.updateAgendaDay(day);
       }

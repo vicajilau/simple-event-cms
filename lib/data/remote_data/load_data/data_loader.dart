@@ -42,7 +42,7 @@ class DataLoader {
     }
     var agendaDays = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
     for (var day in agendaDays) {
-      day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList();
+      day.resolvedTracks = allTracks.where((track) => day.trackUids?.contains(track.uid) == true).toList();
     }
     return agendaDays;
   }
