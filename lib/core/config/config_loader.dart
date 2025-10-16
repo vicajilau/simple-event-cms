@@ -51,7 +51,7 @@ class ConfigLoader {
     );
 
     final configUrl = 'events/${organization.year}/config/events.json';
-          var github = GitHub();
+    var github = GitHub();
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
