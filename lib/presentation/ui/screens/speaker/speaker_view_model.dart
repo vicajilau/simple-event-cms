@@ -66,14 +66,14 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
 
   @override
   void setup([Object? argument]) {
-    if (argument is List<String>) {
+    if (argument is String) {
       _loadSpeakers(argument);
     }
   }
 
-  void _loadSpeakers(List<String> speakersIds) async {
+  void _loadSpeakers(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result = await _speakerUseCase.getSpeakersById(speakersIds);
+    final result = await _speakerUseCase.getSpeakersById(eventId);
     switch (result) {
       case Ok<List<Speaker>>():
         speakers.value = result.value;

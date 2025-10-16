@@ -4,7 +4,6 @@ import 'package:sec/core/utils/result.dart';
 abstract class SecRepository {
   Future<Result<List<Event>>> loadEvents();
   Future<Result<Event>> loadEventById(String eventId);
-  Future<Result<List<Agenda>>> loadEAgendas();
   Future<Result<List<Speaker>>> loadESpeakers();
   Future<Result<List<Sponsor>>> loadSponsors();
   Future<Result<AgendaDay>> loadAgendaDayById(String agendaDayId);
@@ -12,29 +11,26 @@ abstract class SecRepository {
     String eventId,
   );
   Future<Result<List<Track>>> loadTracksByEventId(String eventId);
+  Future<Result<List<Track>>> loadTracks();
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds);
   Future<Result<Track>> loadTrackById(String trackId);
-  Future<void> saveEvent(Event event);
-  Future<void> saveTracks(List<Track> tracks);
-  Future<void> saveAgendaDays(List<AgendaDay> agendaDays);
-  Future<void> saveSpeaker(Speaker speaker, String? parentId);
-  Future<void> removeSpeaker(String speakerId);
-  Future<void> saveAgenda(Agenda agenda, String eventId);
-  Future<void> removeAgenda(String agendaId);
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  Future<void> removeAgendaDay(String agendaDayId, String agendaId);
-  Future<void> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
+  Future<Result<void>> saveEvent(Event event);
+  Future<Result<void>> saveTracks(List<Track> tracks);
+  Future<Result<void>> saveTrack(Track track);
+  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays);
+  Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId);
+  Future<Result<void>> removeSpeaker(String speakerId);
+  Future<Result<void>> saveAgendaDayById(AgendaDay agendaDay, String eventId);
+  Future<Result<void>> removeAgendaDay(String agendaDayId);
+  Future<Result<void>> addSession(
     Session session,
   );
-  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker);
-  Future<void> editSession(Session session, String parentId);
-  Future<void> deleteSessionFromAgendaDay(String sessionId);
-  Future<void> saveSponsor(Sponsor sponsor, String parentId);
-  Future<void> removeSponsor(String sponsorId);
-  Future<void> removeEvent(String eventId);
+  Future<Result<void>> addSpeaker(String eventId,Speaker speaker);
+  Future<Result<void>> editSession(Session session, String parentId);
+  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
+  Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
+  Future<Result<void>> removeSponsor(String sponsorId);
+  Future<Result<void>> removeEvent(String eventId);
 
-  Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
 }

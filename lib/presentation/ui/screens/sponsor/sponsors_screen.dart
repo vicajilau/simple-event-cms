@@ -12,10 +12,9 @@ import 'package:sec/presentation/view_model_common.dart';
 class SponsorsScreen extends StatefulWidget {
   /// Data loader for fetching sponsor information
   final SponsorViewModel viewmodel = getIt<SponsorViewModel>();
-  final List<String> sponsors;
   final String eventId;
 
-  SponsorsScreen({super.key, required this.sponsors, required this.eventId});
+  SponsorsScreen({super.key, required this.eventId});
 
   @override
   State<SponsorsScreen> createState() => _SponsorsScreenState();
@@ -27,13 +26,16 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup(widget.sponsors);
+    widget.viewmodel.setup(widget.eventId);
   }
 
   void _editSponsor(Sponsor sponsor) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,
-      extra: sponsor,
+      extra: {
+        'sponsor': sponsor,
+        'eventId': widget.eventId,
+      },
     );
 
     if (newSponsor != null) {

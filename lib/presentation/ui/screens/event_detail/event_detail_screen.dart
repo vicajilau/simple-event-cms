@@ -42,15 +42,12 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     });
     screens = [
       AgendaScreen(
-        agendaId: widget.viewmodel.agendaId,
         eventId: widget.eventId,
       ),
       SpeakersScreen(
-        speakers: widget.viewmodel.speakersId,
         eventId: widget.eventId,
       ),
       SponsorsScreen(
-        sponsors: widget.viewmodel.sponsorsId,
         eventId: widget.eventId,
       ),
     ];
@@ -95,17 +92,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             children: [
               // Agenda Tab
               AgendaScreen(
-                agendaId: widget.viewmodel.agendaId,
                 eventId: widget.eventId,
               ),
               // Speakers Tab
               SpeakersScreen(
-                speakers: widget.viewmodel.speakersId,
                 eventId: widget.eventId,
               ),
               // Sponsors Tab
               SponsorsScreen(
-                sponsors: widget.viewmodel.sponsorsId,
                 eventId: widget.eventId,
               ),
             ],
@@ -139,7 +133,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             return AddFloatingActionButton(
               onPressed: () async {
                 if (_selectedIndex == 0) {
-                  _addTrackToAgenda(widget.viewmodel.agendaId,widget.eventId);
+                  _addTrackToAgenda(widget.eventId);
                 } else if (_selectedIndex == 1) {
                   _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
@@ -154,21 +148,20 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
   }
 
-  void _addTrackToAgenda(String agendaId, String eventId) async {
-    final Agenda? newAgenda = await AppRouter.router.push(
-      AppRouter.agendaFormPath,extra: AgendaFormData(agendaId: agendaId,eventId: eventId)
+  void _addTrackToAgenda(String eventId) async {
+    final Event? newEvent = await AppRouter.router.push(
+      AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );
 
-    if (newAgenda != null) {
+    if (newEvent != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      await agendaScreen.viewmodel.addAgendaToEvent(newAgenda,eventId);
-      agendaScreen.viewmodel.setup(agendaId);
+      agendaScreen.viewmodel.setup(eventId);
     }
   }
 
   void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
+      AppRouter.speakerFormPath,extra: {'eventId':parentId}
     );
 
     if (newSpeaker != null) {
@@ -179,7 +172,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,
+      AppRouter.sponsorFormPath,extra: {'eventId':parentId}
     );
 
     if (newSponsor != null) {

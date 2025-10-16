@@ -1,8 +1,8 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
-import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/remote_data/common/data_manager.dart';
+import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 class SecRepositoryImp extends SecRepository {
@@ -13,22 +13,9 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<List<Event>>> loadEvents() async {
     try {
-
       final events = await dataLoader.loadEvents();
       _events = events;
       return Result.ok(events);
-    } on Exception catch (e) {
-      return Result.error(e);
-    } catch (e) {
-      return Result.error(Exception('Something really unknown: $e'));
-    }
-  }
-
-  @override
-  Future<Result<List<Agenda>>> loadEAgendas() async {
-    try {
-      final agenda = await dataLoader.getFullAgendaData();
-      return Result.ok(agenda);
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -62,90 +49,196 @@ class SecRepositoryImp extends SecRepository {
 
   //update Items
   @override
-  Future<void> saveEvent(Event event) async {
+  Future<Result<void>> saveEvent(Event event) async {
+    try{
     await DataUpdate.addItemAndAssociations(event, event.uid);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
+
   @override
-  Future<void> saveTracks(List<Track> tracks) async {
+  Future<Result<void>> saveTracks(List<Track> tracks) async {
+    try{
     await DataUpdate.addItemListAndAssociations(tracks);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> saveAgendaDays(List<AgendaDay> agendaDays) async {
+  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays) async {
+    try{
     await DataUpdate.addItemListAndAssociations(agendaDays);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> saveAgenda(Agenda agenda, String eventId) async {
-    await DataUpdate.addItemAndAssociations(agenda, eventId);
-  }
-
-  @override
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await DataUpdate.addItemAndAssociations(agendaDay, agendaId);
-  }
-
-  @override
-  Future<void> saveSpeaker(Speaker speaker, String? parentId) async {
-    await DataUpdate.addItemAndAssociations(speaker, parentId);
-  }
-
-  @override
-  Future<void> saveSponsor(Sponsor sponsor, String parentId) async {
-    await DataUpdate.addItemAndAssociations(sponsor, parentId);
-  }
-
-  @override
-  Future<void> addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
+  Future<Result<void>> saveAgendaDayById(
+    AgendaDay agendaDay,
+    String eventId,
   ) async {
-    DataUpdate.addItemAndAssociations(session, agendaDayId);
+    try{
+    await DataUpdate.addItemAndAssociations(agendaDay, eventId);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> editSession(Session session, String parentId) async {
+  Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId) async {
+    try {
+      await DataUpdate.addItemAndAssociations(speaker, parentId);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId) async {
+    try{
+    await DataUpdate.addItemAndAssociations(sponsor, parentId);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> addSession(Session session) async {
+    try{
+    DataUpdate.addItemAndAssociations(session, null);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> editSession(Session session, String parentId) async {
+    try{
     DataUpdate.addItemAndAssociations(session, parentId);
+    return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> addSpeaker(String eventId, Speaker speaker) async {
+    try {
+      await DataUpdate.addItemAndAssociations(speaker, eventId);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> saveTrack(Track track) async {
+    try {
+      await DataUpdate.addItemAndAssociations(track, null);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   //delete items
   @override
-  Future<void> removeEvent(String eventId) async {
-    await DataUpdate.deleteItemAndAssociations(eventId, Event);
+  Future<Result<void>> removeEvent(String eventId) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(eventId, Event);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> removeAgenda(String agendaId) async {
-    await DataUpdate.deleteItemAndAssociations(agendaId, Agenda);
+  Future<Result<void>> removeAgendaDay(String agendaDayId) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> removeAgendaDay(String agendaDayId, String agendaId) async {
-    await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
+  Future<Result<void>> removeSpeaker(String speakerId) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(speakerId, Speaker);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> removeSpeaker(String speakerId) async {
-    await DataUpdate.deleteItemAndAssociations(speakerId, Speaker);
+  Future<Result<void>> removeSponsor(String sponsorId) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(sponsorId, Sponsor);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
-  Future<void> removeSponsor(String sponsorId) async {
-    DataUpdate.deleteItemAndAssociations(sponsorId, Sponsor);
-  }
-
-  @override
-  Future<void> deleteSessionFromAgendaDay(String sessionId) async {
-    DataUpdate.deleteItemAndAssociations(sessionId, Session);
+  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId) async {
+    try {
+      DataUpdate.deleteItemAndAssociations(sessionId, Session);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
   }
 
   @override
   Future<Result<AgendaDay>> loadAgendaDayById(String agendaDayById) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
-      return Result.ok(agendaDays.firstWhere((agendaDay) => agendaDay.uid == agendaDayById));
+      return Result.ok(
+        agendaDays.firstWhere((agendaDay) => agendaDay.uid == agendaDayById),
+      );
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -166,14 +259,12 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<AgendaDay>>> loadAgendaDayByEventId(
-    String eventId,
-  ) async {
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventId(String eventId) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
-      return Result.ok(agendaDays
-          .where((agendaDay) => eventId == agendaDay.eventUID)
-          .toList());
+      return Result.ok(
+        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID).toList(),
+      );
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -186,7 +277,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       var tracks = await dataLoader.loadAllTracks();
 
-      return Result.ok(tracks.where((track) => eventId == track.eventUid).toList());
+      return Result.ok(
+        tracks.where((track) => eventId == track.eventUid).toList(),
+      );
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -195,13 +288,28 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds) async {
+  Future<Result<List<Track>>> loadTracks() async {
+    try {
+      var tracks = await dataLoader.loadAllTracks();
+
+      return Result.ok(tracks);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<Session>>> loadSessionsByListId(
+    List<String> sessionsIds,
+  ) async {
     try {
       var sessions = await dataLoader.loadAllSessions();
 
-      return Result.ok(sessions
-          .where((session) => sessionsIds.contains(session.uid))
-          .toList());
+      return Result.ok(
+        sessions.where((session) => sessionsIds.contains(session.uid)).toList(),
+      );
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {
@@ -227,27 +335,16 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId) async {
     try {
-      List<Speaker> speakersEvent = [];
       final speakers = await dataLoader.loadSpeakers();
-      final events = await dataLoader.loadEvents();
-      final event = events.firstWhere((event) => event.uid == eventId);
-      for (var uidSpeaker in event.speakersUID) {
-        speakersEvent.add(speakers.firstWhere((speaker) => speaker.uid == uidSpeaker));
-      }
-
-      return speakersEvent.toList();
-    } on Exception catch (_) {
-      return [];
+      return Result.ok(
+        speakers.where((speaker) => speaker.eventUID == eventId).toList(),
+      );
+    } on Exception catch (e) {
+      return Result.error(e);
     } catch (e) {
-      return [];
+      return Result.error(Exception('Something really unknown: $e'));
     }
-  }
-
-  @override
-  Future<void> addSpeakerIntoAgenda(String agendaId,Speaker speaker) async {
-    return await DataUpdate.addItemAndAssociations(speaker, agendaId);
-
   }
 }

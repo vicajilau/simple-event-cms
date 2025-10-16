@@ -56,32 +56,6 @@ class DataUpdateInfo {
     );
   }
 
-  /// Loads event agenda information from the agenda.json file
-  /// Parses the JSON structure and returns a list of AgendaDay objects
-  /// with proper type conversion and validation
-  /// Returns a Future containing a list of AgendaDay models
-  Future<void> updateAgenda(Agenda agenda) async {
-    var agendaOriginal = await dataLoader.loadAgendaStructures();
-    await dataCommons.updateData(
-      agendaOriginal,
-      agenda,
-      "events/${organization.year}/${agenda.pathUrl}",
-      agenda.updateMessage,
-    );
-  }
-
-  /// Loads event agenda information from the agenda.json file
-  /// Parses the JSON structure and returns a list of AgendaDay objects
-  /// with proper type conversion and validation
-  /// Returns a Future containing a list of AgendaDay models
-  Future<void> updateAgendas(List<Agenda> agendas) async {
-    await dataCommons.updateDataList(
-      agendas,
-      "events/${organization.year}/${PathsGithub.agendaPath}",
-      PathsGithub.agendaUpdateMessage,
-    );
-  }
-
   /// Loads event agenda day information from the agenda.json file
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
@@ -187,23 +161,6 @@ class DataUpdateInfo {
       speakerToRemove,
       "events/${organization.year}/${speakerToRemove.pathUrl}",
       speakerToRemove.updateMessage,
-    );
-  }
-
-  /// Removes event agenda information from the agenda.json file
-  /// Parses the JSON structure and returns a list of AgendaDay objects
-  /// with proper type conversion and validation
-  /// Returns a Future containing a list of AgendaDay models
-  Future<void> removeAgenda(String agendaId, String eventId) async {
-    var agendaOriginal = await dataLoader.loadAgendaStructures();
-    var agendaToRemove = agendaOriginal.firstWhere(
-      (agenda) => agenda.uid == agendaId,
-    );
-   await dataCommons.removeData(
-      agendaOriginal,
-      agendaToRemove,
-      "events/${organization.year}/${agendaToRemove.pathUrl}",
-      agendaToRemove.updateMessage,
     );
   }
 

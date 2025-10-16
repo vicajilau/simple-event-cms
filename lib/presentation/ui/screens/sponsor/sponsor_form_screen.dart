@@ -8,7 +8,8 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SponsorFormScreen extends StatefulWidget {
   final Sponsor? sponsor;
-  const SponsorFormScreen({super.key, this.sponsor});
+  final String? eventUID;
+  const SponsorFormScreen({super.key, this.sponsor,required this.eventUID});
 
   @override
   State<SponsorFormScreen> createState() => _SponsorFormScreenState();
@@ -126,6 +127,7 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                           type: _selectedCategory,
                           logo: _logoController.text,
                           website: _websiteController.text,
+                          eventUID: widget.eventUID.toString()
                         );
                         if (context.mounted) {
                           context.pop<Sponsor>(sponsor);

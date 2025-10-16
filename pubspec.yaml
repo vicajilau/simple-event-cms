@@ -76,9 +76,6 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - events/2025/config/
-    - events/2025/speakers/
-    - events/2025/sponsors/
     - events/organization/
     - assets/
 

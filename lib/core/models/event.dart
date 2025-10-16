@@ -30,9 +30,6 @@ class Event extends GitHubModel {
   /// Optional description of the event_collection
   final String? description;
 
-  String agendaUID;
-  final List<String> speakersUID;
-  final List<String> sponsorsUID;
   /// the name of the room where the event_collection will take place
   final List<Track> tracks;
 
@@ -44,9 +41,6 @@ class Event extends GitHubModel {
     required this.year,
     required this.primaryColor,
     required this.secondaryColor,
-    required this.agendaUID,
-    required this.speakersUID,
-    required this.sponsorsUID,
     required this.eventDates,
     this.venue,
     this.description,
@@ -60,22 +54,11 @@ class Event extends GitHubModel {
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {
-    List<String> speakers = (json['speakersUID'] != null)
-        ? (json['speakersUID'] as List)
-              .map((item) => item['UID'].toString())
-              .toList()
-        : [];
-    List<String> sponsors = (json['sponsorsUID'] != null)
-        ? (json['sponsorsUID'] as List)
-              .map((item) => item['UID'].toString())
-              .toList()
-        : [];
     List<Track> tracks = (json['tracks'] != null)
         ? (json['tracks'] as List)
             .map((item) => Track.fromJson(item))
             .toList()
         : [];
-    var agendaUID = json['agendaUID'];
     return Event(
       uid: json["UID"].toString(),
       eventName: json['eventName'],
@@ -85,9 +68,6 @@ class Event extends GitHubModel {
       eventDates: EventDates.fromJson(json['eventDates']),
       venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
       description: json['description'],
-      agendaUID: agendaUID,
-      speakersUID: speakers,
-      sponsorsUID: sponsors,
       tracks: tracks,
     );
   }
@@ -104,9 +84,6 @@ class Event extends GitHubModel {
       'eventDates': eventDates.toJson(),
       'venue': venue?.toJson(),
       'description': description,
-      'agendaUID': agendaUID,
-      'speakersUID': speakersUID.map((uid) => {'UID': uid}).toList(),
-      'sponsorsUID': sponsorsUID.map((uid) => {'UID': uid}).toList(),
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }

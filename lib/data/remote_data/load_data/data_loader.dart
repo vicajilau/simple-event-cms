@@ -32,77 +32,19 @@ class DataLoader {
     List<dynamic> jsonList = await commonsServices.loadData(
       PathsGithub.daysPath,
     );
-    return jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
-  }
-
-  Future<List<Agenda>> loadAgendaStructures() async {
-    List<dynamic> jsonList = await commonsServices.loadData(
-      PathsGithub.agendaPath,
-    );
-    return jsonList.map((jsonItem) => Agenda.fromJson(jsonItem)).toList();
-  }
-
-  /// Loads and assembles the full agenda data from the new JSON structure.
-  Future<List<Agenda>> getFullAgendaData() async {
     // Load all data components in parallel
-    final results = await Future.wait([
-      loadAgendaStructures(),
-      loadAllDays(),
-      loadAllTracks(),
-      loadAllSessions(),
-      loadSpeakers(),
-    ]);
-
-    final List<Agenda> agendaStructures = results[0] as List<Agenda>;
-    final List<AgendaDay> allDays = results[1] as List<AgendaDay>;
-    final List<Track> allTracks = results[2] as List<Track>;
-    final List<Session> allSessions = results[3] as List<Session>;
-    final List<Speaker> allSpeakers = results[4] as List<Speaker>;
-
-    // Create maps for quick UID lookups
-    final Map<String, AgendaDay> daysMap = {
-      for (var day in allDays) day.uid: day,
-    };
-    final Map<String, Track> tracksMap = {
-      for (var track in allTracks) track.uid: track,
-    };
-    final Map<String, Session> sessionsMap = {
-      for (var session in allSessions) session.uid: session,
-    };
-    final Map<String, Speaker> speakersMap = {
-      for (var speaker in allSpeakers) speaker.uid: speaker,
-    };
-
-    // Assemble the structure
-    for (var agenda in agendaStructures) {
-      agenda.resolvedDays = agenda.dayUids
-          .map((dayUid) => daysMap[dayUid])
-          .where((day) => day != null) // Filter out nulls if a UID is not found
-          .cast<AgendaDay>()
-          .toList();
-
-      for (var day in agenda.resolvedDays ?? <AgendaDay>[]) {
-        day.resolvedTracks = day.trackUids
-            .map((trackUid) => tracksMap[trackUid])
-            .where((track) => track != null)
-            .cast<Track>()
-            .toList();
-
-        for (var track in day.resolvedTracks ?? <Track>[]) {
-          track.resolvedSessions = track.sessionUids
-              .map((sessionUid) => sessionsMap[sessionUid])
-              .where((session) => session != null)
-              .cast<Session>()
-              .toList();
-          track.resolvedSessions = track.resolvedSessions?.map((session) {
-            session.speakerUID = speakersMap[session.speakerUID]?.uid;
-            return session;
-          }).toList();
-        }
-      }
-
+    final List<Track> allTracks = await loadAllTracks();
+    final List<Session> allSessions = await loadAllSessions();
+    // The .map() method returns a new lazy iterable and does not modify the list in place.
+    // A for loop is needed to modify the objects within the list.
+    for (var track in allTracks) {
+      track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList();
     }
-    return agendaStructures;
+    var agendaDays = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    for (var day in agendaDays) {
+      day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList();
+    }
+    return agendaDays;
   }
 
   // --- End of New Data Loading Methods ---
