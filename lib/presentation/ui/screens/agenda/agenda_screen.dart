@@ -58,15 +58,27 @@ class _AgendaScreenState extends State<AgendaScreen> {
           );
         }
         final filteredAgendaDays = widget.viewmodel.agendaDays.value
-            .where((day) =>
-                day.resolvedTracks != null && day.resolvedTracks!.isNotEmpty)
+            .where(
+              (day) =>
+                  day.resolvedTracks != null &&
+                  day.resolvedTracks!.isNotEmpty &&
+                  day.resolvedTracks!
+                      .where(
+                        (track) =>
+                            track.resolvedSessions != null &&
+                            track.resolvedSessions!.isNotEmpty,
+                      )
+                      .isNotEmpty,
+            )
             .toList();
+        if(filteredAgendaDays.isEmpty){
+          return Center(child: Text('No sessions found'));
+        }
         return ListView.builder(
           shrinkWrap: true,
           itemCount: filteredAgendaDays.length,
           itemBuilder: (context, index) {
-            final String agendaDayId =
-                filteredAgendaDays[index].uid;
+            final String agendaDayId = filteredAgendaDays[index].uid;
             final String date = filteredAgendaDays[index].date;
             final bool isExpanded =
                 _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
@@ -213,7 +225,11 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
-        sessions: widget.tracks[index].resolvedSessions?.where((session) => session.eventUID == widget.eventId).toList() ?? [],
+        sessions:
+            widget.tracks[index].resolvedSessions
+                ?.where((session) => session.eventUID == widget.eventId)
+                .toList() ??
+            [],
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
         eventId: widget.eventId,
@@ -235,7 +251,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 
   @override
   Widget build(BuildContext context) {
-    if(sessionCards.isEmpty) return const SizedBox.shrink();
+    if (sessionCards.isEmpty) return const SizedBox.shrink();
     return sessionCards[widget.currentIndex];
   }
 }
@@ -287,8 +303,7 @@ class _SessionCardsState extends State<SessionCards> {
                         session: session,
                       ),
                     );
-                  widget.viewModel.setup(widget.eventId);
-
+                    widget.viewModel.setup(widget.eventId);
                   },
                   child: _buildSessionCard(
                     context,
