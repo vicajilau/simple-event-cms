@@ -90,6 +90,16 @@ class AgendaViewModelImp extends AgendaViewModel {
 
   @override
   Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
-    return await agendaUseCase.getSpeakersForEventId(eventId);
+    viewState.value = ViewState.isLoading;
+    final result = await agendaUseCase.getSpeakersForEventId(eventId);
+    switch (result) {
+      case Ok<List<Speaker>>():
+        viewState.value = ViewState.loadFinished;
+        return result.value;
+      case Error():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
+        return [];
+    }
   }
 }

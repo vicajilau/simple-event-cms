@@ -63,7 +63,14 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
 
   @override
   Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
-    return await agendaUseCase.getSpeakersForEventId(eventId);
+    final result = await agendaUseCase.getSpeakersForEventId(eventId);;
+    switch (result) {
+      case Ok<List<Speaker>>():
+        return result.value;
+      case Error():
+        setErrorKey(result.error);
+        return [];
+    }
   }
 
   @override
@@ -165,8 +172,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> updateEvent(Event event) async {
-   return await agendaUseCase.saveEvent(event);
+  Future<void> updateEvent(Event event) {
+   return agendaUseCase.saveEvent(event);
   }
 
   @override

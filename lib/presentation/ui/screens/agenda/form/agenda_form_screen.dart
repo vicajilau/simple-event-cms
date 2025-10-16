@@ -416,6 +416,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         FilledButton(
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
+            setState(() => _isLoading = true);
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
               setState(() {
@@ -447,12 +448,17 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               var selectedTrack = tracks.firstWhere(
                 (track) => track.uid == _selectedTrackUid,
               );
+
+              debugPrint('Selected track: ${selectedTrack.name}');
+              debugPrint('Event uid: ${event?.uid}');
+              debugPrint('Selected track uid: ${selectedTrack.uid}');
+              debugPrint('sessions track: ${selectedTrack.sessionUids}');
               selectedTrack.eventUid = event!.uid.toString();
               selectedTrack.sessionUids.add(session.uid);
               await widget.viewmodel.updateTrack(selectedTrack);
               event?.tracks.add(selectedTrack);
               await widget.viewmodel.updateEvent(event!);
-
+              setState(() => _isLoading = false);
               if (mounted) {
                 Navigator.pop(
                   context,

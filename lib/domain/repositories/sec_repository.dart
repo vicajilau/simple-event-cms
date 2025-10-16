@@ -14,23 +14,23 @@ abstract class SecRepository {
   Future<Result<List<Track>>> loadTracks();
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds);
   Future<Result<Track>> loadTrackById(String trackId);
-  Future<void> saveEvent(Event event);
-  Future<void> saveTracks(List<Track> tracks);
+  Future<Result<void>> saveEvent(Event event);
+  Future<Result<void>> saveTracks(List<Track> tracks);
   Future<Result<void>> saveTrack(Track track);
-  Future<void> saveAgendaDays(List<AgendaDay> agendaDays);
-  Future<void> saveSpeaker(Speaker speaker, String? parentId);
-  Future<void> removeSpeaker(String speakerId);
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String eventId);
-  Future<void> removeAgendaDay(String agendaDayId);
-  Future<void> addSession(
+  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays);
+  Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId);
+  Future<Result<void>> removeSpeaker(String speakerId);
+  Future<Result<void>> saveAgendaDayById(AgendaDay agendaDay, String eventId);
+  Future<Result<void>> removeAgendaDay(String agendaDayId);
+  Future<Result<void>> addSession(
     Session session,
   );
-  Future<void> addSpeaker(String eventId,Speaker speaker);
-  Future<void> editSession(Session session, String parentId);
-  Future<void> deleteSessionFromAgendaDay(String sessionId);
-  Future<void> saveSponsor(Sponsor sponsor, String parentId);
-  Future<void> removeSponsor(String sponsorId);
-  Future<void> removeEvent(String eventId);
+  Future<Result<void>> addSpeaker(String eventId,Speaker speaker);
+  Future<Result<void>> editSession(Session session, String parentId);
+  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
+  Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
+  Future<Result<void>> removeSponsor(String sponsorId);
+  Future<Result<void>> removeEvent(String eventId);
 
-  Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
 }
