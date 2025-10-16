@@ -16,6 +16,7 @@ abstract class SecRepository {
   Future<Result<Track>> loadTrackById(String trackId);
   Future<void> saveEvent(Event event);
   Future<void> saveTracks(List<Track> tracks);
+  Future<Result<void>> saveTrack(Track track);
   Future<void> saveAgendaDays(List<AgendaDay> agendaDays);
   Future<void> saveSpeaker(Speaker speaker, String? parentId);
   Future<void> removeSpeaker(String speakerId);

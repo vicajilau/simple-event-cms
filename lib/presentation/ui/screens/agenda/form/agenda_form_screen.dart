@@ -14,12 +14,7 @@ class AgendaFormData {
   final String? track, day, eventId;
   final Session? session;
 
-  AgendaFormData({
-    this.session,
-    this.track,
-    this.day,
-    required this.eventId,
-  });
+  AgendaFormData({this.session, this.track, this.day, required this.eventId});
 }
 
 class AgendaFormScreen extends StatefulWidget {
@@ -50,7 +45,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   List<Track> tracks = [];
   List<AgendaDay> agendaDays = [];
   List<Speaker> speakers = [];
-  final List<String> sessionTypes = SessionType.values.map((e) => e.name).toList();
+  final List<String> sessionTypes = SessionType.values
+      .map((e) => e.name)
+      .toList();
 
   final AgendaFormViewModel agendaFormViewModel = getIt<AgendaFormViewModel>();
 
@@ -69,10 +66,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       return;
     }
 
-
-    var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(data.eventId!);
+    var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
+      data.eventId!,
+    );
     var fechedTracks = await widget.viewmodel.getTracks() ?? [];
-    var fetchedAgendaDays = await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
+    var fetchedAgendaDays =
+        await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
     event = await widget.viewmodel.getEventById(data.eventId!);
 
     setState(() {
@@ -86,16 +85,20 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       // Editing existing session
       _titleController.text = session.title;
 
-      if (data.day != null && agendaDays.map((day) => day.uid).contains(data.day)) {
+      if (data.day != null &&
+          agendaDays.map((day) => day.uid).contains(data.day)) {
         _selectedDay = data.day!;
       }
 
-      if (data.track != null && tracks.map((track) => track.uid).contains(data.track!)) {
+      if (data.track != null &&
+          tracks.map((track) => track.uid).contains(data.track!)) {
         _selectedTrackUid = data.track!;
       }
 
-      final initialSpeaker =
-          speakers.cast<Speaker?>().firstWhere((s) => s?.uid == session.speakerUID, orElse: () => null);
+      final initialSpeaker = speakers.cast<Speaker?>().firstWhere(
+        (s) => s?.uid == session.speakerUID,
+        orElse: () => null,
+      );
       if (initialSpeaker != null) {
         _selectedSpeaker = initialSpeaker;
       }
@@ -135,7 +138,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         widgetFormChild: Center(child: CircularProgressIndicator()),
       );
     }
-    final title = widget.data?.session == null ? 'Crear Sesión' : 'Editar Sesión';
+    final title = widget.data?.session == null
+        ? 'Crear Sesión'
+        : 'Editar Sesión';
     return FormScreenWrapper(
       pageTitle: title,
       widgetFormChild: Padding(
@@ -175,7 +180,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         initialValue: _selectedDay.isEmpty
-                            ? null : _selectedDay,
+                            ? null
+                            : _selectedDay,
                         decoration: const InputDecoration(
                           hintText: 'Selecciona un día',
                         ),
@@ -202,7 +208,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       label: 'Sala*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTrackUid.isEmpty ? null : _selectedTrackUid,
+                        initialValue: _selectedTrackUid.isEmpty
+                            ? null
+                            : _selectedTrackUid,
                         decoration: const InputDecoration(
                           hintText: 'Selecciona una sala', // This is track
                         ),
@@ -214,9 +222,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                               ),
                             )
                             .toList(),
-                        onChanged: (trackUid) => _selectedTrackUid = trackUid ?? '',
+                        onChanged: (trackUid) =>
+                            _selectedTrackUid = trackUid ?? '',
                         validator: (value) {
-                          return value == null || value.isEmpty ? 'Por favor, selecciona una sala' : null;
+                          return value == null || value.isEmpty
+                              ? 'Por favor, selecciona una sala'
+                              : null;
                         },
                       ),
                     ),
@@ -226,7 +237,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               SizedBox(height: _spacing),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [                  Row(
+                children: [
+                  Row(
                     spacing: _spacingForRowTime,
                     children: [
                       _timeSelector(
@@ -272,19 +284,32 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     child: SectionInputForm(
                       label: 'Speaker*',
                       childInput: speakers.isEmpty
-                          ? Row(children: [
+                          ? Row(
+                              children: [
                                 const Text('No hay speakers. Añade uno.'),
                                 IconButton(
-                                  icon: Icon(Icons.add_circle, color: Theme.of(context).primaryColor),
-                                   onPressed: () async { // Allow adding a new speaker
-                                    final newSpeaker = await Navigator.push<Speaker>(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => SpeakerFormScreen(eventUID: widget.data!.eventId.toString(),),
-                                      ),
-                                    );
+                                  icon: Icon(
+                                    Icons.add_circle,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  onPressed: () async {
+                                    // Allow adding a new speaker
+                                    final newSpeaker =
+                                        await Navigator.push<Speaker>(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                SpeakerFormScreen(
+                                                  eventUID: widget.data!.eventId
+                                                      .toString(),
+                                                ),
+                                          ),
+                                        );
                                     if (newSpeaker != null) {
-                                      await widget.viewmodel.addSpeaker(widget.data!.eventId.toString(),newSpeaker);
+                                      await widget.viewmodel.addSpeaker(
+                                        widget.data!.eventId.toString(),
+                                        newSpeaker,
+                                      );
                                       setState(() {
                                         speakers.add(newSpeaker);
                                         _selectedSpeaker = newSpeaker;
@@ -295,15 +320,18 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                               ],
                             )
                           : DropdownButtonFormField<Speaker>(
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              autovalidateMode:
+                                  AutovalidateMode.onUserInteraction,
                               initialValue: _selectedSpeaker,
                               decoration: const InputDecoration(
-                                hintText: 'Selecciona un speaker', // Now shows Speaker's name
+                                hintText:
+                                    'Selecciona un speaker', // Now shows Speaker's name
                               ),
                               items: speakers
                                   .map(
                                     (speaker) => DropdownMenuItem<Speaker>(
-                                      value: speaker, // The value is the Speaker object
+                                      value:
+                                          speaker, // The value is the Speaker object
                                       child: Text(speaker.name),
                                     ),
                                   )
@@ -312,12 +340,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                 _selectedSpeaker = speaker;
                               }),
                               validator: (value) {
-                                if (value == null) { // value is a Speaker object or null
+                                if (value == null) {
+                                  // value is a Speaker object or null
                                   return 'Por favor, selecciona un speaker';
                                 }
                                 return null;
                               },
-                      ),
+                            ),
                     ),
                   ),
                   Expanded(
@@ -325,7 +354,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       label: 'Tipo de charla*',
                       childInput: DropdownButtonFormField(
                         autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTalkType.isEmpty ? null : _selectedTalkType,
+                        initialValue: _selectedTalkType.isEmpty
+                            ? null
+                            : _selectedTalkType,
                         decoration: const InputDecoration(
                           hintText: 'Selecciona el tipo de charla',
                         ),
@@ -339,7 +370,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             .toList(),
                         onChanged: (type) => _selectedTalkType = type ?? '',
                         validator: (value) {
-                          return value == null || value.isEmpty ? 'Por favor, selecciona el tipo de charla' : null;
+                          return value == null || value.isEmpty
+                              ? 'Por favor, selecciona el tipo de charla'
+                              : null;
                         },
                       ),
                     ),
@@ -375,7 +408,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        OutlinedButton(onPressed: () => Navigator.pop(context), child: const Text('Cancelar')),
+        OutlinedButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancelar'),
+        ),
         const SizedBox(width: 16),
         FilledButton(
           onPressed: () async {
@@ -383,34 +419,46 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
               setState(() {
-                _timeErrorMessage = 'Por favor, seleccionar ambas horas: inicio y final.';
+                _timeErrorMessage =
+                    'Por favor, seleccionar ambas horas: inicio y final.';
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-              isTimeValid = false; // Error message is already set by the time picker logic
+              isTimeValid =
+                  false; // Error message is already set by the time picker logic
             }
 
             if (_formKey.currentState!.validate() && isTimeValid) {
               Session session = Session(
-                uid: widget.data?.session?.uid ?? 'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+                uid:
+                    widget.data?.session?.uid ??
+                    'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
                 title: _titleController.text,
-                time: '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
+                time:
+                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
                 speakerUID: _selectedSpeaker!.uid.toString(),
                 description: _descriptionController.text,
                 type: _selectedTalkType,
-                eventUID: widget.data!.eventId.toString()
+                eventUID: widget.data!.eventId.toString(),
               );
 
-              await widget.viewmodel.addSession(
-                  session,
-                  );
+              await widget.viewmodel.addSession(session);
 
-              var selectedTrack = tracks.firstWhere((track) => track.uid == _selectedTrackUid);
+              var selectedTrack = tracks.firstWhere(
+                (track) => track.uid == _selectedTrackUid,
+              );
               selectedTrack.eventUid = event!.uid.toString();
+              selectedTrack.sessionUids.add(session.uid);
+              await widget.viewmodel.updateTrack(selectedTrack);
               event?.tracks.add(selectedTrack);
               await widget.viewmodel.updateEvent(event!);
 
-              if (mounted) Navigator.pop(context,event); // Return true to indicate success
+              if (mounted) {
+                Navigator.pop(
+                  context,
+                  event,
+                ); // Return true to indicate success
+              }
             }
           },
           child: const Text('Guardar'),
@@ -425,7 +473,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     required ValueChanged<TimeOfDay> onIndexChanged,
     required bool isStartTime,
   }) {
-    return Row(children: [        Text(
+    return Row(
+      children: [
+        Text(
           label,
           style: Theme.of(
             context,
@@ -447,8 +497,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               if (newStartTime != null && newEndTime != null) {
                 bool isValid = isTimeRangeValid(newStartTime, newEndTime);
 
-                setState(() { // Set error message for time range validation
-                  _timeErrorMessage = isValid ? null : 'La hora de inicio debe ser anterior a la hora final.';
+                setState(() {
+                  // Set error message for time range validation
+                  _timeErrorMessage = isValid
+                      ? null
+                      : 'La hora de inicio debe ser anterior a la hora final.';
                 });
               } else {
                 // Clear message if one of the times is not set yet
@@ -467,7 +520,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             child: Text(currentTime?.format(context) ?? '00:00'),
           ),
         ),
-      ],);
+      ],
+    );
   }
 
   bool isTimeRangeValid(TimeOfDay? startTime, TimeOfDay? endTime) {

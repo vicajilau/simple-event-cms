@@ -35,10 +35,16 @@ class DataLoader {
     // Load all data components in parallel
     final List<Track> allTracks = await loadAllTracks();
     final List<Session> allSessions = await loadAllSessions();
-    allTracks.map((track) => track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList());
-    var agendaDay = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
-    agendaDay.map((day) => day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList());
-    return agendaDay;
+    // The .map() method returns a new lazy iterable and does not modify the list in place.
+    // A for loop is needed to modify the objects within the list.
+    for (var track in allTracks) {
+      track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList();
+    }
+    var agendaDays = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    for (var day in agendaDays) {
+      day.resolvedTracks = allTracks.where((track) => day.trackUids.contains(track.uid)).toList();
+    }
+    return agendaDays;
   }
 
   // --- End of New Data Loading Methods ---

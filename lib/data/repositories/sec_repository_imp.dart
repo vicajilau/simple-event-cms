@@ -90,6 +90,23 @@ class SecRepositoryImp extends SecRepository {
     DataUpdate.addItemAndAssociations(session, parentId);
   }
 
+  @override
+  Future<void> addSpeaker(String eventId,Speaker speaker) async {
+    return await DataUpdate.addItemAndAssociations(speaker, eventId);
+
+  }
+
+  @override
+  Future<Result<void>> saveTrack(Track track) async {
+    try {
+      await DataUpdate.addItemAndAssociations(track, null);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
   //delete items
   @override
   Future<void> removeEvent(String eventId) async {
@@ -226,9 +243,4 @@ class SecRepositoryImp extends SecRepository {
     }
   }
 
-  @override
-  Future<void> addSpeaker(String eventId,Speaker speaker) async {
-    return await DataUpdate.addItemAndAssociations(speaker, eventId);
-
-  }
 }
