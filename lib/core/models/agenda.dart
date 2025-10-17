@@ -22,7 +22,7 @@ class AgendaDay extends GitHubModel {
       uid: json['UID'],
       date: json['date'],
       eventUID: json['eventUID'],
-      trackUids: (json['tracks'] as List)
+      trackUids: (json['trackUids'] as List)
           .map((trackUid) => trackUid['UID'].toString())
           .toList(),
       // resolvedTracks will be populated by DataLoader
@@ -34,7 +34,7 @@ class AgendaDay extends GitHubModel {
     "UID": uid,
     "date": date,
     "eventUID": eventUID,
-    "tracks": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "trackUids": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 
