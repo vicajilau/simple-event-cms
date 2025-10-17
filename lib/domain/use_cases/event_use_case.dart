@@ -9,7 +9,6 @@ abstract class EventUseCase {
   Future<Event?> getEventById(String id);
   Future<void> saveEvent(Event event);
   Future<void> prepareAgendaDays(Event event);
-  Future<void> saveAgendaDays(List<AgendaDay> days);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -37,11 +36,6 @@ class EventUseCaseImp implements EventUseCase {
   }
 
   @override
-  Future<void> saveAgendaDays(List<AgendaDay> days) async {
-    await repository.saveAgendaDays(days);
-  }
-
-  @override
   Future<void> prepareAgendaDays(Event event) async {
     final startDate = DateTime.tryParse(event.eventDates.startDate);
     final endDate = DateTime.tryParse(event.eventDates.endDate);
@@ -57,8 +51,7 @@ class EventUseCaseImp implements EventUseCase {
             date: DateFormat(
               'yyyy-MM-dd',
             ).format(startDate.add(Duration(days: i))),
-            eventUID: event.uid,
-            trackUids: event.tracks.map((track) => track.uid).toList(),
+            eventUID: event.uid
           ),
         );
       }

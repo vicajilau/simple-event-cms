@@ -76,16 +76,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
         if (widget.eventId != null) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
+              body: Center(child: CircularProgressIndicator()),
             );
           }
           if (snapshot.hasError) {
             return Scaffold(
-              body: Center(
-                child: Text('Error: ${snapshot.error}'),
-              ),
+              body: Center(child: Text('Error: ${snapshot.error}')),
             );
           }
 
@@ -120,8 +116,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
               spacing: 16,
               children: [
                 Text(
-                    '${widget.eventId != null ? 'Editando' : 'Creando'} evento',
-                    style: AppFonts.titleHeadingForm),
+                  '${widget.eventId != null ? 'Editando' : 'Creando'} evento',
+                  style: AppFonts.titleHeadingForm,
+                ),
                 SectionInputForm(
                   label: 'Nombre del evento',
                   childInput: TextFormField(
@@ -143,10 +140,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         child: TextFormField(
                           controller: _startDateController,
                           readOnly: true,
-                          decoration:
-                              AppDecorations.textFieldDecoration.copyWith(
-                            hintText: 'YYYY-MM-DD',
-                          ),
+                          decoration: AppDecorations.textFieldDecoration
+                              .copyWith(hintText: 'YYYY-MM-DD'),
                           onTap: () =>
                               _selectDate(context, _startDateController),
                           validator: (value) => (value == null || value.isEmpty)
@@ -166,10 +161,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
                           child: TextFormField(
                             controller: _endDateController,
                             readOnly: true,
-                            decoration:
-                                AppDecorations.textFieldDecoration.copyWith(
-                              hintText: 'YYYY-MM-DD',
-                            ),
+                            decoration: AppDecorations.textFieldDecoration
+                                .copyWith(hintText: 'YYYY-MM-DD'),
                             onTap: () =>
                                 _selectDate(context, _endDateController),
                           ),
@@ -323,12 +316,16 @@ class _EventFormScreenState extends State<EventFormScreen> {
       uid: 'EventDate_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
     );
 
-    final eventId =  event?.uid ??
+    final eventId =
+        event?.uid ??
         'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
     final eventModified = Event(
       uid: eventId,
       eventName: _nameController.text,
-      tracks: _tracks,
+      tracks: _tracks.map((track) {
+        track.eventUid = eventId;
+        return track;
+      }).toList(),
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,

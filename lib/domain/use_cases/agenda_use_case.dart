@@ -6,12 +6,12 @@ import '../../core/utils/result.dart';
 abstract class AgendaUseCase {
   Future<Result<void>> saveEvent(Event event);
   Future<Result<void>> saveSpeaker(Speaker speaker,String eventId);
-  Future<Result<void>> saveAgendaDayById(AgendaDay agendaDay, String eventId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId);
   Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
   Future<Result<List<Track>>> getTracks();
-  Future<Result<void>> updateTrack(Track track);
+  Future<Result<void>> updateTrack(Track track,String eventId);
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay);
   Future<Result<Track>> getTrackById(String trackId);
   Future<Result<void>> addSession(
     Session session,
@@ -30,11 +30,6 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<Result<void>> saveSpeaker(Speaker speaker,String eventId) async{
     return await repository.saveSpeaker(speaker,eventId);
-  }
-
-  @override
-  Future<Result<void>> saveAgendaDayById(AgendaDay agendaDay, String eventId) async{
-    return await repository.saveAgendaDayById(agendaDay, eventId);
   }
 
   @override
@@ -101,7 +96,12 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<Result<void>> updateTrack(Track track) async {
-    return await repository.saveTrack(track);
+  Future<Result<void>> updateTrack(Track track,String eventId) async {
+    return await repository.saveTrack(track,eventId);
+  }
+
+  @override
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay) async {
+    return await repository.saveAgendaDay(agendaDay);
   }
 }

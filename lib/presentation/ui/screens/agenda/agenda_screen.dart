@@ -57,29 +57,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
             child: ErrorView(errorType: widget.viewmodel.errorType),
           );
         }
-        final filteredAgendaDays = widget.viewmodel.agendaDays.value
-            .where(
-              (day) =>
-                  day.resolvedTracks != null &&
-                  day.resolvedTracks!.isNotEmpty &&
-                  day.resolvedTracks!
-                      .where(
-                        (track) =>
-                            track.resolvedSessions != null &&
-                            track.resolvedSessions!.isNotEmpty,
-                      )
-                      .isNotEmpty,
-            )
-            .toList();
-        if(filteredAgendaDays.isEmpty){
+
+        if(widget.viewmodel.agendaDays.value.isEmpty){
           return Center(child: Text('No sessions found'));
         }
         return ListView.builder(
           shrinkWrap: true,
-          itemCount: filteredAgendaDays.length,
+          itemCount: widget.viewmodel.agendaDays.value.length,
           itemBuilder: (context, index) {
-            final String agendaDayId = filteredAgendaDays[index].uid;
-            final String date = filteredAgendaDays[index].date;
+            final String agendaDayId = widget.viewmodel.agendaDays.value[index].uid;
+            final String date = widget.viewmodel.agendaDays.value[index].date;
             final bool isExpanded =
                 _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
             final int tabBarIndex =
@@ -104,7 +91,11 @@ class _AgendaScreenState extends State<AgendaScreen> {
               title: _buildTitleExpansionTile(isExpanded, date),
               children: <Widget>[
                 _buildExpansionTileBody(
-                  filteredAgendaDays[index].resolvedTracks ?? [],
+                  widget.viewmodel.agendaDays.value[index].resolvedTracks?.where(
+                        (track) =>
+                            track.resolvedSessions != null &&
+                            track.resolvedSessions!.isNotEmpty,
+                      ).toList() ?? [],
                   tabBarIndex,
                   agendaDayId,
                   widget.eventId.toString(),
@@ -296,14 +287,18 @@ class _SessionCardsState extends State<SessionCards> {
                 final session = sessions[index];
                 return InkWell(
                   onTap: () async {
-                    await AppRouter.router.push(
+                    List<AgendaDay>? agendaDays = await AppRouter.router.push(
                       AppRouter.agendaFormPath,
                       extra: AgendaFormData(
                         eventId: widget.eventId,
                         session: session,
                       ),
                     );
-                    widget.viewModel.setup(widget.eventId);
+                    if(agendaDays != null){
+                      setState(() {
+                        widget.viewModel.agendaDays.value = agendaDays;
+                      });
+                    }
                   },
                   child: _buildSessionCard(
                     context,

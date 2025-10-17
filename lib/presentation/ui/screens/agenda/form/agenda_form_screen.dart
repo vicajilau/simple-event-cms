@@ -6,7 +6,9 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+import 'package:sec/presentation/view_model_common.dart';
 
 import '../../speaker/speaker_form_screen.dart';
 
@@ -36,7 +38,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   String _selectedTalkType = '';
   final double _spacing = 24;
   final double _spacingForRowDropdown = 40, _spacingForRowTime = 40;
-  bool _isLoading = true;
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -62,7 +63,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     if (data == null) {
       // Handling creation of a new session from scratch if needed.
       // For now, let's assume `data` is always provided.
-      setState(() => _isLoading = false);
+      setState(() => agendaFormViewModel.viewState.value = ViewState.isLoading);
       return;
     }
 
@@ -120,7 +121,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       // Creating a new session
     }
 
-    setState(() => _isLoading = false);
+    setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
   }
 
   @override
@@ -132,270 +133,301 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const FormScreenWrapper(
-        pageTitle: 'Cargando...',
-        widgetFormChild: Center(child: CircularProgressIndicator()),
-      );
-    }
     final title = widget.data?.session == null
         ? 'Crear Sesión'
         : 'Editar Sesión';
-    return FormScreenWrapper(
-      pageTitle: title,
-      widgetFormChild: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: AppFonts.titleHeadingForm),
-              SizedBox(height: _spacing),
-              _buildTitle(),
-              SectionInputForm(
-                label: 'Título*',
-                childInput: TextFormField(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  maxLines: 1,
-                  decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce título de la charla',
-                  ),
-                  controller: _titleController,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor, introduce un título de la charla';
-                    }
-                    return null;
+    return ValueListenableBuilder<ViewState>(
+      valueListenable: widget.viewmodel.viewState,
+      builder: (context, viewState, child) {
+        if (viewState == ViewState.isLoading) {
+          return const FormScreenWrapper(
+            pageTitle: 'Cargando...',
+            widgetFormChild: Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (viewState == ViewState.error) {
+          // Using WidgetsBinding.instance.addPostFrameCallback to show a dialog
+          // after the build phase is complete, preventing build-time state changes.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return CustomErrorDialog(
+                  errorMessage: 'Ha ocurrido un error inesperado.',
+                  onCancel: () {
+                    Navigator.of(context).pop();
                   },
-                ),
-              ),
-              SizedBox(height: _spacing),
-              Row(
-                spacing: _spacingForRowDropdown,
-                children: [
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Día del evento*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedDay.isEmpty
-                            ? null
-                            : _selectedDay,
-                        decoration: const InputDecoration(
-                          hintText: 'Selecciona un día',
-                        ),
-                        items: agendaDays
-                            .map(
-                              (day) => DropdownMenuItem(
-                                value: day.uid,
-                                child: Text(day.date),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (day) => _selectedDay = day ?? '',
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Por favor, selecciona un día';
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Sala*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTrackUid.isEmpty
-                            ? null
-                            : _selectedTrackUid,
-                        decoration: const InputDecoration(
-                          hintText: 'Selecciona una sala', // This is track
-                        ),
-                        items: tracks
-                            .map(
-                              (track) => DropdownMenuItem(
-                                value: track.uid,
-                                child: Text(track.name),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (trackUid) =>
-                            _selectedTrackUid = trackUid ?? '',
-                        validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona una sala'
-                              : null;
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: _spacing),
-              Column(
+                  onRetry: () async {
+                    await _loadInitialData();
+                  },
+                );
+              },
+            );
+          });
+        }
+        return FormScreenWrapper(
+          pageTitle: title,
+          widgetFormChild: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    spacing: _spacingForRowTime,
-                    children: [
-                      _timeSelector(
-                        label: 'Hora de inicio:\t\t',
-                        currentTime: _initSessionTime,
-                        onIndexChanged: (value) {
-                          setState(() {
-                            _initSessionTime = value;
-                          });
-                        },
-                        isStartTime: true,
+                  Text(title, style: AppFonts.titleHeadingForm),
+                  SizedBox(height: _spacing),
+                  _buildTitle(),
+                  SectionInputForm(
+                    label: 'Título*',
+                    childInput: TextFormField(
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      maxLines: 1,
+                      decoration: AppDecorations.textFieldDecoration.copyWith(
+                        hintText: 'Introduce título de la charla',
                       ),
-                      _timeSelector(
-                        label: 'Hora final:\t\t',
-                        currentTime: _endSessionTime,
-                        onIndexChanged: (value) {
-                          setState(() {
-                            _endSessionTime = value;
-                          });
-                        },
-                        isStartTime: false,
+                      controller: _titleController,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, introduce un título de la charla';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: _spacing),
+                  Row(
+                    spacing: _spacingForRowDropdown,
+                    children: [
+                      Expanded(
+                        child: SectionInputForm(
+                          label: 'Día del evento*',
+                          childInput: DropdownButtonFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            initialValue: _selectedDay.isEmpty
+                                ? null
+                                : _selectedDay,
+                            decoration: const InputDecoration(
+                              hintText: 'Selecciona un día',
+                            ),
+                            items: agendaDays
+                                .map(
+                                  (day) => DropdownMenuItem(
+                                    value: day.uid,
+                                    child: Text(day.date),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (day) => _selectedDay = day ?? '',
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Por favor, selecciona un día';
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: SectionInputForm(
+                          label: 'Sala*',
+                          childInput: DropdownButtonFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            initialValue: _selectedTrackUid.isEmpty
+                                ? null
+                                : _selectedTrackUid,
+                            decoration: const InputDecoration(
+                              hintText: 'Selecciona una sala', // This is track
+                            ),
+                            items: tracks
+                                .map(
+                                  (track) => DropdownMenuItem(
+                                    value: track.uid,
+                                    child: Text(track.name),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (trackUid) =>
+                                _selectedTrackUid = trackUid ?? '',
+                            validator: (value) {
+                              return value == null || value.isEmpty
+                                  ? 'Por favor, selecciona una sala'
+                                  : null;
+                            },
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  if (_timeErrorMessage != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        _timeErrorMessage!,
-                        style: TextStyle(
-                          color: const Color.fromARGB(255, 194, 67, 58),
-                          fontSize: 12,
-                        ),
+                  SizedBox(height: _spacing),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        spacing: _spacingForRowTime,
+                        children: [
+                          _timeSelector(
+                            label: 'Hora de inicio:\t\t',
+                            currentTime: _initSessionTime,
+                            onIndexChanged: (value) {
+                              setState(() {
+                                _initSessionTime = value;
+                              });
+                            },
+                            isStartTime: true,
+                          ),
+                          _timeSelector(
+                            label: 'Hora final:\t\t',
+                            currentTime: _endSessionTime,
+                            onIndexChanged: (value) {
+                              setState(() {
+                                _endSessionTime = value;
+                              });
+                            },
+                            isStartTime: false,
+                          ),
+                        ],
                       ),
-                    ),
-                ],
-              ),
-              SizedBox(height: _spacing),
-              Row(
-                spacing: _spacingForRowDropdown,
-                children: [
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Speaker*',
-                      childInput: speakers.isEmpty
-                          ? Row(
-                              children: [
-                                const Text('No hay speakers. Añade uno.'),
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.add_circle,
-                                    color: Theme.of(context).primaryColor,
+                      if (_timeErrorMessage != null)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            _timeErrorMessage!,
+                            style: TextStyle(
+                              color: const Color.fromARGB(255, 194, 67, 58),
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  SizedBox(height: _spacing),
+                  Row(
+                    spacing: _spacingForRowDropdown,
+                    children: [
+                      Expanded(
+                        child: SectionInputForm(
+                          label: 'Speaker*',
+                          childInput: speakers.isEmpty
+                              ? Row(
+                                  children: [
+                                    const Text('No hay speakers. Añade uno.'),
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.add_circle,
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                      onPressed: () async {
+                                        // Allow adding a new speaker
+                                        final newSpeaker =
+                                            await Navigator.push<Speaker>(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SpeakerFormScreen(
+                                                      eventUID: widget
+                                                          .data!
+                                                          .eventId
+                                                          .toString(),
+                                                    ),
+                                              ),
+                                            );
+                                        if (newSpeaker != null) {
+                                          await widget.viewmodel.addSpeaker(
+                                            widget.data!.eventId.toString(),
+                                            newSpeaker,
+                                          );
+                                          setState(() {
+                                            speakers.add(newSpeaker);
+                                            _selectedSpeaker = newSpeaker;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                )
+                              : DropdownButtonFormField<Speaker>(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  initialValue: _selectedSpeaker,
+                                  decoration: const InputDecoration(
+                                    hintText:
+                                        'Selecciona un speaker', // Now shows Speaker's name
                                   ),
-                                  onPressed: () async {
-                                    // Allow adding a new speaker
-                                    final newSpeaker =
-                                        await Navigator.push<Speaker>(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                SpeakerFormScreen(
-                                                  eventUID: widget.data!.eventId
-                                                      .toString(),
-                                                ),
-                                          ),
-                                        );
-                                    if (newSpeaker != null) {
-                                      await widget.viewmodel.addSpeaker(
-                                        widget.data!.eventId.toString(),
-                                        newSpeaker,
-                                      );
-                                      setState(() {
-                                        speakers.add(newSpeaker);
-                                        _selectedSpeaker = newSpeaker;
-                                      });
+                                  items: speakers
+                                      .map(
+                                        (speaker) => DropdownMenuItem<Speaker>(
+                                          value:
+                                              speaker, // The value is the Speaker object
+                                          child: Text(speaker.name),
+                                        ),
+                                      )
+                                      .toList(),
+                                  onChanged: (speaker) => setState(() {
+                                    _selectedSpeaker = speaker;
+                                  }),
+                                  validator: (value) {
+                                    if (value == null) {
+                                      // value is a Speaker object or null
+                                      return 'Por favor, selecciona un speaker';
                                     }
+                                    return null;
                                   },
                                 ),
-                              ],
-                            )
-                          : DropdownButtonFormField<Speaker>(
-                              autovalidateMode:
-                                  AutovalidateMode.onUserInteraction,
-                              initialValue: _selectedSpeaker,
-                              decoration: const InputDecoration(
-                                hintText:
-                                    'Selecciona un speaker', // Now shows Speaker's name
-                              ),
-                              items: speakers
-                                  .map(
-                                    (speaker) => DropdownMenuItem<Speaker>(
-                                      value:
-                                          speaker, // The value is the Speaker object
-                                      child: Text(speaker.name),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (speaker) => setState(() {
-                                _selectedSpeaker = speaker;
-                              }),
-                              validator: (value) {
-                                if (value == null) {
-                                  // value is a Speaker object or null
-                                  return 'Por favor, selecciona un speaker';
-                                }
-                                return null;
-                              },
-                            ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SectionInputForm(
-                      label: 'Tipo de charla*',
-                      childInput: DropdownButtonFormField(
-                        autovalidateMode: AutovalidateMode.onUserInteraction,
-                        initialValue: _selectedTalkType.isEmpty
-                            ? null
-                            : _selectedTalkType,
-                        decoration: const InputDecoration(
-                          hintText: 'Selecciona el tipo de charla',
                         ),
-                        items: sessionTypes
-                            .map(
-                              (type) => DropdownMenuItem(
-                                value: type,
-                                child: Text(type),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (type) => _selectedTalkType = type ?? '',
-                        validator: (value) {
-                          return value == null || value.isEmpty
-                              ? 'Por favor, selecciona el tipo de charla'
-                              : null;
-                        },
                       ),
+                      Expanded(
+                        child: SectionInputForm(
+                          label: 'Tipo de charla*',
+                          childInput: DropdownButtonFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            initialValue: _selectedTalkType.isEmpty
+                                ? null
+                                : _selectedTalkType,
+                            decoration: const InputDecoration(
+                              hintText: 'Selecciona el tipo de charla',
+                            ),
+                            items: sessionTypes
+                                .map(
+                                  (type) => DropdownMenuItem(
+                                    value: type,
+                                    child: Text(type),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (type) => _selectedTalkType = type ?? '',
+                            validator: (value) {
+                              return value == null || value.isEmpty
+                                  ? 'Por favor, selecciona el tipo de charla'
+                                  : null;
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: _spacing),
+                  SectionInputForm(
+                    label: 'Descripción',
+                    childInput: TextFormField(
+                      maxLines: 4,
+                      decoration: AppDecorations.textFieldDecoration.copyWith(
+                        hintText: 'Introduce descripción de la charla...',
+                      ),
+                      controller: _descriptionController,
                     ),
                   ),
+                  SizedBox(height: _spacing + 10),
+                  _buildFooter(),
                 ],
               ),
-              SizedBox(height: _spacing),
-              SectionInputForm(
-                label: 'Descripción',
-                childInput: TextFormField(
-                  maxLines: 4,
-                  decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce descripción de la charla...',
-                  ),
-                  controller: _descriptionController,
-                ),
-              ),
-              SizedBox(height: _spacing + 10),
-              _buildFooter(),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 
@@ -416,7 +448,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         FilledButton(
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
-            setState(() => _isLoading = true);
+            setState(() => agendaFormViewModel.viewState.value = ViewState.isLoading);
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
               setState(() {
@@ -448,21 +480,33 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               var selectedTrack = tracks.firstWhere(
                 (track) => track.uid == _selectedTrackUid,
               );
+              AgendaDay agendaDay = agendaDays.firstWhere(
+                (day) => day.uid == _selectedDay,
+              );
+              agendaDay.eventUID = event!.uid.toString();
+              agendaDay.trackUids?.add(selectedTrack.uid);
+              selectedTrack.eventUid = event!.uid.toString();
+              selectedTrack.sessionUids.add(session.uid);
 
               debugPrint('Selected track: ${selectedTrack.name}');
               debugPrint('Event uid: ${event?.uid}');
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
-              selectedTrack.eventUid = event!.uid.toString();
-              selectedTrack.sessionUids.add(session.uid);
-              await widget.viewmodel.updateTrack(selectedTrack);
-              event?.tracks.add(selectedTrack);
+
+              await widget.viewmodel.updateTrack(selectedTrack,event!.uid.toString());
               await widget.viewmodel.updateEvent(event!);
-              setState(() => _isLoading = false);
+              await widget.viewmodel.updateAgendaDay(agendaDay);
+              agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              agendaDays.add(agendaDay);
+              event?.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
+              event?.tracks.add(selectedTrack);
+
+
+              setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
               if (mounted) {
                 Navigator.pop(
                   context,
-                  event,
+                  agendaDays,
                 ); // Return true to indicate success
               }
             }
