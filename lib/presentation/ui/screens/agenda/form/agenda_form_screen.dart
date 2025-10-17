@@ -494,7 +494,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
 
-              await widget.viewmodel.updateTrack(selectedTrack);
+              await widget.viewmodel.updateTrack(selectedTrack,event!.uid.toString());
               await widget.viewmodel.updateEvent(event!);
               await widget.viewmodel.updateAgendaDay(agendaDay);
               setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);

@@ -43,7 +43,7 @@ class Track extends GitHubModel {
   String name;
   String eventUid;
   final String color;
-  List<String> sessionUids;
+  List<String> sessionUids = [];
   List<Session>? resolvedSessions; // Field for in-memory resolved objects
 
   Track({
