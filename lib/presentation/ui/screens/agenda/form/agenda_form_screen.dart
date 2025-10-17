@@ -487,7 +487,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               agendaDay.trackUids?.add(selectedTrack.uid);
               selectedTrack.eventUid = event!.uid.toString();
               selectedTrack.sessionUids.add(session.uid);
-              event?.tracks.add(selectedTrack);
 
               debugPrint('Selected track: ${selectedTrack.name}');
               debugPrint('Event uid: ${event?.uid}');
@@ -497,11 +496,17 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               await widget.viewmodel.updateTrack(selectedTrack,event!.uid.toString());
               await widget.viewmodel.updateEvent(event!);
               await widget.viewmodel.updateAgendaDay(agendaDay);
+              agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              agendaDays.add(agendaDay);
+              event?.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
+              event?.tracks.add(selectedTrack);
+
+
               setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
               if (mounted) {
                 Navigator.pop(
                   context,
-                  event,
+                  agendaDays,
                 ); // Return true to indicate success
               }
             }

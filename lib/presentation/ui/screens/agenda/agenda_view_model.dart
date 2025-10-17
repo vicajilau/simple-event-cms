@@ -8,10 +8,8 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
-  Future<void> saveSpeaker(Speaker speaker,String eventId);
-  void addSession(
-    Session session,
-  );
+  Future<void> saveSpeaker(Speaker speaker, String eventId);
+  void addSession(Session session);
   void editSession(Session session, String parentId);
   void removeSession(String sessionId);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
@@ -52,7 +50,18 @@ class AgendaViewModelImp extends AgendaViewModel {
     final result = await agendaUseCase.getAgendaDayByEventId(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
-        agendaDays.value = result.value;
+        agendaDays.value = result.value.where(
+          (day) =>
+              day.resolvedTracks != null &&
+              day.resolvedTracks!.isNotEmpty &&
+              day.resolvedTracks!
+                  .where(
+                    (track) =>
+                        track.resolvedSessions != null &&
+                        track.resolvedSessions!.isNotEmpty,
+                  )
+                  .isNotEmpty,
+        ).toList();
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);
@@ -61,14 +70,12 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  Future<void> saveSpeaker(Speaker speaker,String eventId) async {
-    await agendaUseCase.saveSpeaker(speaker,eventId);
+  Future<void> saveSpeaker(Speaker speaker, String eventId) async {
+    await agendaUseCase.saveSpeaker(speaker, eventId);
   }
 
   @override
-  void addSession(
-    Session session,
-  ) {
+  void addSession(Session session) {
     agendaUseCase.addSession(session);
   }
 
