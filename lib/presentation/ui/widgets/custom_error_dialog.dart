@@ -6,11 +6,11 @@ class CustomErrorDialog extends StatelessWidget {
   final VoidCallback? onCancel;
 
   const CustomErrorDialog({
-    Key? key,
+    super.key,
     required this.errorMessage,
     this.onRetry,
     this.onCancel,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +20,13 @@ class CustomErrorDialog extends StatelessWidget {
       actions: <Widget>[
         if (onCancel != null)
           TextButton(
-            child: const Text('Cancelar'),
             onPressed: onCancel,
+            child: const Text('Cancelar'),
           ),
         if (onRetry != null)
           TextButton(
-            child: const Text('Reintentar'),
             onPressed: onRetry,
+            child: const Text('Reintentar'),
           ),
       ],
     );
