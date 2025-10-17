@@ -22,9 +22,9 @@ class AgendaDay extends GitHubModel {
       uid: json['UID'],
       date: json['date'],
       eventUID: json['eventUID'],
-      trackUids: (json['trackUids'] as List)
-          .map((trackUid) => trackUid['UID'].toString())
-          .toList(),
+      trackUids: (json['trackUids'] as List?)
+          ?.map((trackUid) => trackUid['UID'].toString())
+          .toList() ?? [],
       // resolvedTracks will be populated by DataLoader
     );
   }
