@@ -44,7 +44,8 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/${organization.year}/$path';
-      var github = GitHub();
+      var githubService = await SecureInfo.getGithubKey();
+      var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
       var repositorySlug = RepositorySlug(
         organization.githubUser,
         (await SecureInfo.getGithubKey()).projectName ??

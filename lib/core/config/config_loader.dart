@@ -20,7 +20,8 @@ class ConfigLoader {
     final data = await json.decode(response);
     var localOrganization = Organization.fromJson(data);
     final configUrl = 'events/organization/organization.json';
-    var github = GitHub();
+    var githubService = await SecureInfo.getGithubKey();
+    var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
     final res = await github.repositories.getContents(
       RepositorySlug(
         localOrganization.githubUser,
@@ -51,7 +52,8 @@ class ConfigLoader {
     );
 
     final configUrl = 'events/${organization.year}/config/events.json';
-    var github = GitHub();
+    var githubService = await SecureInfo.getGithubKey();
+    var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
