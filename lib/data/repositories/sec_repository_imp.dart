@@ -7,14 +7,12 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoader dataLoader = getIt<DataLoader>();
-  List<Event> _events = [];
 
   //load items
   @override
   Future<Result<List<Event>>> loadEvents() async {
     try {
       final events = await dataLoader.loadEvents();
-      _events = events;
       return Result.ok(events);
     } on Exception catch (e) {
       return Result.error(e);
@@ -196,7 +194,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> deleteSessionFromAgendaDay(String sessionId) async {
     try {
-      DataUpdate.deleteItemAndAssociations(sessionId, Session);
+      await DataUpdate.deleteItemAndAssociations(sessionId, Session);
       return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
@@ -288,31 +286,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<Session>>> loadSessionsByListId(
-    List<String> sessionsIds,
-  ) async {
-    try {
-      var sessions = await dataLoader.loadAllSessions();
-
-      return Result.ok(
-        sessions.where((session) => sessionsIds.contains(session.uid)).toList(),
-      );
-    } on Exception catch (e) {
-      return Result.error(e);
-    } catch (e) {
-      return Result.error(Exception('Something really unknown: $e'));
-    }
-  }
-
-  @override
   Future<Result<Event>> loadEventById(String eventId) async {
     try {
-      if (_events.isNotEmpty) {
-        return Result.ok(_events.firstWhere((event) => event.uid == eventId));
-      }
-
-      final events = await dataLoader.loadEvents();
-      _events = events;
+     final events = await dataLoader.loadEvents();
       return Result.ok(events.firstWhere((event) => event.uid == eventId));
     } on Exception catch (e) {
       return Result.error(e);
