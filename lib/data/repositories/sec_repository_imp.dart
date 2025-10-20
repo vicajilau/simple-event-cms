@@ -111,7 +111,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> addSession(Session session,String trackUID) async {
     try{
-    DataUpdate.addItemAndAssociations(session, trackUID);
+    await DataUpdate.addItemAndAssociations(session, trackUID);
     return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
@@ -338,7 +338,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveAgendaDay(AgendaDay agendaDay) async {
     try {
-      DataUpdate.addItemAndAssociations(agendaDay,null);
+      await DataUpdate.addItemAndAssociations(agendaDay,null);
       return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
