@@ -451,12 +451,14 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             setState(() => agendaFormViewModel.viewState.value = ViewState.isLoading);
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
+              setState(() => agendaFormViewModel.viewState.value = ViewState.error);
               setState(() {
                 _timeErrorMessage =
                     'Por favor, seleccionar ambas horas: inicio y final.';
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
+              setState(() => agendaFormViewModel.viewState.value = ViewState.error);
               isTimeValid =
                   false; // Error message is already set by the time picker logic
             }

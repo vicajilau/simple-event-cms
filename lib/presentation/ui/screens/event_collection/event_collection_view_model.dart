@@ -87,7 +87,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
-      await useCase.saveEvent(event);
+      await useCase.removeEvent(event);
     }
   }
 
