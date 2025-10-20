@@ -149,13 +149,13 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addTrackToAgenda(String eventId) async {
-    final Event? newEvent = await AppRouter.router.push(
+    List<AgendaDay>? agendaDays = await AppRouter.router.push(
       AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );
 
-    if (newEvent != null) {
+    if (agendaDays != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.setup(eventId);
+      agendaScreen.viewmodel.agendaDays.value = agendaDays;
     }
   }
 

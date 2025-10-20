@@ -8,6 +8,7 @@ abstract class EventUseCase {
   Future<Result<List<Event>>> getEvents();
   Future<Event?> getEventById(String id);
   Future<void> saveEvent(Event event);
+  Future<void> removeEvent(Event event);
   Future<void> prepareAgendaDays(Event event);
 }
 
@@ -57,5 +58,10 @@ class EventUseCaseImp implements EventUseCase {
       }
       await repository.saveAgendaDays(days);
     }
+  }
+
+  @override
+  Future<void> removeEvent(Event event) async {
+    await repository.removeEvent(event.uid);
   }
 }
