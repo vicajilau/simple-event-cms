@@ -131,9 +131,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveTrack(Track track,String eventId) async {
+  Future<Result<void>> saveTrack(Track track,String agendaDayId) async {
     try {
-      await DataUpdate.addItemAndAssociations(track,eventId);
+      await DataUpdate.addItemAndAssociations(track,agendaDayId);
       return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);

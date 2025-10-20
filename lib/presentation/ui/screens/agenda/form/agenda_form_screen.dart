@@ -491,6 +491,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               );
               agendaDay.eventUID = event.uid.toString();
               agendaDay.trackUids?.add(selectedTrack.uid);
+              agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              agendaDays.add(agendaDay);
+              event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
+              event.tracks.add(selectedTrack);
 
 
               debugPrint('Selected track: ${selectedTrack.name}');
@@ -498,13 +502,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
 
-              await widget.viewmodel.updateTrack(selectedTrack,event.uid.toString());
+              await widget.viewmodel.updateTrack(selectedTrack,agendaDay.uid);
               await widget.viewmodel.updateEvent(event);
               await widget.viewmodel.updateAgendaDay(agendaDay,event.uid.toString());
-              agendaDays.removeWhere((day) => day.uid == _selectedDay);
-              agendaDays.add(agendaDay);
-              event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
-              event.tracks.add(selectedTrack);
+
 
 
               setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
