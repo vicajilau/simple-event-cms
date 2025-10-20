@@ -500,7 +500,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
               await widget.viewmodel.updateTrack(selectedTrack,event.uid.toString());
               await widget.viewmodel.updateEvent(event);
-              await widget.viewmodel.updateAgendaDay(agendaDay);
+              await widget.viewmodel.updateAgendaDay(agendaDay,event.uid.toString());
               agendaDays.removeWhere((day) => day.uid == _selectedDay);
               agendaDays.add(agendaDay);
               event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);

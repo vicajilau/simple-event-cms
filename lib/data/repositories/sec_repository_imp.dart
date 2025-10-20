@@ -312,9 +312,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveAgendaDay(AgendaDay agendaDay) async {
+  Future<Result<void>> saveAgendaDay(AgendaDay agendaDay, String eventUID) async {
     try {
-      await DataUpdate.addItemAndAssociations(agendaDay,null);
+      await DataUpdate.addItemAndAssociations(agendaDay,eventUID);
       return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
