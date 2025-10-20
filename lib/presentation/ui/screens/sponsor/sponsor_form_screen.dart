@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/config/app_decorations.dart';
-import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
