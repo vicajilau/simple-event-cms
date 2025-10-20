@@ -55,7 +55,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/refactor_code_sec",
+          ref: "feature/develop_cp",
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -176,7 +176,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
 
@@ -253,10 +253,62 @@ class CommonsServicesImp extends CommonsServices {
       );
     }
 
+    // After a successful update or creation, GitHub's API might have a slight delay
+    // before the new content is available via a subsequent GET request.
+    // This function polls the file until its SHA matches the newly committed content's SHA.
+    await _waitForFileUpdate(github, repositorySlug, pathUrl, branch);
+
     return response;
   }
 
-  /// Generic function to remove data from GitHub
+  /// Polls the GitHub repository to confirm that a file has been updated.
+  ///
+  /// This function repeatedly fetches the file's metadata until the commit associated
+  /// with it is no longer the previous one, confirming the update is live.
+  /// It includes a timeout to prevent infinite loops.
+  Future<void> _waitForFileUpdate(
+    GitHub github,
+    RepositorySlug slug,
+    String path,
+    String branch,
+  ) async {
+    const maxRetries = 10;
+    const delay = Duration(seconds: 1);
+    int attempts = 0;
+
+    // First, get the latest commit SHA for the specified branch.
+    // This will be our reference for the "new" state.
+    final latestCommit = await github.repositories.getBranch(slug, branch);
+    final targetCommitSha = latestCommit.commit?.sha;
+
+    if (targetCommitSha == null) {
+      // Should not happen if the push was successful, but as a safeguard.
+      throw GithubException("Could not retrieve the latest commit SHA for branch '$branch'.");
+    }
+
+    while (attempts < maxRetries) {
+      try {
+        // We need to fetch the commit details for the file path to see when it was last updated.
+        final commits = github.repositories.listCommits(slug, path: path, sha: branch).map((commit) => commit.sha);
+        final lastFileCommitSha = await commits.first;
+
+        if (lastFileCommitSha == targetCommitSha) {
+          // The file's last modification commit matches the branch's latest commit.
+          // This confirms our change is live.
+          return; // Success
+        }
+      } catch (e) {
+        // Ignore "Not Found" during polling as the file might be propagating.
+        // Other errors might be transient network issues.
+      }
+
+      attempts++;
+      await Future.delayed(delay);
+    }
+
+    // If the loop finishes without returning, the update could not be confirmed in time.
+    throw GithubException("Timed out waiting for file update confirmation at '$path'. The change was likely pushed but is not yet reflected.");
+  }  /// Generic function to remove data from GitHub
   @override
   Future<http.Response> removeData<T extends GitHubModel>(
     List<T> dataOriginal,
@@ -286,7 +338,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -388,7 +440,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
 

@@ -28,7 +28,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "feature/refactor_code_sec",
+      ref: "feature/develop_cp",
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -55,7 +55,7 @@ class ConfigLoader {
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
-      ref: "feature/refactor_code_sec",
+      ref: "feature/develop_cp",
     );
 
     if (res.file == null || res.file!.content == null) {

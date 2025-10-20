@@ -10,6 +10,9 @@ abstract class SecRepository {
   Future<Result<List<AgendaDay>>> loadAgendaDayByEventId(
     String eventId,
   );
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventIdFiltered(
+    String eventId,
+  );
   Future<Result<List<Track>>> loadTracksByEventId(String eventId);
   Future<Result<List<Track>>> loadTracks();
   Future<Result<List<Session>>> loadSessionsByListId(List<String> sessionsIds);
@@ -23,10 +26,9 @@ abstract class SecRepository {
   Future<Result<void>> saveAgendaDay(AgendaDay agendaDay);
   Future<Result<void>> removeAgendaDay(String agendaDayId);
   Future<Result<void>> addSession(
-    Session session,
+    Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId,Speaker speaker);
-  Future<Result<void>> editSession(Session session, String parentId);
   Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
   Future<Result<void>> removeSponsor(String sponsorId);

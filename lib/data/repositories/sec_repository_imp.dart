@@ -109,21 +109,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> addSession(Session session) async {
+  Future<Result<void>> addSession(Session session,String trackUID) async {
     try{
-    DataUpdate.addItemAndAssociations(session, null);
-    return Result.ok(null);
-    } on Exception catch (e) {
-      return Result.error(e);
-    } catch (e) {
-      return Result.error(Exception('Something really unknown: $e'));
-    }
-  }
-
-  @override
-  Future<Result<void>> editSession(Session session, String parentId) async {
-    try{
-    DataUpdate.addItemAndAssociations(session, parentId);
+    DataUpdate.addItemAndAssociations(session, trackUID);
     return Result.ok(null);
     } on Exception catch (e) {
       return Result.error(e);
@@ -249,6 +237,20 @@ class SecRepositoryImp extends SecRepository {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
         agendaDays.where((agendaDay) => eventId == agendaDay.eventUID).toList(),
+      );
+    } on Exception catch (e) {
+      return Result.error(e);
+    } catch (e) {
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventIdFiltered(String eventId) async {
+    try {
+      var agendaDays = await dataLoader.loadAllDays();
+      return Result.ok(
+        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID && agendaDay.trackUids!= null && agendaDay.trackUids!.isNotEmpty).toList(),
       );
     } on Exception catch (e) {
       return Result.error(e);

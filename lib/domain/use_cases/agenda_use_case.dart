@@ -8,16 +8,16 @@ abstract class AgendaUseCase {
   Future<Result<void>> saveSpeaker(Speaker speaker,String eventId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId);
   Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
   Future<Result<List<Track>>> getTracks();
   Future<Result<void>> updateTrack(Track track,String eventId);
   Future<Result<void>> updateAgendaDay(AgendaDay agendaDay);
   Future<Result<Track>> getTrackById(String trackId);
   Future<Result<void>> addSession(
-    Session session,
+    Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId, Speaker speaker);
-  Future<Result<void>> editSession(Session session, String parentId);
   Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
   Future<Result<Event>> loadEvent(String eventId);
 
@@ -34,14 +34,9 @@ class AgendaUseCaseImpl implements AgendaUseCase {
 
   @override
   Future<Result<void>> addSession(
-    Session session,
+    Session session,String trackUID
   ) async {
-    return await repository.addSession(session);
-  }
-
-  @override
-  Future<Result<void>> editSession(Session session, String parentId) async {
-    return await repository.editSession(session, parentId);
+    return await repository.addSession(session,trackUID);
   }
 
   @override
@@ -67,6 +62,11 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   @override
   Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId) async {
     return await repository.loadAgendaDayByEventId(eventId);
+  }
+
+  @override
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId) async {
+    return await repository.loadAgendaDayByEventIdFiltered(eventId);
   }
 
   @override

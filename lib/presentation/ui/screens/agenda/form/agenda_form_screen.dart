@@ -476,39 +476,42 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 type: _selectedTalkType,
                 eventUID: widget.data!.eventId.toString(),
               );
-
-              await widget.viewmodel.addSession(session);
-
               var selectedTrack = tracks.firstWhere(
-                (track) => track.uid == _selectedTrackUid,
+                    (track) => track.uid == _selectedTrackUid,
               );
+              await widget.viewmodel.addSession(session, _selectedTrackUid);
+
+              var event = await widget.viewmodel.getEventById(widget.data!.eventId!);
+
+
+              selectedTrack.eventUid = event!.uid.toString();
+              selectedTrack.sessionUids.add(session.uid);
               AgendaDay agendaDay = agendaDays.firstWhere(
                 (day) => day.uid == _selectedDay,
               );
-              agendaDay.eventUID = event!.uid.toString();
+              agendaDay.eventUID = event.uid.toString();
               agendaDay.trackUids?.add(selectedTrack.uid);
-              selectedTrack.eventUid = event!.uid.toString();
-              selectedTrack.sessionUids.add(session.uid);
+
 
               debugPrint('Selected track: ${selectedTrack.name}');
-              debugPrint('Event uid: ${event?.uid}');
+              debugPrint('Event uid: ${event.uid}');
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
 
-              await widget.viewmodel.updateTrack(selectedTrack,event!.uid.toString());
-              await widget.viewmodel.updateEvent(event!);
+              await widget.viewmodel.updateTrack(selectedTrack,event.uid.toString());
+              await widget.viewmodel.updateEvent(event);
               await widget.viewmodel.updateAgendaDay(agendaDay);
               agendaDays.removeWhere((day) => day.uid == _selectedDay);
               agendaDays.add(agendaDay);
-              event?.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
-              event?.tracks.add(selectedTrack);
+              event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
+              event.tracks.add(selectedTrack);
 
 
               setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
               if (mounted) {
                 Navigator.pop(
                   context,
-                  agendaDays,
+                  agendaDays.where((day) => day.trackUids != null && day.trackUids!.isNotEmpty).toList(),
                 ); // Return true to indicate success
               }
             }

@@ -91,11 +91,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
               title: _buildTitleExpansionTile(isExpanded, date),
               children: <Widget>[
                 _buildExpansionTileBody(
-                  widget.viewmodel.agendaDays.value[index].resolvedTracks?.where(
-                        (track) =>
-                            track.resolvedSessions != null &&
-                            track.resolvedSessions!.isNotEmpty,
-                      ).toList() ?? [],
+                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
                   tabBarIndex,
                   agendaDayId,
                   widget.eventId.toString(),
