@@ -140,22 +140,22 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> addSpeaker(String eventId, Speaker speaker) {
-    return agendaUseCase.addSpeaker(eventId, speaker);
+  Future<void> addSpeaker(String eventId, Speaker speaker) async {
+    await agendaUseCase.addSpeaker(eventId, speaker);
   }
 
   @override
-  Future<void> updateEvent(Event event) {
-    return agendaUseCase.saveEvent(event);
+  Future<void> updateEvent(Event event) async {
+    await agendaUseCase.saveEvent(event);
   }
 
   @override
-  Future<void> updateTrack(Track track, String eventId) {
-    return agendaUseCase.updateTrack(track, eventId);
+  Future<void> updateTrack(Track track, String eventId) async {
+    await agendaUseCase.updateTrack(track, eventId);
   }
 
   @override
-  Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID) {
-    return agendaUseCase.updateAgendaDay(agendaDay,eventUID);
+  Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
+    await agendaUseCase.updateAgendaDay(agendaDay,eventUID);
   }
 }
