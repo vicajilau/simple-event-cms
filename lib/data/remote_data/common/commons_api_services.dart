@@ -257,7 +257,7 @@ class CommonsServicesImp extends CommonsServices {
     // After a successful update or creation, GitHub's API might have a slight delay
     // before the new content is available via a subsequent GET request.
     // This function polls the file until its SHA matches the newly committed content's SHA.
-    await _waitForFileUpdate(github, repositorySlug, pathUrl, branch);
+    //await _waitForFileUpdate(github, repositorySlug, pathUrl, branch);
 
     return response;
   }
@@ -267,7 +267,7 @@ class CommonsServicesImp extends CommonsServices {
   /// This function repeatedly fetches the file's metadata until the commit associated
   /// with it is no longer the previous one, confirming the update is live.
   /// It includes a timeout to prevent infinite loops.
-  Future<void> _waitForFileUpdate(
+  /*Future<void> _waitForFileUpdate(
     GitHub github,
     RepositorySlug slug,
     String path,
@@ -309,7 +309,8 @@ class CommonsServicesImp extends CommonsServices {
 
     // If the loop finishes without returning, the update could not be confirmed in time.
     throw GithubException("Timed out waiting for file update confirmation at '$path'. The change was likely pushed but is not yet reflected.");
-  }  /// Generic function to remove data from GitHub
+  }*/
+  /// Generic function to remove data from GitHub
   @override
   Future<http.Response> removeData<T extends GitHubModel>(
     List<T> dataOriginal,
