@@ -121,7 +121,7 @@ class CommonsServicesImp extends CommonsServices {
         return [].toList();
       } else {
         throw JsonDecodeException(
-          "Error loading configuration from $path", // This was already in English. No change.
+          "Error loading configuration from $path",
           cause: e,
           stackTrace: st,
         );
