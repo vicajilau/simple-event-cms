@@ -32,11 +32,10 @@ class DataLoader {
     List<dynamic> jsonList = await commonsServices.loadData(
       PathsGithub.daysPath,
     );
-    // Load all data components in parallel
+
     final List<Track> allTracks = await loadAllTracks();
     final List<Session> allSessions = await loadAllSessions();
-    // The .map() method returns a new lazy iterable and does not modify the list in place.
-    // A for loop is needed to modify the objects within the list.
+
     for (var track in allTracks) {
       track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList();
     }

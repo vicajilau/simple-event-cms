@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/config/app_decorations.dart';
-import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -70,6 +71,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return FutureBuilder<Event?>(
       future: _eventFuture,
       builder: (context, snapshot) {
@@ -81,7 +83,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           }
           if (snapshot.hasError) {
             return Scaffold(
-              body: Center(child: Text('Error: ${snapshot.error}')),
+              body: Center(child: Text('${location.errorPrefix}${snapshot.error}')),
             );
           }
 
@@ -108,7 +110,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         }
         return FormScreenWrapper(
           pageTitle:
-              '${widget.eventId != null ? 'Edición' : 'Creación'} evento',
+              widget.eventId != null ? location.editEventTitle : location.createEventTitle,
           widgetFormChild: Form(
             key: _formKey,
             child: Column(
@@ -116,24 +118,24 @@ class _EventFormScreenState extends State<EventFormScreen> {
               spacing: 16,
               children: [
                 Text(
-                  '${widget.eventId != null ? 'Editando' : 'Creando'} evento',
+                  widget.eventId != null ? location.editingEvent : location.creatingEvent,
                   style: AppFonts.titleHeadingForm,
                 ),
                 SectionInputForm(
-                  label: 'Nombre del evento',
+                  label: location.eventNameLabel,
                   childInput: TextFormField(
                     controller: _nameController,
                     maxLines: 1,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce el nombre del evento',
+                      hintText: location.eventNameHint,
                     ),
                     validator: (value) => (value == null || value.isEmpty)
-                        ? 'Campo requerido'
+                        ? location.requiredField
                         : null,
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Fecha inicio',
+                  label: location.startDateLabel,
                   childInput: Row(
                     children: [
                       Expanded(
@@ -141,11 +143,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
                           controller: _startDateController,
                           readOnly: true,
                           decoration: AppDecorations.textFieldDecoration
-                              .copyWith(hintText: 'YYYY-MM-DD'),
+                              .copyWith(hintText: location.dateHint),
                           onTap: () =>
                               _selectDate(context, _startDateController),
                           validator: (value) => (value == null || value.isEmpty)
-                              ? 'Campo requerido'
+                              ? location.requiredField
                               : null,
                         ),
                       ),
@@ -154,7 +156,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 ),
                 if (_hasEndDate)
                   SectionInputForm(
-                    label: 'Fecha fin',
+                    label: location.endDateLabel,
                     childInput: Row(
                       children: [
                         Expanded(
@@ -162,7 +164,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                             controller: _endDateController,
                             readOnly: true,
                             decoration: AppDecorations.textFieldDecoration
-                                .copyWith(hintText: 'YYYY-MM-DD'),
+                                .copyWith(hintText: location.dateHint),
                             onTap: () =>
                                 _selectDate(context, _endDateController),
                           ),
@@ -189,7 +191,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         });
                       },
                       child: Text(
-                        'Añadir fecha de fin',
+                        location.addEndDate,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           decoration: TextDecoration.underline,
@@ -198,7 +200,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                   ),
                 SectionInputForm(
-                  label: 'Salas',
+                  label: location.roomsLabel,
                   childInput: SizedBox(
                     height: 200,
                     child: AddRoom(
@@ -211,76 +213,76 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Timezone',
+                  label: location.timezoneLabel,
                   childInput: TextFormField(
                     controller: _timezoneController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce el timezone',
+                      hintText: location.timezoneHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Base URL',
+                  label: location.baseUrlLabel,
                   childInput: TextFormField(
                     controller: _baseUrlController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce la Base URL',
+                      hintText: location.baseUrlHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Color Primario',
+                  label: location.primaryColorLabel,
                   childInput: TextFormField(
                     controller: _primaryColorController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce el color primario (ej. #FFFFFF)',
+                      hintText: location.primaryColorHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Color Secundario',
+                  label: location.secondaryColorLabel,
                   childInput: TextFormField(
                     controller: _secondaryColorController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce el color secundario (ej. #000000)',
+                      hintText: location.secondaryColorHint,
                     ),
                   ),
                 ),
-                Text('Venue', style: AppFonts.titleHeadingForm),
+                Text(location.venueTitle, style: AppFonts.titleHeadingForm),
                 SectionInputForm(
-                  label: 'Nombre del Venue',
+                  label: location.venueNameLabel,
                   childInput: TextFormField(
                     controller: _venueNameController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce el nombre del venue',
+                      hintText: location.venueNameHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Dirección del Venue',
+                  label: location.venueAddressLabel,
                   childInput: TextFormField(
                     controller: _venueAddressController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce la dirección del venue',
+                      hintText: location.venueAddressHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Ciudad del Venue',
+                  label: location.venueCityLabel,
                   childInput: TextFormField(
                     controller: _venueCityController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce la ciudad del venue',
+                      hintText: location.venueCityHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: 'Descripción',
+                  label: location.descriptionLabel,
                   childInput: TextFormField(
                     controller: _descriptionController,
                     maxLines: 3,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: 'Introduce la descripción del evento',
+                      hintText: location.eventDescriptionHint,
                     ),
                   ),
                 ),
@@ -290,7 +292,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   children: [
                     FilledButton(
                       onPressed: _onSubmit,
-                      child: const Text('Guardar'),
+                      child: Text(location.saveButton),
                     ),
                   ],
                 ),

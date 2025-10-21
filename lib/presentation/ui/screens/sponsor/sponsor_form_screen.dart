@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/config/app_decorations.dart';
-import 'package:sec/core/config/app_fonts.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SponsorFormScreen extends StatefulWidget {
@@ -22,12 +23,7 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
   late final TextEditingController _websiteController;
   late String _selectedCategory;
 
-  final List<String> _categories = [
-    'Patrocinador Principal',
-    'Patrocinador Gold',
-    'Patrocinador Silver',
-    'Patrocinador Bronze',
-  ];
+  final List<String> _categories = [];
 
   @override
   void initState() {
@@ -37,7 +33,22 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
     _websiteController = TextEditingController(
       text: widget.sponsor?.website ?? '',
     );
-    _selectedCategory = widget.sponsor?.type ?? _categories.first;
+    _selectedCategory = widget.sponsor?.type ?? '';
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final location = AppLocalizations.of(context)!;
+    _categories.addAll([
+      location.mainSponsor,
+      location.goldSponsor,
+      location.silverSponsor,
+      location.bronzeSponsor,
+    ]);
+    if (_selectedCategory.isEmpty) {
+      _selectedCategory = _categories.first;
+    }
   }
 
   @override
@@ -50,10 +61,11 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     final isEditing = widget.sponsor != null;
 
     return FormScreenWrapper(
-      pageTitle: isEditing ? 'Editar Sponsor' : 'Crear Sponsor',
+      pageTitle: isEditing ? location.editSponsorTitle : location.createSponsorTitle,
       widgetFormChild: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -63,44 +75,44 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
             spacing: 16,
             children: [
               Text(
-                isEditing ? 'Editando Sponsor' : 'Creando Sponsor',
+                isEditing ? location.editingSponsor : location.creatingSponsor,
                 style: AppFonts.titleHeadingForm,
               ),
               SectionInputForm(
-                label: 'Nombre*',
+                label: location.nameLabel,
                 childInput: TextFormField(
                   controller: _nameController,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce el nombre del Sponsor',
+                    hintText: location.sponsorNameHint,
                   ),
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Nombre' : null,
+                      value == null || value.isEmpty ? location.sponsorNameValidation : null,
                 ),
               ),
 
               SectionInputForm(
-                label: 'Logo*',
+                label: location.logoLabel,
                 childInput: TextFormField(
                   maxLines: 1,
                   controller: _logoController,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce la URL del logo',
+                    hintText: location.logoHint,
                   ),
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Logo' : null,
+                      value == null || value.isEmpty ? location.logoValidation : null,
                 ),
               ),
 
               SectionInputForm(
-                label: 'Web*',
+                label: location.websiteLabel,
                 childInput: TextFormField(
                   maxLines: 1,
                   controller: _websiteController,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: 'Introduce la URL de la web',
+                    hintText: location.websiteHint,
                   ),
                   validator: (value) =>
-                      value == null || value.isEmpty ? 'Web' : null,
+                      value == null || value.isEmpty ? location.websiteValidation : null,
                 ),
               ),
               DropdownButtonFormField<String>(
@@ -134,7 +146,7 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                         }
                       }
                     },
-                    child: Text(isEditing ? 'Actualizar' : 'Guardar'),
+                    child: Text(isEditing ? location.updateButton : location.saveButton),
                   ),
                 ],
               ),

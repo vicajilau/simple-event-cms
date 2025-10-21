@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/config/app_decorations.dart';
+import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -57,12 +57,13 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     // You might want to use _speakerViewModel.viewState here to show loading/error states
     // For example, wrap the FormScreenWrapper or its child in a ValueListenableBuilder
     // listening to _speakerViewModel.viewState. For brevity, this example omits that.
 
     return FormScreenWrapper(
-      pageTitle: AppLocalizations.of(context)?.speakerForm ?? '',
+      pageTitle: location.speakerForm,
       widgetFormChild: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -76,87 +77,87 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(
-                    AppLocalizations.of(context)?.speakerForm ?? '',
+                    location.speakerForm,
                     style: Theme.of(context).textTheme.headlineSmall,
                   ),
                 ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.nameLabel ?? '',
+                label: location.nameLabel,
                 childInput: TextFormField(
                   controller: _nameController,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: AppLocalizations.of(context)?.nameHint ?? '',
+                    hintText: location.nameHint,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context)?.nameErrorHint ?? '';
+                      return location.nameErrorHint;
                     }
                     return null;
                   },
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.imageUrlLabel ?? '',
+                label: location.imageUrlLabel,
                 childInput: TextFormField(
                   controller: _imageUrlController,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: AppLocalizations.of(context)?.imageUrlHint ?? '',
+                    hintText: location.imageUrlHint,
                   ),
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.bioLabel ?? '',
+                label: location.bioLabel,
                 childInput: TextFormField(
                   controller: _bioController,
                   maxLines: 5,
                   decoration: AppDecorations.textFieldDecoration.copyWith(
-                    hintText: AppLocalizations.of(context)?.bioHint ?? '',
+                    hintText: location.bioHint,
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return AppLocalizations.of(context)?.bioErrorHint ?? '';
+                      return location.bioErrorHint;
                     }
                     return null;
                   },
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.twitter ?? '',
+                label: location.twitter,
                 childInput: TextFormField(
                   controller: _twitterController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: AppLocalizations.of(context)?.twitterHint ?? '',
+                    hintText: location.twitterHint,
                   ),
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.github ?? '',
+                label: location.github,
                 childInput: TextFormField(
                   controller: _githubController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: AppLocalizations.of(context)?.githubHint ?? '',
+                    hintText: location.githubHint,
                   ),
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.linkedin ?? '',
+                label: location.linkedin,
                 childInput: TextFormField(
                   controller: _linkedinController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: AppLocalizations.of(context)?.linkedinHint ?? '',
+                    hintText: location.linkedinHint,
                   ),
                 ),
               ),
               SectionInputForm(
-                label: AppLocalizations.of(context)?.website ?? '',
+                label: location.website,
                 childInput: TextFormField(
                   controller: _websiteController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    hintText: AppLocalizations.of(context)?.websiteHint ?? '',
+                    hintText: location.websiteHint,
                   ),
                 ),
               ),
@@ -187,7 +188,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                         );
                       }
                     },
-                    child: Text(AppLocalizations.of(context)?.saveButton ?? ''),
+                    child: Text(location.saveButton),
                   ),
                 ],
               ),

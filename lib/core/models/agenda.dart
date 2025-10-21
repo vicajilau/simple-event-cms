@@ -44,7 +44,7 @@ class Track extends GitHubModel {
   String eventUid;
   final String color;
   List<String> sessionUids = [];
-  List<Session>? resolvedSessions; // Field for in-memory resolved objects
+  List<Session> resolvedSessions = []; // Field for in-memory resolved objects
 
   Track({
     required super.uid,
@@ -52,7 +52,7 @@ class Track extends GitHubModel {
     required this.color,
     required this.sessionUids,
     required this.eventUid,
-    this.resolvedSessions, // Allow initialization
+    this.resolvedSessions = const [], // Allow initialization
     super.pathUrl = PathsGithub.tracksPath,
     super.updateMessage = PathsGithub.tracksUpdateMessage,
   });
@@ -63,7 +63,7 @@ class Track extends GitHubModel {
       name: json['name'],
       color: json['color'],
       eventUid: json['eventUid'],
-      sessionUids: (json['sessions'] as List)
+      sessionUids: (json['sessionUids'] as List)
           .map((sessionUid) => sessionUid['UID'].toString())
           .toList(),
       // resolvedSessions will be populated by DataLoader
@@ -75,7 +75,7 @@ class Track extends GitHubModel {
     "UID": uid,
     "name": name,
     "color": color,
-    "sessions": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "sessionUids": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
     "eventUid": eventUid
   };
 }

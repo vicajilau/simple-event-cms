@@ -29,6 +29,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return ValueListenableBuilder(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
@@ -52,7 +53,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 16),
-                    Text(AppLocalizations.of(context)!.noSpeakersRegistered),
+                    Text(location.noSpeakersRegistered),
                   ],
                 ),
               );
@@ -138,9 +139,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                           height: 8,
                                                         ),
                                                         Text(
-                                                          AppLocalizations.of(
-                                                            context,
-                                                          )!.loading,
+                                                          location.loading,
                                                           style: Theme.of(context)
                                                               .textTheme
                                                               .bodySmall
@@ -174,9 +173,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                       ),
                                                       const SizedBox(height: 4),
                                                       Text(
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.errorLoadingImage,
+                                                        location.errorLoadingImage,
                                                         style: Theme.of(
                                                           context,
                                                         ).textTheme.bodySmall,

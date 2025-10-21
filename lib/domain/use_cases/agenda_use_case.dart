@@ -8,16 +8,15 @@ abstract class AgendaUseCase {
   Future<Result<void>> saveSpeaker(Speaker speaker,String eventId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
   Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId);
-  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId);
   Future<Result<List<Track>>> getTracks();
-  Future<Result<void>> updateTrack(Track track,String eventId);
-  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay);
+  Future<Result<void>> updateTrack(Track track,String agendaDayId);
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay, String eventUID);
   Future<Result<Track>> getTrackById(String trackId);
   Future<Result<void>> addSession(
-    Session session,
+    Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId, Speaker speaker);
-  Future<Result<void>> editSession(Session session, String parentId);
   Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
   Future<Result<Event>> loadEvent(String eventId);
 
@@ -34,14 +33,9 @@ class AgendaUseCaseImpl implements AgendaUseCase {
 
   @override
   Future<Result<void>> addSession(
-    Session session,
+    Session session,String trackUID
   ) async {
-    return await repository.addSession(session);
-  }
-
-  @override
-  Future<Result<void>> editSession(Session session, String parentId) async {
-    return await repository.editSession(session, parentId);
+    return await repository.addSession(session,trackUID);
   }
 
   @override
@@ -70,13 +64,13 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<Result<List<Track>>> getTracks() async {
-    return await repository.loadTracks();
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId) async {
+    return await repository.loadAgendaDayByEventIdFiltered(eventId);
   }
 
   @override
-  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds) async {
-    return await repository.loadSessionsByListId(sessionsIds);
+  Future<Result<List<Track>>> getTracks() async {
+    return await repository.loadTracks();
   }
 
   @override
@@ -96,12 +90,12 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<Result<void>> updateTrack(Track track,String eventId) async {
-    return await repository.saveTrack(track,eventId);
+  Future<Result<void>> updateTrack(Track track,String agendaDayId) async {
+    return await repository.saveTrack(track,agendaDayId);
   }
 
   @override
-  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay) async {
-    return await repository.saveAgendaDay(agendaDay);
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
+    return await repository.saveAgendaDay(agendaDay,eventUID);
   }
 }

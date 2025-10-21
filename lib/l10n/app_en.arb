@@ -1,169 +1,135 @@
 {
   "@@locale": "en",
   "loadingAgenda": "Loading agenda...",
-  "@loadingAgenda": {
-    "description": "Loading message for agenda screen"
-  },
   "retry": "Retry",
-  "@retry": {
-    "description": "Button text to retry an operation"
-  },
   "noEventsScheduled": "No events scheduled",
-  "@noEventsScheduled": {
-    "description": "Message when no events are available"
-  },
   "loadingSpeakers": "Loading speakers...",
-  "@loadingSpeakers": {
-    "description": "Loading message for speakers screen"
-  },
   "noSpeakersRegistered": "No speakers registered",
-  "@noSpeakersRegistered": {
-    "description": "Message when no speakers are available"
-  },
   "loadingSponsors": "Loading sponsors...",
-  "@loadingSponsors": {
-    "description": "Loading message for sponsors screen"
-  },
   "noSponsorsRegistered": "No sponsors registered",
-  "@noSponsorsRegistered": {
-    "description": "Message when no sponsors are available"
-  },
   "loading": "Loading...",
-  "@loading": {
-    "description": "Generic loading message"
-  },
   "errorLoadingImage": "Error loading image",
-  "@errorLoadingImage": {
-    "description": "Error message when image fails to load"
-  },
   "keynote": "KEYNOTE",
-  "@keynote": {
-    "description": "Label for keynote sessions"
-  },
   "talk": "TALK",
-  "@talk": {
-    "description": "Label for talk sessions"
-  },
   "workshop": "WORKSHOP",
-  "@workshop": {
-    "description": "Label for workshop sessions"
-  },
   "sessionBreak": "BREAK",
-  "@sessionBreak": {
-    "description": "Label for break sessions"
-  },
   "agenda": "Agenda",
-  "@agenda": {
-    "description": "Navigation tab label for agenda"
-  },
   "speakers": "Speakers",
-  "@speakers": {
-    "description": "Navigation tab label for speakers"
-  },
   "sponsors": "Sponsors",
-  "@sponsors": {
-    "description": "Navigation tab label for sponsors"
-  },
   "eventInfo": "Event Information",
-  "@eventInfo": {
-    "description": "Title for event information dialog"
-  },
   "eventDates": "Event Dates",
-  "@eventDates": {
-    "description": "Label for event dates section"
-  },
   "venue": "Venue",
-  "@venue": {
-    "description": "Label for venue section"
-  },
   "description": "Description",
-  "@description": {
-    "description": "Label for description section"
-  },
   "close": "Close",
-  "@close": {
-    "description": "Button text to close a dialog"
-  },
   "twitter": "Twitter/X",
-  "@twitter": {
-    "description": "Tooltip for Twitter/X social icon"
-  },
   "linkedin": "LinkedIn",
-  "@linkedin": {
-    "description": "Tooltip for LinkedIn social icon"
-  },
   "github": "GitHub",
-  "@github": {
-    "description": "Tooltip for GitHub social icon"
-  },
   "website": "Website",
-  "@website": {
-    "description": "Tooltip for website social icon"
-  },
   "openUrl": "Open URL",
-  "@openUrl": {
-    "description": "Tooltip for opening external links"
-  },
   "changeLanguage": "Change Language",
-  "@changeLanguage": {
-    "description": "Tooltip for language selector"
-  },
   "speakerForm": "Speaker Form",
-  "@speakerForm": {
-    "description": "Title for the speaker submission form"
-  },
   "nameLabel": "Name*",
-  "@nameLabel": {
-    "description": "Label for the name input field"
-  },
   "nameErrorHint": "Please enter your name",
-  "@nameErrorHint": {
-    "description": "Error hint when the name field is empty"
-  },
   "bioLabel": "Biography*",
-  "@bioLabel": {
-    "description": "Label for the biography input field"
-  },
   "bioErrorHint": "Please enter your biography",
-  "@bioErrorHint": {
-    "description": "Error hint when the biography field is empty"
-  },
   "imageUrlLabel": "Image URL",
-  "@imageUrlLabel": {
-    "description": "Label for the image URL input field"
-  },
   "nameHint": "Enter the speaker's name",
-  "@nameHint": {
-    "description": "Hint text for the name input field"
-  },
   "bioHint": "Enter the speaker's biography",
-  "@bioHint": {
-    "description": "Hint text for the biography input field"
-  },
   "imageUrlHint": "Enter the speaker's image URL",
-  "@imageUrlHint": {
-    "description": "Hint text for the image URL input field"
-  },
   "twitterHint": "Enter the Twitter URL",
-  "@twitterHint": {
-    "description": "Hint text for the Twitter input field"
-  },
   "githubHint": "Enter the GitHub URL",
-  "@githubHint": {
-    "description": "Hint text for the GitHub input field"
-  },
   "linkedinHint": "Enter the LinkedIn URL",
-  "@linkedinHint": {
-    "description": "Hint text for the LinkedIn input field"
-  },
   "websiteHint": "Enter the website URL",
-  "@websiteHint": {
-    "description": "Hint text for the website input field"
-  },
   "saveButton": "Save",
-  "@saveButton": {
-    "description": "Button text to save the speaker form"
-  },
   "errorLoadingData": "Error loading data",
-  "errorUnknown": "Unknown error"
+  "errorUnknown": "Unknown error",
+  "createSession": "Create Session",
+  "editSession": "Edit Session",
+  "loadingTitle": "Loading...",
+  "unexpectedError": "An unexpected error has occurred.",
+  "titleLabel": "Title*",
+  "talkTitleHint": "Enter talk title",
+  "talkTitleError": "Please enter a talk title",
+  "eventDayLabel": "Event day*",
+  "selectDayHint": "Select a day",
+  "selectDayError": "Please select a day",
+  "roomLabel": "Room*",
+  "selectRoomHint": "Select a room",
+  "selectRoomError": "Please select a room",
+  "startTimeLabel": "Start time:",
+  "endTimeLabel": "End time:",
+  "timeValidationError": "Start time must be before end time.",
+  "speakerLabel": "Speaker*",
+  "noSpeakersMessage": "No speakers. Add one.",
+  "selectSpeakerHint": "Select a speaker",
+  "selectSpeakerError": "Please select a speaker",
+  "talkTypeLabel": "Talk type*",
+  "selectTalkTypeHint": "Select the talk type",
+  "selectTalkTypeError": "Please select the talk type",
+  "descriptionLabel": "Description",
+  "talkDescriptionHint": "Enter talk description...",
+  "cancelButton": "Cancel",
+  "timeSelectionError": "Please select both start and end times.",
+  "noSessionsFound": "No sessions found",
+  "deleteSessionTitle": "Delete session",
+  "deleteSessionMessage": "Are you sure you want to delete the session?",
+  "editEventTitle": "Edit event",
+  "createEventTitle": "Create event",
+  "editingEvent": "Editing event",
+  "creatingEvent": "Creating event",
+  "eventNameLabel": "Event name",
+  "eventNameHint": "Enter the event name",
+  "requiredField": "Required field",
+  "startDateLabel": "Start date",
+  "dateHint": "YYYY-MM-DD",
+  "endDateLabel": "End date",
+  "addEndDate": "Add end date",
+  "roomsLabel": "Rooms",
+  "timezoneLabel": "Timezone",
+  "timezoneHint": "Enter the timezone",
+  "baseUrlLabel": "Base URL",
+  "baseUrlHint": "Enter the Base URL",
+  "primaryColorLabel": "Primary Color",
+  "primaryColorHint": "Enter the primary color (e.g. #FFFFFF)",
+  "secondaryColorLabel": "Secondary Color",
+  "secondaryColorHint": "Enter the secondary color (e.g. #000000)",
+  "venueTitle": "Venue",
+  "venueNameLabel": "Venue Name",
+  "venueNameHint": "Enter the venue name",
+  "venueAddressLabel": "Venue Address",
+  "venueAddressHint": "Enter the venue address",
+  "venueCityLabel": "Venue City",
+  "venueCityHint": "Enter the venue city",
+  "eventDescriptionHint": "Enter the event description",
+  "errorPrefix": "Error: ",
+  "errorLoadingConfig": "Error loading configuration: ",
+  "configNotAvailable": "Error: Configuration not available",
+  "noEventsToShow": "No events to show.",
+  "eventDeleted": " deleted",
+  "loginTitle": "Login",
+  "projectNameLabel": "Project Name",
+  "projectNameHint": "Please enter the project name",
+  "tokenLabel": "Token (classic with write permissions)",
+  "tokenHint": "Please enter a valid GitHub token",
+  "unknownAuthError": "Unknown authentication failure.",
+  "projectNotFoundError": "The project \"{projectName}\" does not exist in your GitHub repositories.",
+  "authNetworkError": "Authentication or network error. Check your credentials and project name.",
+  "closeButton": "Close",
+  "editSponsorTitle": "Edit Sponsor",
+  "createSponsorTitle": "Create Sponsor",
+  "editingSponsor": "Editing Sponsor",
+  "creatingSponsor": "Creating Sponsor",
+  "sponsorNameHint": "Enter the Sponsor's name",
+  "sponsorNameValidation": "Name",
+  "logoLabel": "Logo*",
+  "logoHint": "Enter the logo URL",
+  "logoValidation": "Logo",
+  "websiteLabel": "Web*",
+  "websiteHint": "Enter the website URL",
+  "websiteValidation": "Web",
+  "mainSponsor": "Main Sponsor",
+  "goldSponsor": "Gold Sponsor",
+  "silverSponsor": "Silver Sponsor",
+  "bronzeSponsor": "Bronze Sponsor",
+  "updateButton": "Update"
 }

@@ -45,6 +45,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return ValueListenableBuilder(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
@@ -70,7 +71,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 16),
-                    Text(AppLocalizations.of(context)!.noSponsorsRegistered),
+                    Text(location.noSponsorsRegistered),
                   ],
                 ),
               );
@@ -95,7 +96,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       child: Text(
-                        type,
+                        _getCategoryDisplayName(context, type),
                         style: Theme.of(context).textTheme.headlineSmall
                             ?.copyWith(
                               fontWeight: FontWeight.bold,
@@ -239,5 +240,28 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
         );
       },
     );
+  }
+
+  String _getCategoryDisplayName(BuildContext context, String type) {
+    final location = AppLocalizations.of(context)!;
+
+    if (type == location.mainSponsor) return location.mainSponsor;
+    if (type == location.goldSponsor) return location.goldSponsor;
+    if (type == location.silverSponsor) return location.silverSponsor;
+    if (type == location.bronzeSponsor) return location.bronzeSponsor;
+
+    // For backwards compatibility, we check against the old hardcoded values
+    switch (type) {
+      case 'main':
+        return location.mainSponsor;
+      case 'gold':
+        return location.goldSponsor;
+      case 'silver':
+        return location.silverSponsor;
+      case 'bronze':
+        return location.bronzeSponsor;
+      default:
+        return type;
+    }
   }
 }

@@ -7,7 +7,6 @@ import 'package:sec/presentation/view_model_common.dart';
 
 import '../../../../../core/utils/result.dart';
 
-
 abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<Event?> loadEvent(String eventId);
   Future<Event?> getEventById(String eventId);
@@ -15,35 +14,28 @@ abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<AgendaDay?> getAgendaDayById(String agendaDayId);
   Future<List<AgendaDay>?> getAgendaDayByEventId(String eventId);
   Future<List<Track>?> getTracks();
-  Future<void> updateTrack(Track track,String eventId);
-  Future<void> updateAgendaDay(AgendaDay agendaDay);
-  Future<List<Session>?> getSessionsByListId(List<String> sessionIds);
+  Future<void> updateTrack(Track track, String agendaDayId);
+  Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
-  Future<void> addSession(Session session);
-  Future<void> addSpeaker(String eventId,Speaker speaker);
+  Future<void> addSession(Session session, String trackUID);
+  Future<void> addSpeaker(String eventId, Speaker speaker);
   Future<void> updateEvent(Event event);
 }
 
-
 class AgendaFormViewModelImpl extends AgendaFormViewModel {
-
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
-  getIt<CheckTokenSavedUseCase>();
+      getIt<CheckTokenSavedUseCase>();
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
-
 
   @override
   ErrorType errorType = ErrorType.none;
 
-
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
-
   @override
   void setup([Object? argument]) {
-    if (argument is String) {
-    }
+    if (argument is String) {}
   }
 
   @override
@@ -52,8 +44,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> addSession(Session session) async {
-    await agendaUseCase.addSession(session);
+  Future<void> addSession(Session session, String trackUID) async {
+    await agendaUseCase.addSession(session, trackUID);
   }
 
   @override
@@ -92,10 +84,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     }
   }
 
-
   @override
-  void dispose() {
-  }
+  void dispose() {}
 
   @override
   Future<Event?> loadEvent(String eventId) async {
@@ -118,18 +108,6 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     final result = await agendaUseCase.getAgendaDayByEventId(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
-        return result.value;
-      case Error():
-        setErrorKey(result.error);
-        return null;
-    }
-  }
-
-  @override
-  Future<List<Session>?> getSessionsByListId(List<String> sessionIds) async {
-    final result = await agendaUseCase.getSessionsByListId(sessionIds);
-    switch (result) {
-      case Ok<List<Session>>():
         return result.value;
       case Error():
         setErrorKey(result.error);
@@ -162,25 +140,22 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> addSpeaker(String eventId, Speaker speaker) {
-    return agendaUseCase.addSpeaker(eventId,speaker);
+  Future<void> addSpeaker(String eventId, Speaker speaker) async {
+    await agendaUseCase.addSpeaker(eventId, speaker);
   }
 
   @override
-  Future<void> updateEvent(Event event) {
-   return agendaUseCase.saveEvent(event);
+  Future<void> updateEvent(Event event) async {
+    await agendaUseCase.saveEvent(event);
   }
 
   @override
-  Future<void> updateTrack(Track track,String eventId) {
-    return agendaUseCase.updateTrack(track,eventId);
+  Future<void> updateTrack(Track track, String agendaDayId) async {
+    await agendaUseCase.updateTrack(track, agendaDayId);
   }
 
   @override
-  Future<void> updateAgendaDay(AgendaDay agendaDay) {
-    return agendaUseCase.updateAgendaDay(agendaDay);
+  Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
+    await agendaUseCase.updateAgendaDay(agendaDay,eventUID);
   }
-
-
-
 }

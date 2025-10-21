@@ -44,7 +44,8 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/${organization.year}/$path';
-      var github = GitHub();
+      var githubService = await SecureInfo.getGithubKey();
+      var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
       var repositorySlug = RepositorySlug(
         organization.githubUser,
         (await SecureInfo.getGithubKey()).projectName ??
@@ -55,7 +56,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/refactor_code_sec",
+          ref: "feature/develop_cp",
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -176,7 +177,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
 
@@ -253,6 +254,11 @@ class CommonsServicesImp extends CommonsServices {
       );
     }
 
+    // After a successful update or creation, GitHub's API might have a slight delay
+    // before the new content is available via a subsequent GET request.
+    // This function polls the file until its SHA matches the newly committed content's SHA.
+    //await _waitForFileUpdate(github, repositorySlug, pathUrl, branch);
+
     return response;
   }
 
@@ -286,7 +292,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -388,7 +394,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/refactor_code_sec",
+        ref: "feature/develop_cp",
       );
       currentSha = contents.file?.sha;
 
