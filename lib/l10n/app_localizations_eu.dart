@@ -138,270 +138,272 @@ class AppLocalizationsEu extends AppLocalizations {
   String get errorUnknown => 'Errore ezezaguna';
 
   @override
-  String get createSession => 'Create Session';
+  String get createSession => 'Saioa Sortu';
 
   @override
-  String get editSession => 'Edit Session';
+  String get editSession => 'Saioa Editatu';
 
   @override
-  String get loadingTitle => 'Loading...';
+  String get loadingTitle => 'Kargatzen...';
 
   @override
-  String get unexpectedError => 'An unexpected error has occurred.';
+  String get unexpectedError => 'Ustekabeko errorea gertatu da.';
 
   @override
-  String get titleLabel => 'Title*';
+  String get titleLabel => 'Izenburua*';
 
   @override
-  String get talkTitleHint => 'Enter talk title';
+  String get talkTitleHint => 'Sartu hitzaldiaren izenburua';
 
   @override
-  String get talkTitleError => 'Please enter a talk title';
+  String get talkTitleError => 'Mesedez, sartu hitzaldiaren izenburua';
 
   @override
-  String get eventDayLabel => 'Event day*';
+  String get eventDayLabel => 'Gertaeraren eguna*';
 
   @override
-  String get selectDayHint => 'Select a day';
+  String get selectDayHint => 'Aukeratu egun bat';
 
   @override
-  String get selectDayError => 'Please select a day';
+  String get selectDayError => 'Mesedez, aukeratu egun bat';
 
   @override
-  String get roomLabel => 'Room*';
+  String get roomLabel => 'Gela*';
 
   @override
-  String get selectRoomHint => 'Select a room';
+  String get selectRoomHint => 'Aukeratu gela bat';
 
   @override
-  String get selectRoomError => 'Please select a room';
+  String get selectRoomError => 'Mesedez, aukeratu gela bat';
 
   @override
-  String get startTimeLabel => 'Start time:';
+  String get startTimeLabel => 'Hasiera ordua:';
 
   @override
-  String get endTimeLabel => 'End time:';
+  String get endTimeLabel => 'Amaiera ordua:';
 
   @override
-  String get timeValidationError => 'Start time must be before end time.';
+  String get timeValidationError =>
+      'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
 
   @override
-  String get speakerLabel => 'Speaker*';
+  String get speakerLabel => 'Hizlaria*';
 
   @override
-  String get noSpeakersMessage => 'No speakers. Add one.';
+  String get noSpeakersMessage => 'Ez dago hizlaririk. Gehitu bat.';
 
   @override
-  String get selectSpeakerHint => 'Select a speaker';
+  String get selectSpeakerHint => 'Aukeratu hizlari bat';
 
   @override
-  String get selectSpeakerError => 'Please select a speaker';
+  String get selectSpeakerError => 'Mesedez, aukeratu hizlari bat';
 
   @override
-  String get talkTypeLabel => 'Talk type*';
+  String get talkTypeLabel => 'Hitzaldi mota*';
 
   @override
-  String get selectTalkTypeHint => 'Select the talk type';
+  String get selectTalkTypeHint => 'Aukeratu hitzaldi mota';
 
   @override
-  String get selectTalkTypeError => 'Please select the talk type';
+  String get selectTalkTypeError => 'Mesedez, aukeratu hitzaldi mota';
 
   @override
-  String get descriptionLabel => 'Description';
+  String get descriptionLabel => 'Deskribapena';
 
   @override
-  String get talkDescriptionHint => 'Enter talk description...';
+  String get talkDescriptionHint => 'Sartu hitzaldiaren deskribapena...';
 
   @override
-  String get cancelButton => 'Cancel';
+  String get cancelButton => 'Ezeztatu';
 
   @override
-  String get timeSelectionError => 'Please select both start and end times.';
+  String get timeSelectionError =>
+      'Mesedez, aukeratu hasiera eta amaiera orduak.';
 
   @override
-  String get noSessionsFound => 'No sessions found';
+  String get noSessionsFound => 'Ez da saiorik aurkitu';
 
   @override
-  String get deleteSessionTitle => 'Delete session';
+  String get deleteSessionTitle => 'Saioa ezabatu';
 
   @override
-  String get deleteSessionMessage =>
-      'Are you sure you want to delete the session?';
+  String get deleteSessionMessage => 'Ziur zaude saioa ezabatu nahi duzula?';
 
   @override
-  String get editEventTitle => 'Edit event';
+  String get editEventTitle => 'Gertaera editatu';
 
   @override
-  String get createEventTitle => 'Create event';
+  String get createEventTitle => 'Gertaera sortu';
 
   @override
-  String get editingEvent => 'Editing event';
+  String get editingEvent => 'Gertaera editatzen';
 
   @override
-  String get creatingEvent => 'Creating event';
+  String get creatingEvent => 'Gertaera sortzen';
 
   @override
-  String get eventNameLabel => 'Event name';
+  String get eventNameLabel => 'Gertaeraren izena';
 
   @override
-  String get eventNameHint => 'Enter the event name';
+  String get eventNameHint => 'Sartu gertaeraren izena';
 
   @override
-  String get requiredField => 'Required field';
+  String get requiredField => 'Beharrezko eremua';
 
   @override
-  String get startDateLabel => 'Start date';
+  String get startDateLabel => 'Hasiera data';
 
   @override
-  String get dateHint => 'YYYY-MM-DD';
+  String get dateHint => 'UUUU-HH-EE';
 
   @override
-  String get endDateLabel => 'End date';
+  String get endDateLabel => 'Amaiera data';
 
   @override
-  String get addEndDate => 'Add end date';
+  String get addEndDate => 'Gehitu amaiera data';
 
   @override
-  String get roomsLabel => 'Rooms';
+  String get roomsLabel => 'Gelak';
 
   @override
-  String get timezoneLabel => 'Timezone';
+  String get timezoneLabel => 'Ordu-zona';
 
   @override
-  String get timezoneHint => 'Enter the timezone';
+  String get timezoneHint => 'Sartu ordu-zona';
 
   @override
-  String get baseUrlLabel => 'Base URL';
+  String get baseUrlLabel => 'Oinarrizko URLa';
 
   @override
-  String get baseUrlHint => 'Enter the Base URL';
+  String get baseUrlHint => 'Sartu oinarrizko URLa';
 
   @override
-  String get primaryColorLabel => 'Primary Color';
+  String get primaryColorLabel => 'Kolore nagusia';
 
   @override
-  String get primaryColorHint => 'Enter the primary color (e.g. #FFFFFF)';
+  String get primaryColorHint => 'Sartu kolore nagusia (adib. #FFFFFF)';
 
   @override
-  String get secondaryColorLabel => 'Secondary Color';
+  String get secondaryColorLabel => 'Bigarren mailako kolorea';
 
   @override
-  String get secondaryColorHint => 'Enter the secondary color (e.g. #000000)';
+  String get secondaryColorHint =>
+      'Sartu bigarren mailako kolorea (adib. #000000)';
 
   @override
-  String get venueTitle => 'Venue';
+  String get venueTitle => 'Lekua';
 
   @override
-  String get venueNameLabel => 'Venue Name';
+  String get venueNameLabel => 'Lekuaren izena';
 
   @override
-  String get venueNameHint => 'Enter the venue name';
+  String get venueNameHint => 'Sartu lekuaren izena';
 
   @override
-  String get venueAddressLabel => 'Venue Address';
+  String get venueAddressLabel => 'Lekuaren helbidea';
 
   @override
-  String get venueAddressHint => 'Enter the venue address';
+  String get venueAddressHint => 'Sartu lekuaren helbidea';
 
   @override
-  String get venueCityLabel => 'Venue City';
+  String get venueCityLabel => 'Lekuaren hiria';
 
   @override
-  String get venueCityHint => 'Enter the venue city';
+  String get venueCityHint => 'Sartu lekuaren hiria';
 
   @override
-  String get eventDescriptionHint => 'Enter the event description';
+  String get eventDescriptionHint => 'Sartu gertaeraren deskribapena';
 
   @override
-  String get errorPrefix => 'Error: ';
+  String get errorPrefix => 'Errorea: ';
 
   @override
-  String get errorLoadingConfig => 'Error loading configuration: ';
+  String get errorLoadingConfig => 'Errorea konfigurazioa kargatzean: ';
 
   @override
-  String get configNotAvailable => 'Error: Configuration not available';
+  String get configNotAvailable => 'Errorea: Konfigurazioa ez dago erabilgarri';
 
   @override
-  String get noEventsToShow => 'No events to show.';
+  String get noEventsToShow => 'Ez dago erakusteko gertaerarik.';
 
   @override
-  String get eventDeleted => ' deleted';
+  String get eventDeleted => ' ezabatuta';
 
   @override
-  String get loginTitle => 'Login';
+  String get loginTitle => 'Saioa hasi';
 
   @override
-  String get projectNameLabel => 'Project Name';
+  String get projectNameLabel => 'Proiektuaren izena';
 
   @override
-  String get projectNameHint => 'Please enter the project name';
+  String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenLabel => 'Token (classic with write permissions)';
+  String get tokenLabel => 'Token-a (klasikoa idazteko baimenekin)';
 
   @override
-  String get tokenHint => 'Please enter a valid GitHub token';
+  String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
 
   @override
-  String get unknownAuthError => 'Unknown authentication failure.';
+  String get unknownAuthError => 'Autentifikazio-errore ezezaguna.';
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'The project \"$projectName\" does not exist in your GitHub repositories.';
+    return '“$projectName” proiektua ez da existitzen zure GitHub-eko biltegietan.';
   }
 
   @override
   String get authNetworkError =>
-      'Authentication or network error. Check your credentials and project name.';
+      'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
 
   @override
-  String get closeButton => 'Close';
+  String get closeButton => 'Itxi';
 
   @override
-  String get editSponsorTitle => 'Edit Sponsor';
+  String get editSponsorTitle => 'Babeslea Editatu';
 
   @override
-  String get createSponsorTitle => 'Create Sponsor';
+  String get createSponsorTitle => 'Babeslea Sortu';
 
   @override
-  String get editingSponsor => 'Editing Sponsor';
+  String get editingSponsor => 'Babeslea Editatzen';
 
   @override
-  String get creatingSponsor => 'Creating Sponsor';
+  String get creatingSponsor => 'Babeslea Sortzen';
 
   @override
-  String get sponsorNameHint => 'Enter the Sponsor\'s name';
+  String get sponsorNameHint => 'Sartu babeslearen izena';
 
   @override
-  String get sponsorNameValidation => 'Name';
+  String get sponsorNameValidation => 'Izena';
 
   @override
-  String get logoLabel => 'Logo*';
+  String get logoLabel => 'Logoa*';
 
   @override
-  String get logoHint => 'Enter the logo URL';
+  String get logoHint => 'Sartu logoaren URLa';
 
   @override
-  String get logoValidation => 'Logo';
+  String get logoValidation => 'Logoa';
 
   @override
-  String get websiteLabel => 'Web*';
+  String get websiteLabel => 'Webgunea*';
 
   @override
-  String get websiteValidation => 'Web';
+  String get websiteValidation => 'Webgunea';
 
   @override
-  String get mainSponsor => 'Main Sponsor';
+  String get mainSponsor => 'Babesle Nagusia';
 
   @override
-  String get goldSponsor => 'Gold Sponsor';
+  String get goldSponsor => 'Urrezko Babeslea';
 
   @override
-  String get silverSponsor => 'Silver Sponsor';
+  String get silverSponsor => 'Zilarrezko Babeslea';
 
   @override
-  String get bronzeSponsor => 'Bronze Sponsor';
+  String get bronzeSponsor => 'Brontzezko Babeslea';
 
   @override
-  String get updateButton => 'Update';
+  String get updateButton => 'Eguneratu';
 }
