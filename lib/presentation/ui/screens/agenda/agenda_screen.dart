@@ -61,45 +61,49 @@ class _AgendaScreenState extends State<AgendaScreen> {
         if(widget.viewmodel.agendaDays.value.isEmpty){
           return Center(child: Text('No sessions found'));
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.viewmodel.agendaDays.value.length,
-          itemBuilder: (context, index) {
-            final String agendaDayId = widget.viewmodel.agendaDays.value[index].uid;
-            final String date = widget.viewmodel.agendaDays.value[index].date;
-            final bool isExpanded =
-                _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
-            final int tabBarIndex =
-                _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-            return ExpansionTile(
-              shape: const Border(),
-              initiallyExpanded: isExpanded,
-              showTrailingIcon: false,
-              onExpansionChanged: (value) {
-                setState(() {
-                  final tabBarIndex =
-                      _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-                  _updateTileState(
-                    key: agendaDayId,
-                    value: ExpansionTileState(
-                      isExpanded: value,
-                      tabBarIndex: tabBarIndex,
+        return ValueListenableBuilder(
+          valueListenable: widget.viewmodel.agendaDays,
+          builder: (context, value, child) {
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.viewmodel.agendaDays.value.length,
+              itemBuilder: (context, index) {
+                final String agendaDayId = widget.viewmodel.agendaDays.value[index].uid;
+                final String date = widget.viewmodel.agendaDays.value[index].date;
+                final bool isExpanded =
+                    _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
+                final int tabBarIndex =
+                    _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+                return ExpansionTile(
+                  shape: const Border(),
+                  initiallyExpanded: isExpanded,
+                  showTrailingIcon: false,
+                  onExpansionChanged: (value) {
+                    setState(() {
+                      final tabBarIndex =
+                          _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+                      _updateTileState(
+                        key: agendaDayId,
+                        value: ExpansionTileState(
+                          isExpanded: value,
+                          tabBarIndex: tabBarIndex,
+                        ),
+                      );
+                    });
+                  },
+                  title: _buildTitleExpansionTile(isExpanded, date),
+                  children: <Widget>[
+                    _buildExpansionTileBody(
+                      widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
+                      tabBarIndex,
+                      agendaDayId,
+                      widget.eventId.toString(),
                     ),
-                  );
-                });
+                  ],
+                );
               },
-              title: _buildTitleExpansionTile(isExpanded, date),
-              children: <Widget>[
-                _buildExpansionTileBody(
-                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
-                  tabBarIndex,
-                  agendaDayId,
-                  widget.eventId.toString(),
-                ),
-              ],
             );
-          },
-        );
+          });
       },
     );
   }
@@ -260,27 +264,20 @@ class SessionCards extends StatefulWidget {
 }
 
 class _SessionCardsState extends State<SessionCards> {
-  late List<Session> sessions;
-  @override
-  void initState() {
-    super.initState();
-    sessions = List.from(widget.sessions);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
-        children: sessions.isEmpty
+        children: widget.sessions.isEmpty
             ? [
-                SizedBox(
+                const SizedBox(
                   height: 150,
-                  child: Center(child: const Text('No sessions')),
+                  child: Center(child: Text('No sessions')),
                 ),
               ]
-            : List.generate(sessions.length, (index) {
-                final session = sessions[index];
+            : List.generate(widget.sessions.length, (index) {
+                final session = widget.sessions[index];
                 return InkWell(
                   onTap: () async {
                     List<AgendaDay>? agendaDays = await AppRouter.router.push(
@@ -292,7 +289,7 @@ class _SessionCardsState extends State<SessionCards> {
                     );
                     if(agendaDays != null){
                       setState(() {
-                        widget.viewModel.agendaDays.value = agendaDays;
+                        widget.viewModel.loadAgendaDays(widget.eventId);
                       });
                     }
                   },
@@ -315,11 +312,9 @@ class _SessionCardsState extends State<SessionCards> {
                             title: 'Delete session',
                             message:
                                 'Are you sure you want to delete the session?',
-                            onDeletePressed: () {
-                              setState(() {
-                                sessions.removeAt(index);
-                              });
-                              widget.viewModel.removeSession(session.uid);
+                            onDeletePressed: () async {
+                              await widget.viewModel.removeSession(session.uid);
+                              widget.viewModel.loadAgendaDays(widget.eventId);
                             },
                           );
                         },

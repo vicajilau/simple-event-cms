@@ -248,8 +248,7 @@ class SecRepositoryImp extends SecRepository {
     try {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
-        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID && agendaDay.trackUids!= null && agendaDay.trackUids!.isNotEmpty).toList(),
-      );
+        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID && agendaDay.resolvedTracks != null && agendaDay.resolvedTracks!.isNotEmpty && agendaDay.resolvedTracks!.expand((track) => track.resolvedSessions ?? []).isNotEmpty).toList());
     } on Exception catch (e) {
       return Result.error(e);
     } catch (e) {

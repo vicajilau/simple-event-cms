@@ -9,8 +9,9 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   Future<void> saveSpeaker(Speaker speaker, String eventId);
-  void removeSession(String sessionId);
+  Future<void> removeSession(String sessionId);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  void loadAgendaDays(String eventId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -39,11 +40,12 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   void setup([Object? argument]) {
     if (argument is String) {
-      _loadAgendaDays(argument);
+      loadAgendaDays(argument);
     }
   }
 
-  void _loadAgendaDays(String eventId) async {
+  @override
+  void loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {
@@ -61,8 +63,8 @@ class AgendaViewModelImp extends AgendaViewModel {
     await agendaUseCase.saveSpeaker(speaker, eventId);
   }
   @override
-  void removeSession(String sessionId) {
-    agendaUseCase.deleteSessionFromAgendaDay(sessionId);
+  Future<void> removeSession(String sessionId) async {
+    await agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 
   @override

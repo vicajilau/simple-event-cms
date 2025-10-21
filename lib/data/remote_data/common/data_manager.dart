@@ -134,11 +134,20 @@ class DataUpdate {
   }
   static Future<void> _deleteSession(String sessionId, DataLoader dataLoader, DataUpdateInfo dataUpdateInfo) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
+    List<AgendaDay> agendaDays = await dataLoader.loadAllDays();
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
         track.sessionUids.remove(sessionId);
         track.resolvedSessions?.removeWhere((session) => session.uid == sessionId);
         await dataUpdateInfo.updateTrack(track);
+        if(track.sessionUids.isEmpty) {
+          agendaDays.map((day) {
+            day.trackUids?.removeWhere((uid) => uid == track.uid);
+            day.resolvedTracks?.removeWhere((t) => t.uid == track.uid);
+            return day;
+          });
+          await dataUpdateInfo.updateAgendaDays(agendaDays);
+        }
       }
     }
     await dataUpdateInfo.removeSession(sessionId);
