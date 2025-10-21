@@ -4,6 +4,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/utils/date_utils.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
 import 'package:sec/presentation/ui/widgets/error_view.dart';
@@ -48,6 +49,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return ValueListenableBuilder(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
@@ -60,7 +62,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
         }
 
         if(widget.viewmodel.agendaDays.value.isEmpty){
-          return Center(child: Text('No sessions found'));
+          return Center(child: Text(location.noSessionsFound));
         }
         return ValueListenableBuilder(
           valueListenable: widget.viewmodel.agendaDays,
@@ -219,9 +221,8 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
       return SessionCards(
         sessions:
             widget.tracks[index].resolvedSessions
-                ?.where((session) => session.eventUID == widget.eventId)
-                .toList() ??
-            [],
+                .where((session) => session.eventUID == widget.eventId)
+                .toList(),
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
         eventId: widget.eventId,
@@ -267,14 +268,15 @@ class SessionCards extends StatefulWidget {
 class _SessionCardsState extends State<SessionCards> {
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
         children: widget.sessions.isEmpty
             ? [
-                const SizedBox(
+                SizedBox(
                   height: 150,
-                  child: Center(child: Text('No sessions')),
+                  child: Center(child: Text(location.noSessionsFound)),
                 ),
               ]
             : List.generate(widget.sessions.length, (index) {
@@ -313,9 +315,9 @@ class _SessionCardsState extends State<SessionCards> {
                         context: context,
                         builder: (BuildContext context) {
                           return DeleteDialog(
-                            title: 'Delete session',
+                            title: location.deleteSessionTitle,
                             message:
-                                'Are you sure you want to delete the session?',
+                                location.deleteSessionMessage,
                             onDeletePressed: () async {
                               await widget.viewModel.removeSession(session.uid);
                               widget.viewModel.loadAgendaDays(widget.eventId);

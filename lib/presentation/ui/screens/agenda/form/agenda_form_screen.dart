@@ -5,6 +5,7 @@ import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -133,16 +134,17 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     final title = widget.data?.session == null
-        ? 'Crear Sesión'
-        : 'Editar Sesión';
+        ? location.createSession
+        : location.editSession;
     return ValueListenableBuilder<ViewState>(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, viewState, child) {
         if (viewState == ViewState.isLoading) {
-          return const FormScreenWrapper(
-            pageTitle: 'Cargando...',
-            widgetFormChild: Center(child: CircularProgressIndicator()),
+          return FormScreenWrapper(
+            pageTitle: location.loadingTitle,
+            widgetFormChild: const Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -154,7 +156,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               context: context,
               builder: (BuildContext context) {
                 return CustomErrorDialog(
-                  errorMessage: 'Ha ocurrido un error inesperado.',
+                  errorMessage: location.unexpectedError,
                   onCancel: () {
                     Navigator.of(context).pop();
                   },
@@ -179,17 +181,17 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   SizedBox(height: _spacing),
                   _buildTitle(),
                   SectionInputForm(
-                    label: 'Título*',
+                    label: location.titleLabel,
                     childInput: TextFormField(
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       maxLines: 1,
                       decoration: AppDecorations.textFieldDecoration.copyWith(
-                        hintText: 'Introduce título de la charla',
+                        hintText: location.talkTitleHint,
                       ),
                       controller: _titleController,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Por favor, introduce un título de la charla';
+                          return location.talkTitleError;
                         }
                         return null;
                       },
@@ -201,15 +203,15 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     children: [
                       Expanded(
                         child: SectionInputForm(
-                          label: 'Día del evento*',
+                          label: location.eventDayLabel,
                           childInput: DropdownButtonFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedDay.isEmpty
                                 ? null
                                 : _selectedDay,
-                            decoration: const InputDecoration(
-                              hintText: 'Selecciona un día',
+                            decoration: InputDecoration(
+                              hintText: location.selectDayHint,
                             ),
                             items: agendaDays
                                 .map(
@@ -222,7 +224,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             onChanged: (day) => _selectedDay = day ?? '',
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Por favor, selecciona un día';
+                                return location.selectDayError;
                               }
                               return null;
                             },
@@ -231,15 +233,15 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       ),
                       Expanded(
                         child: SectionInputForm(
-                          label: 'Sala*',
+                          label: location.roomLabel,
                           childInput: DropdownButtonFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedTrackUid.isEmpty
                                 ? null
                                 : _selectedTrackUid,
-                            decoration: const InputDecoration(
-                              hintText: 'Selecciona una sala', // This is track
+                            decoration: InputDecoration(
+                              hintText: location.selectRoomHint, // This is track
                             ),
                             items: tracks
                                 .map(
@@ -253,7 +255,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                 _selectedTrackUid = trackUid ?? '',
                             validator: (value) {
                               return value == null || value.isEmpty
-                                  ? 'Por favor, selecciona una sala'
+                                  ? location.selectRoomError
                                   : null;
                             },
                           ),
@@ -269,7 +271,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         spacing: _spacingForRowTime,
                         children: [
                           _timeSelector(
-                            label: 'Hora de inicio:\t\t',
+                            label: '${location.startTimeLabel}\t\t',
                             currentTime: _initSessionTime,
                             onIndexChanged: (value) {
                               setState(() {
@@ -279,7 +281,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             isStartTime: true,
                           ),
                           _timeSelector(
-                            label: 'Hora final:\t\t',
+                            label: '${location.endTimeLabel}\t\t',
                             currentTime: _endSessionTime,
                             onIndexChanged: (value) {
                               setState(() {
@@ -309,11 +311,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     children: [
                       Expanded(
                         child: SectionInputForm(
-                          label: 'Speaker*',
+                          label: location.speakerLabel,
                           childInput: speakers.isEmpty
                               ? Row(
                                   children: [
-                                    const Text('No hay speakers. Añade uno.'),
+                                    Text(location.noSpeakersMessage),
                                     IconButton(
                                       icon: Icon(
                                         Icons.add_circle,
@@ -352,9 +354,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                   autovalidateMode:
                                       AutovalidateMode.onUserInteraction,
                                   initialValue: _selectedSpeaker,
-                                  decoration: const InputDecoration(
-                                    hintText:
-                                        'Selecciona un speaker', // Now shows Speaker's name
+                                  decoration: InputDecoration(
+                                    hintText: location.selectSpeakerHint, // Now shows Speaker's name
                                   ),
                                   items: speakers
                                       .map(
@@ -371,7 +372,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                   validator: (value) {
                                     if (value == null) {
                                       // value is a Speaker object or null
-                                      return 'Por favor, selecciona un speaker';
+                                      return location.selectSpeakerError;
                                     }
                                     return null;
                                   },
@@ -380,15 +381,15 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       ),
                       Expanded(
                         child: SectionInputForm(
-                          label: 'Tipo de charla*',
+                          label: location.talkTypeLabel,
                           childInput: DropdownButtonFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedTalkType.isEmpty
                                 ? null
                                 : _selectedTalkType,
-                            decoration: const InputDecoration(
-                              hintText: 'Selecciona el tipo de charla',
+                            decoration: InputDecoration(
+                              hintText: location.selectTalkTypeHint,
                             ),
                             items: sessionTypes
                                 .map(
@@ -401,7 +402,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             onChanged: (type) => _selectedTalkType = type ?? '',
                             validator: (value) {
                               return value == null || value.isEmpty
-                                  ? 'Por favor, selecciona el tipo de charla'
+                                  ? location.selectTalkTypeError
                                   : null;
                             },
                           ),
@@ -411,11 +412,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   ),
                   SizedBox(height: _spacing),
                   SectionInputForm(
-                    label: 'Descripción',
+                    label: location.descriptionLabel,
                     childInput: TextFormField(
                       maxLines: 4,
                       decoration: AppDecorations.textFieldDecoration.copyWith(
-                        hintText: 'Introduce descripción de la charla...',
+                        hintText: location.talkDescriptionHint,
                       ),
                       controller: _descriptionController,
                     ),
@@ -437,12 +438,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   Widget _buildFooter() {
+    final location = AppLocalizations.of(context)!;
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         OutlinedButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Cancelar'),
+          child: Text(location.cancelButton),
         ),
         const SizedBox(width: 16),
         FilledButton(
@@ -454,7 +456,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               setState(() => agendaFormViewModel.viewState.value = ViewState.error);
               setState(() {
                 _timeErrorMessage =
-                    'Por favor, seleccionar ambas horas: inicio y final.';
+                    location.timeSelectionError;
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
@@ -517,7 +519,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               }
             }
           },
-          child: const Text('Guardar'),
+          child: Text(location.saveButton),
         ),
       ],
     );
@@ -529,6 +531,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     required ValueChanged<TimeOfDay> onIndexChanged,
     required bool isStartTime,
   }) {
+    final location = AppLocalizations.of(context)!;
     return Row(
       children: [
         Text(
@@ -557,7 +560,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   // Set error message for time range validation
                   _timeErrorMessage = isValid
                       ? null
-                      : 'La hora de inicio debe ser anterior a la hora final.';
+                      : location.timeValidationError;
                 });
               } else {
                 // Clear message if one of the times is not set yet

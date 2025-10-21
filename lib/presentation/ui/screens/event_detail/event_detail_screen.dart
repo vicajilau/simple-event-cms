@@ -62,6 +62,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     final eventTitle = widget.viewmodel.eventTitle();
 
     return Scaffold(
@@ -80,7 +81,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: widget.viewmodel.setup,
-                    child: const Text('Reintentar'),
+                    child: Text(location.retry),
                   ),
                 ],
               ),
@@ -114,15 +115,15 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.schedule),
-            label: AppLocalizations.of(context)?.agenda ?? 'Agenda',
+            label: location.agenda,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.people),
-            label: AppLocalizations.of(context)?.speakers ?? 'Ponentes',
+            label: location.speakers,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.business),
-            label: AppLocalizations.of(context)?.sponsors ?? 'Patrocinadores',
+            label: location.sponsors,
           ),
         ],
       ),

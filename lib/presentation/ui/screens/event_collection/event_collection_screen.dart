@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 import '../../../view_model_common.dart';
@@ -13,6 +14,7 @@ import 'event_collection_view_model.dart';
 class EventCollectionScreen extends StatefulWidget {
   final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   final int crossAxisCount;
+
 
   EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
@@ -46,8 +48,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         _isLoading = false;
       });
     } catch (e) {
+      final location = AppLocalizations.of(context)!;
       setState(() {
-        _errorMessage = 'Error cargando configuración: $e';
+        _errorMessage = '${location.errorLoadingConfig}$e';
         _isLoading = false;
       });
     }
@@ -61,6 +64,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -81,7 +85,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   });
                   _loadConfiguration();
                 },
-                child: const Text('Reintentar'),
+                child: Text(location.retry),
               ),
             ],
           ),
@@ -90,8 +94,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
 
     if (organizationName == null) {
-      return const Scaffold(
-        body: Center(child: Text('Error: Configuración no disponible')),
+      return Scaffold(
+        body: Center(child: Text(location.configNotAvailable)),
       );
     }
 
@@ -147,8 +151,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
-                return const Center(
-                  child: Text("No hay eventos para mostrar."),
+                return Center(
+                  child: Text(location.noEventsToShow),
                 );
               }
 
@@ -171,7 +175,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             widget.viewmodel.deleteEvent(item);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text("${item.eventName} eliminado"),
+                                content: Text('${item.eventName}${location.eventDeleted}'),
                               ),
                             );
                           }
