@@ -153,8 +153,8 @@ class DataUpdate {
       for (var track in allTracks) {
         if (track.uid == parentId) {
           _removeSessionFromTrack(track, session.uid);
-          track.sessionUids.add(session.uid);
-          track.resolvedSessions.add(session);
+          track.sessionUids.toList().add(session.uid);
+          track.resolvedSessions.toList().add(session);
           await dataUpdateInfo.updateTrack(track);
         }
       }
@@ -208,9 +208,9 @@ class DataUpdate {
       for (var day in allDays) {
         if (day.uid == parentId) {
           _removeTrackFromDay(day, track.uid); // Ensure no duplicates
-          day.trackUids?.add(track.uid);
+          day.trackUids?.toList().add(track.uid);
           if (day.resolvedTracks?.any((t) => t.uid == track.uid) == false) {
-            day.resolvedTracks?.add(track);
+            day.resolvedTracks?.toList().add(track);
           }
           await dataUpdateInfo.updateAgendaDay(day);
         }
