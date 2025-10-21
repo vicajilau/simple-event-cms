@@ -131,5 +131,8 @@
   "goldSponsor": "Sponsor Or",
   "silverSponsor": "Sponsor Argent",
   "bronzeSponsor": "Sponsor Bronze",
-  "updateButton": "Mettre à jour"
+  "updateButton": "Mettre à jour",
+  "addButton": "add button",
+  "addRoomTitle": "add room",
+  "roomNameHint": "Room name"
 }

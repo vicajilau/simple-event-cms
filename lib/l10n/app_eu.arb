@@ -131,5 +131,8 @@
   "goldSponsor": "Urrezko Babeslea",
   "silverSponsor": "Zilarrezko Babeslea",
   "bronzeSponsor": "Brontzezko Babeslea",
-  "updateButton": "Eguneratu"
+  "updateButton": "Eguneratu",
+  "addButton": "add button",
+  "addRoomTitle": "add room",
+  "roomNameHint": "Room name"
 }

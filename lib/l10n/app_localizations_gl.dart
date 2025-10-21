@@ -407,4 +407,13 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get updateButton => 'Actualizar';
+
+  @override
+  String get addButton => 'add button';
+
+  @override
+  String get addRoomTitle => 'add room';
+
+  @override
+  String get roomNameHint => 'Room name';
 }

@@ -410,4 +410,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get updateButton => 'Mettre à jour';
+
+  @override
+  String get addButton => 'add button';
+
+  @override
+  String get addRoomTitle => 'add room';
+
+  @override
+  String get roomNameHint => 'Room name';
 }
