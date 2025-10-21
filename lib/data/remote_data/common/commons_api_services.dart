@@ -208,7 +208,7 @@ class CommonsServicesImp extends CommonsServices {
       } else {
         // Any other error while getting the file.
         throw GithubException(
-          "Failed to get file contents from $pathUrl: $e", // This was already in English.
+          "Failed to get file contents from $pathUrl: $e",
           cause: e,
           stackTrace: st,
         );
