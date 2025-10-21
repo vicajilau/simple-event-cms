@@ -14,10 +14,10 @@ import 'package:sec/presentation/view_model_common.dart';
 import '../../speaker/speaker_form_screen.dart';
 
 class AgendaFormData {
-  final String? track, day, eventId;
+  final String? trackId, agendaDayId, eventId;
   final Session? session;
 
-  AgendaFormData({this.session, this.track, this.day, required this.eventId});
+  AgendaFormData({this.session, this.trackId,this.agendaDayId, required this.eventId});
 }
 
 class AgendaFormScreen extends StatefulWidget {
@@ -87,14 +87,14 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       // Editing existing session
       _titleController.text = session.title;
 
-      if (data.day != null &&
-          agendaDays.map((day) => day.uid).contains(data.day)) {
-        _selectedDay = data.day!;
+      if (data.agendaDayId != null &&
+          agendaDays.map((day) => day.uid).contains(data.agendaDayId)) {
+        _selectedDay = data.agendaDayId!;
       }
 
-      if (data.track != null &&
-          tracks.map((track) => track.uid).contains(data.track!)) {
-        _selectedTrackUid = data.track!;
+      if (data.trackId != null &&
+          tracks.map((track) => track.uid).contains(data.trackId!)) {
+        _selectedTrackUid = data.trackId!;
       }
 
       final initialSpeaker = speakers.cast<Speaker?>().firstWhere(
@@ -208,7 +208,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedDay.isEmpty
-                                ? null
+                                ? widget.data?.agendaDayId
                                 : _selectedDay,
                             decoration: InputDecoration(
                               hintText: location.selectDayHint,
@@ -238,7 +238,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedTrackUid.isEmpty
-                                ? null
+                                ? widget.data?.trackId
                                 : _selectedTrackUid,
                             decoration: InputDecoration(
                               hintText: location.selectRoomHint, // This is track
@@ -477,10 +477,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 description: _descriptionController.text,
                 type: _selectedTalkType,
                 eventUID: widget.data!.eventId.toString(),
+                agendaDayUID: _selectedDay
               );
               var selectedTrack = tracks.firstWhere(
                     (track) => track.uid == _selectedTrackUid,
               );
+
               await widget.viewmodel.addSession(session, _selectedTrackUid);
 
               var event = await widget.viewmodel.getEventById(widget.data!.eventId!);
@@ -488,11 +490,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
               selectedTrack.eventUid = event!.uid.toString();
               selectedTrack.sessionUids.add(session.uid);
+              selectedTrack.resolvedSessions.toList().add(session);
               AgendaDay agendaDay = agendaDays.firstWhere(
                 (day) => day.uid == _selectedDay,
               );
               agendaDay.eventUID = event.uid.toString();
               agendaDay.trackUids?.add(selectedTrack.uid);
+              agendaDay.resolvedTracks?.toList().add(selectedTrack);
               agendaDays.removeWhere((day) => day.uid == _selectedDay);
               agendaDays.add(agendaDay);
               event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);

@@ -134,7 +134,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             return AddFloatingActionButton(
               onPressed: () async {
                 if (_selectedIndex == 0) {
-                  _addTrackToAgenda(widget.eventId);
+                  _addSession(widget.eventId);
                 } else if (_selectedIndex == 1) {
                   _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
@@ -149,7 +149,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
   }
 
-  void _addTrackToAgenda(String eventId) async {
+  void _addSession(String eventId) async {
     List<AgendaDay>? agendaDays = await AppRouter.router.push(
       AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );

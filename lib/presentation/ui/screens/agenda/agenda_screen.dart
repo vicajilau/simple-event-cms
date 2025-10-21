@@ -61,7 +61,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
           );
         }
 
-        if(widget.viewmodel.agendaDays.value.isEmpty){
+        if (widget.viewmodel.agendaDays.value.isEmpty) {
           return Center(child: Text(location.noSessionsFound));
         }
         return ValueListenableBuilder(
@@ -71,8 +71,10 @@ class _AgendaScreenState extends State<AgendaScreen> {
               shrinkWrap: true,
               itemCount: widget.viewmodel.agendaDays.value.length,
               itemBuilder: (context, index) {
-                final String agendaDayId = widget.viewmodel.agendaDays.value[index].uid;
-                final String date = widget.viewmodel.agendaDays.value[index].date;
+                final String agendaDayId =
+                    widget.viewmodel.agendaDays.value[index].uid;
+                final String date =
+                    widget.viewmodel.agendaDays.value[index].date;
                 final bool isExpanded =
                     _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
                 final int tabBarIndex =
@@ -97,7 +99,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                   title: _buildTitleExpansionTile(isExpanded, date),
                   children: <Widget>[
                     _buildExpansionTileBody(
-                      widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
+                      widget.viewmodel.agendaDays.value[index].resolvedTracks ??
+                          [],
                       tabBarIndex,
                       agendaDayId,
                       widget.eventId.toString(),
@@ -106,7 +109,8 @@ class _AgendaScreenState extends State<AgendaScreen> {
                 );
               },
             );
-          });
+          },
+        );
       },
     );
   }
@@ -219,10 +223,13 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
-        sessions:
-            widget.tracks[index].resolvedSessions
-                .where((session) => session.eventUID == widget.eventId)
-                .toList(),
+        sessions: widget.tracks[index].resolvedSessions
+            .where(
+              (session) =>
+                  session.eventUID == widget.eventId &&
+                  session.agendaDayUID == widget.agendaDayId,
+            )
+            .toList(),
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
         eventId: widget.eventId,
@@ -285,19 +292,21 @@ class _SessionCardsState extends State<SessionCards> {
                 return InkWell(
                   onTap: () async {
                     var githubService = await SecureInfo.getGithubKey();
-                    if(githubService.token != null && githubService.token?.isNotEmpty == true){
+                    if (githubService.token != null &&
+                        githubService.token?.isNotEmpty == true) {
                       List<AgendaDay>? agendaDays = await AppRouter.router.push(
                         AppRouter.agendaFormPath,
                         extra: AgendaFormData(
                           eventId: widget.eventId,
                           session: session,
+                          agendaDayId: widget.agendaDayId,
+                          trackId: widget.trackId,
                         ),
                       );
-                      if(agendaDays != null){
+                      if (agendaDays != null) {
                         widget.viewModel.loadAgendaDays(widget.eventId);
                       }
                     }
-
                   },
                   child: _buildSessionCard(
                     context,
@@ -309,6 +318,7 @@ class _SessionCardsState extends State<SessionCards> {
                       type: session.type,
                       uid: session.uid,
                       eventUID: session.eventUID,
+                      agendaDayUID: session.agendaDayUID,
                     ),
                     onDeleteTap: () {
                       showDialog(
@@ -316,8 +326,7 @@ class _SessionCardsState extends State<SessionCards> {
                         builder: (BuildContext context) {
                           return DeleteDialog(
                             title: location.deleteSessionTitle,
-                            message:
-                                location.deleteSessionMessage,
+                            message: location.deleteSessionMessage,
                             onDeletePressed: () async {
                               await widget.viewModel.removeSession(session.uid);
                               widget.viewModel.loadAgendaDays(widget.eventId);
