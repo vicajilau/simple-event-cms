@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -278,20 +279,23 @@ class _SessionCardsState extends State<SessionCards> {
               ]
             : List.generate(widget.sessions.length, (index) {
                 final session = widget.sessions[index];
+
                 return InkWell(
                   onTap: () async {
-                    List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                      AppRouter.agendaFormPath,
-                      extra: AgendaFormData(
-                        eventId: widget.eventId,
-                        session: session,
-                      ),
-                    );
-                    if(agendaDays != null){
-                      setState(() {
+                    var githubService = await SecureInfo.getGithubKey();
+                    if(githubService.token != null && githubService.token?.isNotEmpty == true){
+                      List<AgendaDay>? agendaDays = await AppRouter.router.push(
+                        AppRouter.agendaFormPath,
+                        extra: AgendaFormData(
+                          eventId: widget.eventId,
+                          session: session,
+                        ),
+                      );
+                      if(agendaDays != null){
                         widget.viewModel.loadAgendaDays(widget.eventId);
-                      });
+                      }
                     }
+
                   },
                   child: _buildSessionCard(
                     context,
