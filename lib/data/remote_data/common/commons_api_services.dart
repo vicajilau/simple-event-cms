@@ -262,54 +262,6 @@ class CommonsServicesImp extends CommonsServices {
     return response;
   }
 
-  /// Polls the GitHub repository to confirm that a file has been updated.
-  ///
-  /// This function repeatedly fetches the file's metadata until the commit associated
-  /// with it is no longer the previous one, confirming the update is live.
-  /// It includes a timeout to prevent infinite loops.
-  /*Future<void> _waitForFileUpdate(
-    GitHub github,
-    RepositorySlug slug,
-    String path,
-    String branch,
-  ) async {
-    const maxRetries = 10;
-    const delay = Duration(seconds: 1);
-    int attempts = 0;
-
-    // First, get the latest commit SHA for the specified branch.
-    // This will be our reference for the "new" state.
-    final latestCommit = await github.repositories.getBranch(slug, branch);
-    final targetCommitSha = latestCommit.commit?.sha;
-
-    if (targetCommitSha == null) {
-      // Should not happen if the push was successful, but as a safeguard.
-      throw GithubException("Could not retrieve the latest commit SHA for branch '$branch'.");
-    }
-
-    while (attempts < maxRetries) {
-      try {
-        // We need to fetch the commit details for the file path to see when it was last updated.
-        final commits = github.repositories.listCommits(slug, path: path, sha: branch).map((commit) => commit.sha);
-        final lastFileCommitSha = await commits.first;
-
-        if (lastFileCommitSha == targetCommitSha) {
-          // The file's last modification commit matches the branch's latest commit.
-          // This confirms our change is live.
-          return; // Success
-        }
-      } catch (e) {
-        // Ignore "Not Found" during polling as the file might be propagating.
-        // Other errors might be transient network issues.
-      }
-
-      attempts++;
-      await Future.delayed(delay);
-    }
-
-    // If the loop finishes without returning, the update could not be confirmed in time.
-    throw GithubException("Timed out waiting for file update confirmation at '$path'. The change was likely pushed but is not yet reflected.");
-  }*/
   /// Generic function to remove data from GitHub
   @override
   Future<http.Response> removeData<T extends GitHubModel>(
