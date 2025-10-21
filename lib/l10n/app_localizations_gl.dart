@@ -18,10 +18,10 @@ class AppLocalizationsGl extends AppLocalizations {
   String get noEventsScheduled => 'Non hai eventos programados';
 
   @override
-  String get loadingSpeakers => 'Cargando poñentes...';
+  String get loadingSpeakers => 'Cargando relatores...';
 
   @override
-  String get noSpeakersRegistered => 'Non hai poñentes rexistrados';
+  String get noSpeakersRegistered => 'Non hai relatores rexistrados';
 
   @override
   String get loadingSponsors => 'Cargando patrocinadores...';
@@ -33,7 +33,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get loading => 'Cargando...';
 
   @override
-  String get errorLoadingImage => 'Erro ao cargar imaxe';
+  String get errorLoadingImage => 'Erro ao cargar a imaxe';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -42,7 +42,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get talk => 'CHARLA';
 
   @override
-  String get workshop => 'TALLER';
+  String get workshop => 'OBRADOIRO';
 
   @override
   String get sessionBreak => 'DESCANSO';
@@ -51,7 +51,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get agenda => 'Axenda';
 
   @override
-  String get speakers => 'Poñentes';
+  String get speakers => 'Relatores';
 
   @override
   String get sponsors => 'Patrocinadores';
@@ -126,14 +126,294 @@ class AppLocalizationsGl extends AppLocalizations {
   String get linkedinHint => 'Introduce a URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introduce a URL da páxina web';
+  String get websiteHint => 'Introduce a URL da web';
 
   @override
   String get saveButton => 'Gardar';
 
   @override
-  String get errorLoadingData => 'Produciuse un erro ao cargar os datos';
+  String get errorLoadingData => 'Erro ao cargar os datos';
 
   @override
   String get errorUnknown => 'Erro descoñecido';
+
+  @override
+  String get createSession => 'Crear Sesión';
+
+  @override
+  String get editSession => 'Editar Sesión';
+
+  @override
+  String get loadingTitle => 'Cargando...';
+
+  @override
+  String get unexpectedError => 'Ocorreu un erro inesperado.';
+
+  @override
+  String get titleLabel => 'Título*';
+
+  @override
+  String get talkTitleHint => 'Introduce o título da charla';
+
+  @override
+  String get talkTitleError => 'Por favor, introduce un título para a charla';
+
+  @override
+  String get eventDayLabel => 'Día do evento*';
+
+  @override
+  String get selectDayHint => 'Selecciona un día';
+
+  @override
+  String get selectDayError => 'Por favor, selecciona un día';
+
+  @override
+  String get roomLabel => 'Sala*';
+
+  @override
+  String get selectRoomHint => 'Selecciona unha sala';
+
+  @override
+  String get selectRoomError => 'Por favor, selecciona unha sala';
+
+  @override
+  String get startTimeLabel => 'Hora de inicio:';
+
+  @override
+  String get endTimeLabel => 'Hora de finalización:';
+
+  @override
+  String get timeValidationError =>
+      'A hora de inicio debe ser anterior á hora de finalización.';
+
+  @override
+  String get speakerLabel => 'Relator*';
+
+  @override
+  String get noSpeakersMessage => 'Non hai relatores. Engade un.';
+
+  @override
+  String get selectSpeakerHint => 'Selecciona un relator';
+
+  @override
+  String get selectSpeakerError => 'Por favor, selecciona un relator';
+
+  @override
+  String get talkTypeLabel => 'Tipo de charla*';
+
+  @override
+  String get selectTalkTypeHint => 'Selecciona o tipo de charla';
+
+  @override
+  String get selectTalkTypeError => 'Por favor, selecciona o tipo de charla';
+
+  @override
+  String get descriptionLabel => 'Descrición';
+
+  @override
+  String get talkDescriptionHint => 'Introduce a descrición da charla...';
+
+  @override
+  String get cancelButton => 'Cancelar';
+
+  @override
+  String get timeSelectionError =>
+      'Por favor, selecciona tanto a hora de inicio como a de finalización.';
+
+  @override
+  String get noSessionsFound => 'Non se atoparon sesións';
+
+  @override
+  String get deleteSessionTitle => 'Eliminar sesión';
+
+  @override
+  String get deleteSessionMessage =>
+      'Estás seguro de que queres eliminar a sesión?';
+
+  @override
+  String get editEventTitle => 'Editar evento';
+
+  @override
+  String get createEventTitle => 'Crear evento';
+
+  @override
+  String get editingEvent => 'Editando evento';
+
+  @override
+  String get creatingEvent => 'Creando evento';
+
+  @override
+  String get eventNameLabel => 'Nome do evento';
+
+  @override
+  String get eventNameHint => 'Introduce o nome do evento';
+
+  @override
+  String get requiredField => 'Campo obrigatorio';
+
+  @override
+  String get startDateLabel => 'Data de inicio';
+
+  @override
+  String get dateHint => 'AAAA-MM-DD';
+
+  @override
+  String get endDateLabel => 'Data de finalización';
+
+  @override
+  String get addEndDate => 'Engadir data de finalización';
+
+  @override
+  String get roomsLabel => 'Salas';
+
+  @override
+  String get timezoneLabel => 'Fuso horario';
+
+  @override
+  String get timezoneHint => 'Introduce o fuso horario';
+
+  @override
+  String get baseUrlLabel => 'URL base';
+
+  @override
+  String get baseUrlHint => 'Introduce a URL base';
+
+  @override
+  String get primaryColorLabel => 'Cor primaria';
+
+  @override
+  String get primaryColorHint => 'Introduce a cor primaria (p. ex., #FFFFFF)';
+
+  @override
+  String get secondaryColorLabel => 'Cor secundaria';
+
+  @override
+  String get secondaryColorHint =>
+      'Introduce a cor secundaria (p. ex., #000000)';
+
+  @override
+  String get venueTitle => 'Lugar';
+
+  @override
+  String get venueNameLabel => 'Nome do lugar';
+
+  @override
+  String get venueNameHint => 'Introduce o nome do lugar';
+
+  @override
+  String get venueAddressLabel => 'Enderezo do lugar';
+
+  @override
+  String get venueAddressHint => 'Introduce o enderezo do lugar';
+
+  @override
+  String get venueCityLabel => 'Cidade do lugar';
+
+  @override
+  String get venueCityHint => 'Introduce a cidade do lugar';
+
+  @override
+  String get eventDescriptionHint => 'Introduce a descrición do evento';
+
+  @override
+  String get errorPrefix => 'Erro: ';
+
+  @override
+  String get errorLoadingConfig => 'Erro ao cargar a configuración: ';
+
+  @override
+  String get configNotAvailable => 'Erro: Configuración non dispoñible';
+
+  @override
+  String get noEventsToShow => 'Non hai eventos para amosar.';
+
+  @override
+  String get eventDeleted => ' eliminado';
+
+  @override
+  String get loginTitle => 'Iniciar sesión';
+
+  @override
+  String get projectNameLabel => 'Nome do proxecto';
+
+  @override
+  String get projectNameHint => 'Por favor, introduce o nome do proxecto';
+
+  @override
+  String get tokenLabel => 'Token (clásico con permisos de escritura)';
+
+  @override
+  String get tokenHint => 'Por favor, introduce un token de GitHub válido';
+
+  @override
+  String get unknownAuthError => 'Fallo de autenticación descoñecido.';
+
+  @override
+  String projectNotFoundError(Object projectName) {
+    return 'O proxecto \"$projectName\" non existe nos teus repositorios de GitHub.';
+  }
+
+  @override
+  String get authNetworkError =>
+      'Erro de autenticación ou de rede. Comproba as túas credenciais e o nome do proxecto.';
+
+  @override
+  String get closeButton => 'Pechar';
+
+  @override
+  String get editSponsorTitle => 'Editar patrocinador';
+
+  @override
+  String get createSponsorTitle => 'Crear patrocinador';
+
+  @override
+  String get editingSponsor => 'Editando patrocinador';
+
+  @override
+  String get creatingSponsor => 'Creando patrocinador';
+
+  @override
+  String get sponsorNameHint => 'Introduce o nome do patrocinador';
+
+  @override
+  String get sponsorNameValidation => 'Nome';
+
+  @override
+  String get logoLabel => 'Logo*';
+
+  @override
+  String get logoHint => 'Introduce a URL do logo';
+
+  @override
+  String get logoValidation => 'Logo';
+
+  @override
+  String get websiteLabel => 'Web*';
+
+  @override
+  String get websiteValidation => 'Web';
+
+  @override
+  String get mainSponsor => 'Patrocinador Principal';
+
+  @override
+  String get goldSponsor => 'Patrocinador Ouro';
+
+  @override
+  String get silverSponsor => 'Patrocinador Prata';
+
+  @override
+  String get bronzeSponsor => 'Patrocinador Bronce';
+
+  @override
+  String get updateButton => 'Actualizar';
+
+  @override
+  String get addButton => 'add button';
+
+  @override
+  String get addRoomTitle => 'add room';
+
+  @override
+  String get roomNameHint => 'Room name';
 }

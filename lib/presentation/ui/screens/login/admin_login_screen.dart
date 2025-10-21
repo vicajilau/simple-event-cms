@@ -5,6 +5,7 @@ import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/l10n/app_localizations.dart';
 
 class AdminLoginScreen extends StatefulWidget {
   const AdminLoginScreen({super.key});
@@ -20,6 +21,7 @@ class _LoginPageState extends State<AdminLoginScreen> {
   String _token = '';
 
   Future<void> _submit(BuildContext context) async {
+    final location = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       // Here you can add the authentication logic
@@ -55,10 +57,10 @@ class _LoginPageState extends State<AdminLoginScreen> {
         } else {
           // This block might not be reached if authentication fails earlier
           if (user.login == null) {
-            _showErrorSnackbar('Unknown authentication failure.');
+            _showErrorSnackbar(location.unknownAuthError);
           } else if (!projectExists) {
             _showErrorSnackbar(
-              'The project "$_projectName" does not exist in your GitHub repositories.',
+              location.projectNotFoundError.toString().replaceFirst('{projectName}', _projectName),
             );
           }
         }
@@ -66,7 +68,7 @@ class _LoginPageState extends State<AdminLoginScreen> {
         // Catch common authentication or network exceptions
         // ignore: use_build_context_synchronously
         _showErrorSnackbar(
-          'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.',
+          location.authNetworkError,
         );
         debugPrint('Error de autenticación: $e');
       }
@@ -74,11 +76,12 @@ class _LoginPageState extends State<AdminLoginScreen> {
   }
 
   void _showErrorSnackbar(String message) {
+    final location = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
         action: SnackBarAction(
-          label: 'Close',
+          label: location.closeButton,
           onPressed: () {
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
           },
@@ -89,8 +92,9 @@ class _LoginPageState extends State<AdminLoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: const Text('Login')),
+      appBar: AppBar(title: Text(location.loginTitle)),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -99,22 +103,22 @@ class _LoginPageState extends State<AdminLoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Project Name'),
+                decoration: InputDecoration(labelText: location.projectNameLabel),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter the project name' : null,
+                    value!.isEmpty ? location.projectNameHint : null,
                 onSaved: (value) => _projectName = value!,
               ),
               const SizedBox(height: 20),
               TextFormField(
-                decoration: const InputDecoration(labelText: 'Token(classic with write permissions)'),
+                decoration: InputDecoration(labelText: location.tokenLabel),
                 validator: (value) =>
-                    value!.isEmpty ? 'Please enter a valid GitHub token' : null,
+                    value!.isEmpty ? location.tokenHint : null,
                 onSaved: (value) => _token = value!,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () => _submit(context),
-                child: const Text('Login'),
+                child: Text(location.loginTitle),
               ),
             ],
           ),

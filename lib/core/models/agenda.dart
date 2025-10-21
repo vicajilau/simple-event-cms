@@ -1,46 +1,17 @@
 import 'package:sec/core/config/paths_github.dart';
 import 'github/github_model.dart';
 
-/// Represents the overall structure of the event agenda, linking to days by their UIDs.
-class Agenda extends GitHubModel {
-  List<String> dayUids;
-  List<AgendaDay>? resolvedDays = []; // Field for in-memory resolved objects
-
-  Agenda({
-    required super.uid,
-    required this.dayUids,
-    this.resolvedDays, // Allow initialization
-    super.pathUrl = PathsGithub.agendaPath,
-    super.updateMessage = PathsGithub.agendaUpdateMessage,
-  });
-
-  factory Agenda.fromJson(Map<String, dynamic> json) {
-    return Agenda(
-      uid: json["UID"].toString(),
-      dayUids: (json["days"] as List)
-          .map((dayUid) => dayUid["UID"].toString())
-          .toList(),
-      // resolvedDays will be populated by DataLoader
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson() => {
-    "UID": uid,
-    "days": dayUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
-  };
-}
-
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
-  final String date;
-  List<String> trackUids;
+  String date,eventUID;
+  List<String>? trackUids = [];
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
   AgendaDay({
     required super.uid,
     required this.date,
-    required this.trackUids,
+    this.trackUids,
+    required this.eventUID,
     this.resolvedTracks, // Allow initialization
     super.pathUrl = PathsGithub.daysPath,
     super.updateMessage = PathsGithub.daysUpdateMessage,
@@ -48,11 +19,12 @@ class AgendaDay extends GitHubModel {
 
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
     return AgendaDay(
-      uid: json['UID'].toString(),
+      uid: json['UID'],
       date: json['date'],
-      trackUids: (json['tracks'] as List)
-          .map((trackUid) => trackUid["UID"].toString())
-          .toList(),
+      eventUID: json['eventUID'],
+      trackUids: (json['trackUids'] as List?)
+          ?.map((trackUid) => trackUid['UID'].toString())
+          .toList() ?? [],
       // resolvedTracks will be populated by DataLoader
     );
   }
@@ -61,23 +33,26 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
-    "tracks": trackUids, // Only UIDs are serialized
+    "eventUID": eventUID,
+    "trackUids": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
 
 /// Represents a track or room, linking to sessions by their UIDs.
 class Track extends GitHubModel {
-  final String name;
+  String name;
+  String eventUid;
   final String color;
-  List<String> sessionUids;
-  List<Session>? resolvedSessions; // Field for in-memory resolved objects
+  List<String> sessionUids = [];
+  List<Session> resolvedSessions = []; // Field for in-memory resolved objects
 
   Track({
     required super.uid,
     required this.name,
     required this.color,
     required this.sessionUids,
-    this.resolvedSessions, // Allow initialization
+    required this.eventUid,
+    this.resolvedSessions = const [], // Allow initialization
     super.pathUrl = PathsGithub.tracksPath,
     super.updateMessage = PathsGithub.tracksUpdateMessage,
   });
@@ -87,7 +62,8 @@ class Track extends GitHubModel {
       uid: json['UID'].toString(),
       name: json['name'],
       color: json['color'],
-      sessionUids: (json['sessions'] as List)
+      eventUid: json['eventUid'],
+      sessionUids: (json['sessionUids'] as List)
           .map((sessionUid) => sessionUid['UID'].toString())
           .toList(),
       // resolvedSessions will be populated by DataLoader
@@ -99,7 +75,8 @@ class Track extends GitHubModel {
     "UID": uid,
     "name": name,
     "color": color,
-    "sessions": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "sessionUids": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "eventUid": eventUid
   };
 }
 
@@ -111,12 +88,16 @@ class Session extends GitHubModel {
   String? speakerUID;
   final String? description;
   final String type;
+  final String agendaDayUID;
+  final String eventUID;
 
   Session({
     required super.uid,
     required this.title,
     required this.time,
     required this.speakerUID,
+    required this.eventUID,
+    required this.agendaDayUID,
     super.pathUrl = PathsGithub.sessionsPath,
     super.updateMessage = PathsGithub.sessionsUpdateMessage,
     this.description,
@@ -131,6 +112,8 @@ class Session extends GitHubModel {
       speakerUID: json['speakerUID'],
       description: json['description'],
       type: json['type'],
+      eventUID: json['eventUID'],
+      agendaDayUID: json['agendaDayUID'],
     );
   }
 
@@ -142,5 +125,7 @@ class Session extends GitHubModel {
     "speakerUID": speakerUID,
     "description": description,
     "type": type,
+    "eventUID": eventUID,
+    "agendaDayUID": agendaDayUID,
   };
 }

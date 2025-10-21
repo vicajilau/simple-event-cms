@@ -8,17 +8,10 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
-  void addAgendaToEvent(Agenda agenda,String eventId);
-  void addSession(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
-  );
-  void editSession(Session session, String parentId);
-  void removeSession(String sessionId);
+  Future<void> saveSpeaker(Speaker speaker, String eventId);
+  Future<void> removeSession(String sessionId);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  void loadAgendaDays(String eventId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -47,16 +40,17 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   void setup([Object? argument]) {
     if (argument is String) {
-      _loadAgenda(argument);
+      loadAgendaDays(argument);
     }
   }
 
-  void _loadAgenda(String agendaId) async {
+  @override
+  void loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result = await agendaUseCase.getAgendaById(agendaId);
+    final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {
-      case Ok<Agenda>():
-        agendaDays.value = result.value.resolvedDays ?? [];
+      case Ok<List<AgendaDay>>():
+        agendaDays.value = result.value.toList();
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);
@@ -65,36 +59,26 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId) {
-    agendaUseCase.saveAgendaDayById(agendaDay, agendaId);
-  }
-
-  @override
-  void addAgendaToEvent(Agenda agenda,String eventId) {
-    agendaUseCase.saveAgenda(agenda, eventId);
+  Future<void> saveSpeaker(Speaker speaker, String eventId) async {
+    await agendaUseCase.saveSpeaker(speaker, eventId);
   }
   @override
-  void addSession(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
-  ) {
-    agendaUseCase.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
-  }
-
-  @override
-  void editSession(Session session, String parentId) {
-    agendaUseCase.editSession(session, parentId);
-  }
-
-  @override
-  void removeSession(String sessionId) {
-    agendaUseCase.deleteSessionFromAgendaDay(sessionId);
+  Future<void> removeSession(String sessionId) async {
+    await agendaUseCase.deleteSessionFromAgendaDay(sessionId);
   }
 
   @override
   Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
-    return await agendaUseCase.getSpeakersForEventId(eventId);
+    viewState.value = ViewState.isLoading;
+    final result = await agendaUseCase.getSpeakersForEventId(eventId);
+    switch (result) {
+      case Ok<List<Speaker>>():
+        viewState.value = ViewState.loadFinished;
+        return result.value;
+      case Error():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
+        return [];
+    }
   }
 }

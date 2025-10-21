@@ -13,9 +13,8 @@ import 'package:sec/presentation/view_model_common.dart';
 class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
-  final List<String> speakers;
   final String eventId;
-  SpeakersScreen({super.key, required this.speakers, required this.eventId});
+  SpeakersScreen({super.key,required this.eventId});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
@@ -25,11 +24,12 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup(widget.speakers);
+    widget.viewmodel.setup(widget.eventId);
   }
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     return ValueListenableBuilder(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
@@ -53,7 +53,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                       color: Colors.grey,
                     ),
                     const SizedBox(height: 16),
-                    Text(AppLocalizations.of(context)!.noSpeakersRegistered),
+                    Text(location.noSpeakersRegistered),
                   ],
                 ),
               );
@@ -139,9 +139,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                           height: 8,
                                                         ),
                                                         Text(
-                                                          AppLocalizations.of(
-                                                            context,
-                                                          )!.loading,
+                                                          location.loading,
                                                           style: Theme.of(context)
                                                               .textTheme
                                                               .bodySmall
@@ -175,9 +173,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                       ),
                                                       const SizedBox(height: 4),
                                                       Text(
-                                                        AppLocalizations.of(
-                                                          context,
-                                                        )!.errorLoadingImage,
+                                                        location.errorLoadingImage,
                                                         style: Theme.of(
                                                           context,
                                                         ).textTheme.bodySmall,
@@ -241,10 +237,14 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                         IconWidget(
                                           icon: Icons.edit,
                                           onTap: () async {
+                                            Map<String, dynamic> arguments  = {
+                                              'speaker': speaker,
+                                              'eventId': widget.eventId,
+                                            };
                                             final Speaker? updatedSpeaker =
                                                 await AppRouter.router.push(
                                                   AppRouter.speakerFormPath,
-                                                  extra: speaker,
+                                                  extra: arguments
                                                 );
 
                                             if (updatedSpeaker != null) {

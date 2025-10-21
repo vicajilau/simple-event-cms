@@ -110,247 +110,247 @@ abstract class AppLocalizations {
     Locale('pt'),
   ];
 
-  /// Loading message for agenda screen
+  /// No description provided for @loadingAgenda.
   ///
   /// In en, this message translates to:
   /// **'Loading agenda...'**
   String get loadingAgenda;
 
-  /// Button text to retry an operation
+  /// No description provided for @retry.
   ///
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
 
-  /// Message when no events are available
+  /// No description provided for @noEventsScheduled.
   ///
   /// In en, this message translates to:
   /// **'No events scheduled'**
   String get noEventsScheduled;
 
-  /// Loading message for speakers screen
+  /// No description provided for @loadingSpeakers.
   ///
   /// In en, this message translates to:
   /// **'Loading speakers...'**
   String get loadingSpeakers;
 
-  /// Message when no speakers are available
+  /// No description provided for @noSpeakersRegistered.
   ///
   /// In en, this message translates to:
   /// **'No speakers registered'**
   String get noSpeakersRegistered;
 
-  /// Loading message for sponsors screen
+  /// No description provided for @loadingSponsors.
   ///
   /// In en, this message translates to:
   /// **'Loading sponsors...'**
   String get loadingSponsors;
 
-  /// Message when no sponsors are available
+  /// No description provided for @noSponsorsRegistered.
   ///
   /// In en, this message translates to:
   /// **'No sponsors registered'**
   String get noSponsorsRegistered;
 
-  /// Generic loading message
+  /// No description provided for @loading.
   ///
   /// In en, this message translates to:
   /// **'Loading...'**
   String get loading;
 
-  /// Error message when image fails to load
+  /// No description provided for @errorLoadingImage.
   ///
   /// In en, this message translates to:
   /// **'Error loading image'**
   String get errorLoadingImage;
 
-  /// Label for keynote sessions
+  /// No description provided for @keynote.
   ///
   /// In en, this message translates to:
   /// **'KEYNOTE'**
   String get keynote;
 
-  /// Label for talk sessions
+  /// No description provided for @talk.
   ///
   /// In en, this message translates to:
   /// **'TALK'**
   String get talk;
 
-  /// Label for workshop sessions
+  /// No description provided for @workshop.
   ///
   /// In en, this message translates to:
   /// **'WORKSHOP'**
   String get workshop;
 
-  /// Label for break sessions
+  /// No description provided for @sessionBreak.
   ///
   /// In en, this message translates to:
   /// **'BREAK'**
   String get sessionBreak;
 
-  /// Navigation tab label for agenda
+  /// No description provided for @agenda.
   ///
   /// In en, this message translates to:
   /// **'Agenda'**
   String get agenda;
 
-  /// Navigation tab label for speakers
+  /// No description provided for @speakers.
   ///
   /// In en, this message translates to:
   /// **'Speakers'**
   String get speakers;
 
-  /// Navigation tab label for sponsors
+  /// No description provided for @sponsors.
   ///
   /// In en, this message translates to:
   /// **'Sponsors'**
   String get sponsors;
 
-  /// Title for event information dialog
+  /// No description provided for @eventInfo.
   ///
   /// In en, this message translates to:
   /// **'Event Information'**
   String get eventInfo;
 
-  /// Label for event dates section
+  /// No description provided for @eventDates.
   ///
   /// In en, this message translates to:
   /// **'Event Dates'**
   String get eventDates;
 
-  /// Label for venue section
+  /// No description provided for @venue.
   ///
   /// In en, this message translates to:
   /// **'Venue'**
   String get venue;
 
-  /// Label for description section
+  /// No description provided for @description.
   ///
   /// In en, this message translates to:
   /// **'Description'**
   String get description;
 
-  /// Button text to close a dialog
+  /// No description provided for @close.
   ///
   /// In en, this message translates to:
   /// **'Close'**
   String get close;
 
-  /// Tooltip for Twitter/X social icon
+  /// No description provided for @twitter.
   ///
   /// In en, this message translates to:
   /// **'Twitter/X'**
   String get twitter;
 
-  /// Tooltip for LinkedIn social icon
+  /// No description provided for @linkedin.
   ///
   /// In en, this message translates to:
   /// **'LinkedIn'**
   String get linkedin;
 
-  /// Tooltip for GitHub social icon
+  /// No description provided for @github.
   ///
   /// In en, this message translates to:
   /// **'GitHub'**
   String get github;
 
-  /// Tooltip for website social icon
+  /// No description provided for @website.
   ///
   /// In en, this message translates to:
   /// **'Website'**
   String get website;
 
-  /// Tooltip for opening external links
+  /// No description provided for @openUrl.
   ///
   /// In en, this message translates to:
   /// **'Open URL'**
   String get openUrl;
 
-  /// Tooltip for language selector
+  /// No description provided for @changeLanguage.
   ///
   /// In en, this message translates to:
   /// **'Change Language'**
   String get changeLanguage;
 
-  /// Title for the speaker submission form
+  /// No description provided for @speakerForm.
   ///
   /// In en, this message translates to:
   /// **'Speaker Form'**
   String get speakerForm;
 
-  /// Label for the name input field
+  /// No description provided for @nameLabel.
   ///
   /// In en, this message translates to:
   /// **'Name*'**
   String get nameLabel;
 
-  /// Error hint when the name field is empty
+  /// No description provided for @nameErrorHint.
   ///
   /// In en, this message translates to:
   /// **'Please enter your name'**
   String get nameErrorHint;
 
-  /// Label for the biography input field
+  /// No description provided for @bioLabel.
   ///
   /// In en, this message translates to:
   /// **'Biography*'**
   String get bioLabel;
 
-  /// Error hint when the biography field is empty
+  /// No description provided for @bioErrorHint.
   ///
   /// In en, this message translates to:
   /// **'Please enter your biography'**
   String get bioErrorHint;
 
-  /// Label for the image URL input field
+  /// No description provided for @imageUrlLabel.
   ///
   /// In en, this message translates to:
   /// **'Image URL'**
   String get imageUrlLabel;
 
-  /// Hint text for the name input field
+  /// No description provided for @nameHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the speaker\'s name'**
   String get nameHint;
 
-  /// Hint text for the biography input field
+  /// No description provided for @bioHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the speaker\'s biography'**
   String get bioHint;
 
-  /// Hint text for the image URL input field
+  /// No description provided for @imageUrlHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the speaker\'s image URL'**
   String get imageUrlHint;
 
-  /// Hint text for the Twitter input field
+  /// No description provided for @twitterHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the Twitter URL'**
   String get twitterHint;
 
-  /// Hint text for the GitHub input field
+  /// No description provided for @githubHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the GitHub URL'**
   String get githubHint;
 
-  /// Hint text for the LinkedIn input field
+  /// No description provided for @linkedinHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the LinkedIn URL'**
   String get linkedinHint;
 
-  /// Hint text for the website input field
+  /// No description provided for @websiteHint.
   ///
   /// In en, this message translates to:
   /// **'Enter the website URL'**
   String get websiteHint;
 
-  /// Button text to save the speaker form
+  /// No description provided for @saveButton.
   ///
   /// In en, this message translates to:
   /// **'Save'**
@@ -367,6 +367,552 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unknown error'**
   String get errorUnknown;
+
+  /// No description provided for @createSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Session'**
+  String get createSession;
+
+  /// No description provided for @editSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Session'**
+  String get editSession;
+
+  /// No description provided for @loadingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading...'**
+  String get loadingTitle;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error has occurred.'**
+  String get unexpectedError;
+
+  /// No description provided for @titleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title*'**
+  String get titleLabel;
+
+  /// No description provided for @talkTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter talk title'**
+  String get talkTitleHint;
+
+  /// No description provided for @talkTitleError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a talk title'**
+  String get talkTitleError;
+
+  /// No description provided for @eventDayLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Event day*'**
+  String get eventDayLabel;
+
+  /// No description provided for @selectDayHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a day'**
+  String get selectDayHint;
+
+  /// No description provided for @selectDayError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a day'**
+  String get selectDayError;
+
+  /// No description provided for @roomLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Room*'**
+  String get roomLabel;
+
+  /// No description provided for @selectRoomHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a room'**
+  String get selectRoomHint;
+
+  /// No description provided for @selectRoomError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a room'**
+  String get selectRoomError;
+
+  /// No description provided for @startTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time:'**
+  String get startTimeLabel;
+
+  /// No description provided for @endTimeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End time:'**
+  String get endTimeLabel;
+
+  /// No description provided for @timeValidationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Start time must be before end time.'**
+  String get timeValidationError;
+
+  /// No description provided for @speakerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker*'**
+  String get speakerLabel;
+
+  /// No description provided for @noSpeakersMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'No speakers. Add one.'**
+  String get noSpeakersMessage;
+
+  /// No description provided for @selectSpeakerHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a speaker'**
+  String get selectSpeakerHint;
+
+  /// No description provided for @selectSpeakerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a speaker'**
+  String get selectSpeakerError;
+
+  /// No description provided for @talkTypeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk type*'**
+  String get talkTypeLabel;
+
+  /// No description provided for @selectTalkTypeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select the talk type'**
+  String get selectTalkTypeHint;
+
+  /// No description provided for @selectTalkTypeError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the talk type'**
+  String get selectTalkTypeError;
+
+  /// No description provided for @descriptionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get descriptionLabel;
+
+  /// No description provided for @talkDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter talk description...'**
+  String get talkDescriptionHint;
+
+  /// No description provided for @cancelButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelButton;
+
+  /// No description provided for @timeSelectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select both start and end times.'**
+  String get timeSelectionError;
+
+  /// No description provided for @noSessionsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No sessions found'**
+  String get noSessionsFound;
+
+  /// No description provided for @deleteSessionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete session'**
+  String get deleteSessionTitle;
+
+  /// No description provided for @deleteSessionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the session?'**
+  String get deleteSessionMessage;
+
+  /// No description provided for @editEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit event'**
+  String get editEventTitle;
+
+  /// No description provided for @createEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create event'**
+  String get createEventTitle;
+
+  /// No description provided for @editingEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing event'**
+  String get editingEvent;
+
+  /// No description provided for @creatingEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating event'**
+  String get creatingEvent;
+
+  /// No description provided for @eventNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Event name'**
+  String get eventNameLabel;
+
+  /// No description provided for @eventNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the event name'**
+  String get eventNameHint;
+
+  /// No description provided for @requiredField.
+  ///
+  /// In en, this message translates to:
+  /// **'Required field'**
+  String get requiredField;
+
+  /// No description provided for @startDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start date'**
+  String get startDateLabel;
+
+  /// No description provided for @dateHint.
+  ///
+  /// In en, this message translates to:
+  /// **'YYYY-MM-DD'**
+  String get dateHint;
+
+  /// No description provided for @endDateLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'End date'**
+  String get endDateLabel;
+
+  /// No description provided for @addEndDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Add end date'**
+  String get addEndDate;
+
+  /// No description provided for @roomsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rooms'**
+  String get roomsLabel;
+
+  /// No description provided for @timezoneLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Timezone'**
+  String get timezoneLabel;
+
+  /// No description provided for @timezoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the timezone'**
+  String get timezoneHint;
+
+  /// No description provided for @baseUrlLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Base URL'**
+  String get baseUrlLabel;
+
+  /// No description provided for @baseUrlHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Base URL'**
+  String get baseUrlHint;
+
+  /// No description provided for @primaryColorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary Color'**
+  String get primaryColorLabel;
+
+  /// No description provided for @primaryColorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the primary color (e.g. #FFFFFF)'**
+  String get primaryColorHint;
+
+  /// No description provided for @secondaryColorLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Secondary Color'**
+  String get secondaryColorLabel;
+
+  /// No description provided for @secondaryColorHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the secondary color (e.g. #000000)'**
+  String get secondaryColorHint;
+
+  /// No description provided for @venueTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue'**
+  String get venueTitle;
+
+  /// No description provided for @venueNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue Name'**
+  String get venueNameLabel;
+
+  /// No description provided for @venueNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the venue name'**
+  String get venueNameHint;
+
+  /// No description provided for @venueAddressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue Address'**
+  String get venueAddressLabel;
+
+  /// No description provided for @venueAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the venue address'**
+  String get venueAddressHint;
+
+  /// No description provided for @venueCityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Venue City'**
+  String get venueCityLabel;
+
+  /// No description provided for @venueCityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the venue city'**
+  String get venueCityHint;
+
+  /// No description provided for @eventDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the event description'**
+  String get eventDescriptionHint;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: '**
+  String get errorPrefix;
+
+  /// No description provided for @errorLoadingConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading configuration: '**
+  String get errorLoadingConfig;
+
+  /// No description provided for @configNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: Configuration not available'**
+  String get configNotAvailable;
+
+  /// No description provided for @noEventsToShow.
+  ///
+  /// In en, this message translates to:
+  /// **'No events to show.'**
+  String get noEventsToShow;
+
+  /// No description provided for @eventDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **' deleted'**
+  String get eventDeleted;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get loginTitle;
+
+  /// No description provided for @projectNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Project Name'**
+  String get projectNameLabel;
+
+  /// No description provided for @projectNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the project name'**
+  String get projectNameHint;
+
+  /// No description provided for @tokenLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Token (classic with write permissions)'**
+  String get tokenLabel;
+
+  /// No description provided for @tokenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid GitHub token'**
+  String get tokenHint;
+
+  /// No description provided for @unknownAuthError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown authentication failure.'**
+  String get unknownAuthError;
+
+  /// No description provided for @projectNotFoundError.
+  ///
+  /// In en, this message translates to:
+  /// **'The project \"{projectName}\" does not exist in your GitHub repositories.'**
+  String projectNotFoundError(Object projectName);
+
+  /// No description provided for @authNetworkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication or network error. Check your credentials and project name.'**
+  String get authNetworkError;
+
+  /// No description provided for @closeButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get closeButton;
+
+  /// No description provided for @editSponsorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Sponsor'**
+  String get editSponsorTitle;
+
+  /// No description provided for @createSponsorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Sponsor'**
+  String get createSponsorTitle;
+
+  /// No description provided for @editingSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing Sponsor'**
+  String get editingSponsor;
+
+  /// No description provided for @creatingSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Creating Sponsor'**
+  String get creatingSponsor;
+
+  /// No description provided for @sponsorNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the Sponsor\'s name'**
+  String get sponsorNameHint;
+
+  /// No description provided for @sponsorNameValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get sponsorNameValidation;
+
+  /// No description provided for @logoLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Logo*'**
+  String get logoLabel;
+
+  /// No description provided for @logoHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the logo URL'**
+  String get logoHint;
+
+  /// No description provided for @logoValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Logo'**
+  String get logoValidation;
+
+  /// No description provided for @websiteLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Web*'**
+  String get websiteLabel;
+
+  /// No description provided for @websiteValidation.
+  ///
+  /// In en, this message translates to:
+  /// **'Web'**
+  String get websiteValidation;
+
+  /// No description provided for @mainSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Main Sponsor'**
+  String get mainSponsor;
+
+  /// No description provided for @goldSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Gold Sponsor'**
+  String get goldSponsor;
+
+  /// No description provided for @silverSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Silver Sponsor'**
+  String get silverSponsor;
+
+  /// No description provided for @bronzeSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Bronze Sponsor'**
+  String get bronzeSponsor;
+
+  /// No description provided for @updateButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateButton;
+
+  /// No description provided for @addButton.
+  ///
+  /// In en, this message translates to:
+  /// **'add button'**
+  String get addButton;
+
+  /// No description provided for @addRoomTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'add room'**
+  String get addRoomTitle;
+
+  /// No description provided for @roomNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomNameHint;
 }
 
 class _AppLocalizationsDelegate

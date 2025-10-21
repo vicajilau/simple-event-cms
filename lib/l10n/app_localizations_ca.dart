@@ -126,7 +126,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get linkedinHint => 'Introdueix la URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introdueix la URL del lloc web';
+  String get websiteHint => 'Introdueix la URL de la web';
 
   @override
   String get saveButton => 'Desa';
@@ -136,4 +136,287 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Error desconegut';
+
+  @override
+  String get createSession => 'Crear Sessió';
+
+  @override
+  String get editSession => 'Editar Sessió';
+
+  @override
+  String get loadingTitle => 'Carregant...';
+
+  @override
+  String get unexpectedError => 'Ha ocorregut un error inesperat.';
+
+  @override
+  String get titleLabel => 'Títol*';
+
+  @override
+  String get talkTitleHint => 'Introdueix el títol de la xerrada';
+
+  @override
+  String get talkTitleError =>
+      'Si us plau, introdueix un títol per a la xerrada';
+
+  @override
+  String get eventDayLabel => 'Dia de l\'esdeveniment*';
+
+  @override
+  String get selectDayHint => 'Selecciona un dia';
+
+  @override
+  String get selectDayError => 'Si us plau, selecciona un dia';
+
+  @override
+  String get roomLabel => 'Sala*';
+
+  @override
+  String get selectRoomHint => 'Selecciona una sala';
+
+  @override
+  String get selectRoomError => 'Si us plau, selecciona una sala';
+
+  @override
+  String get startTimeLabel => 'Hora d\'inici:';
+
+  @override
+  String get endTimeLabel => 'Hora de finalització:';
+
+  @override
+  String get timeValidationError =>
+      'L\'hora d\'inici ha de ser anterior a l\'hora de finalització.';
+
+  @override
+  String get speakerLabel => 'Ponent*';
+
+  @override
+  String get noSpeakersMessage => 'No hi ha ponents. Afegeix-ne un.';
+
+  @override
+  String get selectSpeakerHint => 'Selecciona un ponent';
+
+  @override
+  String get selectSpeakerError => 'Si us plau, selecciona un ponent';
+
+  @override
+  String get talkTypeLabel => 'Tipus de xerrada*';
+
+  @override
+  String get selectTalkTypeHint => 'Selecciona el tipus de xerrada';
+
+  @override
+  String get selectTalkTypeError =>
+      'Si us plau, selecciona el tipus de xerrada';
+
+  @override
+  String get descriptionLabel => 'Descripció';
+
+  @override
+  String get talkDescriptionHint => 'Introdueix la descripció de la xerrada...';
+
+  @override
+  String get cancelButton => 'Cancel·lar';
+
+  @override
+  String get timeSelectionError =>
+      'Si us plau, selecciona tant l\'hora d\'inici com la de finalització.';
+
+  @override
+  String get noSessionsFound => 'No s\'han trobat sessions';
+
+  @override
+  String get deleteSessionTitle => 'Eliminar sessió';
+
+  @override
+  String get deleteSessionMessage => 'Estàs segur que vols eliminar la sessió?';
+
+  @override
+  String get editEventTitle => 'Edita l\'esdeveniment';
+
+  @override
+  String get createEventTitle => 'Crea l\'esdeveniment';
+
+  @override
+  String get editingEvent => 'Editant l\'esdeveniment';
+
+  @override
+  String get creatingEvent => 'Creant l\'esdeveniment';
+
+  @override
+  String get eventNameLabel => 'Nom de l\'esdeveniment';
+
+  @override
+  String get eventNameHint => 'Introdueix el nom de l\'esdeveniment';
+
+  @override
+  String get requiredField => 'Camp obligatori';
+
+  @override
+  String get startDateLabel => 'Data d\'inici';
+
+  @override
+  String get dateHint => 'YYYY-MM-DD';
+
+  @override
+  String get endDateLabel => 'Data de finalització';
+
+  @override
+  String get addEndDate => 'Afegeix data de finalització';
+
+  @override
+  String get roomsLabel => 'Sales';
+
+  @override
+  String get timezoneLabel => 'Zona horària';
+
+  @override
+  String get timezoneHint => 'Introdueix la zona horària';
+
+  @override
+  String get baseUrlLabel => 'URL base';
+
+  @override
+  String get baseUrlHint => 'Introdueix la URL base';
+
+  @override
+  String get primaryColorLabel => 'Color primari';
+
+  @override
+  String get primaryColorHint =>
+      'Introdueix el color primari (p. ex., #FFFFFF)';
+
+  @override
+  String get secondaryColorLabel => 'Color secundari';
+
+  @override
+  String get secondaryColorHint =>
+      'Introdueix el color secundari (p. ex., #000000)';
+
+  @override
+  String get venueTitle => 'Lloc';
+
+  @override
+  String get venueNameLabel => 'Nom del lloc';
+
+  @override
+  String get venueNameHint => 'Introdueix el nom del lloc';
+
+  @override
+  String get venueAddressLabel => 'Adreça del lloc';
+
+  @override
+  String get venueAddressHint => 'Introdueix l\'adreça del lloc';
+
+  @override
+  String get venueCityLabel => 'Ciutat del lloc';
+
+  @override
+  String get venueCityHint => 'Introdueix la ciutat del lloc';
+
+  @override
+  String get eventDescriptionHint =>
+      'Introdueix la descripció de l\'esdeveniment';
+
+  @override
+  String get errorPrefix => 'Error: ';
+
+  @override
+  String get errorLoadingConfig => 'Error en carregar la configuració: ';
+
+  @override
+  String get configNotAvailable => 'Error: Configuració no disponible';
+
+  @override
+  String get noEventsToShow => 'No hi ha esdeveniments per mostrar.';
+
+  @override
+  String get eventDeleted => ' eliminat';
+
+  @override
+  String get loginTitle => 'Inici de sessió';
+
+  @override
+  String get projectNameLabel => 'Nom del projecte';
+
+  @override
+  String get projectNameHint => 'Si us plau, introdueix el nom del projecte';
+
+  @override
+  String get tokenLabel => 'Token (clàssic amb permisos d\'escriptura)';
+
+  @override
+  String get tokenHint => 'Si us plau, introdueix un token de GitHub vàlid';
+
+  @override
+  String get unknownAuthError => 'Error d\'autenticació desconegut.';
+
+  @override
+  String projectNotFoundError(Object projectName) {
+    return 'El projecte \"$projectName\" no existeix als teus repositoris de GitHub.';
+  }
+
+  @override
+  String get authNetworkError =>
+      'Error d\'autenticació o de xarxa. Comprova les teves credencials i el nom del projecte.';
+
+  @override
+  String get closeButton => 'Tancar';
+
+  @override
+  String get editSponsorTitle => 'Edita el patrocinador';
+
+  @override
+  String get createSponsorTitle => 'Crea el patrocinador';
+
+  @override
+  String get editingSponsor => 'Editant el patrocinador';
+
+  @override
+  String get creatingSponsor => 'Creant el patrocinador';
+
+  @override
+  String get sponsorNameHint => 'Introdueix el nom del patrocinador';
+
+  @override
+  String get sponsorNameValidation => 'Nom';
+
+  @override
+  String get logoLabel => 'Logo*';
+
+  @override
+  String get logoHint => 'Introdueix la URL del logo';
+
+  @override
+  String get logoValidation => 'Logo';
+
+  @override
+  String get websiteLabel => 'Web*';
+
+  @override
+  String get websiteValidation => 'Web';
+
+  @override
+  String get mainSponsor => 'Patrocinador Principal';
+
+  @override
+  String get goldSponsor => 'Patrocinador Or';
+
+  @override
+  String get silverSponsor => 'Patrocinador Plata';
+
+  @override
+  String get bronzeSponsor => 'Patrocinador Bronze';
+
+  @override
+  String get updateButton => 'Actualitzar';
+
+  @override
+  String get addButton => 'add button';
+
+  @override
+  String get addRoomTitle => 'add room';
+
+  @override
+  String get roomNameHint => 'Room name';
 }

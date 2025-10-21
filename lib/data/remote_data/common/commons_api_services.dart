@@ -19,6 +19,11 @@ abstract class CommonsServices {
     String pathUrl,
     String commitMessage,
   );
+  Future<http.Response> updateDataList<T extends GitHubModel>(
+    List<T> dataList,
+    String pathUrl,
+    String commitMessage,
+  );
   Future<http.Response> removeData<T extends GitHubModel>(
     List<T> dataOriginal,
     T dataToRemove,
@@ -39,7 +44,8 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/${organization.year}/$path';
-      var github = GitHub();
+      var githubService = await SecureInfo.getGithubKey();
+      var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
       var repositorySlug = RepositorySlug(
         organization.githubUser,
         (await SecureInfo.getGithubKey()).projectName ??
@@ -50,7 +56,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "develop",
+          ref: githubService.branch,
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -66,7 +72,7 @@ class CommonsServicesImp extends CommonsServices {
         }
       }
       if (res.file == null || res.file!.content == null) {
-        throw NetworkException("El contenido de la respuesta es null");
+        throw NetworkException("The response content is null");
       }
       final file = utf8.decode(
         base64.decode(
@@ -111,11 +117,15 @@ class CommonsServicesImp extends CommonsServices {
         "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
       );
     } catch (e, st) {
-      throw JsonDecodeException(
-        "Error loading configuration from $path",
-        cause: e,
-        stackTrace: st,
-      );
+      if (e.toString().contains("No element")) {
+        return [].toList();
+      } else {
+        throw JsonDecodeException(
+          "Error loading configuration from $path",
+          cause: e,
+          stackTrace: st,
+        );
+      }
     }
   }
 
@@ -142,9 +152,9 @@ class CommonsServicesImp extends CommonsServices {
 
     String? currentSha;
 
-    // 2. MODIFY THE DATA LIST (Your current logic)
+    // 2. MODIFY THE DATA LIST
     int indexElementFounded = dataOriginal.indexWhere(
-          (item) => item.uid == data.uid,
+      (item) => item.uid == data.uid,
     );
 
     if (indexElementFounded != -1) {
@@ -152,22 +162,20 @@ class CommonsServicesImp extends CommonsServices {
     } else {
       dataOriginal.add(data);
     }
-
-    // 3. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
     try {
-      // 1. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
+      // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "develop",
+        ref: githubService?.branch ?? 'develop',
       );
       currentSha = contents.file?.sha;
 
@@ -177,21 +185,19 @@ class CommonsServicesImp extends CommonsServices {
       }
     } catch (e, st) {
       if (e is GitHubError && e.message == "Not Found") {
-        // If the file is not found, create it with an empty list.
+        // If the file is not found, create it.
         final response = await github.repositories.createFile(
-            repositorySlug,
-            CreateFile(
-              path: pathUrl,
-              content: base64Content,
-              message: 'feat: create file at $pathUrl',
-              branch: branch,
-            ));
+          repositorySlug,
+          CreateFile(
+            path: pathUrl,
+            content: base64Content,
+            message: 'feat: create file at $pathUrl',
+            branch: branch,
+          ),
+        );
         if (response.content != null) {
-          return http.Response(
-            response.content?.content.toString() ?? "",
-            200,
-          );
-        }else{
+          return http.Response(response.content?.content.toString() ?? "", 200);
+        } else {
           // Any other error while getting the file.
           throw GithubException(
             "Failed to create file contents from $pathUrl: $e",
@@ -199,8 +205,6 @@ class CommonsServicesImp extends CommonsServices {
             stackTrace: st,
           );
         }
-        // Return an empty list since the file was just created empty.
-
       } else {
         // Any other error while getting the file.
         throw GithubException(
@@ -222,8 +226,7 @@ class CommonsServicesImp extends CommonsServices {
     // Only add the 'sha' for updates, not for creation.
     requestBody['sha'] = currentSha;
 
-    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
-    // This gives you back the raw http.Response you want.
+    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
@@ -236,7 +239,7 @@ class CommonsServicesImp extends CommonsServices {
       },
       body: json.encode(
         requestBody,
-      ), // Encode the final body map to a JSON string
+      ),
     );
 
     // Check the response status and throw an exception on failure.
@@ -269,7 +272,7 @@ class CommonsServicesImp extends CommonsServices {
 
     var github = GitHub(auth: Authentication.withToken(githubService!.token));
 
-    // 1. GET SHA - This is mandatory
+    // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
@@ -280,7 +283,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "develop",
+        ref: githubService?.branch ?? 'develop',
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -293,7 +296,7 @@ class CommonsServicesImp extends CommonsServices {
       );
     } catch (e, st) {
       throw GithubException(
-        "Failed to get file for removal: $e",
+        "Failed to get file for removal from $pathUrl: $e",
         cause: e,
         stackTrace: st,
       );
@@ -311,8 +314,8 @@ class CommonsServicesImp extends CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
-    // 4. PREPARE REQUEST BODY
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
+    // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
       'content': base64Content,
@@ -323,7 +326,7 @@ class CommonsServicesImp extends CommonsServices {
       organization.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
-    // 5. BUILD URL AND MAKE PUT REQUEST
+    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
@@ -340,6 +343,115 @@ class CommonsServicesImp extends CommonsServices {
     if (response.statusCode != 200) {
       throw NetworkException(
         "Failed to save updated data after removal at $pathUrl: ${response.body}",
+      );
+    }
+    return response;
+  }
+
+  /// Generic function to update a whole list of data on GitHub.
+  /// Replaces the entire file content with the provided list.
+  /// Returns an http.Response for consistency.
+  @override
+  Future<http.Response> updateDataList<T extends GitHubModel>(
+    List<T> dataList,
+    String pathUrl,
+    String commitMessage,
+  ) async {
+    RepositorySlug repositorySlug = RepositorySlug(
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+    );
+    githubService = await SecureInfo.getGithubKey();
+    if (githubService?.token == null) {
+      throw Exception("GitHub token is not available.");
+    }
+
+    // Initialize GitHub client
+    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+
+    String? currentSha;
+    String branch =
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
+
+    // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
+    final dataInJsonString = json.encode(
+      dataList.map((item) => item.toJson()).toList(),
+    );
+    var base64Content = base64.encode(utf8.encode(dataInJsonString));
+
+    try {
+      // 2. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
+      // This is mandatory for updates.
+      final contents = await github.repositories.getContents(
+        repositorySlug,
+        pathUrl,
+        ref: githubService?.branch ?? 'develop',
+      );
+      currentSha = contents.file?.sha;
+
+      if (currentSha == null) {
+        // This case is unlikely if the file exists but helps prevent errors.
+        throw GithubException("Could not get the SHA of the existing file.");
+      }
+    } catch (e, st) {
+      if (e is GitHubError && e.message == "Not Found") {
+        // If the file is not found, create it with the provided list.
+        final response = await github.repositories.createFile(
+          repositorySlug,
+          CreateFile(
+            path: pathUrl,
+            content: base64Content,
+            message: 'feat: create file at $pathUrl',
+            branch: branch,
+          ),
+        );
+        if (response.content != null) {
+          return http.Response(
+            response.content?.content.toString() ?? "",
+            201, // 201 for created
+          );
+        } else {
+          throw GithubException(
+            "Failed to create file contents from $pathUrl: $e",
+            cause: e,
+            stackTrace: st,
+          );
+        }
+      } else {
+        // Any other error while getting the file.
+        throw GithubException(
+          "Failed to get file contents from $pathUrl: $e",
+          cause: e,
+          stackTrace: st,
+        );
+      }
+    }
+
+    // 3. PREPARE THE REQUEST BODY FOR THE GITHUB API
+    // The body requires the message, content, and the sha for updates.
+    final requestBody = <String, String>{
+      'message': commitMessage,
+      'content': base64Content,
+      'branch': branch,
+      'sha': currentSha,
+    };
+
+    // 4. BUILD THE API URL AND MAKE THE PUT REQUEST
+    final apiUrl =
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
+
+    final response = await github.client.put(
+      Uri.parse(apiUrl),
+      headers: {
+        "Authorization": 'Bearer ${githubService?.token}',
+        "Accept": "application/vnd.github.v3+json",
+      },
+      body: json.encode(requestBody),
+    );
+
+    if (response.statusCode != 200) {
+      throw NetworkException(
+        "Failed to update data at $pathUrl: ${response.body}",
       );
     }
     return response;

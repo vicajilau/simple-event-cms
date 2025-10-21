@@ -136,4 +136,283 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get errorUnknown => 'Errore ezezaguna';
+
+  @override
+  String get createSession => 'Saioa Sortu';
+
+  @override
+  String get editSession => 'Saioa Editatu';
+
+  @override
+  String get loadingTitle => 'Kargatzen...';
+
+  @override
+  String get unexpectedError => 'Ustekabeko errorea gertatu da.';
+
+  @override
+  String get titleLabel => 'Izenburua*';
+
+  @override
+  String get talkTitleHint => 'Sartu hitzaldiaren izenburua';
+
+  @override
+  String get talkTitleError => 'Mesedez, sartu hitzaldiaren izenburua';
+
+  @override
+  String get eventDayLabel => 'Gertaeraren eguna*';
+
+  @override
+  String get selectDayHint => 'Aukeratu egun bat';
+
+  @override
+  String get selectDayError => 'Mesedez, aukeratu egun bat';
+
+  @override
+  String get roomLabel => 'Gela*';
+
+  @override
+  String get selectRoomHint => 'Aukeratu gela bat';
+
+  @override
+  String get selectRoomError => 'Mesedez, aukeratu gela bat';
+
+  @override
+  String get startTimeLabel => 'Hasiera ordua:';
+
+  @override
+  String get endTimeLabel => 'Amaiera ordua:';
+
+  @override
+  String get timeValidationError =>
+      'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
+
+  @override
+  String get speakerLabel => 'Hizlaria*';
+
+  @override
+  String get noSpeakersMessage => 'Ez dago hizlaririk. Gehitu bat.';
+
+  @override
+  String get selectSpeakerHint => 'Aukeratu hizlari bat';
+
+  @override
+  String get selectSpeakerError => 'Mesedez, aukeratu hizlari bat';
+
+  @override
+  String get talkTypeLabel => 'Hitzaldi mota*';
+
+  @override
+  String get selectTalkTypeHint => 'Aukeratu hitzaldi mota';
+
+  @override
+  String get selectTalkTypeError => 'Mesedez, aukeratu hitzaldi mota';
+
+  @override
+  String get descriptionLabel => 'Deskribapena';
+
+  @override
+  String get talkDescriptionHint => 'Sartu hitzaldiaren deskribapena...';
+
+  @override
+  String get cancelButton => 'Ezeztatu';
+
+  @override
+  String get timeSelectionError =>
+      'Mesedez, aukeratu hasiera eta amaiera orduak.';
+
+  @override
+  String get noSessionsFound => 'Ez da saiorik aurkitu';
+
+  @override
+  String get deleteSessionTitle => 'Saioa ezabatu';
+
+  @override
+  String get deleteSessionMessage => 'Ziur zaude saioa ezabatu nahi duzula?';
+
+  @override
+  String get editEventTitle => 'Gertaera editatu';
+
+  @override
+  String get createEventTitle => 'Gertaera sortu';
+
+  @override
+  String get editingEvent => 'Gertaera editatzen';
+
+  @override
+  String get creatingEvent => 'Gertaera sortzen';
+
+  @override
+  String get eventNameLabel => 'Gertaeraren izena';
+
+  @override
+  String get eventNameHint => 'Sartu gertaeraren izena';
+
+  @override
+  String get requiredField => 'Beharrezko eremua';
+
+  @override
+  String get startDateLabel => 'Hasiera data';
+
+  @override
+  String get dateHint => 'UUUU-HH-EE';
+
+  @override
+  String get endDateLabel => 'Amaiera data';
+
+  @override
+  String get addEndDate => 'Gehitu amaiera data';
+
+  @override
+  String get roomsLabel => 'Gelak';
+
+  @override
+  String get timezoneLabel => 'Ordu-zona';
+
+  @override
+  String get timezoneHint => 'Sartu ordu-zona';
+
+  @override
+  String get baseUrlLabel => 'Oinarrizko URLa';
+
+  @override
+  String get baseUrlHint => 'Sartu oinarrizko URLa';
+
+  @override
+  String get primaryColorLabel => 'Kolore nagusia';
+
+  @override
+  String get primaryColorHint => 'Sartu kolore nagusia (adib. #FFFFFF)';
+
+  @override
+  String get secondaryColorLabel => 'Bigarren mailako kolorea';
+
+  @override
+  String get secondaryColorHint =>
+      'Sartu bigarren mailako kolorea (adib. #000000)';
+
+  @override
+  String get venueTitle => 'Lekua';
+
+  @override
+  String get venueNameLabel => 'Lekuaren izena';
+
+  @override
+  String get venueNameHint => 'Sartu lekuaren izena';
+
+  @override
+  String get venueAddressLabel => 'Lekuaren helbidea';
+
+  @override
+  String get venueAddressHint => 'Sartu lekuaren helbidea';
+
+  @override
+  String get venueCityLabel => 'Lekuaren hiria';
+
+  @override
+  String get venueCityHint => 'Sartu lekuaren hiria';
+
+  @override
+  String get eventDescriptionHint => 'Sartu gertaeraren deskribapena';
+
+  @override
+  String get errorPrefix => 'Errorea: ';
+
+  @override
+  String get errorLoadingConfig => 'Errorea konfigurazioa kargatzean: ';
+
+  @override
+  String get configNotAvailable => 'Errorea: Konfigurazioa ez dago erabilgarri';
+
+  @override
+  String get noEventsToShow => 'Ez dago erakusteko gertaerarik.';
+
+  @override
+  String get eventDeleted => ' ezabatuta';
+
+  @override
+  String get loginTitle => 'Saioa hasi';
+
+  @override
+  String get projectNameLabel => 'Proiektuaren izena';
+
+  @override
+  String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
+
+  @override
+  String get tokenLabel => 'Token-a (klasikoa idazteko baimenekin)';
+
+  @override
+  String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
+
+  @override
+  String get unknownAuthError => 'Autentifikazio-errore ezezaguna.';
+
+  @override
+  String projectNotFoundError(Object projectName) {
+    return '“$projectName” proiektua ez da existitzen zure GitHub-eko biltegietan.';
+  }
+
+  @override
+  String get authNetworkError =>
+      'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
+
+  @override
+  String get closeButton => 'Itxi';
+
+  @override
+  String get editSponsorTitle => 'Babeslea Editatu';
+
+  @override
+  String get createSponsorTitle => 'Babeslea Sortu';
+
+  @override
+  String get editingSponsor => 'Babeslea Editatzen';
+
+  @override
+  String get creatingSponsor => 'Babeslea Sortzen';
+
+  @override
+  String get sponsorNameHint => 'Sartu babeslearen izena';
+
+  @override
+  String get sponsorNameValidation => 'Izena';
+
+  @override
+  String get logoLabel => 'Logoa*';
+
+  @override
+  String get logoHint => 'Sartu logoaren URLa';
+
+  @override
+  String get logoValidation => 'Logoa';
+
+  @override
+  String get websiteLabel => 'Webgunea*';
+
+  @override
+  String get websiteValidation => 'Webgunea';
+
+  @override
+  String get mainSponsor => 'Babesle Nagusia';
+
+  @override
+  String get goldSponsor => 'Urrezko Babeslea';
+
+  @override
+  String get silverSponsor => 'Zilarrezko Babeslea';
+
+  @override
+  String get bronzeSponsor => 'Brontzezko Babeslea';
+
+  @override
+  String get updateButton => 'Eguneratu';
+
+  @override
+  String get addButton => 'add button';
+
+  @override
+  String get addRoomTitle => 'add room';
+
+  @override
+  String get roomNameHint => 'Room name';
 }

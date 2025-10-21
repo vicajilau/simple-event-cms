@@ -65,16 +65,20 @@ class AppRouter {
         path: speakerFormPath,
         name: speakerFormName,
         builder: (context, state) {
-          final speaker = state.extra as Speaker?;
-          return SpeakerFormScreen(speaker: speaker);
+          final extras = state.extra as Map<String, dynamic>;
+          final speaker = extras['speaker'] as Speaker?;
+          final eventId = extras['eventId'] as String;
+          return SpeakerFormScreen(speaker: speaker,eventUID: eventId,);
         },
       ),
       GoRoute(
         path: sponsorFormPath,
         name: sponsorFormName,
         builder: (context, state) {
-          final sponsor = state.extra as Sponsor?;
-          return SponsorFormScreen(sponsor: sponsor);
+          final extras = state.extra as Map<String, dynamic>;
+          final sponsor = extras['sponsor'] as Sponsor?;
+          final eventId = extras['eventId'] as String;
+          return SponsorFormScreen(sponsor: sponsor,eventUID: eventId,);
         },
       ),
     ],

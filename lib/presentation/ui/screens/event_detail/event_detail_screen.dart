@@ -34,22 +34,20 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     super.initState();
     widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() {
+    _tabController.addListener(() async {
+      await widget.viewmodel.loadEventData(widget.eventId);
       setState(() {
         _selectedIndex = _tabController.index;
       });
     });
     screens = [
       AgendaScreen(
-        agendaId: widget.viewmodel.agendaId,
         eventId: widget.eventId,
       ),
       SpeakersScreen(
-        speakers: widget.viewmodel.speakersId,
         eventId: widget.eventId,
       ),
       SponsorsScreen(
-        sponsors: widget.viewmodel.sponsorsId,
         eventId: widget.eventId,
       ),
     ];
@@ -64,6 +62,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
     final eventTitle = widget.viewmodel.eventTitle();
 
     return Scaffold(
@@ -82,7 +81,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: widget.viewmodel.setup,
-                    child: const Text('Reintentar'),
+                    child: Text(location.retry),
                   ),
                 ],
               ),
@@ -94,17 +93,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             children: [
               // Agenda Tab
               AgendaScreen(
-                agendaId: widget.viewmodel.agendaId,
                 eventId: widget.eventId,
               ),
               // Speakers Tab
               SpeakersScreen(
-                speakers: widget.viewmodel.speakersId,
                 eventId: widget.eventId,
               ),
               // Sponsors Tab
               SponsorsScreen(
-                sponsors: widget.viewmodel.sponsorsId,
                 eventId: widget.eventId,
               ),
             ],
@@ -119,15 +115,15 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.schedule),
-            label: AppLocalizations.of(context)?.agenda ?? 'Agenda',
+            label: location.agenda,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.people),
-            label: AppLocalizations.of(context)?.speakers ?? 'Ponentes',
+            label: location.speakers,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.business),
-            label: AppLocalizations.of(context)?.sponsors ?? 'Patrocinadores',
+            label: location.sponsors,
           ),
         ],
       ),
@@ -138,7 +134,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             return AddFloatingActionButton(
               onPressed: () async {
                 if (_selectedIndex == 0) {
-                  _addTrackToAgenda(widget.viewmodel.agendaId,widget.eventId);
+                  _addSession(widget.eventId);
                 } else if (_selectedIndex == 1) {
                   _addSpeaker(widget.eventId);
                 } else if (_selectedIndex == 2) {
@@ -153,21 +149,20 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     );
   }
 
-  void _addTrackToAgenda(String agendaId, String eventId) async {
-    final Agenda? newAgenda = await AppRouter.router.push(
-      AppRouter.agendaFormPath,extra: AgendaFormData(agendaId: agendaId,eventId: eventId)
+  void _addSession(String eventId) async {
+    List<AgendaDay>? agendaDays = await AppRouter.router.push(
+      AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );
 
-    if (newAgenda != null) {
+    if (agendaDays != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.addAgendaToEvent(newAgenda,eventId);
-      agendaScreen.viewmodel.setup(agendaId);
+      agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
     }
   }
 
   void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
+      AppRouter.speakerFormPath,extra: {'eventId':parentId}
     );
 
     if (newSpeaker != null) {
@@ -178,7 +173,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,
+      AppRouter.sponsorFormPath,extra: {'eventId':parentId}
     );
 
     if (newSponsor != null) {

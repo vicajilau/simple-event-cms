@@ -5,7 +5,9 @@ import 'package:sec/core/models/agenda.dart';
 class AddRoom extends StatefulWidget {
   final List<Track> rooms;
   final void Function(List<Track>) editedRooms;
-  const AddRoom({super.key, required this.rooms, required this.editedRooms});
+  final String eventUid;
+
+  const AddRoom({super.key, required this.rooms, required this.editedRooms, required this.eventUid});
 
   @override
   State<AddRoom> createState() => _AddRoomState();
@@ -15,15 +17,18 @@ class _AddRoomState extends State<AddRoom> {
   List<Track> _tracks = [];
   List<TextEditingController> _controllers = [];
 
-
   @override
   void initState() {
     super.initState();
     _tracks = List.generate(widget.rooms.length, (index) {
       return widget.rooms[index];
     });
-    _controllers = List.generate(widget.rooms.length, (index) {
-      return TextEditingController(text: widget.rooms[index].name);
+    _controllers = List.generate(_tracks.length, (index) {
+      final controller = TextEditingController(text: _tracks[index].name);
+      controller.addListener(() {
+        _tracks[index].name = controller.text;
+      });
+      return controller;
     });
   }
 
@@ -34,16 +39,22 @@ class _AddRoomState extends State<AddRoom> {
   void _addOption() {
     _notifyCurrentRooms();
     setState(() {
-      _controllers.add(TextEditingController());
+      final controller = TextEditingController();
       _tracks.add(
         Track(
-            uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-            name: TextEditingController().text,
-            color: "",
-            sessionUids: []
-        )
-          );
+          uid: 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+          name: controller.text,
+          color: "",
+          sessionUids: [],
+          eventUid: widget.eventUid,
+        ),
+      );
+      _controllers.add(controller);
     });
+  }
+
+  void _updateTrackName(int index, String value) {
+    _tracks[index].name = value;
   }
 
   void _confirmRemoveOption(int index) {
@@ -107,6 +118,10 @@ class _AddRoomState extends State<AddRoom> {
                 child: TextField(
                   controller: _controllers[index],
                   onEditingComplete: () {
+                    _notifyCurrentRooms();
+                  },
+                  onChanged: (value) {
+                    _updateTrackName(index, value);
                     _notifyCurrentRooms();
                   },
                   decoration: InputDecoration(

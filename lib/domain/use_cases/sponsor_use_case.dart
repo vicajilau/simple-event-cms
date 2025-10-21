@@ -4,7 +4,7 @@ import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class SponsorUseCase {
-  Future<Result<List<Sponsor>>> getSponsorByIds(List<String> ids);
+  Future<Result<List<Sponsor>>> getSponsorByIds(String eventId);
   void saveSponsor(Sponsor sponsor, String parentId);
   void removeSponsor(String sponsorId);
 }
@@ -13,13 +13,13 @@ class SponsorUseCaseImp implements SponsorUseCase {
   final SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Result<List<Sponsor>>> getSponsorByIds(List<String> ids) async {
+  Future<Result<List<Sponsor>>> getSponsorByIds(String eventId) async {
     final result = await repository.loadSponsors();
 
     switch (result) {
       case Ok<List<Sponsor>>():
         final filteredSponsors = result.value
-            .where((sponsor) => ids.contains(sponsor.uid))
+            .where((sponsor) => eventId == sponsor.eventUID)
             .toList();
         return Result.ok(filteredSponsors);
       case Error<List<Sponsor>>():

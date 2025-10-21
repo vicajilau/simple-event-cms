@@ -1,113 +1,101 @@
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
-
 import '../../core/utils/result.dart';
 
 abstract class AgendaUseCase {
-  Future<Result<Agenda>> getAgendaById(String id);
-  void saveAgenda(Agenda agenda, String eventId);
-  void saveAgendaDayById(AgendaDay agendaDay, String agendaId);
+  Future<Result<void>> saveEvent(Event event);
+  Future<Result<void>> saveSpeaker(Speaker speaker,String eventId);
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId);
-  Future<Result<List<AgendaDay>>> getAgendaDayByListId(
-    List<String> agendaDayIds,
-  );
-  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds);
-  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId);
+  Future<Result<List<Track>>> getTracks();
+  Future<Result<void>> updateTrack(Track track,String agendaDayId);
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay, String eventUID);
   Future<Result<Track>> getTrackById(String trackId);
-  void addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
+  Future<Result<void>> addSession(
+    Session session,String trackUID
   );
-  void editSession(Session session, String parentId);
-  void deleteSessionFromAgendaDay(String sessionId);
+  Future<Result<void>> addSpeaker(String eventId, Speaker speaker);
+  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
   Future<Result<Event>> loadEvent(String eventId);
 
-  Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
   final SecRepository repository = getIt<SecRepository>();
 
   @override
-  Future<Result<Agenda>> getAgendaById(String id) async {
-    final result = await repository.loadEAgendas();
-    switch (result) {
-      case Ok<List<Agenda>>():
-        if(result.value.isEmpty) return Result.error(NetworkException("No agendas found"));
-        return Result.ok(result.value.firstWhere((event) => event.uid == id));
-      case Error():
-        return Result.error(result.error);
-    }
+  Future<Result<void>> saveSpeaker(Speaker speaker,String eventId) async{
+    return await repository.saveSpeaker(speaker,eventId);
   }
 
   @override
-  void saveAgenda(Agenda agenda, String eventId) {
-    repository.saveAgenda(agenda, eventId);
+  Future<Result<void>> addSession(
+    Session session,String trackUID
+  ) async {
+    return await repository.addSession(session,trackUID);
   }
 
   @override
-  Future<void> saveAgendaDayById(AgendaDay agendaDay, String agendaId) async {
-    await repository.saveAgendaDayById(agendaDay, agendaId);
-  }
-
-  @override
-  void addSessionIntoAgenda(
-    String agendaId,
-    String agendaDayId,
-    String trackId,
-    Session session,
-  ) {
-    repository.addSessionIntoAgenda(agendaId, agendaDayId, trackId, session);
-  }
-
-  @override
-  void editSession(Session session, String parentId) {
-    repository.editSession(session, parentId);
-  }
-
-  @override
-  void deleteSessionFromAgendaDay(String sessionId) {
-    repository.deleteSessionFromAgendaDay(sessionId);
+  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId) async {
+    return await repository.deleteSessionFromAgendaDay(sessionId);
   }
 
   @override
   Future<Result<AgendaDay>> getAgendaDayById(String agendaDayId) async {
-    return repository.loadAgendaDayById(agendaDayId);
+    return await repository.loadAgendaDayById(agendaDayId);
   }
 
   @override
-  Future<Result<Track>> getTrackById(String trackId) {
-    return repository.loadTrackById(trackId);
+  Future<Result<Track>> getTrackById(String trackId) async {
+    return await repository.loadTrackById(trackId);
   }
 
   @override
-  Future<Result<Event>> loadEvent(String eventId) {
-    return repository.loadEventById(eventId);
+  Future<Result<Event>> loadEvent(String eventId) async {
+    return await repository.loadEventById(eventId);
   }
 
   @override
-  Future<Result<List<AgendaDay>>> getAgendaDayByListId(
-    List<String> agendaDayIds,
-  ) {
-    return repository.loadAgendaDayByListId(agendaDayIds);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventId(String eventId) async {
+    return await repository.loadAgendaDayByEventId(eventId);
   }
 
   @override
-  Future<Result<List<Track>>> getTracksByListId(List<String> tracksIds) {
-    return repository.loadTracksByListId(tracksIds);
+  Future<Result<List<AgendaDay>>> getAgendaDayByEventIdFiltered(String eventId) async {
+    return await repository.loadAgendaDayByEventIdFiltered(eventId);
   }
 
   @override
-  Future<Result<List<Session>>> getSessionsByListId(List<String> sessionsIds) {
-    return repository.loadSessionsByListId(sessionsIds);
+  Future<Result<List<Track>>> getTracks() async {
+    return await repository.loadTracks();
   }
 
   @override
-  Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId) async {
     return await repository.getSpeakersForEventId(eventId);
+  }
+
+  @override
+  Future<Result<void>> addSpeaker(String eventId, Speaker speaker) async {
+    return await repository.addSpeaker(eventId, speaker);
+  }
+
+  @override
+  Future<Result<void>> saveEvent(Event event) async {
+   return await repository.saveEvent(event);
+
+  }
+
+  @override
+  Future<Result<void>> updateTrack(Track track,String agendaDayId) async {
+    return await repository.saveTrack(track,agendaDayId);
+  }
+
+  @override
+  Future<Result<void>> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
+    return await repository.saveAgendaDay(agendaDay,eventUID);
   }
 }
