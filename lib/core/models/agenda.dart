@@ -44,7 +44,7 @@ class Track extends GitHubModel {
   String eventUid;
   final String color;
   List<String> sessionUids = [];
-  List<Session>? resolvedSessions = []; // Field for in-memory resolved objects
+  List<Session> resolvedSessions = []; // Field for in-memory resolved objects
 
   Track({
     required super.uid,
@@ -52,7 +52,7 @@ class Track extends GitHubModel {
     required this.color,
     required this.sessionUids,
     required this.eventUid,
-    this.resolvedSessions, // Allow initialization
+    this.resolvedSessions = const [], // Allow initialization
     super.pathUrl = PathsGithub.tracksPath,
     super.updateMessage = PathsGithub.tracksUpdateMessage,
   });
