@@ -168,14 +168,14 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService?.branch ?? 'develop',
       );
       currentSha = contents.file?.sha;
 
@@ -283,7 +283,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService?.branch ?? 'develop',
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -314,7 +314,7 @@ class CommonsServicesImp extends CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -371,7 +371,7 @@ class CommonsServicesImp extends CommonsServices {
 
     String? currentSha;
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService?.branch ?? 'develop'; // Default to 'main' if not specified
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -385,7 +385,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService?.branch ?? 'develop',
       );
       currentSha = contents.file?.sha;
 
