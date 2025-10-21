@@ -234,30 +234,43 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       Expanded(
                         child: SectionInputForm(
                           label: location.roomLabel,
-                          childInput: DropdownButtonFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            initialValue: _selectedTrackUid.isEmpty
-                                ? widget.data?.trackId
-                                : _selectedTrackUid,
-                            decoration: InputDecoration(
-                              hintText: location.selectRoomHint, // This is track
-                            ),
-                            items: tracks
-                                .map(
-                                  (track) => DropdownMenuItem(
-                                    value: track.uid,
-                                    child: Text(track.name),
+                          childInput: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: DropdownButtonFormField<String>(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  initialValue: _selectedTrackUid.isEmpty
+                                      ? null
+                                      : _selectedTrackUid,
+                                  decoration: InputDecoration(
+                                    hintText:
+                                        location.selectRoomHint, // This is track
                                   ),
-                                )
-                                .toList(),
-                            onChanged: (trackUid) =>
-                                _selectedTrackUid = trackUid ?? '',
-                            validator: (value) {
-                              return value == null || value.isEmpty
-                                  ? location.selectRoomError
-                                  : null;
-                            },
+                                  items: tracks
+                                      .map(
+                                        (track) => DropdownMenuItem(
+                                          value: track.uid,
+                                          child: Text(track.name),
+                                        ),
+                                      )
+                                      .toList(),
+                                  onChanged: (trackUid) => setState(
+                                      () => _selectedTrackUid = trackUid ?? ''),
+                                  validator: (value) {
+                                    return value == null || value.isEmpty
+                                        ? location.selectRoomError
+                                        : null;
+                                  },
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.add,
+                                    color: Theme.of(context).primaryColor),
+                                onPressed: () => _showAddTrackDialog(),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -598,5 +611,57 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
 
   bool isTimeSelected(TimeOfDay? time) {
     return time != null; // Simpler check
+  }
+
+  void _showAddTrackDialog() {
+    final location = AppLocalizations.of(context)!;
+    final TextEditingController trackNameController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(location.addRoomTitle), // "Add New Room"
+          content: TextFormField(
+            controller: trackNameController,
+            autofocus: true,
+            decoration: InputDecoration(hintText: location.roomNameHint), // "Room name"
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(location.cancelButton),
+            ),
+            FilledButton(
+              onPressed: () async {
+                if (trackNameController.text.isNotEmpty) {
+                  final String newTrackName = trackNameController.text;
+                  final String newTrackUid = 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
+
+                  final newTrack = Track(
+                    uid: newTrackUid,
+                    name: newTrackName,
+                    sessionUids: [],
+                    eventUid: widget.data!.eventId!,
+                    resolvedSessions: [],
+                    color: '',
+                  );
+
+                  setState(() {
+                    tracks.add(newTrack);
+                    _selectedTrackUid = newTrack.uid;
+                  });
+                  await widget.viewmodel.addTrack(newTrack,_selectedDay);
+                  if(context.mounted){
+                    Navigator.pop(context);
+                  }
+                }
+              },
+              child: Text(location.addButton), // "Add"
+            ),
+          ],
+        );
+      },
+    );
   }
 }

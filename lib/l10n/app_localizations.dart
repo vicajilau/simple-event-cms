@@ -895,6 +895,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Update'**
   String get updateButton;
+
+  /// No description provided for @addButton.
+  ///
+  /// In en, this message translates to:
+  /// **'add button'**
+  String get addButton;
+
+  /// No description provided for @addRoomTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'add room'**
+  String get addRoomTitle;
+
+  /// No description provided for @roomNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Room name'**
+  String get roomNameHint;
 }
 
 class _AppLocalizationsDelegate

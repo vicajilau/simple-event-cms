@@ -19,6 +19,7 @@ abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
   Future<void> addSession(Session session, String trackUID);
   Future<void> addSpeaker(String eventId, Speaker speaker);
+  Future<void> addTrack(Track track,String agendaDayId);
   Future<void> updateEvent(Event event);
 }
 
@@ -157,5 +158,10 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   @override
   Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
     await agendaUseCase.updateAgendaDay(agendaDay,eventUID);
+  }
+
+  @override
+  Future<void> addTrack(Track track,String agendaDayId) async {
+    await agendaUseCase.updateTrack(track,agendaDayId);
   }
 }
