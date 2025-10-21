@@ -4,7 +4,7 @@ class GithubData {
   final String? token;
   final String? repo;
   final String? projectName;
-  final String? branch;
+  final String branch;
 
   GithubData({
     this.token,
