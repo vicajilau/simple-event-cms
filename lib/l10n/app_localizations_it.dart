@@ -139,248 +139,253 @@ class AppLocalizationsIt extends AppLocalizations {
   String get errorUnknown => 'Errore sconosciuto';
 
   @override
-  String get createSession => 'Create Session';
+  String get createSession => 'Crea Sessione';
 
   @override
-  String get editSession => 'Edit Session';
+  String get editSession => 'Modifica Sessione';
 
   @override
-  String get loadingTitle => 'Loading...';
+  String get loadingTitle => 'Caricamento...';
 
   @override
-  String get unexpectedError => 'An unexpected error has occurred.';
+  String get unexpectedError => 'Si è verificato un errore imprevisto.';
 
   @override
-  String get titleLabel => 'Title*';
+  String get titleLabel => 'Titolo*';
 
   @override
-  String get talkTitleHint => 'Enter talk title';
+  String get talkTitleHint => 'Inserisci il titolo della presentazione';
 
   @override
-  String get talkTitleError => 'Please enter a talk title';
+  String get talkTitleError => 'Inserisci un titolo per la presentazione';
 
   @override
-  String get eventDayLabel => 'Event day*';
+  String get eventDayLabel => 'Giorno dell\'evento*';
 
   @override
-  String get selectDayHint => 'Select a day';
+  String get selectDayHint => 'Seleziona un giorno';
 
   @override
-  String get selectDayError => 'Please select a day';
+  String get selectDayError => 'Seleziona un giorno';
 
   @override
-  String get roomLabel => 'Room*';
+  String get roomLabel => 'Sala*';
 
   @override
-  String get selectRoomHint => 'Select a room';
+  String get selectRoomHint => 'Seleziona una sala';
 
   @override
-  String get selectRoomError => 'Please select a room';
+  String get selectRoomError => 'Seleziona una sala';
 
   @override
-  String get startTimeLabel => 'Start time:';
+  String get startTimeLabel => 'Ora di inizio:';
 
   @override
-  String get endTimeLabel => 'End time:';
+  String get endTimeLabel => 'Ora di fine:';
 
   @override
-  String get timeValidationError => 'Start time must be before end time.';
+  String get timeValidationError =>
+      'L\'ora di inizio deve precedere l\'ora di fine.';
 
   @override
-  String get speakerLabel => 'Speaker*';
+  String get speakerLabel => 'Relatore*';
 
   @override
-  String get noSpeakersMessage => 'No speakers. Add one.';
+  String get noSpeakersMessage => 'Nessun relatore. Aggiungine uno.';
 
   @override
-  String get selectSpeakerHint => 'Select a speaker';
+  String get selectSpeakerHint => 'Seleziona un relatore';
 
   @override
-  String get selectSpeakerError => 'Please select a speaker';
+  String get selectSpeakerError => 'Seleziona un relatore';
 
   @override
-  String get talkTypeLabel => 'Talk type*';
+  String get talkTypeLabel => 'Tipo di presentazione*';
 
   @override
-  String get selectTalkTypeHint => 'Select the talk type';
+  String get selectTalkTypeHint => 'Seleziona il tipo di presentazione';
 
   @override
-  String get selectTalkTypeError => 'Please select the talk type';
+  String get selectTalkTypeError => 'Seleziona il tipo di presentazione';
 
   @override
-  String get descriptionLabel => 'Description';
+  String get descriptionLabel => 'Descrizione';
 
   @override
-  String get talkDescriptionHint => 'Enter talk description...';
+  String get talkDescriptionHint =>
+      'Inserisci la descrizione della presentazione...';
 
   @override
-  String get cancelButton => 'Cancel';
+  String get cancelButton => 'Annulla';
 
   @override
-  String get timeSelectionError => 'Please select both start and end times.';
+  String get timeSelectionError =>
+      'Seleziona sia l\'ora di inizio che quella di fine.';
 
   @override
-  String get noSessionsFound => 'No sessions found';
+  String get noSessionsFound => 'Nessuna sessione trovata';
 
   @override
-  String get deleteSessionTitle => 'Delete session';
+  String get deleteSessionTitle => 'Elimina sessione';
 
   @override
   String get deleteSessionMessage =>
-      'Are you sure you want to delete the session?';
+      'Sei sicuro di voler eliminare la sessione?';
 
   @override
-  String get editEventTitle => 'Edit event';
+  String get editEventTitle => 'Modifica evento';
 
   @override
-  String get createEventTitle => 'Create event';
+  String get createEventTitle => 'Crea evento';
 
   @override
-  String get editingEvent => 'Editing event';
+  String get editingEvent => 'Modifica dell\'evento';
 
   @override
-  String get creatingEvent => 'Creating event';
+  String get creatingEvent => 'Creazione dell\'evento';
 
   @override
-  String get eventNameLabel => 'Event name';
+  String get eventNameLabel => 'Nome dell\'evento';
 
   @override
-  String get eventNameHint => 'Enter the event name';
+  String get eventNameHint => 'Inserisci il nome dell\'evento';
 
   @override
-  String get requiredField => 'Required field';
+  String get requiredField => 'Campo obbligatorio';
 
   @override
-  String get startDateLabel => 'Start date';
+  String get startDateLabel => 'Data di inizio';
 
   @override
-  String get dateHint => 'YYYY-MM-DD';
+  String get dateHint => 'AAAA-MM-GG';
 
   @override
-  String get endDateLabel => 'End date';
+  String get endDateLabel => 'Data di fine';
 
   @override
-  String get addEndDate => 'Add end date';
+  String get addEndDate => 'Aggiungi data di fine';
 
   @override
-  String get roomsLabel => 'Rooms';
+  String get roomsLabel => 'Sale';
 
   @override
-  String get timezoneLabel => 'Timezone';
+  String get timezoneLabel => 'Fuso orario';
 
   @override
-  String get timezoneHint => 'Enter the timezone';
+  String get timezoneHint => 'Inserisci il fuso orario';
 
   @override
-  String get baseUrlLabel => 'Base URL';
+  String get baseUrlLabel => 'URL di base';
 
   @override
-  String get baseUrlHint => 'Enter the Base URL';
+  String get baseUrlHint => 'Inserisci l\'URL di base';
 
   @override
-  String get primaryColorLabel => 'Primary Color';
+  String get primaryColorLabel => 'Colore primario';
 
   @override
-  String get primaryColorHint => 'Enter the primary color (e.g. #FFFFFF)';
+  String get primaryColorHint => 'Inserisci il colore primario (es. #FFFFFF)';
 
   @override
-  String get secondaryColorLabel => 'Secondary Color';
+  String get secondaryColorLabel => 'Colore secondario';
 
   @override
-  String get secondaryColorHint => 'Enter the secondary color (e.g. #000000)';
+  String get secondaryColorHint =>
+      'Inserisci il colore secondario (es. #000000)';
 
   @override
-  String get venueTitle => 'Venue';
+  String get venueTitle => 'Luogo';
 
   @override
-  String get venueNameLabel => 'Venue Name';
+  String get venueNameLabel => 'Nome del luogo';
 
   @override
-  String get venueNameHint => 'Enter the venue name';
+  String get venueNameHint => 'Inserisci il nome del luogo';
 
   @override
-  String get venueAddressLabel => 'Venue Address';
+  String get venueAddressLabel => 'Indirizzo del luogo';
 
   @override
-  String get venueAddressHint => 'Enter the venue address';
+  String get venueAddressHint => 'Inserisci l\'indirizzo del luogo';
 
   @override
-  String get venueCityLabel => 'Venue City';
+  String get venueCityLabel => 'Città del luogo';
 
   @override
-  String get venueCityHint => 'Enter the venue city';
+  String get venueCityHint => 'Inserisci la città del luogo';
 
   @override
-  String get eventDescriptionHint => 'Enter the event description';
+  String get eventDescriptionHint => 'Inserisci la descrizione dell\'evento';
 
   @override
-  String get errorPrefix => 'Error: ';
+  String get errorPrefix => 'Errore: ';
 
   @override
-  String get errorLoadingConfig => 'Error loading configuration: ';
+  String get errorLoadingConfig =>
+      'Errore during il caricamento della configurazione: ';
 
   @override
-  String get configNotAvailable => 'Error: Configuration not available';
+  String get configNotAvailable => 'Errore: Configurazione non disponibile';
 
   @override
-  String get noEventsToShow => 'No events to show.';
+  String get noEventsToShow => 'Nessun evento da mostrare.';
 
   @override
-  String get eventDeleted => ' deleted';
+  String get eventDeleted => ' eliminato';
 
   @override
-  String get loginTitle => 'Login';
+  String get loginTitle => 'Accesso';
 
   @override
-  String get projectNameLabel => 'Project Name';
+  String get projectNameLabel => 'Nome del progetto';
 
   @override
-  String get projectNameHint => 'Please enter the project name';
+  String get projectNameHint => 'Inserisci il nome del progetto';
 
   @override
-  String get tokenLabel => 'Token (classic with write permissions)';
+  String get tokenLabel => 'Token (classico con autorizzazioni di scrittura)';
 
   @override
-  String get tokenHint => 'Please enter a valid GitHub token';
+  String get tokenHint => 'Inserisci un token GitHub valido';
 
   @override
-  String get unknownAuthError => 'Unknown authentication failure.';
+  String get unknownAuthError => 'Errore di autenticazione sconosciuto.';
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'The project \"$projectName\" does not exist in your GitHub repositories.';
+    return 'Il progetto \"$projectName\" non esiste nei tuoi repository GitHub.';
   }
 
   @override
   String get authNetworkError =>
-      'Authentication or network error. Check your credentials and project name.';
+      'Errore di autenticazione o di rete. Controlla le tue credenziali e il nome del progetto.';
 
   @override
-  String get closeButton => 'Close';
+  String get closeButton => 'Chiudi';
 
   @override
-  String get editSponsorTitle => 'Edit Sponsor';
+  String get editSponsorTitle => 'Modifica Sponsor';
 
   @override
-  String get createSponsorTitle => 'Create Sponsor';
+  String get createSponsorTitle => 'Crea Sponsor';
 
   @override
-  String get editingSponsor => 'Editing Sponsor';
+  String get editingSponsor => 'Modifica dello sponsor';
 
   @override
-  String get creatingSponsor => 'Creating Sponsor';
+  String get creatingSponsor => 'Creazione dello sponsor';
 
   @override
-  String get sponsorNameHint => 'Enter the Sponsor\'s name';
+  String get sponsorNameHint => 'Inserisci il nome dello Sponsor';
 
   @override
-  String get sponsorNameValidation => 'Name';
+  String get sponsorNameValidation => 'Nome';
 
   @override
   String get logoLabel => 'Logo*';
 
   @override
-  String get logoHint => 'Enter the logo URL';
+  String get logoHint => 'Inserisci l\'URL del logo';
 
   @override
   String get logoValidation => 'Logo';
@@ -392,17 +397,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get websiteValidation => 'Web';
 
   @override
-  String get mainSponsor => 'Main Sponsor';
+  String get mainSponsor => 'Sponsor Principale';
 
   @override
-  String get goldSponsor => 'Gold Sponsor';
+  String get goldSponsor => 'Sponsor Oro';
 
   @override
-  String get silverSponsor => 'Silver Sponsor';
+  String get silverSponsor => 'Sponsor Argento';
 
   @override
-  String get bronzeSponsor => 'Bronze Sponsor';
+  String get bronzeSponsor => 'Sponsor Bronzo';
 
   @override
-  String get updateButton => 'Update';
+  String get updateButton => 'Aggiorna';
 }

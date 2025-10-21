@@ -72,7 +72,7 @@ class CommonsServicesImp extends CommonsServices {
         }
       }
       if (res.file == null || res.file!.content == null) {
-        throw NetworkException("El contenido de la respuesta es null");
+        throw NetworkException("The response content is null");
       }
       final file = utf8.decode(
         base64.decode(
@@ -121,7 +121,7 @@ class CommonsServicesImp extends CommonsServices {
         return [].toList();
       } else {
         throw JsonDecodeException(
-          "Error loading configuration from $path",
+          "Error loading configuration from $path", // This was already in English. No change.
           cause: e,
           stackTrace: st,
         );
@@ -152,7 +152,7 @@ class CommonsServicesImp extends CommonsServices {
 
     String? currentSha;
 
-    // 2. MODIFY THE DATA LIST (Your current logic)
+    // 2. MODIFY THE DATA LIST
     int indexElementFounded = dataOriginal.indexWhere(
       (item) => item.uid == data.uid,
     );
@@ -162,8 +162,6 @@ class CommonsServicesImp extends CommonsServices {
     } else {
       dataOriginal.add(data);
     }
-
-    // 3. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
@@ -172,7 +170,7 @@ class CommonsServicesImp extends CommonsServices {
     String branch =
         githubService?.branch ?? 'main'; // Default to 'main' if not specified
     try {
-      // 1. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
+      // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
@@ -187,7 +185,7 @@ class CommonsServicesImp extends CommonsServices {
       }
     } catch (e, st) {
       if (e is GitHubError && e.message == "Not Found") {
-        // If the file is not found, create it with an empty list.
+        // If the file is not found, create it.
         final response = await github.repositories.createFile(
           repositorySlug,
           CreateFile(
@@ -207,11 +205,10 @@ class CommonsServicesImp extends CommonsServices {
             stackTrace: st,
           );
         }
-        // Return an empty list since the file was just created empty.
       } else {
         // Any other error while getting the file.
         throw GithubException(
-          "Failed to get file contents from $pathUrl: $e",
+          "Failed to get file contents from $pathUrl: $e", // This was already in English.
           cause: e,
           stackTrace: st,
         );
@@ -229,8 +226,7 @@ class CommonsServicesImp extends CommonsServices {
     // Only add the 'sha' for updates, not for creation.
     requestBody['sha'] = currentSha;
 
-    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST MANUALLY
-    // This gives you back the raw http.Response you want.
+    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
@@ -243,7 +239,7 @@ class CommonsServicesImp extends CommonsServices {
       },
       body: json.encode(
         requestBody,
-      ), // Encode the final body map to a JSON string
+      ),
     );
 
     // Check the response status and throw an exception on failure.
@@ -253,11 +249,6 @@ class CommonsServicesImp extends CommonsServices {
         "Failed to update data at $pathUrl: ${response.body}",
       );
     }
-
-    // After a successful update or creation, GitHub's API might have a slight delay
-    // before the new content is available via a subsequent GET request.
-    // This function polls the file until its SHA matches the newly committed content's SHA.
-    //await _waitForFileUpdate(github, repositorySlug, pathUrl, branch);
 
     return response;
   }
@@ -281,7 +272,7 @@ class CommonsServicesImp extends CommonsServices {
 
     var github = GitHub(auth: Authentication.withToken(githubService!.token));
 
-    // 1. GET SHA - This is mandatory
+    // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
@@ -305,7 +296,7 @@ class CommonsServicesImp extends CommonsServices {
       );
     } catch (e, st) {
       throw GithubException(
-        "Failed to get file for removal: $e",
+        "Failed to get file for removal from $pathUrl: $e",
         cause: e,
         stackTrace: st,
       );
@@ -324,7 +315,7 @@ class CommonsServicesImp extends CommonsServices {
 
     String branch =
         githubService?.branch ?? 'main'; // Default to 'main' if not specified
-    // 4. PREPARE REQUEST BODY
+    // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
       'content': base64Content,
@@ -335,7 +326,7 @@ class CommonsServicesImp extends CommonsServices {
       organization.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
-    // 5. BUILD URL AND MAKE PUT REQUEST
+    // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
     final apiUrl =
         'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
@@ -382,7 +373,7 @@ class CommonsServicesImp extends CommonsServices {
     String branch =
         githubService?.branch ?? 'main'; // Default to 'main' if not specified
 
-    // 1. CONVERT THE LIST TO JSON AND THEN TO BASE64
+    // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
       dataList.map((item) => item.toJson()).toList(),
     );
@@ -404,7 +395,7 @@ class CommonsServicesImp extends CommonsServices {
       }
     } catch (e, st) {
       if (e is GitHubError && e.message == "Not Found") {
-        // If the file is not found, create it.
+        // If the file is not found, create it with the provided list.
         final response = await github.repositories.createFile(
           repositorySlug,
           CreateFile(
@@ -417,7 +408,7 @@ class CommonsServicesImp extends CommonsServices {
         if (response.content != null) {
           return http.Response(
             response.content?.content.toString() ?? "",
-            200, // 201 is more accurate for create, but 200 is fine
+            201, // 201 for created
           );
         } else {
           throw GithubException(
@@ -429,7 +420,7 @@ class CommonsServicesImp extends CommonsServices {
       } else {
         // Any other error while getting the file.
         throw GithubException(
-          "Failed to get file contents from $pathUrl: $e",
+          "Failed to get file contents from $pathUrl: $e", // Already in English
           cause: e,
           stackTrace: st,
         );
@@ -437,6 +428,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // 3. PREPARE THE REQUEST BODY FOR THE GITHUB API
+    // The body requires the message, content, and the sha for updates.
     final requestBody = <String, String>{
       'message': commitMessage,
       'content': base64Content,
