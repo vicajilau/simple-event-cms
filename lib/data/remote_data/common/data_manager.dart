@@ -140,14 +140,12 @@ class DataUpdate {
         track.sessionUids.remove(sessionId);
         track.resolvedSessions?.removeWhere((session) => session.uid == sessionId);
         await dataUpdateInfo.updateTrack(track);
-        if(track.sessionUids.isEmpty) {
-          agendaDays.map((day) {
-            day.trackUids?.removeWhere((uid) => uid == track.uid);
-            day.resolvedTracks?.removeWhere((t) => t.uid == track.uid);
-            return day;
-          });
-          await dataUpdateInfo.updateAgendaDays(agendaDays);
-        }
+        agendaDays.map((day) {
+          day.trackUids?.removeWhere((uid) => uid == track.uid);
+          day.resolvedTracks?.removeWhere((t) => t.uid == track.uid);
+          return day;
+        });
+        await dataUpdateInfo.updateAgendaDays(agendaDays);
       }
     }
     await dataUpdateInfo.removeSession(sessionId);
