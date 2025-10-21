@@ -113,9 +113,9 @@ class DataUpdate {
           track.sessionUids.removeWhere((uid) =>
           uid == session.uid); // Ensure no duplicates
           track.sessionUids.add(session.uid);
-          track.resolvedSessions?.removeWhere((s) =>
+          track.resolvedSessions.removeWhere((s) =>
           s.uid == session.uid); // Ensure no duplicates
-          track.resolvedSessions?.add(session);
+          track.resolvedSessions.add(session);
           await dataUpdateInfo.updateTrack(track);
         }
       }
@@ -138,7 +138,7 @@ class DataUpdate {
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
         track.sessionUids.remove(sessionId);
-        track.resolvedSessions?.removeWhere((session) => session.uid == sessionId);
+        track.resolvedSessions.removeWhere((session) => session.uid == sessionId);
         await dataUpdateInfo.updateTrack(track);
         agendaDays.map((day) {
           day.trackUids?.removeWhere((uid) => uid == track.uid);
