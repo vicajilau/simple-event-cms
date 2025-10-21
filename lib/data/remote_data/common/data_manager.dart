@@ -183,14 +183,19 @@ class DataUpdate {
   ) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
     List<AgendaDay> agendaDays = await dataLoader.loadAllDays();
+    List<Event> events = await dataLoader.loadEvents();
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
         _removeSessionFromTrack(track, sessionId);
         await dataUpdateInfo.updateTrack(track);
-        agendaDays.map((day) {
-          _removeTrackFromDay(day, track.uid);
-        });
-        await dataUpdateInfo.updateAgendaDays(agendaDays);
+        await _updateAgendaDaysRemovingTrack(
+          agendaDays,
+          track.uid,
+          dataUpdateInfo,
+        );
+        var event = events.firstWhere((event) => event.uid == track.eventUid);
+        event.tracks.removeWhere((track) => track.uid == track.uid);
+        await dataUpdateInfo.updateEvent(event);
       }
     }
     await dataUpdateInfo.removeSession(sessionId);
@@ -207,12 +212,7 @@ class DataUpdate {
       List<AgendaDay> allDays = await dataLoader.loadAllDays();
       for (var day in allDays) {
         if (day.uid == parentId) {
-          _removeTrackFromDay(day, track.uid); // Ensure no duplicates
-          day.trackUids?.toList().add(track.uid);
-          if (day.resolvedTracks?.any((t) => t.uid == track.uid) == false) {
-            day.resolvedTracks?.toList().add(track);
-          }
-          await dataUpdateInfo.updateAgendaDay(day);
+          await _updateAgendaDaysAddingTrack([day], track, dataUpdateInfo);
         }
       }
     }
@@ -242,8 +242,7 @@ class DataUpdate {
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
       if (day.trackUids?.contains(trackId) == true) {
-        _removeTrackFromDay(day, trackId);
-        await dataUpdateInfo.updateAgendaDay(day);
+        await _updateAgendaDaysRemovingTrack([day], trackId, dataUpdateInfo);
       }
     }
     await dataUpdateInfo.removeTrack(trackId);
@@ -375,17 +374,69 @@ void _removeSessionFromTrack(Track track, String sessionId) {
     track.resolvedSessions.removeAt(resolvedSessionIndex);
   }
 }
-void _removeTrackFromDay(AgendaDay day, String trackId) {
+
+Future<void> _updateAgendaDaysRemovingTrack(
+  List<AgendaDay> days,
+  String trackId,
+  DataUpdateInfo dataUpdateInfo,
+) async {
+  if (days.length == 1) {
+    await _removeTrackFromDay(days.first, trackId);
+    await dataUpdateInfo.updateAgendaDay(days.first);
+  } else {
+    days.map((day) async {
+      await _removeTrackFromDay(day, trackId);
+    });
+    await dataUpdateInfo.updateAgendaDays(days);
+  }
+}
+
+Future<void> _updateAgendaDaysAddingTrack(
+  List<AgendaDay> days,
+  Track track,
+  DataUpdateInfo dataUpdateInfo,
+) async {
+  if (days.length == 1) {
+    await _addTrackFromDay(days.first, track);
+    await dataUpdateInfo.updateAgendaDay(days.first);
+  } else {
+    days.map((day) async {
+      await _addTrackFromDay(day, track);
+    });
+    await dataUpdateInfo.updateAgendaDays(days);
+  }
+}
+
+Future<AgendaDay> _removeTrackFromDay(AgendaDay day, String trackId) async {
   final trackUidIndex = day.trackUids?.indexOf(trackId);
   if (trackUidIndex != null && trackUidIndex != -1) {
     day.trackUids?.removeAt(trackUidIndex);
   }
 
   if (day.resolvedTracks != null) {
-    final resolvedTrackIndex =
-        day.resolvedTracks!.indexWhere((t) => t.uid == trackId);
+    final resolvedTrackIndex = day.resolvedTracks!.indexWhere(
+      (t) => t.uid == trackId,
+    );
     if (resolvedTrackIndex != -1) {
       day.resolvedTracks!.removeAt(resolvedTrackIndex);
     }
   }
+  return day;
+}
+
+Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
+  final trackUidIndex = day.trackUids?.indexOf(track.uid);
+  if (trackUidIndex == null || trackUidIndex == -1) {
+    day.trackUids?.toList().add(track.uid);
+  }
+
+  final resolvedTrackIndex = day.resolvedTracks!.indexWhere(
+    (t) => t.uid == track.uid,
+  );
+  if (resolvedTrackIndex != -1) {
+    day.resolvedTracks!.removeAt(resolvedTrackIndex);
+  }
+  day.resolvedTracks?.toList().add(track);
+
+  return day;
 }
