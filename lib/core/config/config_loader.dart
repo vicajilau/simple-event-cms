@@ -29,7 +29,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: "feature/develop_cp",
+      ref: githubService.branch,
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -57,7 +57,7 @@ class ConfigLoader {
     final res = await github.repositories.getContents(
       repositorySlug,
       configUrl,
-      ref: "feature/develop_cp",
+      ref: githubService.branch,
     );
 
     if (res.file == null || res.file!.content == null) {

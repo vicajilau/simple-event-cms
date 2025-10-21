@@ -56,7 +56,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: "feature/develop_cp",
+          ref: githubService.branch,
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -175,7 +175,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/develop_cp",
+        ref: githubService?.branch ?? 'main',
       );
       currentSha = contents.file?.sha;
 
@@ -283,7 +283,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/develop_cp",
+        ref: githubService?.branch ?? 'main',
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -385,7 +385,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: "feature/develop_cp",
+        ref: githubService?.branch ?? 'main',
       );
       currentSha = contents.file?.sha;
 
