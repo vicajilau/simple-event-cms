@@ -156,7 +156,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (agendaDays != null) {
       final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.agendaDays.value = agendaDays;
+      agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
     }
   }
 
