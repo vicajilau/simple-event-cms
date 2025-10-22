@@ -9,6 +9,7 @@ class Organization extends GitHubModel {
   String githubUser;
   String projectName = "simple-event-cms";
   String year;
+  String branch = "main";
 
   Organization({
     super.uid = "unique-id-organization",
@@ -18,6 +19,7 @@ class Organization extends GitHubModel {
     required this.githubUser,
     required this.projectName,
     required this.year,
+    required this.branch,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
   });
@@ -28,6 +30,7 @@ class Organization extends GitHubModel {
     secondaryColorOrganization: json["secondaryColorOrganization"],
     githubUser: json["github_user"],
     projectName: json["project_name"],
+    branch: json["branch"],
     year: json["year"],
   );
 
@@ -40,6 +43,7 @@ class Organization extends GitHubModel {
       "github_user": githubUser,
       "project_name": projectName,
       "year": year,
+      "branch": branch,
     };
   }
 }
