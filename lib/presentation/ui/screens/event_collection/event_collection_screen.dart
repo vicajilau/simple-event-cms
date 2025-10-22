@@ -209,7 +209,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   AppRouter.eventFormPath
                 );
                 if (newConfig != null) {
-                 setState(() async {
+                 setState(() {
                    _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newConfig.uid);
                    _viewmodel.eventsToShow.value.add(newConfig);
                  });

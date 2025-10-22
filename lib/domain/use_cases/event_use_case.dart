@@ -10,7 +10,7 @@ abstract class EventUseCase {
   Future<void> saveEvent(Event event);
   Future<void> removeEvent(Event event);
   Future<void> prepareAgendaDays(Event event);
-  Future<void> removeTrack(String trackUID);
+  Future<void> removeTrack(String trackUID,String eventUID);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -45,14 +45,15 @@ class EventUseCaseImp implements EventUseCase {
     if (startDate != null && endDate != null) {
       final difference = endDate.difference(startDate).inDays;
       List<AgendaDay> days = [];
+
       for (int i = 1; i <= difference; i++) {
+        var date = DateFormat(
+          'yyyy-MM-dd',
+        ).format(startDate.add(Duration(days: i)));
         days.add(
           AgendaDay(
-            uid:
-                'AgendaDay_$i${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-            date: DateFormat(
-              'yyyy-MM-dd',
-            ).format(startDate.add(Duration(days: i))),
+            uid:date,
+            date:date,
             eventUID: event.uid
           ),
         );
@@ -67,7 +68,7 @@ class EventUseCaseImp implements EventUseCase {
   }
 
   @override
-  Future<void> removeTrack(String trackUID) async {
-    await repository.removeTrack(trackUID);
+  Future<void> removeTrack(String trackUID,String eventUID) async {
+    await repository.removeTrack(trackUID,eventUID);
   }
 }
