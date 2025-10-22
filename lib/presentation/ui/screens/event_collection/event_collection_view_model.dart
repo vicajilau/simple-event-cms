@@ -140,4 +140,5 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   Future<Event?> getEventById(String eventId) async {
     return await useCase.getEventById(eventId);
   }
+
 }
