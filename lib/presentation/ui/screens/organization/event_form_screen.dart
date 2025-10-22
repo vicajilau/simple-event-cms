@@ -41,7 +41,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   bool _hasEndDate = true;
   List<Track> _tracks = [];
-  Event? event;
 
   @override
   void initState() {
@@ -343,7 +342,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     );
 
     final eventId =
-        event?.uid ??
+        widget.eventId ??
         'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
     final eventModified = Event(
       uid: eventId,
