@@ -223,7 +223,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId) async {
+  Future<Result<void>> deleteSession(String sessionId) async {
     try {
       await DataUpdate.deleteItemAndAssociations(sessionId, Session);
       return Result.ok(null);

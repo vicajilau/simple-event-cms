@@ -268,12 +268,7 @@ class DataUpdate {
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
   ) async {
-    List<AgendaDay> allAgendaDays = await dataLoader.loadAllDays();
-    final dayMap = {for (var d in allAgendaDays) d.uid: d};
-    for (var day in days) {
-      dayMap[day.uid] = day;
-    }
-    await dataUpdateInfo.updateAgendaDays(dayMap.values.toList());
+    await dataUpdateInfo.updateAgendaDays(days);
   }
 
   static Future<void> _deleteAgendaDay(
