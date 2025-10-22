@@ -33,7 +33,7 @@ abstract class CommonsServices {
 }
 
 class CommonsServicesImp extends CommonsServices {
-  GithubData? githubService;
+  late GithubData githubService;
   Organization organization = getIt<Organization>();
 
   /// Generic method to load data from a specified path
@@ -143,12 +143,12 @@ class CommonsServicesImp extends CommonsServices {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
 
@@ -168,14 +168,14 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -234,7 +234,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(
@@ -266,11 +266,11 @@ class CommonsServicesImp extends CommonsServices {
     // You must read the file, remove the item locally, and write the entire file back.
 
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw GithubException("GitHub token is not available.");
     }
 
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
@@ -283,7 +283,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -314,7 +314,7 @@ class CommonsServicesImp extends CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -334,7 +334,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -362,16 +362,16 @@ class CommonsServicesImp extends CommonsServices {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -385,7 +385,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -443,7 +443,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
