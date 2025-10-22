@@ -134,5 +134,6 @@
   "updateButton": "Atualizar",
   "addButton": "add button",
   "addRoomTitle": "add room",
-  "roomNameHint": "Room name"
+  "roomNameHint": "Room name",
+  "formError": "Há erros no formulário"
 }

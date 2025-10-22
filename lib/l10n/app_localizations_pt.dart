@@ -416,4 +416,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get roomNameHint => 'Room name';
+
+  @override
+  String get formError => 'Há erros no formulário';
 }
