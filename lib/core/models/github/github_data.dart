@@ -10,7 +10,7 @@ class GithubData {
     this.token,
     this.repo,
     this.projectName,
-    this.branch = 'develop',
+    this.branch = 'main',
   });
 
   factory GithubData.fromJson(String str) {
