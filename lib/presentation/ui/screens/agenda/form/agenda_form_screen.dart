@@ -610,7 +610,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   bool isTimeSelected(TimeOfDay? time) {
-    return time != null; // Simpler check
+    return time != null;
   }
 
   void _showAddTrackDialog() {
@@ -621,11 +621,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(location.addRoomTitle), // "Add New Room"
+          title: Text(location.addRoomTitle),
           content: TextFormField(
             controller: trackNameController,
             autofocus: true,
-            decoration: InputDecoration(hintText: location.roomNameHint), // "Room name"
+            decoration: InputDecoration(hintText: location.roomNameHint),
           ),
           actions: [
             TextButton(
@@ -657,7 +657,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   }
                 }
               },
-              child: Text(location.addButton), // "Add"
+              child: Text(location.addButton),
             ),
           ],
         );
