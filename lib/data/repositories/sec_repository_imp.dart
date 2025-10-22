@@ -373,4 +373,18 @@ class SecRepositoryImp extends SecRepository {
       return Result.error(Exception('Something really unknown: $e'));
     }
   }
+
+  @override
+  Future<Result<void>> removeTrack(String trackUID) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(trackUID, Track);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      debugPrint('Error in removeTrack: $e');
+      return Result.error(e);
+    } catch (e) {
+      debugPrint('Error in removeTrack: $e');
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
 }

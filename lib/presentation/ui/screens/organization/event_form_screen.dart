@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/utils/app_decorations.dart';
-import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+
+import '../../../view_model_common.dart';
 
 class EventFormScreen extends StatefulWidget {
   final EventCollectionViewModel eventCollectionViewModel =
@@ -39,15 +41,42 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   bool _hasEndDate = true;
   List<Track> _tracks = [];
-  Event? event;
 
   @override
   void initState() {
     super.initState();
     if (widget.eventId != null) {
+      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
       _eventFuture = widget.eventCollectionViewModel.getEventById(
         widget.eventId!,
       );
+      _eventFuture?.catchError((error) {
+        return null;
+      });
+      _eventFuture?.then((event) {
+        if(event == null){
+          widget.eventCollectionViewModel.viewState.value = ViewState.error;
+        }else{
+          _nameController.text = event.eventName;
+          final startDate = event.eventDates.startDate;
+          _startDateController.text = startDate;
+                  final endDate = event.eventDates.endDate;
+          _hasEndDate = startDate != endDate;
+          if (_hasEndDate) {
+            _endDateController.text = endDate;
+          }
+          _tracks = event.tracks;
+          _timezoneController.text =
+              event.eventDates.timezone;
+          _primaryColorController.text = event.primaryColor;
+          _secondaryColorController.text = event.secondaryColor;
+          _venueNameController.text = event.venue?.name ?? '';
+          _venueAddressController.text = event.venue?.address ?? '';
+          _venueCityController.text = event.venue?.city ?? '';
+          _descriptionController.text = event.description ?? '';
+          widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
+        }
+      });
     }
   }
 
@@ -64,7 +93,17 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
     if (pickedDate != null) {
       setState(() {
-        controller.text = pickedDate.toIso8601String().split("T").first;
+        if (controller == _endDateController) {
+          _endDateController.text = pickedDate
+              .toIso8601String()
+              .split("T")
+              .first;
+        } else {
+          _startDateController.text = pickedDate
+              .toIso8601String()
+              .split("T")
+              .first;
+        }
       });
     }
   }
@@ -72,45 +111,24 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    return FutureBuilder<Event?>(
-      future: _eventFuture,
-      builder: (context, snapshot) {
-        if (widget.eventId != null) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Scaffold(
-              body: Center(child: CircularProgressIndicator()),
-            );
-          }
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(child: Text('${location.errorPrefix}${snapshot.error}')),
-            );
-          }
-
-          event = snapshot.data;
-          _nameController.text = event?.eventName ?? '';
-          final startDate = event?.eventDates.startDate;
-          if (startDate != null) {
-            _startDateController.text = startDate;
-          }
-          final endDate = event?.eventDates.endDate;
-          _hasEndDate = startDate != endDate;
-          if (endDate != null && _hasEndDate) {
-            _endDateController.text = endDate;
-          }
-          _tracks = event?.tracks ?? [];
-          _timezoneController.text =
-              event?.eventDates.timezone ?? 'Europe/Madrid';
-          _primaryColorController.text = event?.primaryColor ?? '';
-          _secondaryColorController.text = event?.secondaryColor ?? '';
-          _venueNameController.text = event?.venue?.name ?? '';
-          _venueAddressController.text = event?.venue?.address ?? '';
-          _venueCityController.text = event?.venue?.city ?? '';
-          _descriptionController.text = event?.description ?? '';
+    return ValueListenableBuilder(valueListenable: widget.eventCollectionViewModel.viewState,
+      builder: (context, snapshot,child) {
+        if (snapshot == ViewState.isLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        else if (snapshot == ViewState.error) {
+          return Scaffold(
+            body: Center(
+              child: Text('${location.errorPrefix} Error with event, please, retry later'),
+            ),
+          );
         }
         return FormScreenWrapper(
-          pageTitle:
-              widget.eventId != null ? location.editEventTitle : location.createEventTitle,
+          pageTitle: widget.eventId != null
+              ? location.editEventTitle
+              : location.createEventTitle,
           widgetFormChild: Form(
             key: _formKey,
             child: Column(
@@ -118,7 +136,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
               spacing: 16,
               children: [
                 Text(
-                  widget.eventId != null ? location.editingEvent : location.creatingEvent,
+                  widget.eventId != null
+                      ? location.editingEvent
+                      : location.creatingEvent,
                   style: AppFonts.titleHeadingForm,
                 ),
                 SectionInputForm(
@@ -205,8 +225,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     height: 200,
                     child: AddRoom(
                       rooms: _tracks.toList(),
-                      editedRooms: (List<Track> currentRooms) {
+                      editedRooms: (List<Track> currentRooms) async {
                         _tracks = currentRooms;
+                      },
+                      removeRoom: (Track track) async {
+                        await eventFormViewModel.removeTrack(track.uid);
                       },
                       eventUid: widget.eventId.toString(),
                     ),
@@ -319,7 +342,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     );
 
     final eventId =
-        event?.uid ??
+        widget.eventId ??
         'Event_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
     final eventModified = Event(
       uid: eventId,

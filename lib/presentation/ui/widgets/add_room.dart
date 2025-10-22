@@ -5,9 +5,10 @@ import 'package:sec/core/models/agenda.dart';
 class AddRoom extends StatefulWidget {
   final List<Track> rooms;
   final void Function(List<Track>) editedRooms;
+  final void Function(Track) removeRoom;
   final String eventUid;
 
-  const AddRoom({super.key, required this.rooms, required this.editedRooms, required this.eventUid});
+  const AddRoom({super.key, required this.rooms, required this.editedRooms, required this.eventUid, required this.removeRoom});
 
   @override
   State<AddRoom> createState() => _AddRoomState();
@@ -70,13 +71,14 @@ class _AddRoomState extends State<AddRoom> {
               child: const Text("Cancelar"),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                widget.removeRoom(_tracks[index]);
                 setState(() {
                   _controllers[index].dispose();
                   _controllers.removeAt(index);
                   _tracks.removeAt(index);
                 });
-                _notifyCurrentRooms();
+                widget.editedRooms(_tracks);
                 Navigator.pop(context);
               },
               child: const Text(

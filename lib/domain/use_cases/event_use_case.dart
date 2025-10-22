@@ -10,6 +10,7 @@ abstract class EventUseCase {
   Future<void> saveEvent(Event event);
   Future<void> removeEvent(Event event);
   Future<void> prepareAgendaDays(Event event);
+  Future<void> removeTrack(String trackUID);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -63,5 +64,10 @@ class EventUseCaseImp implements EventUseCase {
   @override
   Future<void> removeEvent(Event event) async {
     await repository.removeEvent(event.uid);
+  }
+
+  @override
+  Future<void> removeTrack(String trackUID) async {
+    await repository.removeTrack(trackUID);
   }
 }
