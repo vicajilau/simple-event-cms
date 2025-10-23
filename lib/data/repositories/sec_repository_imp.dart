@@ -181,9 +181,16 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> removeAgendaDay(String agendaDayId,String eventUID) async {
+  Future<Result<void>> removeAgendaDay(
+    String agendaDayId,
+    String eventUID,
+  ) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay,eventUID: eventUID);
+      await DataUpdate.deleteItemAndAssociations(
+        agendaDayId,
+        AgendaDay,
+        eventUID: eventUID,
+      );
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
@@ -225,7 +232,6 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> deleteSession(String sessionId) async {
     try {
-
       await DataUpdate.deleteItemAndAssociations(sessionId, Session);
       return Result.ok(null);
     } on Exception catch (e) {
@@ -272,7 +278,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
-        agendaDays.where((agendaDay) => agendaDay.eventUID.contains(eventId)).toList(),
+        agendaDays
+            .where((agendaDay) => agendaDay.eventUID.contains(eventId))
+            .toList(),
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
@@ -289,9 +297,14 @@ class SecRepositoryImp extends SecRepository {
   ) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
-      var tracks = (await dataLoader.loadAllTracks()).toList().where((track) => track.eventUid != eventId).toList();
+      var tracks = (await dataLoader.loadAllTracks())
+          .toList()
+          .where((track) => track.eventUid != eventId)
+          .toList();
       agendaDays = agendaDays.map((agendaDay) {
-        agendaDay.resolvedTracks?.removeWhere((track) => tracks.map((track) => track.uid).contains(track.uid));
+        agendaDay.resolvedTracks?.removeWhere(
+          (track) => tracks.map((track) => track.uid).contains(track.uid),
+        );
         return agendaDay;
       }).toList();
       return Result.ok(
@@ -400,8 +413,10 @@ class SecRepositoryImp extends SecRepository {
     try {
       var events = await dataLoader.loadEvents();
       var event = events.firstWhere((event) => event.uid == eventUID);
-      var posTrackToRemove = event.tracks.indexWhere((track) => track.uid == trackUID);
-      if(posTrackToRemove != -1){
+      var posTrackToRemove = event.tracks.indexWhere(
+        (track) => track.uid == trackUID,
+      );
+      if (posTrackToRemove != -1) {
         event.tracks.removeAt(posTrackToRemove);
       }
       await DataUpdate.addItemAndAssociations(event, event.uid);
@@ -412,6 +427,20 @@ class SecRepositoryImp extends SecRepository {
       return Result.error(e);
     } catch (e) {
       debugPrint('Error in removeTrack: $e');
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> saveOrganization(Organization organization) async {
+    try {
+      await DataUpdate.addItemAndAssociations(organization, "");
+      return Result.ok(null);
+    } on Exception catch (e) {
+      debugPrint('Error in saveOrganization: $e');
+      return Result.error(e);
+    } catch (e) {
+      debugPrint('Error in saveOrganization: $e');
       return Result.error(Exception('Something really unknown: $e'));
     }
   }

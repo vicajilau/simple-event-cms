@@ -97,6 +97,17 @@ class DataUpdateInfo {
     );
   }
 
+
+  /// Loads organization information from the organization.json file
+    Future<void> updateOrganization(Organization organization) async {
+    await dataCommons.updateData(
+      [organization],
+      organization,
+      "events/${organization.year}/${organization.pathUrl}",
+      organization.updateMessage,
+    );
+  }
+
   /// Loads sponsor information from the sponsors.json file
   /// Returns a Future containing a list of sponsor data with logos and details
   Future<void> updateSponsorsList(List<Sponsor> sponsors) async {

@@ -83,6 +83,15 @@ class DataUpdate {
           parentId,
         );
         break;
+
+      case "Organization":
+        await _addOrganization(
+          item as Organization,
+          dataLoader,
+          dataUpdateInfo,
+          parentId,
+        );
+        break;
       default:
         throw Exception(
           "Unsupported item type for addition: ${item.runtimeType}",
@@ -362,6 +371,16 @@ class DataUpdate {
 
     await dataUpdateInfo.updateSponsors(sponsor);
     debugPrint("Sponsor ${sponsor.uid} added.");
+  }
+
+  static Future<void> _addOrganization(
+    Organization organization,
+    DataLoader dataLoader,
+    DataUpdateInfo dataUpdateInfom,
+    String? parentId,
+  ) async {
+    await dataUpdateInfo.updateOrganization(organization);
+    debugPrint("Organization ${organization.organizationName} added.");
   }
 
   static Future<void> _addSponsors(

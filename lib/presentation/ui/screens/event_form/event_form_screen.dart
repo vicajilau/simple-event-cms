@@ -6,7 +6,7 @@ import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
-import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
+import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
