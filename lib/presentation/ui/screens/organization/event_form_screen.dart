@@ -91,27 +91,27 @@ class _EventFormScreenState extends State<EventFormScreen> {
         return null;
       });
       _eventFuture?.then((event) {
-        if(event == null){
+        if (event == null) {
           widget.eventCollectionViewModel.viewState.value = ViewState.error;
-        }else{
+        } else {
           _nameController.text = event.eventName;
           final startDate = event.eventDates.startDate;
           _startDateController.text = startDate;
-                  final endDate = event.eventDates.endDate;
+          final endDate = event.eventDates.endDate;
           _hasEndDate = startDate != endDate;
           if (_hasEndDate) {
             _endDateController.text = endDate;
           }
           _tracks = event.tracks;
-          _timezoneController.text =
-              event.eventDates.timezone;
+          _timezoneController.text = event.eventDates.timezone;
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
           _venueNameController.text = event.venue?.name ?? '';
           _venueAddressController.text = event.venue?.address ?? '';
           _venueCityController.text = event.venue?.city ?? '';
           _descriptionController.text = event.description ?? '';
-          widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
+          widget.eventCollectionViewModel.viewState.value =
+              ViewState.loadFinished;
         }
       });
     }
@@ -180,17 +180,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    return ValueListenableBuilder(valueListenable: widget.eventCollectionViewModel.viewState,
-      builder: (context, snapshot,child) {
+    return ValueListenableBuilder(
+      valueListenable: widget.eventCollectionViewModel.viewState,
+      builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        }
-        else if (snapshot == ViewState.error) {
+        } else if (snapshot == ViewState.error) {
           return Scaffold(
             body: Center(
-              child: Text('${location.errorPrefix} Error with event, please, retry later'),
+              child: Text(
+                '${location.errorPrefix} Error with event, please, retry later',
+              ),
             ),
           );
         }
@@ -304,7 +306,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         _tracks = currentRooms;
                       },
                       removeRoom: (Track track) async {
-                        await eventFormViewModel.removeTrack(track.uid,track.eventUid);
+                        await eventFormViewModel.removeTrack(
+                          track.uid,
+                          track.eventUid,
+                        );
                       },
                       eventUid: widget.eventId.toString(),
                     ),
@@ -452,7 +457,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
         barrierDismissible: false,
         builder: (_) => CustomErrorDialog(
           errorMessage: location.formError,
-          onCancel: () => Navigator.of(context).pop(), buttonText: location.closeButton,
+          onCancel: () => Navigator.of(context).pop(),
+          buttonText: location.closeButton,
         ),
       );
 
