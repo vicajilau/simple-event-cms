@@ -13,9 +13,9 @@ class DataUpdate {
 
   static Future<void> deleteItemAndAssociations(
     String itemId,
-    Type itemType,
-  {String? eventUID}
-  ) async {
+    Type itemType, {
+    String? eventUID,
+  }) async {
     switch (itemType.toString()) {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
@@ -27,7 +27,12 @@ class DataUpdate {
         await _deleteTrack(itemId, dataLoader, dataUpdateInfo);
         break;
       case "AgendaDay":
-        await _deleteAgendaDay(itemId, dataLoader, dataUpdateInfo,eventUID.toString());
+        await _deleteAgendaDay(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          eventUID.toString(),
+        );
         break;
       case "Speaker":
         await _deleteSpeaker(itemId, dataLoader, dataUpdateInfo);
@@ -78,6 +83,15 @@ class DataUpdate {
       case "Sponsor":
         await _addSponsor(
           item as Sponsor,
+          dataLoader,
+          dataUpdateInfo,
+          parentId,
+        );
+        break;
+
+      case "Organization":
+        await _addOrganization(
+          item as Organization,
           dataLoader,
           dataUpdateInfo,
           parentId,
@@ -240,6 +254,11 @@ class DataUpdate {
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
   ) async {
+    Event event = (await dataLoader.loadEvents())
+        .toList()
+        .firstWhere((event) => event.tracks.any((track) => track.uid == trackId));
+    event.tracks.removeWhere((track) => track.uid == trackId);
+    await dataUpdateInfo.updateEvent(event);
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
     for (var day in allDays) {
       if (day.trackUids?.contains(trackId) == true) {
@@ -256,15 +275,19 @@ class DataUpdate {
     DataUpdateInfo dataUpdateInfo,
     String? parentId,
   ) async {
-
     if (parentId != null && parentId.isNotEmpty) {
       var allDays = await dataLoader.loadAllDays();
-      var existingDay = allDays.firstWhere((d) => d.uid == day.uid, orElse: () => day);
+      var existingDay = allDays.firstWhere(
+        (d) => d.uid == day.uid,
+        orElse: () => day,
+      );
 
       if (!existingDay.eventUID.contains(parentId)) {
         existingDay.eventUID.add(parentId);
       }
-      existingDay.trackUids?.toList().removeWhere((trackId) => day.trackUids?.contains(trackId) == true);
+      existingDay.trackUids?.toList().removeWhere(
+        (trackId) => day.trackUids?.contains(trackId) == true,
+      );
       existingDay.trackUids?.addAll(day.trackUids?.toList() ?? []);
       day = existingDay;
     }
@@ -295,18 +318,18 @@ class DataUpdate {
     String dayId,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
-    String eventId
+    String eventId,
   ) async {
     var agendaDays = await dataLoader.loadAllDays();
     var agendaDay = agendaDays.firstWhere((day) => day.uid == dayId);
-    if(agendaDay.eventUID.isNotEmpty){
+    if (agendaDay.eventUID.isNotEmpty) {
       agendaDay.eventUID.remove(eventId);
       debugPrint("AgendaDay $dayId remove eventId from eventUID.");
-      if(agendaDay.eventUID.isEmpty){
+      if (agendaDay.eventUID.isEmpty) {
         await dataUpdateInfo.removeAgendaDay(dayId);
         debugPrint("AgendaDay $dayId and its associations removed.");
       }
-    }else{
+    } else {
       await dataUpdateInfo.removeAgendaDay(dayId);
       debugPrint("AgendaDay $dayId and its associations removed.");
     }
@@ -362,6 +385,16 @@ class DataUpdate {
 
     await dataUpdateInfo.updateSponsors(sponsor);
     debugPrint("Sponsor ${sponsor.uid} added.");
+  }
+
+  static Future<void> _addOrganization(
+    Organization organization,
+    DataLoader dataLoader,
+    DataUpdateInfo dataUpdateInfom,
+    String? parentId,
+  ) async {
+    await dataUpdateInfo.updateOrganization(organization);
+    debugPrint("Organization ${organization.organizationName} added.");
   }
 
   static Future<void> _addSponsors(

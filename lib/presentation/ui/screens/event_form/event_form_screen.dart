@@ -6,7 +6,7 @@ import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
-import 'package:sec/presentation/ui/screens/organization/event_form_view_model.dart';
+import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
@@ -185,8 +185,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
       valueListenable: widget.eventCollectionViewModel.viewState,
       builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return FormScreenWrapper(
+            pageTitle: location.loadingTitle,
+            widgetFormChild: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot == ViewState.error) {
           return Scaffold(
@@ -433,6 +434,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }
 
   Future<void> _onSubmit() async {
+    setState(() {
+      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
+    });
     final location = AppLocalizations.of(context)!;
     setState(() => _isSubmitting = true);
 
@@ -523,9 +527,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
       description: _descriptionController.text,
     );
     await eventFormViewModel.onSubmit(eventModified);
-    if (!mounted) return;
-
-    setState(() => _isSubmitting = false);
-    Navigator.pop(context, eventModified);
+    if (mounted) {
+      
+      setState(() {
+        widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
+         _isSubmitting = false;
+      });
+      Navigator.pop(context, eventModified);
+    }
   }
 }

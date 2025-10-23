@@ -6,7 +6,7 @@ class PathsGithub {
   static const String sessionsPath = 'sessions/sessions.json';
   
   static const String eventPath = 'config/events.json';
-  static const String organizationPath = 'config/organization.json';
+  static const String organizationPath = 'organization/organization.json';
   static const String speakerPath = 'speakers/speakers.json';
   static const String sponsorPath = 'sponsors/sponsors.json';
 
