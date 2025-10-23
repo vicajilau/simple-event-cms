@@ -72,7 +72,7 @@ class CommonsServicesImp extends CommonsServices {
         res = await github.repositories.getContents(
           repositorySlug,
           url,
-          ref: githubService.branch,
+          ref: organization.branch,
         );
       } catch (e, st) {
         if (e is GitHubError && e.message == "Not Found") {
@@ -183,14 +183,14 @@ class CommonsServicesImp extends CommonsServices {
     );
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
-    String branch = githubService.branch; // Default to 'main' if not specified
+    String branch = organization.branch; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService.branch,
+        ref: organization.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -469,7 +469,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService.branch,
+        ref: organization.branch,
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -499,7 +499,7 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
-    String branch = githubService.branch; // Default to 'main' if not specified
+    String branch = organization.branch; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -579,7 +579,7 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = githubService.branch;
+    String branch = organization.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -593,7 +593,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService.branch,
+        ref: organization.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -711,7 +711,7 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = githubService.branch;
+    String branch = organization.branch;
 
     var dataToMerge = dataOriginal.toList();
     dataToMerge.removeWhere((item) => dataToRemove.contains(item));
@@ -728,7 +728,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService.branch,
+        ref: organization.branch,
       );
       currentSha = contents.file?.sha;
 

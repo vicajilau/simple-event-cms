@@ -32,7 +32,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: githubService.branch,
+      ref: localOrganization.branch,
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -49,39 +49,6 @@ class ConfigLoader {
       }
       getIt.registerSingleton<Organization>(orgToUse);
       return orgToUse;
-    }
-  }
-
-  static Future<List<Event>> loadConfig() async {
-    Organization organization = getIt<Organization>();
-    RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-    );
-
-    final configUrl = 'events/${organization.year}/config/events.json';
-    var githubService = await SecureInfo.getGithubKey();
-    var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
-    final res = await github.repositories.getContents(
-      repositorySlug,
-      configUrl,
-      ref: githubService.branch,
-    );
-
-    if (res.file == null || res.file!.content == null) {
-      throw Exception(
-        "Error cargando configuración de producción desde $configUrl",
-      );
-    } else {
-      final file = utf8.decode(
-        base64.decode(res.file!.content!.replaceAll("\n", "")),
-      );
-      final fileJsonData = json.decode(file);
-      final List<dynamic> eventDataList = fileJsonData;
-
-      return eventDataList
-          .map((eventData) => Event.fromJson(eventData))
-          .toList();
     }
   }
 }
