@@ -565,7 +565,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       .toList(),
                 ); // Return true to indicate success
               }else if(containsAgendaDays == -1){
-                Navigator.pop(context);
+                if (mounted) {
+                  Navigator.pop(context);
+                }
+
               }
             }
           },
