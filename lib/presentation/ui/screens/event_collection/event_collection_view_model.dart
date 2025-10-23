@@ -97,6 +97,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   Future<void> _applyFilters() async {
+    viewState.value = ViewState.isLoading;
     final now = DateTime.now();
     List<Event> eventsFiltered = [..._allEvents];
     switch (currentFilter) {
@@ -118,6 +119,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
         break;
     }
     eventsToShow.value = eventsFiltered;
+    viewState.value = ViewState.loadFinished;
   }
 
   void _sortEvents() {
@@ -140,4 +142,5 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   Future<Event?> getEventById(String eventId) async {
     return await useCase.getEventById(eventId);
   }
+
 }

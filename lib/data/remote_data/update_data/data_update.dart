@@ -76,6 +76,8 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<void> updateAgendaDays(List<AgendaDay> agendaDays) async {
+    var agendaDaysRepo = (await dataLoader.loadAllDays()).toList().where((day) => !agendaDays.contains(day)).toList();
+    agendaDaysRepo.addAll(agendaDays);
     await dataCommons.updateDataList(
       agendaDays,
       "events/${organization.year}/${PathsGithub.daysPath}",
@@ -92,6 +94,17 @@ class DataUpdateInfo {
       sponsors,
       "events/${organization.year}/${sponsors.pathUrl}",
       sponsors.updateMessage,
+    );
+  }
+
+
+  /// Loads organization information from the organization.json file
+    Future<void> updateOrganization(Organization organization) async {
+    await dataCommons.updateData(
+      [organization],
+      organization,
+      "events/${organization.pathUrl}",
+      organization.updateMessage,
     );
   }
 
@@ -183,8 +196,15 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of events data with logos and details
   Future<void> removeEvent(String eventId) async {
     var eventsOriginal = await dataLoader.loadEvents();
+    var tracksOriginal = await dataLoader.loadAllTracks();
     var eventToRemove = eventsOriginal.firstWhere(
       (event) => event.uid == eventId,
+    );
+   await dataCommons.removeDataList(
+      tracksOriginal,
+      eventToRemove.tracks,
+      "events/${organization.year}/${eventToRemove.pathUrl}",
+      eventToRemove.updateMessage,
     );
    await dataCommons.removeData(
       eventsOriginal,
@@ -229,7 +249,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of track data
   Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
-    await dataCommons.updateData(
+    await dataCommons.removeData(
       // Using updateData as we are modifying an existing agenda by removing a track
       tracksOriginal,
       tracksOriginal.firstWhere((track) => track.uid == trackId),

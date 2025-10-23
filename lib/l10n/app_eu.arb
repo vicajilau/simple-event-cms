@@ -134,5 +134,6 @@
   "updateButton": "Eguneratu",
   "addButton": "add button",
   "addRoomTitle": "add room",
-  "roomNameHint": "Room name"
+  "roomNameHint": "Room name",
+  "formError": "Formularioan akatsak daude"
 }

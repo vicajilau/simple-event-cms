@@ -199,23 +199,45 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           );
         },
       ),
-      floatingActionButton: FutureBuilder<bool>(
-        future: widget.viewmodel.checkToken(),
-        builder: (context, snapshot) {
-          if (snapshot.data == true) {
-            return AddFloatingActionButton(
-              onPressed: () async {
-                final Event? newConfig = await AppRouter.router.push(
-                  AppRouter.eventFormPath
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FutureBuilder<bool>(
+            future: widget.viewmodel.checkToken(),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return FloatingActionButton(
+                  heroTag: 'editOrganizationBtn', // Unique heroTag
+                  onPressed: () {
+                    AppRouter.router.push(AppRouter.organizationFormPath);
+                  },
+                  child: const Icon(Icons.business),
                 );
-                if (newConfig != null) {
-                 await  widget.viewmodel.addEvent(newConfig);
-                }
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          const SizedBox(height: 16), // Spacing between buttons
+          FutureBuilder<bool>(
+            future: widget.viewmodel.checkToken(),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return AddFloatingActionButton(
+                  onPressed: () async {
+                    final Event? newConfig = await AppRouter.router.push(AppRouter.eventFormPath);
+                    if (newConfig != null) {
+                      setState(() {
+                        _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newConfig.uid);
+                        _viewmodel.eventsToShow.value.add(newConfig);
+                      });
+                    }
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );

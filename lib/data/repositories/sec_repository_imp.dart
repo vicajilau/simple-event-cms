@@ -55,9 +55,9 @@ class SecRepositoryImp extends SecRepository {
   //update Items
   @override
   Future<Result<void>> saveEvent(Event event) async {
-    try{
-    await DataUpdate.addItemAndAssociations(event, event.uid);
-    return Result.ok(null);
+    try {
+      await DataUpdate.addItemAndAssociations(event, event.uid);
+      return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveEvent: $e');
       return Result.error(e);
@@ -69,9 +69,9 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<Result<void>> saveTracks(List<Track> tracks) async {
-    try{
-    await DataUpdate.addItemListAndAssociations(tracks);
-    return Result.ok(null);
+    try {
+      await DataUpdate.addItemListAndAssociations(tracks);
+      return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveTracks: $e');
       return Result.error(e);
@@ -83,9 +83,9 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays) async {
-    try{
-    await DataUpdate.addItemListAndAssociations(agendaDays);
-    return Result.ok(null);
+    try {
+      await DataUpdate.addItemListAndAssociations(agendaDays);
+      return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
       return Result.error(e);
@@ -111,9 +111,9 @@ class SecRepositoryImp extends SecRepository {
 
   @override
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId) async {
-    try{
-    await DataUpdate.addItemAndAssociations(sponsor, parentId);
-    return Result.ok(null);
+    try {
+      await DataUpdate.addItemAndAssociations(sponsor, parentId);
+      return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveSponsor: $e');
       return Result.error(e);
@@ -124,14 +124,13 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> addSession(Session session,String trackUID) async {
-    try{
-    await DataUpdate.addItemAndAssociations(session, trackUID);
-    return Result.ok(null);
+  Future<Result<void>> addSession(Session session, String trackUID) async {
+    try {
+      await DataUpdate.addItemAndAssociations(session, trackUID);
+      return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in addSession: $e');
       return Result.error(e);
-
     } catch (e) {
       debugPrint('Error in addSession: $e');
       return Result.error(Exception('Something really unknown: $e'));
@@ -153,9 +152,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveTrack(Track track,String agendaDayId) async {
+  Future<Result<void>> saveTrack(Track track, String agendaDayId) async {
     try {
-      await DataUpdate.addItemAndAssociations(track,agendaDayId);
+      await DataUpdate.addItemAndAssociations(track, agendaDayId);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveTrack: $e');
@@ -182,9 +181,16 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> removeAgendaDay(String agendaDayId) async {
+  Future<Result<void>> removeAgendaDay(
+    String agendaDayId,
+    String eventUID,
+  ) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
+      await DataUpdate.deleteItemAndAssociations(
+        agendaDayId,
+        AgendaDay,
+        eventUID: eventUID,
+      );
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
@@ -224,7 +230,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId) async {
+  Future<Result<void>> deleteSession(String sessionId) async {
     try {
       await DataUpdate.deleteItemAndAssociations(sessionId, Session);
       return Result.ok(null);
@@ -272,7 +278,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
-        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID).toList(),
+        agendaDays
+            .where((agendaDay) => agendaDay.eventUID.contains(eventId))
+            .toList(),
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
@@ -284,11 +292,34 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<List<AgendaDay>>> loadAgendaDayByEventIdFiltered(String eventId) async {
+  Future<Result<List<AgendaDay>>> loadAgendaDayByEventIdFiltered(
+    String eventId,
+  ) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
+      var tracks = (await dataLoader.loadAllTracks())
+          .toList()
+          .where((track) => track.eventUid != eventId)
+          .toList();
+      agendaDays = agendaDays.map((agendaDay) {
+        agendaDay.resolvedTracks?.removeWhere(
+          (track) => tracks.map((track) => track.uid).contains(track.uid),
+        );
+        return agendaDay;
+      }).toList();
       return Result.ok(
-        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID && agendaDay.resolvedTracks != null && agendaDay.resolvedTracks!.isNotEmpty && agendaDay.resolvedTracks!.expand((track) => track.resolvedSessions).isNotEmpty).toList());
+        agendaDays
+            .where(
+              (agendaDay) =>
+                  agendaDay.eventUID.contains(eventId) &&
+                  agendaDay.resolvedTracks != null &&
+                  agendaDay.resolvedTracks!.isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .isNotEmpty,
+            )
+            .toList(),
+      );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventIdFiltered: $e');
       return Result.error(e);
@@ -333,7 +364,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<Event>> loadEventById(String eventId) async {
     try {
-     final events = await dataLoader.loadEvents();
+      final events = await dataLoader.loadEvents();
       return Result.ok(events.firstWhere((event) => event.uid == eventId));
     } on Exception catch (e) {
       debugPrint('Error in loadEventById: $e');
@@ -361,15 +392,46 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveAgendaDay(AgendaDay agendaDay, String eventUID) async {
+  Future<Result<void>> saveAgendaDay(
+    AgendaDay agendaDay,
+    String eventUID,
+  ) async {
     try {
-      await DataUpdate.addItemAndAssociations(agendaDay,eventUID);
+      await DataUpdate.addItemAndAssociations(agendaDay, eventUID);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
       return Result.error(e);
     } catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
+    try {
+      await DataUpdate.deleteItemAndAssociations(trackUID, Track);
+      return Result.ok(null);
+    } on Exception catch (e) {
+      debugPrint('Error in removeTrack: $e');
+      return Result.error(e);
+    } catch (e) {
+      debugPrint('Error in removeTrack: $e');
+      return Result.error(Exception('Something really unknown: $e'));
+    }
+  }
+
+  @override
+  Future<Result<void>> saveOrganization(Organization organization) async {
+    try {
+      await DataUpdate.addItemAndAssociations(organization, "");
+      return Result.ok(null);
+    } on Exception catch (e) {
+      debugPrint('Error in saveOrganization: $e');
+      return Result.error(e);
+    } catch (e) {
+      debugPrint('Error in saveOrganization: $e');
       return Result.error(Exception('Something really unknown: $e'));
     }
   }

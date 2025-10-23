@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 
 class CustomErrorDialog extends StatelessWidget {
   final String errorMessage;
-  final VoidCallback? onRetry;
+  final String buttonText ;
   final VoidCallback? onCancel;
 
   const CustomErrorDialog({
     super.key,
     required this.errorMessage,
-    this.onRetry,
-    this.onCancel,
+     required this.buttonText, this.onCancel,
   });
 
   @override
@@ -19,15 +18,7 @@ class CustomErrorDialog extends StatelessWidget {
       content: Text(errorMessage),
       actions: <Widget>[
         if (onCancel != null)
-          TextButton(
-            onPressed: onCancel,
-            child: const Text('Cancelar'),
-          ),
-        if (onRetry != null)
-          TextButton(
-            onPressed: onRetry,
-            child: const Text('Reintentar'),
-          ),
+          TextButton(onPressed: onCancel, child:  Text(buttonText)),
       ],
     );
   }

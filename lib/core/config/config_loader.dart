@@ -14,6 +14,12 @@ class ConfigLoader {
     defaultValue: 'prod',
   );
 
+  static Future<Organization> getLocalOrganization() async {
+    final localConfigPath = 'events/organization/organization.json';
+    final String response = await rootBundle.loadString(localConfigPath);
+    final data = await json.decode(response);
+    return Organization.fromJson(data);
+  }
   static Future<Organization> loadOrganization() async {
     final localConfigPath = 'events/organization/organization.json';
     final String response = await rootBundle.loadString(localConfigPath);
