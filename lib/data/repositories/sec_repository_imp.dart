@@ -225,6 +225,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> deleteSession(String sessionId) async {
     try {
+
       await DataUpdate.deleteItemAndAssociations(sessionId, Session);
       return Result.ok(null);
     } on Exception catch (e) {
@@ -394,7 +395,10 @@ class SecRepositoryImp extends SecRepository {
     try {
       var events = await dataLoader.loadEvents();
       var event = events.firstWhere((event) => event.uid == eventUID);
-      event.tracks.removeWhere((track) => track.uid == trackUID);
+      var posTrackToRemove = event.tracks.indexWhere((track) => track.uid == trackUID);
+      if(posTrackToRemove != -1){
+        event.tracks.removeAt(posTrackToRemove);
+      }
       await DataUpdate.addItemAndAssociations(event, event.uid);
       await DataUpdate.deleteItemAndAssociations(trackUID, Track);
       return Result.ok(null);

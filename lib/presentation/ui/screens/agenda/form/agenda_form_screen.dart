@@ -71,7 +71,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
       data.eventId!,
     );
-    var fechedTracks = await widget.viewmodel.getTracks() ?? [];
+    var fechedTracks = await widget.viewmodel.getTracksByEventId(widget.data!.eventId.toString()) ?? [];
     var fetchedAgendaDays =
         await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
     event = await widget.viewmodel.getEventById(data.eventId!);
@@ -621,11 +621,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(location.addRoomTitle), // "Add New Room"
+          title: Text(location.addRoomTitle),
           content: TextFormField(
             controller: trackNameController,
             autofocus: true,
-            decoration: InputDecoration(hintText: location.roomNameHint), // "Room name"
+            decoration: InputDecoration(hintText: location.roomNameHint),
           ),
           actions: [
             TextButton(
@@ -657,7 +657,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   }
                 }
               },
-              child: Text(location.addButton), // "Add"
+              child: Text(location.addButton),
             ),
           ],
         );

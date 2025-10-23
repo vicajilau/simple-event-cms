@@ -376,8 +376,8 @@ Future<void> _updateAgendaDaysRemovingTrack(
   DataUpdateInfo dataUpdateInfo,
 ) async {
   if (days.length == 1) {
-    await _removeTrackFromDay(days.first, trackId);
-    await dataUpdateInfo.updateAgendaDay(days.first);
+    var daysUpdated = await _removeTrackFromDay(days.first, trackId);
+    await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
     days.map((day) async {
       await _removeTrackFromDay(day, trackId);

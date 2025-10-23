@@ -46,7 +46,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   void initState() {
     super.initState();
     if (widget.eventId != null) {
-      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
+
       _eventFuture = widget.eventCollectionViewModel.getEventById(
         widget.eventId!,
       );
@@ -57,6 +57,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         if(event == null){
           widget.eventCollectionViewModel.viewState.value = ViewState.error;
         }else{
+          widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
           _nameController.text = event.eventName;
           final startDate = event.eventDates.startDate;
           _startDateController.text = startDate;
@@ -79,6 +80,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
       });
     }
   }
+
+
 
   Future<void> _selectDate(
     BuildContext context,
