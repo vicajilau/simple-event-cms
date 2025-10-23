@@ -913,6 +913,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Room name'**
   String get roomNameHint;
+
+  /// No description provided for @formError.
+  ///
+  /// In en, this message translates to:
+  /// **'There are errors in the form'**
+  String get formError;
 }
 
 class _AppLocalizationsDelegate

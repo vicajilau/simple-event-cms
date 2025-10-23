@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/utils/app_decorations.dart';
-import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
@@ -17,7 +17,12 @@ class AgendaFormData {
   final String? trackId, agendaDayId, eventId;
   final Session? session;
 
-  AgendaFormData({this.session, this.trackId,this.agendaDayId, required this.eventId});
+  AgendaFormData({
+    this.session,
+    this.trackId,
+    this.agendaDayId,
+    required this.eventId,
+  });
 }
 
 class AgendaFormScreen extends StatefulWidget {
@@ -122,7 +127,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       // Creating a new session
     }
 
-    setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
+    setState(
+      () => agendaFormViewModel.viewState.value = ViewState.loadFinished,
+    );
   }
 
   @override
@@ -153,6 +160,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
           // after the build phase is complete, preventing build-time state changes.
           WidgetsBinding.instance.addPostFrameCallback((_) {
             showDialog(
+              barrierDismissible: false,
               context: context,
               builder: (BuildContext context) {
                 return CustomErrorDialog(
@@ -160,9 +168,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   onCancel: () {
                     Navigator.of(context).pop();
                   },
-                  onRetry: () async {
-                    await _loadInitialData();
-                  },
+                  buttonText: location.closeButton,
                 );
               },
             );
@@ -245,8 +251,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                       ? null
                                       : _selectedTrackUid,
                                   decoration: InputDecoration(
-                                    hintText:
-                                        location.selectRoomHint, // This is track
+                                    hintText: location
+                                        .selectRoomHint, // This is track
                                   ),
                                   items: tracks
                                       .map(
@@ -257,7 +263,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                       )
                                       .toList(),
                                   onChanged: (trackUid) => setState(
-                                      () => _selectedTrackUid = trackUid ?? ''),
+                                    () => _selectedTrackUid = trackUid ?? '',
+                                  ),
                                   validator: (value) {
                                     return value == null || value.isEmpty
                                         ? location.selectRoomError
@@ -266,8 +273,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                 ),
                               ),
                               IconButton(
-                                icon: Icon(Icons.add,
-                                    color: Theme.of(context).primaryColor),
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Theme.of(context).primaryColor,
+                                ),
                                 onPressed: () => _showAddTrackDialog(),
                               ),
                             ],
@@ -368,7 +377,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                       AutovalidateMode.onUserInteraction,
                                   initialValue: _selectedSpeaker,
                                   decoration: InputDecoration(
-                                    hintText: location.selectSpeakerHint, // Now shows Speaker's name
+                                    hintText: location
+                                        .selectSpeakerHint, // Now shows Speaker's name
                                   ),
                                   items: speakers
                                       .map(
@@ -463,17 +473,22 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         FilledButton(
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
-            setState(() => agendaFormViewModel.viewState.value = ViewState.isLoading);
+            setState(
+              () => agendaFormViewModel.viewState.value = ViewState.isLoading,
+            );
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
-              setState(() => agendaFormViewModel.viewState.value = ViewState.error);
+              setState(
+                () => agendaFormViewModel.viewState.value = ViewState.error,
+              );
               setState(() {
-                _timeErrorMessage =
-                    location.timeSelectionError;
+                _timeErrorMessage = location.timeSelectionError;
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-              setState(() => agendaFormViewModel.viewState.value = ViewState.error);
+              setState(
+                () => agendaFormViewModel.viewState.value = ViewState.error,
+              );
               isTimeValid =
                   false; // Error message is already set by the time picker logic
             }
@@ -490,16 +505,17 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 description: _descriptionController.text,
                 type: _selectedTalkType,
                 eventUID: widget.data!.eventId.toString(),
-                agendaDayUID: _selectedDay
+                agendaDayUID: _selectedDay,
               );
               var selectedTrack = tracks.firstWhere(
-                    (track) => track.uid == _selectedTrackUid,
+                (track) => track.uid == _selectedTrackUid,
               );
 
               await widget.viewmodel.addSession(session, _selectedTrackUid);
 
-              var event = await widget.viewmodel.getEventById(widget.data!.eventId!);
-
+              var event = await widget.viewmodel.getEventById(
+                widget.data!.eventId!,
+              );
 
               selectedTrack.eventUid = event!.uid.toString();
               selectedTrack.sessionUids.add(session.uid);
@@ -512,26 +528,36 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               agendaDay.resolvedTracks?.toList().add(selectedTrack);
               agendaDays.removeWhere((day) => day.uid == _selectedDay);
               agendaDays.add(agendaDay);
-              event.tracks.removeWhere((track) => track.uid == _selectedTrackUid);
+              event.tracks.removeWhere(
+                (track) => track.uid == _selectedTrackUid,
+              );
               event.tracks.add(selectedTrack);
-
 
               debugPrint('Selected track: ${selectedTrack.name}');
               debugPrint('Event uid: ${event.uid}');
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
 
-              await widget.viewmodel.updateTrack(selectedTrack,agendaDay.uid);
+              await widget.viewmodel.updateTrack(selectedTrack, agendaDay.uid);
               await widget.viewmodel.updateEvent(event);
-              await widget.viewmodel.updateAgendaDay(agendaDay,event.uid.toString());
+              await widget.viewmodel.updateAgendaDay(
+                agendaDay,
+                event.uid.toString(),
+              );
 
-
-
-              setState(() => agendaFormViewModel.viewState.value = ViewState.loadFinished);
+              setState(
+                () => agendaFormViewModel.viewState.value =
+                    ViewState.loadFinished,
+              );
               if (mounted) {
                 Navigator.pop(
                   context,
-                  agendaDays.where((day) => day.trackUids != null && day.trackUids!.isNotEmpty).toList(),
+                  agendaDays
+                      .where(
+                        (day) =>
+                            day.trackUids != null && day.trackUids!.isNotEmpty,
+                      )
+                      .toList(),
                 ); // Return true to indicate success
               }
             }
@@ -625,7 +651,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
           content: TextFormField(
             controller: trackNameController,
             autofocus: true,
-            decoration: InputDecoration(hintText: location.roomNameHint), // "Room name"
+            decoration: InputDecoration(
+              hintText: location.roomNameHint,
+            ), // "Room name"
           ),
           actions: [
             TextButton(
@@ -636,7 +664,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               onPressed: () async {
                 if (trackNameController.text.isNotEmpty) {
                   final String newTrackName = trackNameController.text;
-                  final String newTrackUid = 'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
+                  final String newTrackUid =
+                      'Track_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}';
 
                   final newTrack = Track(
                     uid: newTrackUid,
@@ -651,8 +680,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     tracks.add(newTrack);
                     _selectedTrackUid = newTrack.uid;
                   });
-                  await widget.viewmodel.addTrack(newTrack,_selectedDay);
-                  if(context.mounted){
+                  await widget.viewmodel.addTrack(newTrack, _selectedDay);
+                  if (context.mounted) {
                     Navigator.pop(context);
                   }
                 }
