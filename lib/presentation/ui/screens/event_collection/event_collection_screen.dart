@@ -208,8 +208,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data == true) {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
-                  onPressed: () {
-                    AppRouter.router.push(AppRouter.organizationFormPath);
+                  onPressed: () async {
+                    Organization? organizationUpdated = await AppRouter.router.push(AppRouter.organizationFormPath) as Organization?;
+
+                    if(organizationUpdated != null){
+                      getIt.resetLazySingleton<Organization>(instance: organizationUpdated);
+                      setState(() {
+                        organizationName = organizationUpdated.organizationName;
+                      });
+                    }
                   },
                   child: const Icon(Icons.business),
                 );

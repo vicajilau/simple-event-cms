@@ -33,7 +33,7 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
     await organizationUseCase.updateOrganization(organization);
     viewState.value = ViewState.loadFinished;
     if(context.mounted){
-      Navigator.pop(context);
+      Navigator.pop(context, organization);
     }
   }
 

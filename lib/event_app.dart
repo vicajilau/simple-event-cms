@@ -24,10 +24,8 @@ class _EventAppState extends State<EventApp> with WidgetsBindingObserver {
 
   void _loadOrg() async {
     final organization = await ConfigLoader.loadOrganization();
-    if (getIt.isRegistered<Organization>()) {
-      getIt.unregister<Organization>();
-    }
-    getIt.registerSingleton<Organization>(organization);
+    getIt.resetLazySingleton<Organization>(instance: organization);
+
   }
 
   @override

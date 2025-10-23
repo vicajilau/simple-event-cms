@@ -291,10 +291,7 @@ class CommonsServicesImp extends CommonsServices {
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
-    if (getIt.isRegistered<Organization>()) {
-      getIt.unregister<Organization>();
-    }
-    getIt.registerSingleton<Organization>(orgToUse);
+    getIt.resetLazySingleton<Organization>(instance: orgToUse);
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
