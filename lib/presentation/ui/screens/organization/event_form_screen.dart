@@ -26,6 +26,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   Future<Event?>? _eventFuture;
   final _formKey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
+  bool _isSubmitting = false;
 
   final eventFormViewModel = getIt<EventFormViewModel>();
   final TextEditingController _nameController = TextEditingController();
@@ -91,27 +92,27 @@ class _EventFormScreenState extends State<EventFormScreen> {
         return null;
       });
       _eventFuture?.then((event) {
-        if(event == null){
+        if (event == null) {
           widget.eventCollectionViewModel.viewState.value = ViewState.error;
-        }else{
+        } else {
           _nameController.text = event.eventName;
           final startDate = event.eventDates.startDate;
           _startDateController.text = startDate;
-                  final endDate = event.eventDates.endDate;
+          final endDate = event.eventDates.endDate;
           _hasEndDate = startDate != endDate;
           if (_hasEndDate) {
             _endDateController.text = endDate;
           }
           _tracks = event.tracks;
-          _timezoneController.text =
-              event.eventDates.timezone;
+          _timezoneController.text = event.eventDates.timezone;
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
           _venueNameController.text = event.venue?.name ?? '';
           _venueAddressController.text = event.venue?.address ?? '';
           _venueCityController.text = event.venue?.city ?? '';
           _descriptionController.text = event.description ?? '';
-          widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
+          widget.eventCollectionViewModel.viewState.value =
+              ViewState.loadFinished;
         }
       });
     }
@@ -180,239 +181,252 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    return ValueListenableBuilder(valueListenable: widget.eventCollectionViewModel.viewState,
-      builder: (context, snapshot,child) {
+    return ValueListenableBuilder(
+      valueListenable: widget.eventCollectionViewModel.viewState,
+      builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
-        }
-        else if (snapshot == ViewState.error) {
+        } else if (snapshot == ViewState.error) {
           return Scaffold(
             body: Center(
-              child: Text('${location.errorPrefix} Error with event, please, retry later'),
+              child: Text(
+                '${location.errorPrefix} Error with event, please, retry later',
+              ),
             ),
           );
         }
-        return FormScreenWrapper(
-          pageTitle: widget.eventId != null
-              ? location.editEventTitle
-              : location.createEventTitle,
-          widgetFormChild: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              spacing: 16,
-              children: [
-                Text(
-                  widget.eventId != null
-                      ? location.editingEvent
-                      : location.creatingEvent,
-                  style: AppFonts.titleHeadingForm,
-                ),
-                SectionInputForm(
-                  label: location.eventNameLabel,
-                  childInput: TextFormField(
-                    key: _nameFieldKey,
-                    focusNode: _nameFocus,
-                    controller: _nameController,
-                    maxLines: 1,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.eventNameHint,
+        return Stack(
+          children: [
+            FormScreenWrapper(
+              pageTitle: widget.eventId != null
+                  ? location.editEventTitle
+                  : location.createEventTitle,
+              widgetFormChild: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16,
+                  children: [
+                    Text(
+                      widget.eventId != null
+                          ? location.editingEvent
+                          : location.creatingEvent,
+                      style: AppFonts.titleHeadingForm,
                     ),
-                    validator: (value) => (value == null || value.isEmpty)
-                        ? location.requiredField
-                        : null,
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.startDateLabel,
-                  childInput: Row(
-                    children: [
-                      Expanded(
-                        child: TextFormField(
-                          key: _startDateFieldKey,
-                          focusNode: _startDateFocus,
-                          controller: _startDateController,
-                          readOnly: true,
-                          decoration: AppDecorations.textFieldDecoration
-                              .copyWith(hintText: location.dateHint),
-                          onTap: () =>
-                              _selectDate(context, _startDateController),
-                          validator: (value) => (value == null || value.isEmpty)
-                              ? location.requiredField
-                              : null,
+                    SectionInputForm(
+                      label: location.eventNameLabel,
+                      childInput: TextFormField(
+                        key: _nameFieldKey,
+                        focusNode: _nameFocus,
+                        controller: _nameController,
+                        maxLines: 1,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.eventNameHint,
                         ),
+                        validator: (value) => (value == null || value.isEmpty)
+                            ? location.requiredField
+                            : null,
                       ),
-                    ],
-                  ),
-                ),
-                if (_hasEndDate)
-                  SectionInputForm(
-                    label: location.endDateLabel,
-                    childInput: Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            key: _endDateFieldKey,
-                            focusNode: _endDateFocus,
-                            controller: _endDateController,
-                            readOnly: true,
-                            decoration: AppDecorations.textFieldDecoration
-                                .copyWith(hintText: location.dateHint),
-                            onTap: () =>
-                                _selectDate(context, _endDateController),
+                    ),
+                    SectionInputForm(
+                      label: location.startDateLabel,
+                      childInput: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              key: _startDateFieldKey,
+                              focusNode: _startDateFocus,
+                              controller: _startDateController,
+                              readOnly: true,
+                              decoration: AppDecorations.textFieldDecoration
+                                  .copyWith(hintText: location.dateHint),
+                              onTap: () =>
+                                  _selectDate(context, _startDateController),
+                              validator: (value) =>
+                                  (value == null || value.isEmpty)
+                                  ? location.requiredField
+                                  : null,
+                            ),
                           ),
+                        ],
+                      ),
+                    ),
+                    if (_hasEndDate)
+                      SectionInputForm(
+                        label: location.endDateLabel,
+                        childInput: Row(
+                          children: [
+                            Expanded(
+                              child: TextFormField(
+                                key: _endDateFieldKey,
+                                focusNode: _endDateFocus,
+                                controller: _endDateController,
+                                readOnly: true,
+                                decoration: AppDecorations.textFieldDecoration
+                                    .copyWith(hintText: location.dateHint),
+                                onTap: () =>
+                                    _selectDate(context, _endDateController),
+                              ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  _hasEndDate = false;
+                                  _endDateController.clear();
+                                });
+                              },
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.red),
-                          onPressed: () {
+                      )
+                    else
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: GestureDetector(
+                          onTap: () {
                             setState(() {
-                              _hasEndDate = false;
-                              _endDateController.clear();
+                              _hasEndDate = true;
                             });
                           },
+                          child: Text(
+                            location.addEndDate,
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ),
+                    SectionInputForm(
+                      label: location.roomsLabel,
+                      childInput: SizedBox(
+                        height: 200,
+                        child: AddRoom(
+                          rooms: _tracks.toList(),
+                          editedRooms: (List<Track> currentRooms) async {
+                            _tracks = currentRooms;
+                          },
+                          removeRoom: (Track track) async {
+                            await eventFormViewModel.removeTrack(track.uid);
+                          },
+                          eventUid: widget.eventId.toString(),
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.timezoneLabel,
+                      childInput: TextFormField(
+                        key: _timezoneFieldKey,
+                        focusNode: _timezoneFocus,
+                        controller: _timezoneController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.timezoneHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.baseUrlLabel,
+                      childInput: TextFormField(
+                        key: _baseUrlFieldKey,
+                        focusNode: _baseUrlFocus,
+                        controller: _baseUrlController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.baseUrlHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.primaryColorLabel,
+                      childInput: TextFormField(
+                        key: _primaryColorFieldKey,
+                        focusNode: _primaryColorFocus,
+                        controller: _primaryColorController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.primaryColorHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.secondaryColorLabel,
+                      childInput: TextFormField(
+                        key: _secondaryColorFieldKey,
+                        focusNode: _secondaryColorFocus,
+                        controller: _secondaryColorController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.secondaryColorHint,
+                        ),
+                      ),
+                    ),
+                    Text(location.venueTitle, style: AppFonts.titleHeadingForm),
+                    SectionInputForm(
+                      label: location.venueNameLabel,
+                      childInput: TextFormField(
+                        key: _venueNameFieldKey,
+                        focusNode: _venueNameFocus,
+                        controller: _venueNameController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.venueNameHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.venueAddressLabel,
+                      childInput: TextFormField(
+                        key: _venueAddressFieldKey,
+                        focusNode: _venueAddressFocus,
+                        controller: _venueAddressController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.venueAddressHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.venueCityLabel,
+                      childInput: TextFormField(
+                        key: _venueCityFieldKey,
+                        focusNode: _venueCityFocus,
+                        controller: _venueCityController,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.venueCityHint,
+                        ),
+                      ),
+                    ),
+                    SectionInputForm(
+                      label: location.descriptionLabel,
+                      childInput: TextFormField(
+                        key: _descriptionFieldKey,
+                        focusNode: _descriptionFocus,
+                        controller: _descriptionController,
+                        maxLines: 3,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: location.eventDescriptionHint,
+                        ),
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      spacing: 12,
+                      children: [
+                        FilledButton(
+                          onPressed: _isSubmitting ? null : _onSubmit,
+                          child: Text(location.saveButton),
                         ),
                       ],
                     ),
-                  )
-                else
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _hasEndDate = true;
-                        });
-                      },
-                      child: Text(
-                        location.addEndDate,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ),
-                SectionInputForm(
-                  label: location.roomsLabel,
-                  childInput: SizedBox(
-                    height: 200,
-                    child: AddRoom(
-                      rooms: _tracks.toList(),
-                      editedRooms: (List<Track> currentRooms) async {
-                        _tracks = currentRooms;
-                      },
-                      removeRoom: (Track track) async {
-                        await eventFormViewModel.removeTrack(track.uid);
-                      },
-                      eventUid: widget.eventId.toString(),
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.timezoneLabel,
-                  childInput: TextFormField(
-                    key: _timezoneFieldKey,
-                    focusNode: _timezoneFocus,
-                    controller: _timezoneController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.timezoneHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.baseUrlLabel,
-                  childInput: TextFormField(
-                    key: _baseUrlFieldKey,
-                    focusNode: _baseUrlFocus,
-                    controller: _baseUrlController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.baseUrlHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.primaryColorLabel,
-                  childInput: TextFormField(
-                    key: _primaryColorFieldKey,
-                    focusNode: _primaryColorFocus,
-                    controller: _primaryColorController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.primaryColorHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.secondaryColorLabel,
-                  childInput: TextFormField(
-                    key: _secondaryColorFieldKey,
-                    focusNode: _secondaryColorFocus,
-                    controller: _secondaryColorController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.secondaryColorHint,
-                    ),
-                  ),
-                ),
-                Text(location.venueTitle, style: AppFonts.titleHeadingForm),
-                SectionInputForm(
-                  label: location.venueNameLabel,
-                  childInput: TextFormField(
-                    key: _venueNameFieldKey,
-                    focusNode: _venueNameFocus,
-                    controller: _venueNameController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueNameHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.venueAddressLabel,
-                  childInput: TextFormField(
-                    key: _venueAddressFieldKey,
-                    focusNode: _venueAddressFocus,
-                    controller: _venueAddressController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueAddressHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.venueCityLabel,
-                  childInput: TextFormField(
-                    key: _venueCityFieldKey,
-                    focusNode: _venueCityFocus,
-                    controller: _venueCityController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueCityHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.descriptionLabel,
-                  childInput: TextFormField(
-                    key: _descriptionFieldKey,
-                    focusNode: _descriptionFocus,
-                    controller: _descriptionController,
-                    maxLines: 3,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.eventDescriptionHint,
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 12,
-                  children: [
-                    FilledButton(
-                      onPressed: _onSubmit,
-                      child: Text(location.saveButton),
-                    ),
                   ],
                 ),
-              ],
+              ),
             ),
-          ),
+
+            if (_isSubmitting)
+              Container(
+                color: Colors.black.withValues(alpha: 0.3),
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+          ],
         );
       },
     );
@@ -420,11 +434,15 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   Future<void> _onSubmit() async {
     final location = AppLocalizations.of(context)!;
+    setState(() => _isSubmitting = true);
 
-    // Primero forzamos la validación para que los errores aparezcan
+    await Future.delayed(const Duration(milliseconds: 500));
+
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
+      setState(() => _isSubmitting = false);
+
       // Lista ordenada de pares (key, focusNode) en el mismo orden visual del formulario.
       final fields = <MapEntry<GlobalKey<FormFieldState>, FocusNode>>[
         MapEntry(_nameFieldKey, _nameFocus),
@@ -452,7 +470,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
         barrierDismissible: false,
         builder: (_) => CustomErrorDialog(
           errorMessage: location.formError,
-          onCancel: () => Navigator.of(context).pop(), buttonText: location.closeButton,
+          onCancel: () => Navigator.of(context).pop(),
+          buttonText: location.closeButton,
         ),
       );
 
@@ -504,8 +523,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
       description: _descriptionController.text,
     );
     await eventFormViewModel.onSubmit(eventModified);
-    if (mounted) {
-      Navigator.pop(context, eventModified);
-    }
+    if (!mounted) return;
+
+    setState(() => _isSubmitting = false);
+    Navigator.pop(context, eventModified);
   }
 }
