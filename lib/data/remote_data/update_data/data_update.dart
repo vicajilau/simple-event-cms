@@ -103,7 +103,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       [organization],
       organization,
-      "events/${organization.year}/${organization.pathUrl}",
+      "events/${organization.pathUrl}",
       organization.updateMessage,
     );
   }
