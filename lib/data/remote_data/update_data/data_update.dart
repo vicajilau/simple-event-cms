@@ -100,8 +100,7 @@ class DataUpdateInfo {
 
   /// Loads organization information from the organization.json file
     Future<void> updateOrganization(Organization organization) async {
-    await dataCommons.updateData(
-      [organization],
+    await dataCommons.updateSingleData(
       organization,
       "events/${organization.pathUrl}",
       organization.updateMessage,

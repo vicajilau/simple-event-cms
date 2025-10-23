@@ -21,10 +21,7 @@ class ConfigLoader {
     return Organization.fromJson(data);
   }
   static Future<Organization> loadOrganization() async {
-    final localConfigPath = 'events/organization/organization.json';
-    final String response = await rootBundle.loadString(localConfigPath);
-    final data = await json.decode(response);
-    var localOrganization = Organization.fromJson(data);
+    var localOrganization = await getLocalOrganization();
     final configUrl = 'events/organization/organization.json';
     var githubService = await SecureInfo.getGithubKey();
     var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
@@ -46,7 +43,12 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-      return Organization.fromJson(fileJsonData);
+      var orgToUse = Organization.fromJson(fileJsonData);
+      if (getIt.isRegistered<Organization>()) {
+        getIt.unregister<Organization>();
+      }
+      getIt.registerSingleton<Organization>(orgToUse);
+      return orgToUse;
     }
   }
 
