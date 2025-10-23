@@ -1,1 +1,1 @@
-[{"UID":"Track_20251023_094211","name":"room1","color":"","sessionUids":[],"eventUid":"Event_20251023_094219"},{"UID":"Track_20251023_094215","name":"room2","color":"","sessionUids":[],"eventUid":"Event_20251023_094219"}]
+[{"UID":"Track_20251023_094211","name":"room1","color":"","sessionUids":[{"UID":"Session_20251023_094245"}],"eventUid":"Event_20251023_094219"},{"UID":"Track_20251023_094215","name":"room2","color":"","sessionUids":[],"eventUid":"Event_20251023_094219"}]
