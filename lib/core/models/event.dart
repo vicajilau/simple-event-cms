@@ -55,9 +55,9 @@ class Event extends GitHubModel {
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {
     List<Track> tracks = (json['tracks'] != null)
-        ? (json['tracks'] as List)
-            .map((item) => Track.fromJson(item))
-            .toList()
+        ? (json['tracks'] as List?)
+            ?.map((item) => Track.fromJson(item))
+            .toList() ?? []
         : [];
     return Event(
       uid: json["UID"].toString(),

@@ -23,16 +23,16 @@ abstract class SecRepository {
   Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId);
   Future<Result<void>> removeSpeaker(String speakerId);
   Future<Result<void>> saveAgendaDay(AgendaDay agendaDay, String eventUID);
-  Future<Result<void>> removeAgendaDay(String agendaDayId);
+  Future<Result<void>> removeAgendaDay(String agendaDayId,String eventUID);
   Future<Result<void>> addSession(
     Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId,Speaker speaker);
-  Future<Result<void>> deleteSessionFromAgendaDay(String sessionId);
+  Future<Result<void>> deleteSession(String sessionId);
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
   Future<Result<void>> removeSponsor(String sponsorId);
   Future<Result<void>> removeEvent(String eventId);
-  Future<Result<void>> removeTrack(String trackUID);
+  Future<Result<void>> removeTrack(String trackUID,String eventUID) ;
 
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
 }
