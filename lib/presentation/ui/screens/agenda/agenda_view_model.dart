@@ -64,7 +64,7 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
   @override
   Future<void> removeSession(String sessionId) async {
-    await agendaUseCase.deleteSessionFromAgendaDay(sessionId);
+    await agendaUseCase.deleteSession(sessionId);
   }
 
   @override

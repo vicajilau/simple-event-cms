@@ -14,6 +14,7 @@ class DataUpdate {
   static Future<void> deleteItemAndAssociations(
     String itemId,
     Type itemType,
+  {String? eventUID}
   ) async {
     switch (itemType.toString()) {
       case "Event":
@@ -26,7 +27,7 @@ class DataUpdate {
         await _deleteTrack(itemId, dataLoader, dataUpdateInfo);
         break;
       case "AgendaDay":
-        await _deleteAgendaDay(itemId, dataLoader, dataUpdateInfo);
+        await _deleteAgendaDay(itemId, dataLoader, dataUpdateInfo,eventUID.toString());
         break;
       case "Speaker":
         await _deleteSpeaker(itemId, dataLoader, dataUpdateInfo);
@@ -255,8 +256,17 @@ class DataUpdate {
     DataUpdateInfo dataUpdateInfo,
     String? parentId,
   ) async {
+
     if (parentId != null && parentId.isNotEmpty) {
-      day.eventUID = parentId;
+      var allDays = await dataLoader.loadAllDays();
+      var existingDay = allDays.firstWhere((d) => d.uid == day.uid, orElse: () => day);
+
+      if (!existingDay.eventUID.contains(parentId)) {
+        existingDay.eventUID.add(parentId);
+      }
+      existingDay.trackUids?.toList().removeWhere((trackId) => day.trackUids?.contains(trackId) == true);
+      existingDay.trackUids?.addAll(day.trackUids?.toList() ?? []);
+      day = existingDay;
     }
     // If agenda days are associated with an agenda, update the agenda.
     await dataUpdateInfo.updateAgendaDay(day);
@@ -268,21 +278,38 @@ class DataUpdate {
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
   ) async {
-    List<AgendaDay> allAgendaDays = await dataLoader.loadAllDays();
-    final dayMap = {for (var d in allAgendaDays) d.uid: d};
+    var allDays = await dataLoader.loadAllDays();
+    Map<String, AgendaDay> allDaysMap = {for (var day in allDays) day.uid: day};
+
     for (var day in days) {
-      dayMap[day.uid] = day;
+      if (allDaysMap.containsKey(day.uid)) {
+        allDaysMap[day.uid]?.eventUID.addAll(day.eventUID);
+      } else {
+        allDaysMap[day.uid] = day;
+      }
     }
-    await dataUpdateInfo.updateAgendaDays(dayMap.values.toList());
+    await dataUpdateInfo.updateAgendaDays(allDaysMap.values.toList());
   }
 
   static Future<void> _deleteAgendaDay(
     String dayId,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
+    String eventId
   ) async {
-    await dataUpdateInfo.removeAgendaDay(dayId);
-    debugPrint("AgendaDay $dayId and its associations removed.");
+    var agendaDays = await dataLoader.loadAllDays();
+    var agendaDay = agendaDays.firstWhere((day) => day.uid == dayId);
+    if(agendaDay.eventUID.isNotEmpty){
+      agendaDay.eventUID.remove(eventId);
+      debugPrint("AgendaDay $dayId remove eventId from eventUID.");
+      if(agendaDay.eventUID.isEmpty){
+        await dataUpdateInfo.removeAgendaDay(dayId);
+        debugPrint("AgendaDay $dayId and its associations removed.");
+      }
+    }else{
+      await dataUpdateInfo.removeAgendaDay(dayId);
+      debugPrint("AgendaDay $dayId and its associations removed.");
+    }
   }
 
   static Future<void> _addSpeaker(
@@ -381,8 +408,8 @@ Future<void> _updateAgendaDaysRemovingTrack(
   DataUpdateInfo dataUpdateInfo,
 ) async {
   if (days.length == 1) {
-    await _removeTrackFromDay(days.first, trackId);
-    await dataUpdateInfo.updateAgendaDay(days.first);
+    var daysUpdated = await _removeTrackFromDay(days.first, trackId);
+    await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
     days.map((day) async {
       await _removeTrackFromDay(day, trackId);

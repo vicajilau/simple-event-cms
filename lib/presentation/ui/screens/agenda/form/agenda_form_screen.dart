@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/utils/app_fonts.dart';
+import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
@@ -76,7 +76,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
       data.eventId!,
     );
-    var fechedTracks = await widget.viewmodel.getTracks() ?? [];
+    var fechedTracks = await widget.viewmodel.getTracksByEventId(widget.data!.eventId.toString()) ?? [];
     var fetchedAgendaDays =
         await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
     event = await widget.viewmodel.getEventById(data.eventId!);
@@ -523,10 +523,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               AgendaDay agendaDay = agendaDays.firstWhere(
                 (day) => day.uid == _selectedDay,
               );
-              agendaDay.eventUID = event.uid.toString();
+              agendaDay.eventUID.add(event.uid.toString());
               agendaDay.trackUids?.add(selectedTrack.uid);
               agendaDay.resolvedTracks?.toList().add(selectedTrack);
-              agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              if(agendaDays.indexWhere((day) => day.uid == _selectedDay) != -1) {
+                agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              }
               agendaDays.add(agendaDay);
               event.tracks.removeWhere(
                 (track) => track.uid == _selectedTrackUid,
@@ -549,7 +551,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 () => agendaFormViewModel.viewState.value =
                     ViewState.loadFinished,
               );
-              if (mounted) {
+              var containsAgendaDays = agendaDays.indexWhere((day) =>
+              day.trackUids != null && day.trackUids!.isNotEmpty,
+              );
+              if (mounted && containsAgendaDays != -1) {
                 Navigator.pop(
                   context,
                   agendaDays
@@ -559,6 +564,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       )
                       .toList(),
                 ); // Return true to indicate success
+              }else if(containsAgendaDays == -1){
+                if (mounted) {
+                  Navigator.pop(context);
+                }
+
               }
             }
           },
@@ -647,13 +657,13 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(location.addRoomTitle), // "Add New Room"
+          title: Text(location.addRoomTitle),
           content: TextFormField(
             controller: trackNameController,
             autofocus: true,
             decoration: InputDecoration(
               hintText: location.roomNameHint,
-            ), // "Room name"
+            ),
           ),
           actions: [
             TextButton(
@@ -686,7 +696,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   }
                 }
               },
-              child: Text(location.addButton), // "Add"
+              child: Text(location.addButton),
             ),
           ],
         );

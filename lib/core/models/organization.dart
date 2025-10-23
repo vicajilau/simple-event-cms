@@ -9,7 +9,7 @@ class Organization extends GitHubModel {
   String githubUser;
   String projectName = "simple-event-cms";
   String year;
-  String branch = "main";
+  String branch;
 
   Organization({
     super.uid = "unique-id-organization",

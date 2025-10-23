@@ -76,6 +76,8 @@ class DataUpdateInfo {
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
   Future<void> updateAgendaDays(List<AgendaDay> agendaDays) async {
+    var agendaDaysRepo = (await dataLoader.loadAllDays()).toList().where((day) => !agendaDays.contains(day)).toList();
+    agendaDaysRepo.addAll(agendaDays);
     await dataCommons.updateDataList(
       agendaDays,
       "events/${organization.year}/${PathsGithub.daysPath}",

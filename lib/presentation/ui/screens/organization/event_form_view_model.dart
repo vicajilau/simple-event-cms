@@ -8,7 +8,7 @@ import '../../../../core/models/event.dart';
 
 abstract class EventFormViewModel extends ViewModelCommon {
   Future<void> onSubmit(Event event);
-  Future<void> removeTrack(String trackUID);
+  Future<void> removeTrack(String trackUID,String eventUID);
 }
 
 class EventFormViewModelImpl extends EventFormViewModel {
@@ -40,7 +40,7 @@ class EventFormViewModelImpl extends EventFormViewModel {
   }
 
   @override
-  Future<void> removeTrack(String trackUID) async {
-    await eventFormUseCase.removeTrack(trackUID);
+  Future<void> removeTrack(String trackUID,String eventUID) async {
+    await eventFormUseCase.removeTrack(trackUID,eventUID);
   }
 }

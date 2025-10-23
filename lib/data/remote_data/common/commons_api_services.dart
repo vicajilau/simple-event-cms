@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
@@ -33,7 +34,7 @@ abstract class CommonsServices {
 }
 
 class CommonsServicesImp extends CommonsServices {
-  GithubData? githubService;
+  late GithubData githubService;
   Organization organization = getIt<Organization>();
 
   /// Generic method to load data from a specified path
@@ -143,12 +144,12 @@ class CommonsServicesImp extends CommonsServices {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
 
@@ -168,14 +169,14 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -234,7 +235,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(
@@ -249,8 +250,49 @@ class CommonsServicesImp extends CommonsServices {
         "Failed to update data at $pathUrl: ${response.body}",
       );
     }
+    // After a successful write operation to GitHub, there can be a small delay
+    // before the change is propagated and visible via the API for subsequent reads.
+    // This function polls the file content until it matches the content we just wrote.
+    await _waitForContentUpdate(
+        github, repositorySlug, pathUrl, branch, base64Content);
 
     return response;
+  }
+  /// Polls GitHub to verify that the file content has been updated.
+  /// Retries a few times with a delay if the content is not immediately updated.
+  Future<void> _waitForContentUpdate(
+    GitHub github,
+    RepositorySlug repositorySlug,
+    String pathUrl,
+    String branch,
+    String expectedBase64Content,
+  ) async {
+    const maxRetries = 5;
+    const retryDelay = Duration(seconds: 2);
+
+    for (int i = 0; i < maxRetries; i++) {
+      try {
+        // Fetch the latest content of the file from GitHub.
+        final contents = await github.repositories.getContents(
+          repositorySlug,
+          pathUrl,
+          ref: branch,
+        );
+
+        // The content from GitHub API has newlines, remove them for a reliable comparison.
+        final currentContent = contents.file?.content?.replaceAll('\n', '');
+
+        if (currentContent == expectedBase64Content) {
+          // The content is updated, we can return successfully.
+          return;
+        }
+      } catch (e) {
+        debugPrint("fail to update: $pathUrl");
+      }
+
+      // Wait before the next retry.
+      await Future.delayed(retryDelay);
+    }
   }
 
   /// Generic function to remove data from GitHub
@@ -266,11 +308,11 @@ class CommonsServicesImp extends CommonsServices {
     // You must read the file, remove the item locally, and write the entire file back.
 
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw GithubException("GitHub token is not available.");
     }
 
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
@@ -283,7 +325,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -314,7 +356,7 @@ class CommonsServicesImp extends CommonsServices {
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -334,7 +376,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -345,6 +387,11 @@ class CommonsServicesImp extends CommonsServices {
         "Failed to save updated data after removal at $pathUrl: ${response.body}",
       );
     }
+    // After a successful write operation to GitHub, there can be a small delay
+    // before the change is propagated and visible via the API for subsequent reads.
+    // This function polls the file content until it matches the content we just wrote.
+    await _waitForContentUpdate(
+        github, repositorySlug, pathUrl, branch, base64Content);
     return response;
   }
 
@@ -362,16 +409,16 @@ class CommonsServicesImp extends CommonsServices {
       (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
-    if (githubService?.token == null) {
+    if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService!.token));
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
     String branch =
-        githubService?.branch ?? 'main'; // Default to 'main' if not specified
+        githubService.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -385,7 +432,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: githubService?.branch ?? 'main',
+        ref: githubService.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -443,7 +490,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService?.token}',
+        "Authorization": 'Bearer ${githubService.token}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -454,6 +501,11 @@ class CommonsServicesImp extends CommonsServices {
         "Failed to update data at $pathUrl: ${response.body}",
       );
     }
+    // After a successful write operation to GitHub, there can be a small delay
+    // before the change is propagated and visible via the API for subsequent reads.
+    // This function polls the file content until it matches the content we just wrote.
+    await _waitForContentUpdate(
+        github, repositorySlug, pathUrl, branch, base64Content);
     return response;
   }
 }
