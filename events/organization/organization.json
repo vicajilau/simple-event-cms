@@ -1,1 +1,9 @@
-[{"organizationName":"test_organization_is_working","primaryColorOrganization":"#4285F4","secondaryColorOrganization":"#4285F4","github_user":"vicajilau","project_name":"simple-event-cms","year":"2025","branch":"feature/correct_issues"}]
+{
+  "organizationName": "Random Organization",
+  "primaryColorOrganization": "#4285F4",
+  "secondaryColorOrganization": "#34A853",
+  "github_user": "vicajilau",
+  "project_name": "simple-event-cms",
+  "year": "2025",
+  "branch": "feature/correct_issues"
+}
