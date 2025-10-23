@@ -181,9 +181,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> removeAgendaDay(String agendaDayId) async {
+  Future<Result<void>> removeAgendaDay(String agendaDayId,String eventUID) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay);
+      await DataUpdate.deleteItemAndAssociations(agendaDayId, AgendaDay,eventUID: eventUID);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
@@ -272,7 +272,7 @@ class SecRepositoryImp extends SecRepository {
     try {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
-        agendaDays.where((agendaDay) => eventId == agendaDay.eventUID).toList(),
+        agendaDays.where((agendaDay) => agendaDay.eventUID.contains(eventId)).toList(),
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
@@ -289,11 +289,16 @@ class SecRepositoryImp extends SecRepository {
   ) async {
     try {
       var agendaDays = await dataLoader.loadAllDays();
+      var tracks = (await dataLoader.loadAllTracks()).toList().where((track) => track.eventUid != eventId).toList();
+      agendaDays = agendaDays.map((agendaDay) {
+        agendaDay.resolvedTracks?.removeWhere((track) => tracks.map((track) => track.uid).contains(track.uid));
+        return agendaDay;
+      }).toList();
       return Result.ok(
         agendaDays
             .where(
               (agendaDay) =>
-                  eventId == agendaDay.eventUID &&
+                  agendaDay.eventUID.contains(eventId) &&
                   agendaDay.resolvedTracks != null &&
                   agendaDay.resolvedTracks!.isNotEmpty &&
                   agendaDay.resolvedTracks!

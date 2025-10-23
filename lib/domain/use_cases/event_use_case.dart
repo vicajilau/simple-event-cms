@@ -54,7 +54,7 @@ class EventUseCaseImp implements EventUseCase {
           AgendaDay(
             uid:date,
             date:date,
-            eventUID: event.uid
+            eventUID: [event.uid].toList()
           ),
         );
       }

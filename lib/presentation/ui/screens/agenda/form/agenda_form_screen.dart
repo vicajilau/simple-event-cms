@@ -523,11 +523,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               AgendaDay agendaDay = agendaDays.firstWhere(
                 (day) => day.uid == _selectedDay,
               );
-              agendaDay.eventUID = event.uid.toString();
+              agendaDay.eventUID.add(event.uid.toString());
               agendaDay.trackUids?.add(selectedTrack.uid);
               agendaDay.resolvedTracks?.toList().add(selectedTrack);
-              if(agendaDays.indexWhere((day) => day.uid == _selectedDay) != -1){
-              agendaDays.removeWhere((day) => day.uid == _selectedDay);
+              if(agendaDays.indexWhere((day) => day.uid == _selectedDay) != -1) {
+                agendaDays.removeWhere((day) => day.uid == _selectedDay);
               }
               agendaDays.add(agendaDay);
               event.tracks.removeWhere(

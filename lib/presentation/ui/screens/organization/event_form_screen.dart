@@ -304,7 +304,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         _tracks = currentRooms;
                       },
                       removeRoom: (Track track) async {
-                        await eventFormViewModel.removeTrack(track.uid);
+                        await eventFormViewModel.removeTrack(track.uid,track.eventUid);
                       },
                       eventUid: widget.eventId.toString(),
                     ),
