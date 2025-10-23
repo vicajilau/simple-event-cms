@@ -411,15 +411,6 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
     try {
-      var events = await dataLoader.loadEvents();
-      var event = events.firstWhere((event) => event.uid == eventUID);
-      var posTrackToRemove = event.tracks.indexWhere(
-        (track) => track.uid == trackUID,
-      );
-      if (posTrackToRemove != -1) {
-        event.tracks.removeAt(posTrackToRemove);
-      }
-      await DataUpdate.addItemAndAssociations(event, event.uid);
       await DataUpdate.deleteItemAndAssociations(trackUID, Track);
       return Result.ok(null);
     } on Exception catch (e) {
