@@ -184,8 +184,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
       valueListenable: widget.eventCollectionViewModel.viewState,
       builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return FormScreenWrapper(
+            pageTitle: location.loadingTitle,
+            widgetFormChild: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot == ViewState.error) {
           return Scaffold(
@@ -424,6 +425,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }
 
   Future<void> _onSubmit() async {
+    setState(() {
+      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
+    });
     final location = AppLocalizations.of(context)!;
 
     // Primero forzamos la validación para que los errores aparezcan
@@ -511,6 +515,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
     );
     await eventFormViewModel.onSubmit(eventModified);
     if (mounted) {
+      setState(() {
+        widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
+      });
       Navigator.pop(context, eventModified);
     }
   }

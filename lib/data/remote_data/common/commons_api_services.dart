@@ -302,6 +302,7 @@ class CommonsServicesImp extends CommonsServices {
     T dataToRemove,
     String pathUrl,
     String commitMessage,
+    {int retries = 0}
   ) async {
     // This function needs the same logic as updateData: get SHA, then update.
     // GitHub API doesn't have a "remove item from JSON" endpoint.
@@ -382,7 +383,13 @@ class CommonsServicesImp extends CommonsServices {
       body: json.encode(requestBody),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 409) {
+      if (retries < 5) {
+        // The content on the server is out of date. Fetch the latest version, apply the change, and try again.
+        return updateDataList(dataOriginal, pathUrl, commitMessage, retries: retries + 1);
+      }
+      throw NetworkException("Failed to update data at $pathUrl after multiple retries due to conflicts: ${response.body}");
+    } else if (response.statusCode != 200) {
       throw NetworkException(
         "Failed to save updated data after removal at $pathUrl: ${response.body}",
       );
@@ -403,6 +410,7 @@ class CommonsServicesImp extends CommonsServices {
     List<T> dataList,
     String pathUrl,
     String commitMessage,
+    {int retries = 0}
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
       organization.githubUser,
@@ -496,7 +504,13 @@ class CommonsServicesImp extends CommonsServices {
       body: json.encode(requestBody),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode == 409) {
+      if (retries < 5) {
+        // Retry logic for conflicts, up to 5 times.
+        return updateDataList(dataList, pathUrl, commitMessage, retries: retries + 1);
+      }
+      throw NetworkException("Failed to update data at $pathUrl after multiple retries due to conflicts: ${response.body}");
+    } else if (response.statusCode != 200) {
       throw NetworkException(
         "Failed to update data at $pathUrl: ${response.body}",
       );
@@ -508,4 +522,5 @@ class CommonsServicesImp extends CommonsServices {
         github, repositorySlug, pathUrl, branch, base64Content);
     return response;
   }
+
 }
