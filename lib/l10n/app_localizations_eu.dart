@@ -415,4 +415,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get roomNameHint => 'Room name';
+
+  @override
+  String get formError => 'Formularioan akatsak daude';
 }
