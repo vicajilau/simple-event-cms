@@ -50,11 +50,12 @@ class AgendaViewModelImp extends AgendaViewModel {
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     viewState.value = ViewState.loadFinished;
     switch (result) {
-      case Ok<void>():
+      case Ok<List<AgendaDay>>():
+        agendaDays.value = result.value;
         viewState.value = ViewState.loadFinished;
         return result;
       case Error():
-        viewState.value = ViewState.loadFinished;
+        viewState.value = ViewState.error;
         setErrorKey(result.error);
         return result;
     }
@@ -70,7 +71,7 @@ class AgendaViewModelImp extends AgendaViewModel {
         viewState.value = ViewState.loadFinished;
         return result;
       case Error():
-        viewState.value = ViewState.loadFinished;
+        viewState.value = ViewState.error;
         setErrorKey(result.error);
         return result;
     }
@@ -85,7 +86,7 @@ class AgendaViewModelImp extends AgendaViewModel {
         viewState.value = ViewState.loadFinished;
         return result;
       case Error():
-        viewState.value = ViewState.loadFinished;
+        viewState.value = ViewState.error;
         setErrorKey(result.error);
         return result;
     }

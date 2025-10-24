@@ -8,7 +8,7 @@ import '../../../../core/models/event.dart';
 import '../../../../core/utils/result.dart';
 
 abstract class EventFormViewModel extends ViewModelCommon {
-  Future<void> onSubmit(Event event);
+  Future<bool> onSubmit(Event event);
   Future<void> removeTrack(String trackUID,String eventUID);
 }
 
@@ -35,21 +35,33 @@ class EventFormViewModelImpl extends EventFormViewModel {
   void setup([Object? argument]) {}
 
   @override
-  Future<void> onSubmit(Event event) async {
+  Future<bool> onSubmit(Event event) async {
     viewState.value = ViewState.isLoading;
     final result = await eventFormUseCase.prepareAgendaDays(event);
     switch (result) {
       case Ok<void>():
-        await eventFormUseCase.saveEvent(event);
-        viewState.value = ViewState.loadFinished;
+        var resultEvent = await eventFormUseCase.saveEvent(event);
+        switch (resultEvent) {
+          case Ok<void>():
+            viewState.value = ViewState.loadFinished;
+            return true;
+          case Error():
+            setErrorKey(resultEvent.error);
+            debugPrint('error located into onSubmit()  in saveevent: ${resultEvent.error.message}');
+            viewState.value = ViewState.error;
+            return false;
+        }
       case Error():
         setErrorKey(result.error);
+        debugPrint('error located into onSubmit()  in prepareAgendaDays: ${result.error.message}');
         viewState.value = ViewState.error;
+        return false;
     }
   }
 
   @override
   Future<void> removeTrack(String trackUID,String eventUID) async {
+    viewState.value = ViewState.isLoading;
     var result = await eventFormUseCase.removeTrack(trackUID,eventUID);
     switch (result) {
       case Ok<void>():

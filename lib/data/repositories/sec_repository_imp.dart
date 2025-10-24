@@ -97,7 +97,8 @@ class SecRepositoryImp extends SecRepository {
                 !agendaDays
                     .map((agendaDayToSave) => agendaDayToSave.uid)
                     .contains(agendaDay.uid) &&
-                agendaDay.trackUids?.isNotEmpty == true,
+                agendaDay.trackUids?.isNotEmpty == true
+        && agendaDay.resolvedTracks?.expand((track) => track.resolvedSessions).isNotEmpty == true,
           )
           .toList()
           .isNotEmpty;

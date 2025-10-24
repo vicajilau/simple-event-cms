@@ -157,13 +157,12 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   Future<Event?> getEventById(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result =  await useCase.getEventById(eventId);
-    viewState.value = ViewState.loadFinished;
     switch (result) {
       case Ok<Event?>():
         viewState.value = ViewState.loadFinished;
         return result.value;
       case Error():
-        viewState.value = ViewState.loadFinished;
+        viewState.value = ViewState.error;
         setErrorKey(result.error);
         return null;
     }
