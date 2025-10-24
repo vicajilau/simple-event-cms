@@ -463,12 +463,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ];
 
       // Encontrar los que tienen error
-      final invalid = fields.where((f) {
+      final invalid = fields.toList().where((f) {
         final state = f.key.currentState;
         return state != null && state.hasError;
       }).toList();
 
       final lastInvalid = invalid.last;
+      
       await showDialog(
         context: context,
         barrierDismissible: false,

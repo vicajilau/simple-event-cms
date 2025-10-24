@@ -33,6 +33,7 @@ class AgendaScreen extends StatefulWidget {
 
 class _AgendaScreenState extends State<AgendaScreen> {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
+  bool _isDeleting = false;
 
   @override
   void initState() {
@@ -154,36 +155,51 @@ class _AgendaScreenState extends State<AgendaScreen> {
     String agendaDayId,
     String eventId,
   ) {
-    return DefaultTabController(
-      initialIndex: tabBarIndex,
-      length: tracks.length,
-      child: Column(
-        children: [
-          TabBar(
-            isScrollable: true,
-            tabs: List.generate(tracks.length, (index) {
-              return Tab(text: tracks[index].name);
-            }),
+    return Stack(
+      children: [
+        DefaultTabController(
+          initialIndex: tabBarIndex,
+          length: tracks.length,
+          child: Column(
+            children: [
+              TabBar(
+                isScrollable: true,
+                tabs: List.generate(tracks.length, (index) {
+                  return Tab(text: tracks[index].name);
+                }),
+              ),
+              CustomTabBarView(
+                agendaDayId: agendaDayId,
+                tracks: tracks,
+                currentIndex: tabBarIndex,
+                eventId: eventId,
+                onIndexChanged: (value) {
+                  final isExpanded =
+                      _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
+                  _updateTileState(
+                    key: agendaDayId,
+                    value: ExpansionTileState(
+                      isExpanded: isExpanded,
+                      tabBarIndex: value,
+                    ),
+                  );
+                },
+                // 👇 Pasamos el callback para mostrar/ocultar spinner global
+                onDeleteLoading: (bool value) {
+                  setState(() => _isDeleting = value);
+                },
+              ),
+            ],
           ),
-          CustomTabBarView(
-            agendaDayId: agendaDayId,
-            tracks: tracks,
-            currentIndex: tabBarIndex,
-            eventId: eventId,
-            onIndexChanged: (value) {
-              final isExpanded =
-                  _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
-              _updateTileState(
-                key: agendaDayId,
-                value: ExpansionTileState(
-                  isExpanded: isExpanded,
-                  tabBarIndex: value,
-                ),
-              );
-            },
+        ),
+
+        // 👇 Overlay global visible cuando se está eliminando
+        if (_isDeleting)
+          Container(
+            color: const Color.fromARGB(100, 0, 0, 0),
+            child: const Center(child: CircularProgressIndicator()),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -201,6 +217,7 @@ class CustomTabBarView extends StatefulWidget {
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
   final String agendaDayId, eventId;
+  final ValueChanged<bool> onDeleteLoading;
 
   CustomTabBarView({
     super.key,
@@ -209,6 +226,7 @@ class CustomTabBarView extends StatefulWidget {
     required this.onIndexChanged,
     required this.agendaDayId,
     required this.eventId,
+    required this.onDeleteLoading,
   });
 
   @override
@@ -233,6 +251,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
         eventId: widget.eventId,
+        onDeleteLoading: widget.onDeleteLoading,
       );
     });
   }
@@ -260,12 +279,15 @@ class SessionCards extends StatefulWidget {
   final AgendaViewModel viewModel = getIt<AgendaViewModel>();
   final String agendaDayId, trackId, eventId;
   final List<Session> sessions;
+  final ValueChanged<bool> onDeleteLoading;
+
   SessionCards({
     super.key,
     required this.sessions,
     required this.agendaDayId,
     required this.trackId,
     required this.eventId,
+    required this.onDeleteLoading,
   });
 
   @override
@@ -328,8 +350,16 @@ class _SessionCardsState extends State<SessionCards> {
                             title: location.deleteSessionTitle,
                             message: location.deleteSessionMessage,
                             onDeletePressed: () async {
+                              widget.onDeleteLoading(true);
+
+                              await Future.delayed(
+                                const Duration(milliseconds: 500),
+                              );
                               await widget.viewModel.removeSession(session.uid);
                               widget.viewModel.loadAgendaDays(widget.eventId);
+
+                              widget.onDeleteLoading(false);
+                              if (mounted) Navigator.of(context).pop();
                             },
                           );
                         },
