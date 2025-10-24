@@ -75,10 +75,14 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveTracks: $e');
-      return Result.error(NetworkException('Error in saveTracks, please try again'));
+      return Result.error(
+        NetworkException('Error in saveTracks, please try again'),
+      );
     } catch (e) {
       debugPrint('Error in saveTracks: $e');
-      return Result.error(NetworkException('Error in saveTracks, please try again'));
+      return Result.error(
+        NetworkException('Error in saveTracks, please try again'),
+      );
     }
   }
 
@@ -86,6 +90,7 @@ class SecRepositoryImp extends SecRepository {
   Future<Result<void>> saveAgendaDays(
     List<AgendaDay> agendaDays,
     String eventUID,
+  {bool overrideAgendaDays = false}
   ) async {
     try {
       var allAgendaDays = (await dataLoader.loadAllDays())
@@ -97,16 +102,23 @@ class SecRepositoryImp extends SecRepository {
                 !agendaDays
                     .map((agendaDayToSave) => agendaDayToSave.uid)
                     .contains(agendaDay.uid) &&
-                agendaDay.trackUids?.isNotEmpty == true
-        && agendaDay.resolvedTracks?.expand((track) => track.resolvedSessions).isNotEmpty == true,
+                agendaDay.trackUids?.isNotEmpty == true &&
+                agendaDay.resolvedTracks
+                        ?.expand((track) => track.resolvedSessions)
+                        .isNotEmpty ==
+                    true,
           )
           .toList()
           .isNotEmpty;
       if (thereAreAgendaDaysNotIncluded) {
-        return Result.error(NetworkException('There are sessions in days that are not included in the agenda days of the event, please delete them and try again'));
+        return Result.error(
+          NetworkException(
+            'There are sessions in days that are not included in the agenda days of the event, please delete them and try again',
+          ),
+        );
       }
 
-      await DataUpdate.addItemListAndAssociations(agendaDays);
+      await DataUpdate.addItemListAndAssociations(agendaDays,overrideData: overrideAgendaDays);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
