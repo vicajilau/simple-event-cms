@@ -82,8 +82,20 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays) async {
+  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays,String eventUID) async {
     try {
+      var allAgendaDays = (await dataLoader.loadAllDays())
+          .where((agendaDay) => agendaDay.eventUID.contains(eventUID))
+          .toList();
+        var agendaDaysNotIncluded = allAgendaDays
+            .where(
+              (element) => !agendaDays.map((e) => e.uid).contains(element.uid),
+            )
+            .toList();
+        agendaDaysNotIncluded.forEach((agendaDay) async {
+          await DataUpdate.deleteItemAndAssociations(agendaDay.uid, AgendaDay,eventUID: eventUID);
+        });
+
       await DataUpdate.addItemListAndAssociations(agendaDays);
       return Result.ok(null);
     } on Exception catch (e) {

@@ -44,7 +44,9 @@ class ConfigLoader {
       );
       final fileJsonData = json.decode(file);
       var orgToUse = Organization.fromJson(fileJsonData);
-      getIt.resetLazySingleton<Organization>(instance: orgToUse);
+      if(getIt.isRegistered<Organization>()){
+        getIt.resetLazySingleton<Organization>(instance: orgToUse);
+      }
       return orgToUse;
     }
   }

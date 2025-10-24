@@ -227,7 +227,16 @@ class DataUpdateInfo {
   /// Returns a `Future<http.Response>` indicating the outcome of the operation.
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
-    await dataCommons.updateData(
+    var sessions = (await dataLoader.loadAllSessions()).toList();
+    var sessionsReleatedWithAgendaDay = sessions.where((session) => session.agendaDayUID == agendaDayId).toList();
+
+    await dataCommons.removeDataList(
+      sessions,
+      sessionsReleatedWithAgendaDay,
+      "events/${organization.year}/${PathsGithub.sessionsPath}",
+      PathsGithub.sessionsUpdateMessage,
+    );
+    await dataCommons.removeData(
       agendaDaysListOriginal,
       agendaDaysListOriginal.firstWhere((day) => day.uid == agendaDayId),
       "events/${organization.year}/${PathsGithub.daysPath}",

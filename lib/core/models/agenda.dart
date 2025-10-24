@@ -22,11 +22,11 @@ class AgendaDay extends GitHubModel {
     return AgendaDay(
       uid: json['UID'],
       date: json['date'],
-      eventUID: (json['eventUID'] as List?)
-          ?.map((trackUid) => trackUid['UID'].toString())
-          .toList() ?? [],
+      eventUID: (json['eventUID'] as List<dynamic>?)
+          ?.map<String>((trackUid) => trackUid['UID'].toString())
+          .toSet().toList() ?? [],
       trackUids: (json['trackUids'] as List?)
-          ?.map((trackUid) => trackUid['UID'].toString())
+          ?.map<String>((trackUid) => trackUid['UID'].toString())
           .toList() ?? [],
       // resolvedTracks will be populated by DataLoader
     );
@@ -36,7 +36,7 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
-    "eventUID": eventUID.map((uid) => {'UID': uid}).toList(),
+    "eventUID": eventUID.toSet().map((uid) => {'UID': uid}).toList(),
     "trackUids": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }
@@ -47,7 +47,7 @@ class Track extends GitHubModel {
   String eventUid;
   final String color;
   List<String> sessionUids = [];
-  List<Session> resolvedSessions = []; // Field for in-memory resolved objects
+  List<Session> resolvedSessions = []; // Field for in-memory resolved objects, order might matter for display.
 
   Track({
     required super.uid,
@@ -66,9 +66,9 @@ class Track extends GitHubModel {
       name: json['name'],
       color: json['color'],
       eventUid: json['eventUid'],
-      sessionUids: (json['sessionUids'] as List)
-          .map((sessionUid) => sessionUid['UID'].toString())
-          .toList(),
+      sessionUids: (json['sessionUids'] as List<dynamic>)
+          .map<String>((sessionUid) => sessionUid['UID'].toString())
+          .toSet().toList(),
       // resolvedSessions will be populated by DataLoader
     );
   }

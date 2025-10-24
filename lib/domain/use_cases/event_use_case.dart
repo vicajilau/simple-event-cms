@@ -46,7 +46,7 @@ class EventUseCaseImp implements EventUseCase {
       final difference = endDate.difference(startDate).inDays;
       List<AgendaDay> days = [];
 
-      for (int i = 1; i <= difference; i++) {
+      for (int i = 0; i <= difference; i++) {
         var date = DateFormat(
           'yyyy-MM-dd',
         ).format(startDate.add(Duration(days: i)));
@@ -58,7 +58,7 @@ class EventUseCaseImp implements EventUseCase {
           ),
         );
       }
-      await repository.saveAgendaDays(days);
+      await repository.saveAgendaDays(days,event.uid);
     }
   }
 
