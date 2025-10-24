@@ -11,7 +11,7 @@ abstract class AgendaViewModel extends ViewModelCommon {
   Future<void> saveSpeaker(Speaker speaker, String eventId);
   Future<void> removeSession(String sessionId);
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
-  void loadAgendaDays(String eventId);
+  Future<void> loadAgendaDays(String eventId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -45,7 +45,7 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  void loadAgendaDays(String eventId) async {
+  Future<void> loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {

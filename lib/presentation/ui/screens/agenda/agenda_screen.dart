@@ -329,7 +329,7 @@ class _SessionCardsState extends State<SessionCards> {
                             message: location.deleteSessionMessage,
                             onDeletePressed: () async {
                               await widget.viewModel.removeSession(session.uid);
-                              widget.viewModel.loadAgendaDays(widget.eventId);
+                              await widget.viewModel.loadAgendaDays(widget.eventId);
                             },
                           );
                         },

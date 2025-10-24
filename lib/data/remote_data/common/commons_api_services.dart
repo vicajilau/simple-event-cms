@@ -408,7 +408,7 @@ class CommonsServicesImp extends CommonsServices {
     String expectedBase64Content,
   ) async {
     const maxRetries = 5;
-    const retryDelay = Duration(seconds: 2);
+    const retryDelay = Duration(seconds: 4);
 
     for (int i = 0; i < maxRetries; i++) {
       try {

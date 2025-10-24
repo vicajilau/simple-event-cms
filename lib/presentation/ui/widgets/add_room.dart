@@ -34,7 +34,7 @@ class _AddRoomState extends State<AddRoom> {
   }
 
   void _notifyCurrentRooms() {
-    widget.editedRooms(_tracks);
+    widget.editedRooms(_tracks.where((track) => track.name.isNotEmpty).toList());
   }
 
   void _addOption() {
