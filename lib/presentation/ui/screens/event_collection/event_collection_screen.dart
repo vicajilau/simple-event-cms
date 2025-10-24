@@ -29,6 +29,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;
+  final organization = getIt<Organization>();
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Future<void> _loadConfiguration() async {
     try {
       // Usar inyección de dependencias en lugar de crear instancias manualmente
-      final organization = getIt<Organization>();
+
 
       widget.viewmodel.setup();
 

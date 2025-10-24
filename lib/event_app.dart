@@ -19,7 +19,6 @@ class _EventAppState extends State<EventApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    _loadOrg();
   }
 
   void _loadOrg() async {

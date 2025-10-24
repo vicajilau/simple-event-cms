@@ -5,6 +5,9 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
 
 class OrganizationScreen extends StatefulWidget {
+
+
+
   const OrganizationScreen({super.key});
 
   @override
@@ -22,18 +25,19 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   late TextEditingController _branchController;
 
   final _viewModel = getIt<OrganizationViewModel>();
+  final organization = getIt<Organization>();
 
   @override
   void initState() {
     super.initState();
     // Initialize controllers with empty strings
-    _organizationNameController = TextEditingController();
-    _primaryColorOrganizationController = TextEditingController();
-    _secondaryColorOrganizationController = TextEditingController();
-    _githubUserController = TextEditingController();
-    _projectNameController = TextEditingController();
-    _yearController = TextEditingController();
-    _branchController = TextEditingController();
+    _organizationNameController = TextEditingController(text: organization.organizationName);
+    _primaryColorOrganizationController = TextEditingController(text: organization.primaryColorOrganization);
+    _secondaryColorOrganizationController = TextEditingController(text: organization.secondaryColorOrganization);
+    _githubUserController = TextEditingController(text: organization.githubUser);
+    _projectNameController = TextEditingController(text: organization.projectName);
+    _yearController = TextEditingController(text: organization.year);
+    _branchController = TextEditingController(text: organization.branch);
   }
 
   @override
