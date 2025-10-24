@@ -75,12 +75,20 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<void> updateAgendaDays(List<AgendaDay> agendaDays) async {
-    var agendaDaysRepo = (await dataLoader.loadAllDays())
-        .toList()
-        .where((day) => !agendaDays.contains(day))
-        .toList();
-    agendaDaysRepo.addAll(agendaDays);
+  Future<void> updateAgendaDays(List<AgendaDay> agendaDays,{bool overrideData = false}) async {
+    var agendaDaysRepo = (await dataLoader.loadAllDays());
+    if(overrideData == false) {
+      agendaDaysRepo
+          .toList()
+          .where((day) => !agendaDays.contains(day))
+          .toList();
+      agendaDaysRepo.addAll(agendaDays);
+    }else{
+      agendaDaysRepo
+          .toList()
+          .removeWhere((day) => day.eventUID.contains(agendaDays.first.eventUID.first));
+      agendaDaysRepo.addAll(agendaDays);
+    }
     await dataCommons.updateDataList(
       agendaDays,
       "events/${organization.year}/${PathsGithub.daysPath}",

@@ -106,30 +106,52 @@ class DataUpdate {
 
   static Future<void> addItemListAndAssociations(
     List<dynamic>
-    items, // Can be a list of Session, Track, AgendaDay, Speaker, Sponsor
-  ) async {
+    items, { // Can be a list of Session, Track, AgendaDay, Speaker, Sponsor
+    bool overrideData = false,
+  }) async {
     if (items.isEmpty) return;
 
     String itemType = items.first.runtimeType.toString();
     switch (itemType) {
       case "Session":
-        await _addSessions(items.cast<Session>(), dataLoader, dataUpdateInfo);
+        await _addSessions(
+          items.cast<Session>(),
+          dataLoader,
+          dataUpdateInfo,
+          overrideData: overrideData,
+        );
         break;
       case "Track":
-        await _addTracks(items.cast<Track>(), dataLoader, dataUpdateInfo);
+        await _addTracks(
+          items.cast<Track>(),
+          dataLoader,
+          dataUpdateInfo,
+          overrideData: overrideData,
+        );
         break;
       case "AgendaDay":
         await _addAgendaDays(
           items.cast<AgendaDay>(),
           dataLoader,
           dataUpdateInfo,
+          overrideData: overrideData,
         );
         break;
       case "Speaker":
-        await _addSpeakers(items.cast<Speaker>(), dataLoader, dataUpdateInfo);
+        await _addSpeakers(
+          items.cast<Speaker>(),
+          dataLoader,
+          dataUpdateInfo,
+          overrideData: overrideData,
+        );
         break;
       case "Sponsor":
-        await _addSponsors(items.cast<Sponsor>(), dataLoader, dataUpdateInfo);
+        await _addSponsors(
+          items.cast<Sponsor>(),
+          dataLoader,
+          dataUpdateInfo,
+          overrideData: overrideData,
+        );
         break;
       default:
         throw Exception(
@@ -181,8 +203,9 @@ class DataUpdate {
   static Future<void> _addSessions(
     List<Session> sessions,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    bool overrideData = false,
+  }) async {
     List<Session> allSessions = await dataLoader.loadAllSessions();
     final sessionMap = {for (var s in allSessions) s.uid: s};
     for (var session in sessions) {
@@ -239,8 +262,9 @@ class DataUpdate {
   static Future<void> _addTracks(
     List<Track> tracks,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    bool overrideData = false,
+  }) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
     final trackMap = {for (var t in allTracks) t.uid: t};
     for (var track in tracks) {
@@ -254,9 +278,9 @@ class DataUpdate {
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
   ) async {
-    Event event = (await dataLoader.loadEvents())
-        .toList()
-        .firstWhere((event) => event.tracks.any((track) => track.uid == trackId));
+    Event event = (await dataLoader.loadEvents()).toList().firstWhere(
+      (event) => event.tracks.any((track) => track.uid == trackId),
+    );
     event.tracks.removeWhere((track) => track.uid == trackId);
     await dataUpdateInfo.updateEvent(event);
     List<AgendaDay> allDays = await dataLoader.loadAllDays();
@@ -299,9 +323,17 @@ class DataUpdate {
   static Future<void> _addAgendaDays(
     List<AgendaDay> days,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    bool overrideData = false,
+  }) async {
     var allDays = await dataLoader.loadAllDays();
+    if (overrideData == true) {
+      allDays.removeWhere(
+        (day) =>
+            day.eventUID.contains(days.first.eventUID.first) &&
+            !days.map((dayModified) => dayModified.uid).contains(day.uid),
+      );
+    }
     Map<String, AgendaDay> allDaysMap = {for (var day in allDays) day.uid: day};
 
     for (var day in days) {
@@ -311,7 +343,8 @@ class DataUpdate {
         allDaysMap[day.uid] = day;
       }
     }
-    await dataUpdateInfo.updateAgendaDays(allDaysMap.values.toList());
+
+    await dataUpdateInfo.updateAgendaDays(allDaysMap.values.toList(),overrideData: overrideData);
   }
 
   static Future<void> _deleteAgendaDay(
@@ -353,8 +386,9 @@ class DataUpdate {
   static Future<void> _addSpeakers(
     List<Speaker> speakers,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    bool overrideData = false,
+  }) async {
     List<Speaker> allSpeakers = await dataLoader.loadSpeakers();
     final speakerMap = {for (var s in allSpeakers) s.uid: s};
     for (var speaker in speakers) {
@@ -400,8 +434,9 @@ class DataUpdate {
   static Future<void> _addSponsors(
     List<Sponsor> sponsors,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    bool overrideData = false,
+  }) async {
     List<Sponsor> allSponsors = await dataLoader.loadSponsors();
     final sponsorMap = {for (var s in allSponsors) s.uid: s};
     for (var sponsor in sponsors) {
