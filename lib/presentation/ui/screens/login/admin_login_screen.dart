@@ -47,7 +47,6 @@ class _LoginPageState extends State<AdminLoginScreen> {
             GithubData(
               token: github.auth.token.toString(),
               projectName: _projectName,
-              branch: organization.branch
             ),
           );
           // Check if there is basic authentication or token

@@ -22,7 +22,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  ErrorType errorType = ErrorType.none;
+  String errorMessage = '';
 
 
   @override

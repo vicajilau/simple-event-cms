@@ -20,7 +20,7 @@ abstract class SecRepository {
   Future<Result<void>> saveOrganization(Organization organization);
   Future<Result<void>> saveTracks(List<Track> tracks);
   Future<Result<void>> saveTrack(Track track,String agendaDayId);
-  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays);
+  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays, String eventUID,{bool overrideAgendaDays = false});
   Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId);
   Future<Result<void>> removeSpeaker(String speakerId);
   Future<Result<void>> saveAgendaDay(AgendaDay agendaDay, String eventUID);

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:sec/core/models/github/github_data.dart';
-import 'config_loader.dart';
 
 /// Defines a class named `SecureInfo` to interact with `FlutterSecureStorage`.
 ///
@@ -37,12 +36,11 @@ abstract class SecureInfo {
   /// Returns the value as a `String?` (can be null if the key does not exist).
   /// Throws an exception if an error occurs during reading.
   static Future<GithubData> getGithubKey() async {
-    final organization = await ConfigLoader.getLocalOrganization();
     String? githubServiceJson = await _storage.read(key: 'github_service');
     if (githubServiceJson != null) {
       // Convert the JSON string back to a GithubService object
       return GithubData.fromJson(jsonDecode(githubServiceJson));
     }
-    return GithubData(branch: organization.branch);
+    return GithubData();
   }
 }

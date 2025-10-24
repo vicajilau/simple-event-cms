@@ -8,8 +8,8 @@ import 'package:sec/presentation/view_model_common.dart';
 
 abstract class SponsorViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Sponsor>> sponsors;
-  void addSponsor(Sponsor sponsor, String parentId);
-  void removeSponsor(String id);
+  Future<void> addSponsor(Sponsor sponsor, String parentId);
+  Future<void> removeSponsor(String id);
 }
 
 class SponsorViewModelImpl extends SponsorViewModel {
@@ -21,7 +21,7 @@ class SponsorViewModelImpl extends SponsorViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  ErrorType errorType = ErrorType.none;
+  String errorMessage = '';
 
   @override
   Future<bool> checkToken() async {
@@ -32,18 +32,32 @@ class SponsorViewModelImpl extends SponsorViewModel {
   ValueNotifier<List<Sponsor>> sponsors = ValueNotifier([]);
 
   @override
-  void addSponsor(Sponsor sponsor, String parentId) async {
+  Future<void> addSponsor(Sponsor sponsor, String parentId) async {
     sponsors.value.removeWhere((s) => s.uid == sponsor.uid);
     sponsors.value = [...sponsors.value, sponsor];
-    sponsorUseCase.saveSponsor(sponsor, parentId);
+    final result = await sponsorUseCase.saveSponsor(sponsor, parentId);
+    switch (result) {
+      case Ok<void>():
+        viewState.value = ViewState.loadFinished;
+      case Error<void>():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
+    }
   }
 
   @override
-  void removeSponsor(String id) {
+  Future<void> removeSponsor(String id) async {
     List<Sponsor> currentSponsors = [...sponsors.value];
     currentSponsors.removeWhere((s) => s.uid == id);
     sponsors.value = currentSponsors;
-    sponsorUseCase.removeSponsor(id);
+    final result = await sponsorUseCase.removeSponsor(id);
+    switch (result) {
+      case Ok<void>():
+        viewState.value = ViewState.loadFinished;
+      case Error<void>():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
+    }
   }
 
   @override

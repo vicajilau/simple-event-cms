@@ -1,11 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/config/config_loader.dart';
+import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/organization.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
 /// Aplicación unificada que maneja tanto la vista de eventos como el panel de administración
 /// Usa GoRouter para navegación basada en rutas
-class EventApp extends StatelessWidget {
+class EventApp extends StatefulWidget {
   const EventApp({super.key});
+
+  @override
+  State<EventApp> createState() => _EventAppState();
+}
+
+class _EventAppState extends State<EventApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  void _loadOrg() async {
+    final organization = await ConfigLoader.loadOrganization();
+    getIt.resetLazySingleton<Organization>(instance: organization);
+
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      _loadOrg();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
