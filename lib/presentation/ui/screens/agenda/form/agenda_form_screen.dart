@@ -334,72 +334,73 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       Expanded(
                         child: SectionInputForm(
                           label: location.speakerLabel,
-                          childInput: speakers.isEmpty
-                              ? Row(
-                                  children: [
-                                    Text(location.noSpeakersMessage),
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.add_circle,
-                                        color: Theme.of(context).primaryColor,
-                                      ),
-                                      onPressed: () async {
-                                        // Allow adding a new speaker
-                                        final newSpeaker =
-                                            await Navigator.push<Speaker>(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    SpeakerFormScreen(
-                                                      eventUID: widget
-                                                          .data!
-                                                          .eventId
-                                                          .toString(),
-                                                    ),
-                                              ),
-                                            );
-                                        if (newSpeaker != null) {
-                                          await widget.viewmodel.addSpeaker(
-                                            widget.data!.eventId.toString(),
-                                            newSpeaker,
-                                          );
-                                          setState(() {
-                                            speakers.add(newSpeaker);
-                                            _selectedSpeaker = newSpeaker;
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                )
-                              : DropdownButtonFormField<Speaker>(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  initialValue: _selectedSpeaker,
-                                  decoration: InputDecoration(
-                                    hintText: location
-                                        .selectSpeakerHint, // Now shows Speaker's name
-                                  ),
-                                  items: speakers
-                                      .map(
-                                        (speaker) => DropdownMenuItem<Speaker>(
-                                          value:
-                                              speaker, // The value is the Speaker object
-                                          child: Text(speaker.name),
+                          childInput: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: speakers.isEmpty
+                                    ? Text(location.noSpeakersMessage)
+                                    : DropdownButtonFormField<Speaker>(
+                                        autovalidateMode:
+                                            AutovalidateMode.onUserInteraction,
+                                        initialValue: _selectedSpeaker,
+                                        decoration: InputDecoration(
+                                          hintText: location
+                                              .selectSpeakerHint, // Now shows Speaker's name
                                         ),
-                                      )
-                                      .toList(),
-                                  onChanged: (speaker) => setState(() {
-                                    _selectedSpeaker = speaker;
-                                  }),
-                                  validator: (value) {
-                                    if (value == null) {
-                                      // value is a Speaker object or null
-                                      return location.selectSpeakerError;
-                                    }
-                                    return null;
-                                  },
+                                        items: speakers
+                                            .map(
+                                              (speaker) =>
+                                                  DropdownMenuItem<Speaker>(
+                                                value:
+                                                    speaker, // The value is the Speaker object
+                                                child: Text(speaker.name),
+                                              ),
+                                            )
+                                            .toList(),
+                                        onChanged: (speaker) => setState(() {
+                                          _selectedSpeaker = speaker;
+                                        }),
+                                        validator: (value) {
+                                          if (value == null) {
+                                            // value is a Speaker object or null
+                                            return location.selectSpeakerError;
+                                          }
+                                          return null;
+                                        },
+                                      ),
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.add_circle,
+                                  color: Theme.of(context).primaryColor,
                                 ),
+                                onPressed: () async {
+                                  // Allow adding a new speaker
+                                  final newSpeaker =
+                                      await Navigator.push<Speaker>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => SpeakerFormScreen(
+                                        eventUID:
+                                            widget.data!.eventId.toString(),
+                                      ),
+                                    ),
+                                  );
+                                  if (newSpeaker != null) {
+                                    await widget.viewmodel.addSpeaker(
+                                      widget.data!.eventId.toString(),
+                                      newSpeaker,
+                                    );
+                                    setState(() {
+                                      speakers.add(newSpeaker);
+                                      _selectedSpeaker = newSpeaker;
+                                    });
+                                  }
+                                },
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Expanded(
