@@ -164,7 +164,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               context: context,
               builder: (BuildContext context) {
                 return CustomErrorDialog(
-                  errorMessage: location.unexpectedError,
+                  errorMessage: widget.viewmodel.errorMessage,
                   onCancel: () {
                     Navigator.of(context).pop();
                   },
@@ -686,12 +686,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     color: '',
                   );
 
-                  setState(() {
-                    tracks.add(newTrack);
-                    _selectedTrackUid = newTrack.uid;
-                  });
-                  await widget.viewmodel.addTrack(newTrack, _selectedDay);
-                  if (context.mounted) {
+                  var trackAdded = await widget.viewmodel.addTrack(newTrack, _selectedDay);
+                  if (context.mounted && trackAdded) {
+                    setState(() {
+                      tracks.add(newTrack);
+                      _selectedTrackUid = newTrack.uid;
+                    });
                     Navigator.pop(context);
                   }
                 }

@@ -19,7 +19,7 @@ abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
   Future<void> addSession(Session session, String trackUID);
   Future<void> addSpeaker(String eventId, Speaker speaker);
-  Future<void> addTrack(Track track,String agendaDayId);
+  Future<bool> addTrack(Track track,String agendaDayId);
   Future<void> updateEvent(Event event);
 }
 
@@ -229,17 +229,17 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> addTrack(Track track,String agendaDayId) async {
+  Future<bool> addTrack(Track track,String agendaDayId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.updateTrack(track, agendaDayId);
     switch (result) {
       case Ok<void>():
         viewState.value = ViewState.loadFinished;
-        return;
+        return true;
       case Error():
         setErrorKey(result.error);
         viewState.value = ViewState.error;
-        return;
+        return false;
     }
   }
 }

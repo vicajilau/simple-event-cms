@@ -71,6 +71,22 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveTracks(List<Track> tracks) async {
     try {
+      final allTracks = (await dataLoader.loadAllTracks()).where(
+        (track) => track.eventUid == tracks.first.eventUid,
+      );
+      for (final track in tracks) {
+        if (allTracks.any(
+          (existingTrack) =>
+              existingTrack.name.trim().toLowerCase() ==
+              track.name.trim().toLowerCase(),
+        )) {
+          return Result.error(
+            NetworkException(
+              'A track with the name "${track.name}" already exists.',
+            ),
+          );
+        }
+      }
       await DataUpdate.addItemListAndAssociations(tracks);
       return Result.ok(null);
     } on Exception catch (e) {
@@ -89,9 +105,9 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveAgendaDays(
     List<AgendaDay> agendaDays,
-    String eventUID,
-  {bool overrideAgendaDays = false}
-  ) async {
+    String eventUID, {
+    bool overrideAgendaDays = false,
+  }) async {
     try {
       var allAgendaDays = (await dataLoader.loadAllDays())
           .where((agendaDay) => agendaDay.eventUID.contains(eventUID))
@@ -118,7 +134,10 @@ class SecRepositoryImp extends SecRepository {
         );
       }
 
-      await DataUpdate.addItemListAndAssociations(agendaDays,overrideData: overrideAgendaDays);
+      await DataUpdate.addItemListAndAssociations(
+        agendaDays,
+        overrideData: overrideAgendaDays,
+      );
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
@@ -188,6 +207,21 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveTrack(Track track, String agendaDayId) async {
     try {
+      final allTracks = (await dataLoader.loadAllTracks()).where(
+        (track) => track.eventUid == track.eventUid,
+      );
+      if (allTracks.any(
+        (existingTrack) =>
+            existingTrack.name.trim().toLowerCase() ==
+            track.name.trim().toLowerCase(),
+      )) {
+        return Result.error(
+          NetworkException(
+            'A track with the name "${track.name}" already exists.',
+          ),
+        );
+      }
+
       await DataUpdate.addItemAndAssociations(track, agendaDayId);
       return Result.ok(null);
     } on Exception catch (e) {
