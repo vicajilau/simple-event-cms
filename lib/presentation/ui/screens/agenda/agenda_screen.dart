@@ -57,7 +57,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
           return Center(
-            child: ErrorView(errorType: widget.viewmodel.errorType),
+            child: ErrorView(errorMessage: widget.viewmodel.errorMessage),
           );
         }
 

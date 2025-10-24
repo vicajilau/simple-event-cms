@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -17,10 +18,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(events);
     } on Exception catch (e) {
       debugPrint('Error in loadEvents: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadEvents: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -31,10 +32,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(speakers);
     } on Exception catch (e) {
       debugPrint('Error in loadESpeakers: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadESpeakers: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -45,10 +46,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(sponsors);
     } on Exception catch (e) {
       debugPrint('Error in loadSponsors: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadSponsors: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -60,10 +61,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveEvent: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveEvent: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -74,36 +75,44 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveTracks: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Error in saveTracks, please try again'));
     } catch (e) {
       debugPrint('Error in saveTracks: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Error in saveTracks, please try again'));
     }
   }
 
   @override
-  Future<Result<void>> saveAgendaDays(List<AgendaDay> agendaDays,String eventUID) async {
+  Future<Result<void>> saveAgendaDays(
+    List<AgendaDay> agendaDays,
+    String eventUID,
+  ) async {
     try {
       var allAgendaDays = (await dataLoader.loadAllDays())
           .where((agendaDay) => agendaDay.eventUID.contains(eventUID))
           .toList();
-        var agendaDaysNotIncluded = allAgendaDays
-            .where(
-              (element) => !agendaDays.map((e) => e.uid).contains(element.uid),
-            )
-            .toList();
-        agendaDaysNotIncluded.forEach((agendaDay) async {
-          await DataUpdate.deleteItemAndAssociations(agendaDay.uid, AgendaDay,eventUID: eventUID);
-        });
+      var thereAreAgendaDaysNotIncluded = allAgendaDays
+          .where(
+            (agendaDay) =>
+                !agendaDays
+                    .map((agendaDayToSave) => agendaDayToSave.uid)
+                    .contains(agendaDay.uid) &&
+                agendaDay.trackUids?.isNotEmpty == true,
+          )
+          .toList()
+          .isNotEmpty;
+      if (thereAreAgendaDaysNotIncluded) {
+        return Result.error(NetworkException('There are sessions in days that are not included in the agenda days of the event, please delete them and try again'));
+      }
 
       await DataUpdate.addItemListAndAssociations(agendaDays);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -114,10 +123,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveSpeaker: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveSpeaker: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -128,10 +137,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveSponsor: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveSponsor: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -142,10 +151,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in addSession: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in addSession: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -156,10 +165,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in addSpeaker: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in addSpeaker: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -170,10 +179,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveTrack: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveTrack: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -185,10 +194,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeEvent: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in removeEvent: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -206,10 +215,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -220,10 +229,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeSpeaker: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in removeSpeaker: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -234,10 +243,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeSponsor: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in removeSponsor: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -248,10 +257,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in deleteSessionFromAgendaDay: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in deleteSessionFromAgendaDay: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -264,10 +273,10 @@ class SecRepositoryImp extends SecRepository {
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayById: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadAgendaDayById: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -278,10 +287,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(tracks.firstWhere((track) => track.uid == trackId));
     } on Exception catch (e) {
       debugPrint('Error in loadTrackById: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadTrackById: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -296,10 +305,10 @@ class SecRepositoryImp extends SecRepository {
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -334,10 +343,10 @@ class SecRepositoryImp extends SecRepository {
       );
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventIdFiltered: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadAgendaDayByEventIdFiltered: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -351,10 +360,10 @@ class SecRepositoryImp extends SecRepository {
       );
     } on Exception catch (e) {
       debugPrint('Error in loadTracksByEventId: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadTracksByEventId: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -366,10 +375,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(tracks);
     } on Exception catch (e) {
       debugPrint('Error in loadTracks: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadTracks: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -380,10 +389,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(events.firstWhere((event) => event.uid == eventId));
     } on Exception catch (e) {
       debugPrint('Error in loadEventById: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in loadEventById: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -396,10 +405,10 @@ class SecRepositoryImp extends SecRepository {
       );
     } on Exception catch (e) {
       debugPrint('Error in getSpeakersForEventId: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in getSpeakersForEventId: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -413,10 +422,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -427,10 +436,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeTrack: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in removeTrack: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 
@@ -441,10 +450,10 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveOrganization: $e');
-      return Result.error(e);
+      return Result.error(NetworkException('Something really unknown: $e'));
     } catch (e) {
       debugPrint('Error in saveOrganization: $e');
-      return Result.error(Exception('Something really unknown: $e'));
+      return Result.error(NetworkException('Something really unknown: $e'));
     }
   }
 }

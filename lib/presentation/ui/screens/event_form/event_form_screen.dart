@@ -88,6 +88,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
         widget.eventId!,
       );
       _eventFuture?.catchError((error) {
+        widget.eventCollectionViewModel.setErrorKey(error);
+        widget.eventCollectionViewModel.viewState.value = ViewState.error;
         return null;
       });
       _eventFuture?.then((event) {

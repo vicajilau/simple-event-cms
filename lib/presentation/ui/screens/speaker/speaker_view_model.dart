@@ -23,7 +23,7 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  ErrorType errorType = ErrorType.none;
+  String errorMessage = '';
 
   @override
   Future<bool> checkToken() async {
@@ -51,11 +51,18 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   }
 
   @override
-  void removeSpeaker(String id) {
+  Future<void> removeSpeaker(String id) async {
     List<Speaker> currentSpeakers = [...speakers.value];
     currentSpeakers.removeWhere((s) => s.uid == id);
     speakers.value = currentSpeakers;
-    _speakerUseCase.removeSpeaker(id);
+    final result = await _speakerUseCase.removeSpeaker(id);
+    switch (result) {
+      case Ok<void>():
+        viewState.value = ViewState.loadFinished;
+      case Error():
+        setErrorKey(result.error);
+        viewState.value = ViewState.error;
+    }
   }
 
   @override

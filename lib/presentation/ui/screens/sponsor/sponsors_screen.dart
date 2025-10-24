@@ -53,7 +53,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
           return Center(
-            child: ErrorView(errorType: widget.viewmodel.errorType),
+            child: ErrorView(errorMessage: widget.viewmodel.errorMessage),
           );
         }
 
@@ -213,8 +213,8 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                   Icons.delete,
                                                   size: 20,
                                                 ),
-                                                onPressed: () {
-                                                  widget.viewmodel
+                                                onPressed: () async {
+                                                  await widget.viewmodel
                                                       .removeSponsor(
                                                         sponsor.uid,
                                                       );

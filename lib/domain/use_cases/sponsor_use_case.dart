@@ -5,8 +5,8 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class SponsorUseCase {
   Future<Result<List<Sponsor>>> getSponsorByIds(String eventId);
-  void saveSponsor(Sponsor sponsor, String parentId);
-  void removeSponsor(String sponsorId);
+  Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
+  Future<Result<void>> removeSponsor(String sponsorId);
 }
 
 class SponsorUseCaseImp implements SponsorUseCase {
@@ -28,12 +28,24 @@ class SponsorUseCaseImp implements SponsorUseCase {
   }
 
   @override
-  void saveSponsor(Sponsor sponsor, String parentId) {
-    repository.saveSponsor(sponsor, parentId);
+  Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId) async {
+    final result = await repository.saveSponsor(sponsor, parentId);
+    switch (result) {
+      case Ok<void>():
+        return result;
+      case Error<void>():
+        return Result.error(result.error);
+    }
   }
 
   @override
-  void removeSponsor(String sponsorId) {
-    repository.removeSponsor(sponsorId);
+  Future<Result<void>> removeSponsor(String sponsorId) async {
+    final result = await repository.removeSponsor(sponsorId);
+    switch (result) {
+      case Ok<void>():
+        return result;
+    case Error<void>():
+        return Result.error(result.error);
+    }
   }
 }

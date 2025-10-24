@@ -29,7 +29,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
   @override
-  ErrorType errorType = ErrorType.none;
+  String errorMessage = '';
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
@@ -46,7 +46,14 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
 
   @override
   Future<void> addSession(Session session, String trackUID) async {
-    await agendaUseCase.addSession(session, trackUID);
+    final result = await agendaUseCase.addSession(session, trackUID);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 
   @override
@@ -142,26 +149,61 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
 
   @override
   Future<void> addSpeaker(String eventId, Speaker speaker) async {
-    await agendaUseCase.addSpeaker(eventId, speaker);
+    final result = await agendaUseCase.addSpeaker(eventId, speaker);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 
   @override
   Future<void> updateEvent(Event event) async {
-    await agendaUseCase.saveEvent(event);
+    final result = await agendaUseCase.saveEvent(event);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 
   @override
   Future<void> updateTrack(Track track, String agendaDayId) async {
-    await agendaUseCase.updateTrack(track, agendaDayId);
+    final result = await agendaUseCase.updateTrack(track, agendaDayId);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 
   @override
   Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID) async {
-    await agendaUseCase.updateAgendaDay(agendaDay,eventUID);
+    final result = await agendaUseCase.updateAgendaDay(agendaDay, eventUID);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 
   @override
   Future<void> addTrack(Track track,String agendaDayId) async {
-    await agendaUseCase.updateTrack(track,agendaDayId);
+    final result = await agendaUseCase.updateTrack(track, agendaDayId);
+    switch (result) {
+      case Ok<void>():
+        return;
+      case Error():
+        setErrorKey(result.error);
+        return;
+    }
   }
 }

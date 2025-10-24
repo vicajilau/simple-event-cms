@@ -2,15 +2,16 @@ import 'package:intl/intl.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 abstract class EventUseCase {
   Future<Result<List<Event>>> getEvents();
-  Future<Event?> getEventById(String id);
-  Future<void> saveEvent(Event event);
-  Future<void> removeEvent(Event event);
-  Future<void> prepareAgendaDays(Event event);
-  Future<void> removeTrack(String trackUID,String eventUID);
+  Future<Result<Event?>> getEventById(String id);
+  Future<Result<void>> saveEvent(Event event);
+  Future<Result<void>> removeEvent(Event event);
+  Future<Result<void>> prepareAgendaDays(Event event);
+  Future<Result<void>> removeTrack(String trackUID,String eventUID);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -22,23 +23,23 @@ class EventUseCaseImp implements EventUseCase {
   }
 
   @override
-  Future<Event?> getEventById(String id) async {
+  Future<Result<Event?>> getEventById(String id) async {
     final events = await repository.loadEvents();
     switch (events) {
       case Ok<List<Event>>():
-        return events.value.firstWhere((event) => event.uid == id);
+        return Result.ok(events.value.firstWhere((event) => event.uid == id));
       case Error():
-        return null;
+        return Result.error(GithubException("Event not found"));
     }
   }
 
   @override
-  Future<void> saveEvent(Event event) async {
-    await repository.saveEvent(event);
+  Future<Result<void>> saveEvent(Event event) async {
+    return await repository.saveEvent(event);
   }
 
   @override
-  Future<void> prepareAgendaDays(Event event) async {
+  Future<Result<void>> prepareAgendaDays(Event event) async {
     final startDate = DateTime.tryParse(event.eventDates.startDate);
     final endDate = DateTime.tryParse(event.eventDates.endDate);
 
@@ -58,17 +59,19 @@ class EventUseCaseImp implements EventUseCase {
           ),
         );
       }
-      await repository.saveAgendaDays(days,event.uid);
+      return await repository.saveAgendaDays(days,event.uid);
+    }else{
+      return Result.error(GithubException("Invalid date format"));
     }
   }
 
   @override
-  Future<void> removeEvent(Event event) async {
-    await repository.removeEvent(event.uid);
+  Future<Result<void>> removeEvent(Event event) async {
+    return await repository.removeEvent(event.uid);
   }
 
   @override
-  Future<void> removeTrack(String trackUID,String eventUID) async {
-    await repository.removeTrack(trackUID,eventUID);
+  Future<Result<void>> removeTrack(String trackUID,String eventUID) async {
+    return await repository.removeTrack(trackUID,eventUID);
   }
 }

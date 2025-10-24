@@ -7,17 +7,12 @@ enum ErrorType { none, errorLoadingData, unknow }
 
 abstract class ViewModelCommon {
   abstract final ValueNotifier<ViewState> viewState;
-  abstract ErrorType errorType;
+  abstract String errorMessage;
 
   void setup([Object? argument]);
   void dispose();
   Future<bool> checkToken();
-  void setErrorKey(Exception exception) {
-    errorType = switch (exception) {
-      JsonDecodeException() ||
-      GithubException() ||
-      NetworkException() => ErrorType.errorLoadingData,
-      _ => ErrorType.unknow,
-    };
+  void setErrorKey(CustomException exception) {
+    errorMessage = exception.message;
   }
 }

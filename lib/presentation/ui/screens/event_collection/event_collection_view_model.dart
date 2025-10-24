@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
@@ -12,10 +13,10 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
-  Future<void> addEvent(Event event);
+  Future<Result<void>> addEvent(Event event);
   Future<Event?> getEventById(String eventId);
-  Future<void> editEvent(Event event);
-  void deleteEvent(Event event);
+  Future<Result<void>> editEvent(Event event);
+  Future<Result<void>> deleteEvent(Event event);
 }
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
@@ -32,7 +33,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
-  ErrorType errorType = ErrorType.none;
+  String errorMessage = '';
 
   @override
   EventFilter currentFilter = EventFilter.all;
@@ -65,30 +66,44 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  Future<void> addEvent(Event event) async {
+  Future<Result<void>> addEvent(Event event) async {
     _allEvents.add(event);
     _updateEventsToShow();
-    await useCase.saveEvent(event);
+
+    viewState.value = ViewState.isLoading;
+    final result =  await useCase.saveEvent(event);
+    viewState.value = ViewState.loadFinished;
+    return result;
   }
 
   @override
-  Future<void> editEvent(Event event) async {
+  Future<Result<void>> editEvent(Event event) async {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents[index] = event;
       _updateEventsToShow();
-      await useCase.saveEvent(event);
+
+      viewState.value = ViewState.isLoading;
+      final result =  await useCase.saveEvent(event);
+      viewState.value = ViewState.loadFinished;
+      return result;
     }
+    return Result.error(GithubException('Event not found'));
   }
 
   @override
-  void deleteEvent(Event event) async {
+  Future<Result<void>> deleteEvent(Event event) async {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
-      await useCase.removeEvent(event);
+
+      viewState.value = ViewState.isLoading;
+      final result =  await useCase.removeEvent(event);
+      viewState.value = ViewState.loadFinished;
+      return result;
     }
+    return Result.error(GithubException('Event not found'));
   }
 
   void _updateEventsToShow() async {
@@ -140,7 +155,18 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
 
   @override
   Future<Event?> getEventById(String eventId) async {
-    return await useCase.getEventById(eventId);
+    viewState.value = ViewState.isLoading;
+    final result =  await useCase.getEventById(eventId);
+    viewState.value = ViewState.loadFinished;
+    switch (result) {
+      case Ok<Event?>():
+        viewState.value = ViewState.loadFinished;
+        return result.value;
+      case Error():
+        viewState.value = ViewState.loadFinished;
+        setErrorKey(result.error);
+        return null;
+    }
   }
 
 }
