@@ -48,7 +48,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   Future<Result<void>> loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
-    viewState.value = ViewState.loadFinished;
     switch (result) {
       case Ok<List<AgendaDay>>():
         agendaDays.value = result.value;
@@ -65,7 +64,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.saveSpeaker(speaker, eventId);
-    viewState.value = ViewState.loadFinished;
     switch (result) {
       case Ok<void>():
         viewState.value = ViewState.loadFinished;

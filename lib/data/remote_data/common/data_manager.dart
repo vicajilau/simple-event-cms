@@ -14,14 +14,20 @@ class DataUpdate {
   static Future<void> deleteItemAndAssociations(
     String itemId,
     Type itemType, {
-    String? eventUID,String agendaDayUidSelected = "",
+    String? eventUID,
+    String agendaDayUidSelected = "",
   }) async {
     switch (itemType.toString()) {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
         break;
       case "Session":
-        await _deleteSession(itemId, dataLoader, dataUpdateInfo,agendaDayUidSelected: agendaDayUidSelected);
+        await _deleteSession(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          agendaDayUidSelected: agendaDayUidSelected,
+        );
         break;
       case "Track":
         await _deleteTrack(itemId, dataLoader, dataUpdateInfo);
@@ -233,6 +239,8 @@ class DataUpdate {
         } else {
           updatedTracks.add(track);
         }
+      } else {
+        updatedTracks.add(track);
       }
     }
 
@@ -500,7 +508,7 @@ Future<void> _updateAgendaDaysRemovingTrack(
     await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
     List<AgendaDay> modifiedDays = [];
-    days.forEach((day) async {
+    for (var day in days) {
       if (sessionId.isNotEmpty &&
           day.resolvedTracks
                   ?.expand((track) => track.sessionUids)
@@ -515,7 +523,7 @@ Future<void> _updateAgendaDaysRemovingTrack(
           modifiedDays.add(day);
         }
       }
-    });
+    }
     await dataUpdateInfo.updateAgendaDays(modifiedDays);
   }
 }
