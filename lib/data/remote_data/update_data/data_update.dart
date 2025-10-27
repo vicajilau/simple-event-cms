@@ -19,7 +19,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       speakersOriginal,
       speakers,
-      "events/${organization.year}/${speakers.pathUrl}",
+      "events/${speakers.pathUrl}",
       speakers.updateMessage,
     );
   }
@@ -29,7 +29,7 @@ class DataUpdateInfo {
   Future<void> updateSpeakers(List<Speaker> speakers) async {
     await dataCommons.updateDataList(
       speakers,
-      "events/${organization.year}/${PathsGithub.speakerPath}",
+      "events/${PathsGithub.speakerPath}",
       PathsGithub.speakerUpdateMessage,
     );
   }
@@ -41,7 +41,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       trackOriginal,
       track,
-      "events/${organization.year}/${PathsGithub.tracksPath}",
+      "events/${PathsGithub.tracksPath}",
       PathsGithub.tracksUpdateMessage,
     );
   }
@@ -51,7 +51,7 @@ class DataUpdateInfo {
   Future<void> updateTracks(List<Track> tracks) async {
     await dataCommons.updateDataList(
       tracks,
-      "events/${organization.year}/${PathsGithub.tracksPath}",
+      "events/${PathsGithub.tracksPath}",
       PathsGithub.tracksUpdateMessage,
     );
   }
@@ -66,7 +66,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       daysOriginal,
       agendaDay,
-      "events/${organization.year}/${agendaDay.pathUrl}",
+      "events/${agendaDay.pathUrl}",
       agendaDay.updateMessage,
     );
   }
@@ -80,18 +80,18 @@ class DataUpdateInfo {
     if(overrideData == false) {
       agendaDaysRepo
           .toList()
-          .where((day) => !agendaDays.contains(day))
+          .where((day) => !agendaDays.map((agendaDay) => agendaDay.uid).contains(day.uid))
           .toList();
       agendaDaysRepo.addAll(agendaDays);
     }else{
       agendaDaysRepo
           .toList()
-          .removeWhere((day) => day.eventUID.contains(agendaDays.first.eventUID.first));
+          .removeWhere((day) => day.eventsUID.contains(agendaDays.first.eventsUID.first));
       agendaDaysRepo.addAll(agendaDays);
     }
     await dataCommons.updateDataList(
       agendaDays,
-      "events/${organization.year}/${PathsGithub.daysPath}",
+      "events/${PathsGithub.daysPath}",
       PathsGithub.daysUpdateMessage,
     );
   }
@@ -103,7 +103,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       sponsorOriginal,
       sponsors,
-      "events/${organization.year}/${sponsors.pathUrl}",
+      "events/${sponsors.pathUrl}",
       sponsors.updateMessage,
     );
   }
@@ -123,7 +123,7 @@ class DataUpdateInfo {
   Future<void> updateSponsorsList(List<Sponsor> sponsors) async {
     await dataCommons.updateDataList(
       sponsors,
-      "events/${organization.year}/${PathsGithub.sponsorPath}",
+      "events/${PathsGithub.sponsorPath}",
       PathsGithub.sponsorUpdateMessage,
     );
   }
@@ -135,7 +135,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       eventsOriginal,
       event,
-      "events/${organization.year}/${event.pathUrl}",
+      "events/${event.pathUrl}",
       event.updateMessage,
     );
   }
@@ -145,7 +145,7 @@ class DataUpdateInfo {
   Future<void> updateEvents(List<Event> events) async {
     await dataCommons.updateDataList(
       events,
-      "events/${organization.year}/${PathsGithub.eventPath}",
+      "events/${PathsGithub.eventPath}",
       PathsGithub.eventUpdateMessage,
     );
   }
@@ -157,7 +157,7 @@ class DataUpdateInfo {
     await dataCommons.updateData(
       sessionListOriginal,
       session,
-      "events/${organization.year}/${session.pathUrl}",
+      "events/${session.pathUrl}",
       session.updateMessage,
     );
   }
@@ -167,7 +167,7 @@ class DataUpdateInfo {
   Future<void> updateSessions(List<Session> sessions) async {
     await dataCommons.updateDataList(
       sessions,
-      "events/${organization.year}/${PathsGithub.sessionsPath}",
+      "events/${PathsGithub.sessionsPath}",
       PathsGithub.sessionsUpdateMessage,
     );
   }
@@ -182,7 +182,7 @@ class DataUpdateInfo {
     await dataCommons.removeData(
       speakersOriginal,
       speakerToRemove,
-      "events/${organization.year}/${speakerToRemove.pathUrl}",
+      "events/${speakerToRemove.pathUrl}",
       speakerToRemove.updateMessage,
     );
   }
@@ -197,7 +197,7 @@ class DataUpdateInfo {
     await dataCommons.removeData(
       sponsorOriginal,
       sponsorToRemove,
-      "events/${organization.year}/${sponsorToRemove.pathUrl}",
+      "events/${sponsorToRemove.pathUrl}",
       sponsorToRemove.updateMessage,
     );
   }
@@ -213,13 +213,13 @@ class DataUpdateInfo {
     await dataCommons.removeDataList(
       tracksOriginal,
       eventToRemove.tracks,
-      "events/${organization.year}/${eventToRemove.pathUrl}",
+      "events/${eventToRemove.pathUrl}",
       eventToRemove.updateMessage,
     );
     await dataCommons.removeData(
       eventsOriginal,
       eventToRemove,
-      "events/${organization.year}/${eventToRemove.pathUrl}",
+      "events/${eventToRemove.pathUrl}",
       eventToRemove.updateMessage,
     );
   }
@@ -239,7 +239,7 @@ class DataUpdateInfo {
     await dataCommons.removeData(
       agendaDaysListOriginal,
       agendaDaysListOriginal.firstWhere((day) => day.uid == agendaDayId),
-      "events/${organization.year}/${PathsGithub.daysPath}",
+      "events/${PathsGithub.daysPath}",
       PathsGithub.daysUpdateMessage,
     );
   }
@@ -251,7 +251,7 @@ class DataUpdateInfo {
     await dataCommons.removeData(
       sessionListOriginal,
       sessionListOriginal.firstWhere((session) => session.uid == sessionId),
-      "events/${organization.year}/${PathsGithub.sessionsPath}",
+      "events/${PathsGithub.sessionsPath}",
       PathsGithub.sessionsUpdateMessage,
     );
   }
@@ -264,7 +264,7 @@ class DataUpdateInfo {
       // Using updateData as we are modifying an existing agenda by removing a track
       tracksOriginal,
       tracksOriginal.firstWhere((track) => track.uid == trackId),
-      "events/${organization.year}/${PathsGithub.tracksPath}",
+      "events/${PathsGithub.tracksPath}",
       PathsGithub.tracksUpdateMessage,
     );
   }

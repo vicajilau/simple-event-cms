@@ -110,7 +110,7 @@ class SecRepositoryImp extends SecRepository {
   }) async {
     try {
       var allAgendaDays = (await dataLoader.loadAllDays())
-          .where((agendaDay) => agendaDay.eventUID.contains(eventUID))
+          .where((agendaDay) => agendaDay.eventsUID.contains(eventUID))
           .toList();
       var thereAreAgendaDaysNotIncluded = allAgendaDays
           .where(
@@ -298,9 +298,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> deleteSession(String sessionId) async {
+  Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID}) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(sessionId, Session);
+      await DataUpdate.deleteItemAndAssociations(sessionId, Session,agendaDayUidSelected: agendaDayUID ?? "");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in deleteSessionFromAgendaDay: $e');
@@ -347,7 +347,7 @@ class SecRepositoryImp extends SecRepository {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
         agendaDays
-            .where((agendaDay) => agendaDay.eventUID.contains(eventId))
+            .where((agendaDay) => agendaDay.eventsUID.contains(eventId))
             .toList(),
       );
     } on Exception catch (e) {
@@ -379,11 +379,17 @@ class SecRepositoryImp extends SecRepository {
         agendaDays
             .where(
               (agendaDay) =>
-                  agendaDay.eventUID.contains(eventId) &&
+                  agendaDay.eventsUID.contains(eventId) &&
                   agendaDay.resolvedTracks != null &&
                   agendaDay.resolvedTracks!.isNotEmpty &&
                   agendaDay.resolvedTracks!
                       .expand((track) => track.resolvedSessions)
+                      .isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .toList()
+                      .where((session) => session.agendaDayUID == agendaDay.uid)
+                      .toList()
                       .isNotEmpty,
             )
             .toList(),

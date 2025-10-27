@@ -15,13 +15,19 @@ class DataUpdate {
     String itemId,
     Type itemType, {
     String? eventUID,
+    String agendaDayUidSelected = "",
   }) async {
     switch (itemType.toString()) {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
         break;
       case "Session":
-        await _deleteSession(itemId, dataLoader, dataUpdateInfo);
+        await _deleteSession(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          agendaDayUidSelected: agendaDayUidSelected,
+        );
         break;
       case "Track":
         await _deleteTrack(itemId, dataLoader, dataUpdateInfo);
@@ -189,7 +195,7 @@ class DataUpdate {
       List<Track> allTracks = await dataLoader.loadAllTracks();
       for (var track in allTracks) {
         if (track.uid == parentId) {
-          _removeSessionFromTrack(track, session.uid);
+          await _removeSessionFromTrack(track, session.uid);
           track.sessionUids.toList().add(session.uid);
           track.resolvedSessions.toList().add(session);
           await dataUpdateInfo.updateTrack(track);
@@ -217,25 +223,42 @@ class DataUpdate {
   static Future<void> _deleteSession(
     String sessionId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
-  ) async {
+    DataUpdateInfo dataUpdateInfo, {
+    String agendaDayUidSelected = "",
+  }) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
-    List<AgendaDay> agendaDays = await dataLoader.loadAllDays();
-    List<Event> events = await dataLoader.loadEvents();
+
+    List<Track> updatedTracks = [];
+    List<String> tracksToDelete = [];
+
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
-        _removeSessionFromTrack(track, sessionId);
-        await dataUpdateInfo.updateTrack(track);
-        await _updateAgendaDaysRemovingTrack(
-          agendaDays,
-          track.uid,
-          dataUpdateInfo,
-        );
-        var event = events.firstWhere((event) => event.uid == track.eventUid);
-        event.tracks.removeWhere((track) => track.uid == track.uid);
-        await dataUpdateInfo.updateEvent(event);
+        track.sessionUids.remove(sessionId);
+        if (track.sessionUids.isEmpty) {
+          tracksToDelete.add(track.uid);
+        } else {
+          updatedTracks.add(track);
+        }
+      } else {
+        updatedTracks.add(track);
       }
     }
+
+    if (tracksToDelete.isNotEmpty) {
+      List<AgendaDay> allAgendaDays = await dataLoader.loadAllDays();
+      for (var agendaDay in allAgendaDays) {
+        bool modified = false;
+        for (var trackId in tracksToDelete) {
+          if (agendaDay.trackUids?.contains(trackId) ?? false) {
+            agendaDay.trackUids?.remove(trackId);
+            modified = true;
+          }
+        }
+        if (modified) await dataUpdateInfo.updateAgendaDay(agendaDay);
+      }
+    }
+
+    await dataUpdateInfo.updateTracks(updatedTracks);
     await dataUpdateInfo.removeSession(sessionId);
     debugPrint("Session $sessionId and its associations removed.");
   }
@@ -306,8 +329,8 @@ class DataUpdate {
         orElse: () => day,
       );
 
-      if (!existingDay.eventUID.contains(parentId)) {
-        existingDay.eventUID.add(parentId);
+      if (!existingDay.eventsUID.contains(parentId)) {
+        existingDay.eventsUID.add(parentId);
       }
       existingDay.trackUids?.toList().removeWhere(
         (trackId) => day.trackUids?.contains(trackId) == true,
@@ -330,7 +353,7 @@ class DataUpdate {
     if (overrideData == true) {
       allDays.removeWhere(
         (day) =>
-            day.eventUID.contains(days.first.eventUID.first) &&
+            day.eventsUID.contains(days.first.eventsUID.first) &&
             !days.map((dayModified) => dayModified.uid).contains(day.uid),
       );
     }
@@ -338,13 +361,16 @@ class DataUpdate {
 
     for (var day in days) {
       if (allDaysMap.containsKey(day.uid)) {
-        allDaysMap[day.uid]?.eventUID.addAll(day.eventUID);
+        allDaysMap[day.uid]?.eventsUID.addAll(day.eventsUID);
       } else {
         allDaysMap[day.uid] = day;
       }
     }
 
-    await dataUpdateInfo.updateAgendaDays(allDaysMap.values.toList(),overrideData: overrideData);
+    await dataUpdateInfo.updateAgendaDays(
+      allDaysMap.values.toList(),
+      overrideData: overrideData,
+    );
   }
 
   static Future<void> _deleteAgendaDay(
@@ -355,10 +381,10 @@ class DataUpdate {
   ) async {
     var agendaDays = await dataLoader.loadAllDays();
     var agendaDay = agendaDays.firstWhere((day) => day.uid == dayId);
-    if (agendaDay.eventUID.isNotEmpty) {
-      agendaDay.eventUID.remove(eventId);
+    if (agendaDay.eventsUID.isNotEmpty) {
+      agendaDay.eventsUID.remove(eventId);
       debugPrint("AgendaDay $dayId remove eventId from eventUID.");
-      if (agendaDay.eventUID.isEmpty) {
+      if (agendaDay.eventsUID.isEmpty) {
         await dataUpdateInfo.removeAgendaDay(dayId);
         debugPrint("AgendaDay $dayId and its associations removed.");
       }
@@ -456,7 +482,7 @@ class DataUpdate {
   }
 }
 
-void _removeSessionFromTrack(Track track, String sessionId) {
+Future<Track> _removeSessionFromTrack(Track track, String sessionId) async {
   final sessionUidIndex = track.sessionUids.indexOf(sessionId);
   if (sessionUidIndex != -1) {
     track.sessionUids.removeAt(sessionUidIndex);
@@ -468,21 +494,37 @@ void _removeSessionFromTrack(Track track, String sessionId) {
   if (resolvedSessionIndex != -1) {
     track.resolvedSessions.removeAt(resolvedSessionIndex);
   }
+  return track;
 }
 
 Future<void> _updateAgendaDaysRemovingTrack(
   List<AgendaDay> days,
   String trackId,
-  DataUpdateInfo dataUpdateInfo,
-) async {
+  DataUpdateInfo dataUpdateInfo, {
+  String sessionId = "",
+}) async {
   if (days.length == 1) {
     var daysUpdated = await _removeTrackFromDay(days.first, trackId);
     await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
-    days.map((day) async {
-      await _removeTrackFromDay(day, trackId);
-    });
-    await dataUpdateInfo.updateAgendaDays(days);
+    List<AgendaDay> modifiedDays = [];
+    for (var day in days) {
+      if (sessionId.isNotEmpty &&
+          day.resolvedTracks
+                  ?.expand((track) => track.sessionUids)
+                  .toList()
+                  .contains(sessionId) ==
+              true) {
+        modifiedDays.add(await _removeTrackFromDay(day, trackId));
+      } else {
+        if (sessionId.isEmpty) {
+          modifiedDays.add(await _removeTrackFromDay(day, trackId));
+        } else {
+          modifiedDays.add(day);
+        }
+      }
+    }
+    await dataUpdateInfo.updateAgendaDays(modifiedDays);
   }
 }
 
@@ -516,7 +558,7 @@ Future<AgendaDay> _removeTrackFromDay(AgendaDay day, String trackId) async {
       day.resolvedTracks!.removeAt(resolvedTrackIndex);
     }
   }
-  return day;
+  return Future.value(day);
 }
 
 Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
@@ -533,5 +575,5 @@ Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
   }
   day.resolvedTracks?.toList().add(track);
 
-  return day;
+  return Future.value(day);
 }

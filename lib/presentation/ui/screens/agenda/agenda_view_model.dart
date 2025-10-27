@@ -9,9 +9,9 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId);
-  Future<Result<void>> removeSession(String sessionId);
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
   Future<Result<void>> loadAgendaDays(String eventId);
+  Future<Result<void>> removeSessionAndReloadAgenda(String sessionId, String eventId,{String? agendaDayUID});
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -48,7 +48,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   Future<Result<void>> loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
-    viewState.value = ViewState.loadFinished;
     switch (result) {
       case Ok<List<AgendaDay>>():
         agendaDays.value = result.value;
@@ -65,22 +64,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.saveSpeaker(speaker, eventId);
-    viewState.value = ViewState.loadFinished;
-    switch (result) {
-      case Ok<void>():
-        viewState.value = ViewState.loadFinished;
-        return result;
-      case Error():
-        viewState.value = ViewState.error;
-        setErrorKey(result.error);
-        return result;
-    }
-  }
-  @override
-  Future<Result<void>> removeSession(String sessionId) async {
-    viewState.value = ViewState.isLoading;
-    final result =  await agendaUseCase.deleteSession(sessionId);
-    viewState.value = ViewState.loadFinished;
     switch (result) {
       case Ok<void>():
         viewState.value = ViewState.loadFinished;
@@ -98,5 +81,20 @@ class AgendaViewModelImp extends AgendaViewModel {
     final result =  await agendaUseCase.getSpeakersForEventId(eventId);
     viewState.value = ViewState.loadFinished;
     return result;
+  }
+
+  @override
+  Future<Result<void>> removeSessionAndReloadAgenda(
+      String sessionId, String eventId,{String? agendaDayUID}) async {
+    viewState.value = ViewState.isLoading;
+    final result = await agendaUseCase.deleteSession(sessionId,agendaDayUID: agendaDayUID);
+    switch (result) {
+      case Ok<void>():
+        return await loadAgendaDays(eventId);
+      case Error():
+        viewState.value = ViewState.error;
+        setErrorKey(result.error);
+        return result;
+    }
   }
 }
