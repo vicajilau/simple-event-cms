@@ -110,7 +110,7 @@ class SecRepositoryImp extends SecRepository {
   }) async {
     try {
       var allAgendaDays = (await dataLoader.loadAllDays())
-          .where((agendaDay) => agendaDay.eventUID.contains(eventUID))
+          .where((agendaDay) => agendaDay.eventsUID.contains(eventUID))
           .toList();
       var thereAreAgendaDaysNotIncluded = allAgendaDays
           .where(
@@ -347,7 +347,7 @@ class SecRepositoryImp extends SecRepository {
       var agendaDays = await dataLoader.loadAllDays();
       return Result.ok(
         agendaDays
-            .where((agendaDay) => agendaDay.eventUID.contains(eventId))
+            .where((agendaDay) => agendaDay.eventsUID.contains(eventId))
             .toList(),
       );
     } on Exception catch (e) {
@@ -379,7 +379,7 @@ class SecRepositoryImp extends SecRepository {
         agendaDays
             .where(
               (agendaDay) =>
-                  agendaDay.eventUID.contains(eventId) &&
+                  agendaDay.eventsUID.contains(eventId) &&
                   agendaDay.resolvedTracks != null &&
                   agendaDay.resolvedTracks!.isNotEmpty &&
                   agendaDay.resolvedTracks!

@@ -12,6 +12,7 @@ abstract class AgendaViewModel extends ViewModelCommon {
   Future<Result<void>> removeSession(String sessionId);
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
   Future<Result<void>> loadAgendaDays(String eventId);
+  Future<Result<void>> removeSessionAndReloadAgenda(String sessionId, String eventId);
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -98,5 +99,29 @@ class AgendaViewModelImp extends AgendaViewModel {
     final result =  await agendaUseCase.getSpeakersForEventId(eventId);
     viewState.value = ViewState.loadFinished;
     return result;
+  }
+
+  @override
+  Future<Result<void>> removeSessionAndReloadAgenda(
+      String sessionId, String eventId) async {
+    viewState.value = ViewState.isLoading;
+    final result = await agendaUseCase.deleteSession(sessionId);
+    switch (result) {
+      case Ok<void>():
+        var loadAgendaResult =  await loadAgendaDays(eventId);
+        switch (loadAgendaResult) {
+          case Ok<void>():
+            viewState.value = ViewState.loadFinished;
+            return loadAgendaResult;
+          case Error():
+            viewState.value = ViewState.error;
+            setErrorKey(loadAgendaResult.error);
+            return result;
+        }
+      case Error():
+        viewState.value = ViewState.error;
+        setErrorKey(result.error);
+        return result;
+    }
   }
 }
