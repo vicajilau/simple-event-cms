@@ -18,7 +18,7 @@ abstract class AgendaUseCase {
     Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId, Speaker speaker);
-  Future<Result<void>> deleteSession(String sessionId);
+  Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID});
   Future<Result<Event>> loadEvent(String eventId);
 
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
@@ -40,8 +40,8 @@ class AgendaUseCaseImpl implements AgendaUseCase {
   }
 
   @override
-  Future<Result<void>> deleteSession(String sessionId) async {
-    return await repository.deleteSession(sessionId);
+  Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID}) async {
+    return await repository.deleteSession(sessionId,agendaDayUID: agendaDayUID);
   }
 
   @override

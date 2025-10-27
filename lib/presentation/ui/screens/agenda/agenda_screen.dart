@@ -332,7 +332,7 @@ class _SessionCardsState extends State<SessionCards> {
                             onDeletePressed: () async {
                               await widget.viewModel
                                   .removeSessionAndReloadAgenda(
-                                      session.uid, widget.eventId);
+                                      session.uid, widget.eventId,agendaDayUID:session.agendaDayUID);
                             },
                           );
                         },

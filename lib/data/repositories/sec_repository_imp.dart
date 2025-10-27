@@ -298,9 +298,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> deleteSession(String sessionId) async {
+  Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID}) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(sessionId, Session);
+      await DataUpdate.deleteItemAndAssociations(sessionId, Session,agendaDayUidSelected: agendaDayUID ?? "");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in deleteSessionFromAgendaDay: $e');
@@ -384,6 +384,12 @@ class SecRepositoryImp extends SecRepository {
                   agendaDay.resolvedTracks!.isNotEmpty &&
                   agendaDay.resolvedTracks!
                       .expand((track) => track.resolvedSessions)
+                      .isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .toList()
+                      .where((session) => session.agendaDayUID == agendaDay.uid)
+                      .toList()
                       .isNotEmpty,
             )
             .toList(),
