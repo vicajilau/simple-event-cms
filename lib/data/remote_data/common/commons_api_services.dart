@@ -55,7 +55,7 @@ class CommonsServicesImp extends CommonsServices {
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
     if (ConfigLoader.appEnv != 'dev') {
-      final url = 'events/${organization.year}/$path';
+      final url = 'events/$path';
       var githubService = await SecureInfo.getGithubKey();
       var github = GitHub(
         auth: githubService.token == null
@@ -97,7 +97,7 @@ class CommonsServicesImp extends CommonsServices {
       );
       content = file;
     } else if (ConfigLoader.appEnv == 'dev') {
-      final localPath = 'events/${organization.year}/$path';
+      final localPath = 'events/$path';
       content = await rootBundle.loadString(localPath);
     }
     try {
