@@ -9,10 +9,9 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId);
-  Future<Result<void>> removeSession(String sessionId);
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
   Future<Result<void>> loadAgendaDays(String eventId);
-  Future<Result<void>> removeSessionAndReloadAgenda(String sessionId, String eventId);
+  Future<Result<void>> removeSessionAndReloadAgenda(String sessionId, String eventId,{String? agendaDayUID});
 }
 
 class AgendaViewModelImp extends AgendaViewModel {
@@ -77,21 +76,6 @@ class AgendaViewModelImp extends AgendaViewModel {
         return result;
     }
   }
-  @override
-  Future<Result<void>> removeSession(String sessionId) async {
-    viewState.value = ViewState.isLoading;
-    final result =  await agendaUseCase.deleteSession(sessionId);
-    viewState.value = ViewState.loadFinished;
-    switch (result) {
-      case Ok<void>():
-        viewState.value = ViewState.loadFinished;
-        return result;
-      case Error():
-        viewState.value = ViewState.error;
-        setErrorKey(result.error);
-        return result;
-    }
-  }
 
   @override
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId) async {
@@ -103,21 +87,12 @@ class AgendaViewModelImp extends AgendaViewModel {
 
   @override
   Future<Result<void>> removeSessionAndReloadAgenda(
-      String sessionId, String eventId) async {
+      String sessionId, String eventId,{String? agendaDayUID}) async {
     viewState.value = ViewState.isLoading;
-    final result = await agendaUseCase.deleteSession(sessionId);
+    final result = await agendaUseCase.deleteSession(sessionId,agendaDayUID: agendaDayUID);
     switch (result) {
       case Ok<void>():
-        var loadAgendaResult =  await loadAgendaDays(eventId);
-        switch (loadAgendaResult) {
-          case Ok<void>():
-            viewState.value = ViewState.loadFinished;
-            return loadAgendaResult;
-          case Error():
-            viewState.value = ViewState.error;
-            setErrorKey(loadAgendaResult.error);
-            return result;
-        }
+        return await loadAgendaDays(eventId);
       case Error():
         viewState.value = ViewState.error;
         setErrorKey(result.error);

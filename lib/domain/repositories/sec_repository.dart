@@ -29,7 +29,7 @@ abstract class SecRepository {
     Session session,String trackUID
   );
   Future<Result<void>> addSpeaker(String eventId,Speaker speaker);
-  Future<Result<void>> deleteSession(String sessionId);
+  Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID});
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId);
   Future<Result<void>> removeSponsor(String sponsorId);
   Future<Result<void>> removeEvent(String eventId);
