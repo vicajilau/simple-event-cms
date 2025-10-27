@@ -189,7 +189,7 @@ class DataUpdate {
       List<Track> allTracks = await dataLoader.loadAllTracks();
       for (var track in allTracks) {
         if (track.uid == parentId) {
-          _removeSessionFromTrack(track, session.uid);
+          await _removeSessionFromTrack(track, session.uid);
           track.sessionUids.toList().add(session.uid);
           track.resolvedSessions.toList().add(session);
           await dataUpdateInfo.updateTrack(track);
@@ -224,7 +224,7 @@ class DataUpdate {
     List<Event> events = await dataLoader.loadEvents();
     for (var track in allTracks) {
       if (track.sessionUids.contains(sessionId)) {
-        _removeSessionFromTrack(track, sessionId);
+        await _removeSessionFromTrack(track, sessionId);
         await dataUpdateInfo.updateTrack(track);
         await _updateAgendaDaysRemovingTrack(
           agendaDays,
@@ -456,7 +456,7 @@ class DataUpdate {
   }
 }
 
-void _removeSessionFromTrack(Track track, String sessionId) {
+Future<void> _removeSessionFromTrack(Track track, String sessionId) async {
   final sessionUidIndex = track.sessionUids.indexOf(sessionId);
   if (sessionUidIndex != -1) {
     track.sessionUids.removeAt(sessionUidIndex);
@@ -516,7 +516,7 @@ Future<AgendaDay> _removeTrackFromDay(AgendaDay day, String trackId) async {
       day.resolvedTracks!.removeAt(resolvedTrackIndex);
     }
   }
-  return day;
+  return Future.value(day);
 }
 
 Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
@@ -533,5 +533,5 @@ Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
   }
   day.resolvedTracks?.toList().add(track);
 
-  return day;
+  return Future.value(day);
 }

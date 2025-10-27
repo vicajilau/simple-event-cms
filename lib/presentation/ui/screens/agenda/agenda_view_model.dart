@@ -111,6 +111,7 @@ class AgendaViewModelImp extends AgendaViewModel {
         var loadAgendaResult =  await loadAgendaDays(eventId);
         switch (loadAgendaResult) {
           case Ok<void>():
+            viewState.value = ViewState.loadFinished;
             return loadAgendaResult;
           case Error():
             viewState.value = ViewState.error;
