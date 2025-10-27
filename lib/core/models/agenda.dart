@@ -4,7 +4,7 @@ import 'github/github_model.dart';
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
 class AgendaDay extends GitHubModel {
   String date;
-  List<String> eventUID;
+  List<String> eventsUID;
   List<String>? trackUids = [];
   List<Track>? resolvedTracks; // Field for in-memory resolved objects
 
@@ -12,7 +12,7 @@ class AgendaDay extends GitHubModel {
     required super.uid,
     required this.date,
     this.trackUids,
-    required this.eventUID,
+    required this.eventsUID,
     this.resolvedTracks, // Allow initialization
     super.pathUrl = PathsGithub.daysPath,
     super.updateMessage = PathsGithub.daysUpdateMessage,
@@ -22,7 +22,7 @@ class AgendaDay extends GitHubModel {
     return AgendaDay(
       uid: json['UID'],
       date: json['date'],
-      eventUID: (json['eventUID'] as List<dynamic>?)
+      eventsUID: (json['eventUID'] as List<dynamic>?)
           ?.map<String>((trackUid) => trackUid['UID'].toString())
           .toSet().toList() ?? [],
       trackUids: (json['trackUids'] as List?)
@@ -36,7 +36,7 @@ class AgendaDay extends GitHubModel {
   Map<String, dynamic> toJson() => {
     "UID": uid,
     "date": date,
-    "eventUID": eventUID.toSet().map((uid) => {'UID': uid}).toList(),
+    "eventUID": eventsUID.toSet().map((uid) => {'UID': uid}).toList(),
     "trackUids": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
   };
 }

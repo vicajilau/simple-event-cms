@@ -37,14 +37,16 @@ class _AgendaScreenState extends State<AgendaScreen> {
   @override
   void initState() {
     super.initState();
-    widget.viewmodel.setup(widget.eventId);
+    widget.viewmodel.loadAgendaDays(widget.eventId).then((value) {
+      for (var day in widget.viewmodel.agendaDays.value) {
+        _updateTileState(
+          key: day.date,
+          value: ExpansionTileState(isExpanded: false, tabBarIndex: 0),
+        );
+      }
+    });
 
-    for (var day in widget.viewmodel.agendaDays.value) {
-      _updateTileState(
-        key: day.date,
-        value: ExpansionTileState(isExpanded: false, tabBarIndex: 0),
-      );
-    }
+
   }
 
   @override
@@ -61,12 +63,12 @@ class _AgendaScreenState extends State<AgendaScreen> {
           );
         }
 
-        if (widget.viewmodel.agendaDays.value.isEmpty) {
-          return Center(child: Text(location.noSessionsFound));
-        }
-        return ValueListenableBuilder(
-          valueListenable: widget.viewmodel.agendaDays,
-          builder: (context, value, child) {
+        return FutureBuilder(
+          future: widget.viewmodel.loadAgendaDays(widget.eventId),
+          builder: (context, value) {
+            if (widget.viewmodel.agendaDays.value.isEmpty) {
+              return Center(child: Text(location.noSessionsFound));
+            }
             return ListView.builder(
               shrinkWrap: true,
               itemCount: widget.viewmodel.agendaDays.value.length,
@@ -328,8 +330,9 @@ class _SessionCardsState extends State<SessionCards> {
                             title: location.deleteSessionTitle,
                             message: location.deleteSessionMessage,
                             onDeletePressed: () async {
-                              await widget.viewModel.removeSession(session.uid);
-                              await widget.viewModel.loadAgendaDays(widget.eventId);
+                              await widget.viewModel
+                                  .removeSessionAndReloadAgenda(
+                                      session.uid, widget.eventId,agendaDayUID:session.agendaDayUID);
                             },
                           );
                         },

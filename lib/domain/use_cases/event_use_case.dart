@@ -52,7 +52,7 @@ class EventUseCaseImp implements EventUseCase {
           'yyyy-MM-dd',
         ).format(startDate.add(Duration(days: i)));
         days.add(
-          AgendaDay(uid: date, date: date, eventUID: [event.uid].toList()),
+          AgendaDay(uid: date, date: date, eventsUID: [event.uid].toList()),
         );
       }
       return await repository.saveAgendaDays(days, event.uid,overrideAgendaDays: true);
