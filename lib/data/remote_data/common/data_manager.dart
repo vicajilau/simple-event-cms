@@ -306,8 +306,8 @@ class DataUpdate {
         orElse: () => day,
       );
 
-      if (!existingDay.eventUID.contains(parentId)) {
-        existingDay.eventUID.add(parentId);
+      if (!existingDay.eventsUID.contains(parentId)) {
+        existingDay.eventsUID.add(parentId);
       }
       existingDay.trackUids?.toList().removeWhere(
         (trackId) => day.trackUids?.contains(trackId) == true,
@@ -330,7 +330,7 @@ class DataUpdate {
     if (overrideData == true) {
       allDays.removeWhere(
         (day) =>
-            day.eventUID.contains(days.first.eventUID.first) &&
+            day.eventsUID.contains(days.first.eventsUID.first) &&
             !days.map((dayModified) => dayModified.uid).contains(day.uid),
       );
     }
@@ -338,7 +338,7 @@ class DataUpdate {
 
     for (var day in days) {
       if (allDaysMap.containsKey(day.uid)) {
-        allDaysMap[day.uid]?.eventUID.addAll(day.eventUID);
+        allDaysMap[day.uid]?.eventsUID.addAll(day.eventsUID);
       } else {
         allDaysMap[day.uid] = day;
       }
@@ -355,10 +355,10 @@ class DataUpdate {
   ) async {
     var agendaDays = await dataLoader.loadAllDays();
     var agendaDay = agendaDays.firstWhere((day) => day.uid == dayId);
-    if (agendaDay.eventUID.isNotEmpty) {
-      agendaDay.eventUID.remove(eventId);
+    if (agendaDay.eventsUID.isNotEmpty) {
+      agendaDay.eventsUID.remove(eventId);
       debugPrint("AgendaDay $dayId remove eventId from eventUID.");
-      if (agendaDay.eventUID.isEmpty) {
+      if (agendaDay.eventsUID.isEmpty) {
         await dataUpdateInfo.removeAgendaDay(dayId);
         debugPrint("AgendaDay $dayId and its associations removed.");
       }
@@ -479,9 +479,9 @@ Future<void> _updateAgendaDaysRemovingTrack(
     var daysUpdated = await _removeTrackFromDay(days.first, trackId);
     await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
-    days.map((day) async {
-      await _removeTrackFromDay(day, trackId);
-    });
+    days = days.map((day) async {
+      return await _removeTrackFromDay(day, trackId);
+    }).cast<AgendaDay>().toList();
     await dataUpdateInfo.updateAgendaDays(days);
   }
 }

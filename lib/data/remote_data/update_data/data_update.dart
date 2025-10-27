@@ -80,13 +80,13 @@ class DataUpdateInfo {
     if(overrideData == false) {
       agendaDaysRepo
           .toList()
-          .where((day) => !agendaDays.contains(day))
+          .where((day) => !agendaDays.map((agendaDay) => agendaDay.uid).contains(day.uid))
           .toList();
       agendaDaysRepo.addAll(agendaDays);
     }else{
       agendaDaysRepo
           .toList()
-          .removeWhere((day) => day.eventUID.contains(agendaDays.first.eventUID.first));
+          .removeWhere((day) => day.eventsUID.contains(agendaDays.first.eventsUID.first));
       agendaDaysRepo.addAll(agendaDays);
     }
     await dataCommons.updateDataList(
