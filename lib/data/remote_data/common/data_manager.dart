@@ -479,10 +479,11 @@ Future<void> _updateAgendaDaysRemovingTrack(
     var daysUpdated = await _removeTrackFromDay(days.first, trackId);
     await dataUpdateInfo.updateAgendaDay(daysUpdated);
   } else {
-    days = days.map((day) async {
-      return await _removeTrackFromDay(day, trackId);
-    }).cast<AgendaDay>().toList();
-    await dataUpdateInfo.updateAgendaDays(days);
+    List<AgendaDay> modifiedDays = [];
+    days.forEach((day) async {
+      modifiedDays.add(await _removeTrackFromDay(day, trackId));
+    });
+    await dataUpdateInfo.updateAgendaDays(modifiedDays);
   }
 }
 
