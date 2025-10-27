@@ -57,7 +57,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
           return Center(
-            child: ErrorView(errorType: widget.viewmodel.errorType),
+            child: ErrorView(errorMessage: widget.viewmodel.errorMessage),
           );
         }
 
@@ -329,7 +329,7 @@ class _SessionCardsState extends State<SessionCards> {
                             message: location.deleteSessionMessage,
                             onDeletePressed: () async {
                               await widget.viewModel.removeSession(session.uid);
-                              widget.viewModel.loadAgendaDays(widget.eventId);
+                              await widget.viewModel.loadAgendaDays(widget.eventId);
                             },
                           );
                         },

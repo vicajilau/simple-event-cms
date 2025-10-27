@@ -1,8 +1,8 @@
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/data/remote_data/common/commons_api_services.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
 class DataUpdateInfo {
   final CommonsServices dataCommons;
@@ -75,9 +75,20 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<void> updateAgendaDays(List<AgendaDay> agendaDays) async {
-    var agendaDaysRepo = (await dataLoader.loadAllDays()).toList().where((day) => !agendaDays.contains(day)).toList();
-    agendaDaysRepo.addAll(agendaDays);
+  Future<void> updateAgendaDays(List<AgendaDay> agendaDays,{bool overrideData = false}) async {
+    var agendaDaysRepo = (await dataLoader.loadAllDays());
+    if(overrideData == false) {
+      agendaDaysRepo
+          .toList()
+          .where((day) => !agendaDays.contains(day))
+          .toList();
+      agendaDaysRepo.addAll(agendaDays);
+    }else{
+      agendaDaysRepo
+          .toList()
+          .removeWhere((day) => day.eventUID.contains(agendaDays.first.eventUID.first));
+      agendaDaysRepo.addAll(agendaDays);
+    }
     await dataCommons.updateDataList(
       agendaDays,
       "events/${organization.year}/${PathsGithub.daysPath}",
@@ -97,15 +108,14 @@ class DataUpdateInfo {
     );
   }
 
-
   /// Loads organization information from the organization.json file
-    Future<void> updateOrganization(Organization organization) async {
-    await dataCommons.updateData(
-      [organization],
-      organization,
-      "events/${organization.pathUrl}",
-      organization.updateMessage,
-    );
+  Future<void> updateOrganization(Organization organization) async {
+    await dataCommons
+        .updateSingleData(
+          organization,
+          "events/${organization.pathUrl}",
+          organization.updateMessage,
+        );
   }
 
   /// Loads sponsor information from the sponsors.json file
@@ -169,7 +179,7 @@ class DataUpdateInfo {
     var speakerToRemove = speakersOriginal.firstWhere(
       (agenda) => agenda.uid == speakerId,
     );
-   await dataCommons.removeData(
+    await dataCommons.removeData(
       speakersOriginal,
       speakerToRemove,
       "events/${organization.year}/${speakerToRemove.pathUrl}",
@@ -184,7 +194,7 @@ class DataUpdateInfo {
     var sponsorToRemove = sponsorOriginal.firstWhere(
       (sponsor) => sponsor.uid == sponsorId,
     );
-   await dataCommons.removeData(
+    await dataCommons.removeData(
       sponsorOriginal,
       sponsorToRemove,
       "events/${organization.year}/${sponsorToRemove.pathUrl}",
@@ -200,13 +210,13 @@ class DataUpdateInfo {
     var eventToRemove = eventsOriginal.firstWhere(
       (event) => event.uid == eventId,
     );
-   await dataCommons.removeDataList(
+    await dataCommons.removeDataList(
       tracksOriginal,
       eventToRemove.tracks,
       "events/${organization.year}/${eventToRemove.pathUrl}",
       eventToRemove.updateMessage,
     );
-   await dataCommons.removeData(
+    await dataCommons.removeData(
       eventsOriginal,
       eventToRemove,
       "events/${organization.year}/${eventToRemove.pathUrl}",
@@ -225,7 +235,8 @@ class DataUpdateInfo {
   /// Returns a `Future<http.Response>` indicating the outcome of the operation.
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
-    await dataCommons.updateData(
+
+    await dataCommons.removeData(
       agendaDaysListOriginal,
       agendaDaysListOriginal.firstWhere((day) => day.uid == agendaDayId),
       "events/${organization.year}/${PathsGithub.daysPath}",
@@ -237,7 +248,7 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of sessions data
   Future<void> removeSession(String sessionId) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
-   await dataCommons.removeData(
+    await dataCommons.removeData(
       sessionListOriginal,
       sessionListOriginal.firstWhere((session) => session.uid == sessionId),
       "events/${organization.year}/${PathsGithub.sessionsPath}",

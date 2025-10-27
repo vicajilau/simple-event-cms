@@ -23,7 +23,6 @@ class EventFormScreen extends StatefulWidget {
 }
 
 class _EventFormScreenState extends State<EventFormScreen> {
-  Future<Event?>? _eventFuture;
   final _formKey = GlobalKey<FormState>();
   final ScrollController _scrollController = ScrollController();
 
@@ -83,16 +82,13 @@ class _EventFormScreenState extends State<EventFormScreen> {
   void initState() {
     super.initState();
     if (widget.eventId != null) {
-      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
-      _eventFuture = widget.eventCollectionViewModel.getEventById(
+      eventFormViewModel.viewState.value = ViewState.isLoading;
+      widget.eventCollectionViewModel.getEventById(
         widget.eventId!,
-      );
-      _eventFuture?.catchError((error) {
-        return null;
-      });
-      _eventFuture?.then((event) {
+      ).then((event) {
         if (event == null) {
-          widget.eventCollectionViewModel.viewState.value = ViewState.error;
+          eventFormViewModel.viewState.value = ViewState.error;
+          eventFormViewModel.errorMessage = 'Failed to load event.';
         } else {
           _nameController.text = event.eventName;
           final startDate = event.eventDates.startDate;
@@ -110,10 +106,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _venueAddressController.text = event.venue?.address ?? '';
           _venueCityController.text = event.venue?.city ?? '';
           _descriptionController.text = event.description ?? '';
-          widget.eventCollectionViewModel.viewState.value =
-              ViewState.loadFinished;
+          eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
+    } else {
+      eventFormViewModel.viewState.value = ViewState.loadFinished;
     }
   }
 
@@ -180,8 +177,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    return ValueListenableBuilder(
-      valueListenable: widget.eventCollectionViewModel.viewState,
+    return ValueListenableBuilder<ViewState>(
+      valueListenable: eventFormViewModel.viewState,
       builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
           return FormScreenWrapper(
@@ -189,13 +186,22 @@ class _EventFormScreenState extends State<EventFormScreen> {
             widgetFormChild: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot == ViewState.error) {
-          return Scaffold(
-            body: Center(
-              child: Text(
-                '${location.errorPrefix} Error with event, please, retry later',
-              ),
-            ),
-          );
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => CustomErrorDialog(
+                  errorMessage: eventFormViewModel.errorMessage,
+                  onCancel: () => {
+                    eventFormViewModel.viewState.value = ViewState.loadFinished,
+                    Navigator.of(context).pop()
+                  },
+                  buttonText: location.closeButton,
+                ),
+              );
+            }
+          });
         }
         return FormScreenWrapper(
           pageTitle: widget.eventId != null
@@ -410,6 +416,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 12,
                   children: [
+                    OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(location.cancelButton),
+                    ),
                     FilledButton(
                       onPressed: _onSubmit,
                       child: Text(location.saveButton),
@@ -425,9 +437,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }
 
   Future<void> _onSubmit() async {
-    setState(() {
-      widget.eventCollectionViewModel.viewState.value = ViewState.isLoading;
-    });
     final location = AppLocalizations.of(context)!;
 
     // Primero forzamos la validación para que los errores aparezcan
@@ -513,12 +522,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
       ),
       description: _descriptionController.text,
     );
-    await eventFormViewModel.onSubmit(eventModified);
-    if (mounted) {
-      setState(() {
-        widget.eventCollectionViewModel.viewState.value = ViewState.loadFinished;
-      });
-      Navigator.pop(context, eventModified);
+    var result = await eventFormViewModel.onSubmit(eventModified);
+    if(result){
+      if (mounted) {
+        Navigator.pop(context, eventModified);
+      }
     }
   }
 }

@@ -36,7 +36,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          ErrorView(errorType: widget.viewmodel.errorType);
+          ErrorView(errorMessage: widget.viewmodel.errorMessage);
         }
 
         return ValueListenableBuilder<List<Speaker>>(

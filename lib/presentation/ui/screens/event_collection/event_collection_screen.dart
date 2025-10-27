@@ -29,6 +29,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;
+  final organization = getIt<Organization>();
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Future<void> _loadConfiguration() async {
     try {
       // Usar inyección de dependencias en lugar de crear instancias manualmente
-      final organization = getIt<Organization>();
+
 
       widget.viewmodel.setup();
 
@@ -140,7 +141,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ErrorView(errorType: widget.viewmodel.errorType),
+                  ErrorView(errorMessage: widget.viewmodel.errorMessage),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -208,8 +209,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data == true) {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
-                  onPressed: () {
-                    AppRouter.router.push(AppRouter.organizationFormPath);
+                  onPressed: () async {
+                    Organization? organizationUpdated = await AppRouter.router.push(AppRouter.organizationFormPath) as Organization?;
+
+                    if(organizationUpdated != null){
+                      getIt.resetLazySingleton<Organization>(instance: organizationUpdated);
+                      setState(() {
+                        organizationName = organizationUpdated.organizationName;
+                      });
+                    }
                   },
                   child: const Icon(Icons.business),
                 );

@@ -77,7 +77,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ErrorView(errorType: widget.viewmodel.errorType),
+                  ErrorView(errorMessage: widget.viewmodel.errorMessage),
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: widget.viewmodel.setup,
@@ -178,7 +178,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
     if (newSponsor != null) {
       final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
+      await sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
     }
   }
 }

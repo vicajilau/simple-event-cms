@@ -21,10 +21,7 @@ class ConfigLoader {
     return Organization.fromJson(data);
   }
   static Future<Organization> loadOrganization() async {
-    final localConfigPath = 'events/organization/organization.json';
-    final String response = await rootBundle.loadString(localConfigPath);
-    final data = await json.decode(response);
-    var localOrganization = Organization.fromJson(data);
+    var localOrganization = await getLocalOrganization();
     final configUrl = 'events/organization/organization.json';
     var githubService = await SecureInfo.getGithubKey();
     var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
@@ -35,7 +32,7 @@ class ConfigLoader {
             localOrganization.projectName,
       ),
       configUrl,
-      ref: githubService.branch,
+      ref: localOrganization.branch,
     );
     if (res.file == null || res.file!.content == null) {
       throw Exception(
@@ -46,40 +43,11 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-      return Organization.fromJson(fileJsonData);
-    }
-  }
-
-  static Future<List<Event>> loadConfig() async {
-    Organization organization = getIt<Organization>();
-    RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-    );
-
-    final configUrl = 'events/${organization.year}/config/events.json';
-    var githubService = await SecureInfo.getGithubKey();
-    var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
-    final res = await github.repositories.getContents(
-      repositorySlug,
-      configUrl,
-      ref: githubService.branch,
-    );
-
-    if (res.file == null || res.file!.content == null) {
-      throw Exception(
-        "Error cargando configuración de producción desde $configUrl",
-      );
-    } else {
-      final file = utf8.decode(
-        base64.decode(res.file!.content!.replaceAll("\n", "")),
-      );
-      final fileJsonData = json.decode(file);
-      final List<dynamic> eventDataList = fileJsonData;
-
-      return eventDataList
-          .map((eventData) => Event.fromJson(eventData))
-          .toList();
+      var orgToUse = Organization.fromJson(fileJsonData);
+      if(getIt.isRegistered<Organization>()){
+        getIt.resetLazySingleton<Organization>(instance: orgToUse);
+      }
+      return orgToUse;
     }
   }
 }

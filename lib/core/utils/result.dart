@@ -1,3 +1,5 @@
+import 'package:sec/data/exceptions/exceptions.dart';
+
 /// Utility class that simplifies handling errors.
 ///
 /// Return a [Result] from a function to indicate success or failure.
@@ -26,7 +28,7 @@ sealed class Result<T> {
   const factory Result.ok(T value) = Ok._;
 
   /// Creates an error [Result], completed with the specified [error].
-  const factory Result.error(Exception error) = Error._;
+  const factory Result.error(CustomException error) = Error._;
 }
 
 /// A successful [Result] with a returned [value].
@@ -45,7 +47,7 @@ final class Error<T> extends Result<T> {
   const Error._(this.error);
 
   /// The resulting error of this result.
-  final Exception error;
+  final CustomException error;
 
   @override
   String toString() => 'Result<$T>.error($error)';
