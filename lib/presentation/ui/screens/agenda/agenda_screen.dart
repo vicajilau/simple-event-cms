@@ -41,7 +41,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
       for (var day in widget.viewmodel.agendaDays.value) {
         _updateTileState(
           key: day.date,
-          value: ExpansionTileState(isExpanded: false, tabBarIndex: 0),
+          value: ExpansionTileState(isExpanded: true, tabBarIndex: 0),
         );
       }
     });
