@@ -27,13 +27,18 @@ class AppRouter {
   static const String sponsorFormName = 'sponsor_form';
   static const String organizationFormName = 'organization_form';
 
-  static GoRouter createRouter(AuthService authService) {
-    return GoRouter(
+  // Router estático
+  static late GoRouter router;
+
+  /// Método para inicializar el router con AuthService
+  static void init(AuthService authService) {
+    router = GoRouter(
       initialLocation: homePath,
-      refreshListenable: authService,
+      refreshListenable: authService, // 🔁 escucha cambios de sesión admin
       redirect: (context, state) {
         final isAdmin = authService.isAdmin;
 
+        // 🔒 Bloqueo: si ya es admin y va al login admin, lo mandamos al home
         if (isAdmin && state.matchedLocation == adminPath) {
           return homePath;
         }

@@ -3,7 +3,6 @@ import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/organization.dart';
 import 'package:sec/core/routing/app_router.dart';
-import 'package:sec/core/utils/auth_service.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
 /// Aplicación unificada que maneja tanto la vista de eventos como el panel de administración
@@ -44,14 +43,12 @@ class _EventAppState extends State<EventApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final authService = getIt<AuthService>();
-
     return MaterialApp.router(
       title: 'Simple Event CMS',
       debugShowCheckedModeBanner: false,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-    routerConfig: AppRouter.createRouter(authService),
+      routerConfig: AppRouter.router,
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(

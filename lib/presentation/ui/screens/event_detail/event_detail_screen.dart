@@ -151,7 +151,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSession(String eventId) async {
-    List<AgendaDay>? agendaDays = await context.push(
+    List<AgendaDay>? agendaDays = await AppRouter.router.push(
       AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );
 
@@ -162,7 +162,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await context.push(
+    final Speaker? newSpeaker = await AppRouter.router.push(
       AppRouter.speakerFormPath,extra: {'eventId':parentId}
     );
 
@@ -173,7 +173,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSponsor(String parentId) async {
-    final Sponsor? newSponsor = await context.push(
+    final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,extra: {'eventId':parentId}
     );
 

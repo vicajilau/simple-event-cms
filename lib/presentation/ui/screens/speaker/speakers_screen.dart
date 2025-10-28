@@ -243,7 +243,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                               'eventId': widget.eventId,
                                             };
                                             final Speaker? updatedSpeaker =
-                                                await context.push(
+                                                await AppRouter.router.push(
                                                   AppRouter.speakerFormPath,
                                                   extra: arguments
                                                 );

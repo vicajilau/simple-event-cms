@@ -297,7 +297,7 @@ class _SessionCardsState extends State<SessionCards> {
                     var githubService = await SecureInfo.getGithubKey();
                     if (githubService.token != null &&
                         githubService.token?.isNotEmpty == true) {
-                      List<AgendaDay>? agendaDays = await context.push(
+                      List<AgendaDay>? agendaDays = await AppRouter.router.push(
                         AppRouter.agendaFormPath,
                         extra: AgendaFormData(
                           eventId: widget.eventId,

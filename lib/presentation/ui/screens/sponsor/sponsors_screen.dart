@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -31,7 +30,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
   }
 
   void _editSponsor(Sponsor sponsor) async {
-    final Sponsor? newSponsor = await context.push(
+    final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,
       extra: {
         'sponsor': sponsor,
