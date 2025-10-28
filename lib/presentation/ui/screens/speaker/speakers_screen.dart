@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -242,7 +243,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                               'eventId': widget.eventId,
                                             };
                                             final Speaker? updatedSpeaker =
-                                                await AppRouter.router.push(
+                                                await context.push(
                                                   AppRouter.speakerFormPath,
                                                   extra: arguments
                                                 );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
@@ -296,7 +297,7 @@ class _SessionCardsState extends State<SessionCards> {
                     var githubService = await SecureInfo.getGithubKey();
                     if (githubService.token != null &&
                         githubService.token?.isNotEmpty == true) {
-                      List<AgendaDay>? agendaDays = await AppRouter.router.push(
+                      List<AgendaDay>? agendaDays = await context.push(
                         AppRouter.agendaFormPath,
                         extra: AgendaFormData(
                           eventId: widget.eventId,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -107,7 +108,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             _titleTapCount++;
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
-              AppRouter.router.push(AppRouter.adminPath);
+              context.push(AppRouter.adminPath);
             }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
@@ -210,7 +211,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
                   onPressed: () async {
-                    Organization? organizationUpdated = await AppRouter.router.push(AppRouter.organizationFormPath) as Organization?;
+                    Organization? organizationUpdated = await context.push(AppRouter.organizationFormPath) as Organization?;
 
                     if(organizationUpdated != null){
                       getIt.resetLazySingleton<Organization>(instance: organizationUpdated);
@@ -232,7 +233,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data == true) {
                 return AddFloatingActionButton(
                   onPressed: () async {
-                    final Event? newConfig = await AppRouter.router.push(AppRouter.eventFormPath);
+                    final Event? newConfig = await context.push(AppRouter.eventFormPath);
                     if (newConfig != null) {
                       setState(() {
                         _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newConfig.uid);
@@ -254,7 +255,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildEventCard(BuildContext context, Event item, bool isAdmin) {
     return GestureDetector(
       onTap: () {
-        AppRouter.router.pushNamed(
+        context.pushNamed(
           AppRouter.eventDetailName,
           pathParameters: {'eventId': item.uid},
         );
@@ -291,7 +292,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ? IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () async {
-                      final Event? eventEdited = await AppRouter.router.push(
+                      final Event? eventEdited = await context.push(
                         AppRouter.eventFormPath,
                         extra: item.uid,
                       );

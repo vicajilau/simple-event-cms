@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -150,7 +151,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSession(String eventId) async {
-    List<AgendaDay>? agendaDays = await AppRouter.router.push(
+    List<AgendaDay>? agendaDays = await context.push(
       AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
     );
 
@@ -161,7 +162,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await AppRouter.router.push(
+    final Speaker? newSpeaker = await context.push(
       AppRouter.speakerFormPath,extra: {'eventId':parentId}
     );
 
@@ -172,7 +173,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   }
 
   void _addSponsor(String parentId) async {
-    final Sponsor? newSponsor = await AppRouter.router.push(
+    final Sponsor? newSponsor = await context.push(
       AppRouter.sponsorFormPath,extra: {'eventId':parentId}
     );
 
