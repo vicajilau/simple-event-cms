@@ -420,14 +420,14 @@ class AppLocalizationsEu extends AppLocalizations {
   String get formError => 'Formularioan akatsak daude';
 
   @override
-  String get confirmLogout => 'Confirm Logout';
+  String get confirmLogout => 'Berretsi saioa ixtea';
 
   @override
-  String get confirmLogoutMessage => 'Are you sure you want to log out?';
+  String get confirmLogoutMessage => 'Ziur zaude saioa itxi nahi duzula?';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Ezeztatu';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Saioa itxi';
 }

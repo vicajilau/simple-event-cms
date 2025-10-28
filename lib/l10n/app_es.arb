@@ -139,5 +139,6 @@
   "confirmLogout": "Confirmar cierre de sesión",
   "confirmLogoutMessage": "¿Estás seguro de que quieres cerrar sesión?",
   "cancel": "Cancelar",
+  "cancelButton": "Cancelar",
   "logout": "Cerrar sesión"
 }

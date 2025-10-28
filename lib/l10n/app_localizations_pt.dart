@@ -421,14 +421,14 @@ class AppLocalizationsPt extends AppLocalizations {
   String get formError => 'Há erros no formulário';
 
   @override
-  String get confirmLogout => 'Confirm Logout';
+  String get confirmLogout => 'Confirmar Saída';
 
   @override
-  String get confirmLogoutMessage => 'Are you sure you want to log out?';
+  String get confirmLogoutMessage => 'Tem a certeza que quer sair?';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Cancelar';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Sair';
 }

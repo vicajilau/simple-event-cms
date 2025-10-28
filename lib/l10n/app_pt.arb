@@ -136,6 +136,7 @@
   "roomNameHint": "Room name",
   "formError": "Há erros no formulário",
   "cancelButton": "Cancelar",
+  "cancel": "Cancelar",
   "confirmLogout": "Confirmar Saída",
   "confirmLogoutMessage": "Tem a certeza que quer sair?",
   "logout": "Sair"

@@ -136,6 +136,7 @@
   "roomNameHint": "Room name",
   "formError": "Hi ha errors al formulari",
   "cancelButton": "Cancel·lar",
+  "cancel": "Cancel·lar",
   "confirmLogout": "Confirmar Tancament de Sessió",
   "confirmLogoutMessage": "Estàs segur que vols tancar la sessió?",
   "logout": "Tancar Sessió"

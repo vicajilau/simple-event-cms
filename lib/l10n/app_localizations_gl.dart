@@ -421,14 +421,15 @@ class AppLocalizationsGl extends AppLocalizations {
   String get formError => 'Hai erros no formulario';
 
   @override
-  String get confirmLogout => 'Confirm Logout';
+  String get confirmLogout => 'Confirmar peche de sesión';
 
   @override
-  String get confirmLogoutMessage => 'Are you sure you want to log out?';
+  String get confirmLogoutMessage =>
+      'Estás seguro de que queres pechar a sesión?';
 
   @override
-  String get cancel => 'Cancel';
+  String get cancel => 'Cancelar';
 
   @override
-  String get logout => 'Logout';
+  String get logout => 'Pechar sesión';
 }
