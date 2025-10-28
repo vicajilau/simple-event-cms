@@ -11,7 +11,7 @@ abstract class CustomException implements Exception {
 
   @override
   String toString() {
-    final b = StringBuffer('$runtimeType: $message');
+    final b = StringBuffer(message);
     if (url != null) b.write(' | url=$url');
     if (cause != null) b.write(' | cause=$cause');
     return b.toString();
