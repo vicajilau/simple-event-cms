@@ -422,4 +422,17 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get formError => 'Il y a des erreurs dans le formulaire';
+
+  @override
+  String get confirmLogout => 'Confirmer la déconnexion';
+
+  @override
+  String get confirmLogoutMessage =>
+      'Êtes-vous sûr de vouloir vous déconnecter ?';
+
+  @override
+  String get cancel => 'Annuler';
+
+  @override
+  String get logout => 'Déconnexion';
 }

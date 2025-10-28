@@ -68,7 +68,6 @@
   "selectTalkTypeError": "Por favor, selecciona o tipo de charla",
   "descriptionLabel": "Descrición",
   "talkDescriptionHint": "Introduce a descrición da charla...",
-  "cancelButton": "Cancelar",
   "timeSelectionError": "Por favor, selecciona tanto a hora de inicio como a de finalización.",
   "noSessionsFound": "Non se atoparon sesións",
   "deleteSessionTitle": "Eliminar sesión",
@@ -135,5 +134,10 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Hai erros no formulario"
+  "formError": "Hai erros no formulario",
+  "cancelButton": "Cancelar",
+  "cancel": "Cancelar",
+  "confirmLogout": "Confirmar peche de sesión",
+  "confirmLogoutMessage": "Estás seguro de que queres pechar a sesión?",
+  "logout": "Pechar sesión"
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -15,7 +16,6 @@ import 'event_collection_view_model.dart';
 class EventCollectionScreen extends StatefulWidget {
   final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   final int crossAxisCount;
-
 
   EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
@@ -41,7 +41,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Future<void> _loadConfiguration() async {
     try {
       // Usar inyección de dependencias en lugar de crear instancias manualmente
-
 
       widget.viewmodel.setup();
 
@@ -96,9 +95,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     }
 
     if (organizationName == null) {
-      return Scaffold(
-        body: Center(child: Text(location.configNotAvailable)),
-      );
+      return Scaffold(body: Center(child: Text(location.configNotAvailable)));
     }
 
     return Scaffold(
@@ -110,10 +107,38 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
               var githubService = await SecureInfo.getGithubKey();
-              if(githubService.token == null){
+              if (githubService.token == null) {
                 AppRouter.router.push(AppRouter.adminPath);
+              } else {
+                if (context.mounted) {
+                  final bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(location.confirmLogout),
+                        content: Text(
+                          location.confirmLogoutMessage,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text(location.cancel),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text(location.logout),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (confirm == true) {
+                    setState(() async {
+                      await SecureInfo.saveGithubKey(GithubData());
+                    });
+                  }
+                }
               }
-
             }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
@@ -158,9 +183,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
-                return Center(
-                  child: Text(location.noEventsToShow),
-                );
+                return Center(child: Text(location.noEventsToShow));
               }
 
               return ListView.builder(
@@ -182,7 +205,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             widget.viewmodel.deleteEvent(item);
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text('${item.eventName}${location.eventDeleted}'),
+                                content: Text(
+                                  '${item.eventName}${location.eventDeleted}',
+                                ),
                               ),
                             );
                           }
@@ -216,10 +241,16 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
                   onPressed: () async {
-                    Organization? organizationUpdated = await AppRouter.router.push(AppRouter.organizationFormPath) as Organization?;
+                    Organization? organizationUpdated =
+                        await AppRouter.router.push(
+                              AppRouter.organizationFormPath,
+                            )
+                            as Organization?;
 
-                    if(organizationUpdated != null){
-                      getIt.resetLazySingleton<Organization>(instance: organizationUpdated);
+                    if (organizationUpdated != null) {
+                      getIt.resetLazySingleton<Organization>(
+                        instance: organizationUpdated,
+                      );
                       setState(() {
                         organizationName = organizationUpdated.organizationName;
                       });
@@ -238,10 +269,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data == true) {
                 return AddFloatingActionButton(
                   onPressed: () async {
-                    final Event? newEvent = await AppRouter.router.push(AppRouter.eventFormPath);
+                    final Event? newEvent = await AppRouter.router.push(
+                      AppRouter.eventFormPath,
+                    );
                     if (newEvent != null) {
                       setState(() {
-                        _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newEvent.uid);
+                        _viewmodel.eventsToShow.value.removeWhere(
+                          (event) => event.uid == newEvent.uid,
+                        );
                         _viewmodel.eventsToShow.value.add(newEvent);
                         _viewmodel.addEvent(newEvent);
                       });

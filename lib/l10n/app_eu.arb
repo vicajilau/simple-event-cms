@@ -135,5 +135,9 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Formularioan akatsak daude"
+  "formError": "Formularioan akatsak daude",
+  "confirmLogout": "Berretsi saioa ixtea",
+  "confirmLogoutMessage": "Ziur zaude saioa itxi nahi duzula?",
+  "cancel": "Ezeztatu",
+  "logout": "Saioa itxi"
 }

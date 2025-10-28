@@ -68,7 +68,6 @@
   "selectTalkTypeError": "Por favor, selecione o tipo de palestra",
   "descriptionLabel": "Descrição",
   "talkDescriptionHint": "Insira a descrição da palestra...",
-  "cancelButton": "Cancelar",
   "timeSelectionError": "Por favor, selecione os horários de início e término.",
   "noSessionsFound": "Nenhuma sessão encontrada",
   "deleteSessionTitle": "Excluir sessão",
@@ -135,5 +134,10 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Há erros no formulário"
+  "formError": "Há erros no formulário",
+  "cancelButton": "Cancelar",
+  "cancel": "Cancelar",
+  "confirmLogout": "Confirmar Saída",
+  "confirmLogoutMessage": "Tem a certeza que quer sair?",
+  "logout": "Sair"
 }

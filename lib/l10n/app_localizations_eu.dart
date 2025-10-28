@@ -418,4 +418,16 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get formError => 'Formularioan akatsak daude';
+
+  @override
+  String get confirmLogout => 'Berretsi saioa ixtea';
+
+  @override
+  String get confirmLogoutMessage => 'Ziur zaude saioa itxi nahi duzula?';
+
+  @override
+  String get cancel => 'Ezeztatu';
+
+  @override
+  String get logout => 'Saioa itxi';
 }

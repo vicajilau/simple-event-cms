@@ -422,4 +422,16 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get formError => 'Hi ha errors al formulari';
+
+  @override
+  String get confirmLogout => 'Confirmar Tancament de Sessió';
+
+  @override
+  String get confirmLogoutMessage => 'Estàs segur que vols tancar la sessió?';
+
+  @override
+  String get cancel => 'Cancel·lar';
+
+  @override
+  String get logout => 'Tancar Sessió';
 }
