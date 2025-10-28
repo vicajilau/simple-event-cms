@@ -225,7 +225,6 @@ class DataUpdateInfo {
   }
 
   /// Removes an agenda day entry from the agenda.json file by its ID.
-  /// This function first loads all agenda entries for the year "2025".
   /// It then iterates through each `Agenda` object to find an `AgendaDay`
   /// whose `uid` matches the provided `agendaDayId`.
   /// If a match is found, it calls `dataCommons.removeData` to remove

@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
-import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
@@ -54,7 +52,6 @@ class CommonsServicesImp extends CommonsServices {
   @override
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
-    if (ConfigLoader.appEnv != 'dev') {
       final url = 'events/$path';
       var githubService = await SecureInfo.getGithubKey();
       var github = GitHub(
@@ -96,10 +93,7 @@ class CommonsServicesImp extends CommonsServices {
         ),
       );
       content = file;
-    } else if (ConfigLoader.appEnv == 'dev') {
-      final localPath = 'events/$path';
-      content = await rootBundle.loadString(localPath);
-    }
+
     try {
       // Handle cases where content might be a list or a map containing a list
       final decodedContent = json.decode(content);

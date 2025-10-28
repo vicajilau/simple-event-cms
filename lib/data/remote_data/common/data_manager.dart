@@ -13,11 +13,11 @@ class DataUpdate {
 
   static Future<void> deleteItemAndAssociations(
     String itemId,
-    Type itemType, {
+    String itemType, {
     String? eventUID,
     String agendaDayUidSelected = "",
   }) async {
-    switch (itemType.toString()) {
+    switch (itemType) {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
         break;
@@ -55,58 +55,48 @@ class DataUpdate {
     dynamic item, // Can be Session, Track, AgendaDay, Speaker, Sponsor
     String? parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
   ) async {
-    switch (item.runtimeType.toString()) {
-      case "Event":
-        await _addEvent(item as Event, dataLoader, dataUpdateInfo);
-        break;
-      case "Session":
-        await _addSession(
-          item as Session,
-          dataLoader,
-          dataUpdateInfo,
-          parentId,
-        );
-        break;
-      case "Track":
-        await _addTrack(item as Track, dataLoader, dataUpdateInfo, parentId);
-        break;
-      case "AgendaDay":
-        await _addAgendaDay(
-          item as AgendaDay,
-          dataLoader,
-          dataUpdateInfo,
-          parentId,
-        );
-        break;
-      case "Speaker":
-        await _addSpeaker(
-          item as Speaker,
-          dataLoader,
-          dataUpdateInfo,
-          parentId,
-        );
-        break;
-      case "Sponsor":
-        await _addSponsor(
-          item as Sponsor,
-          dataLoader,
-          dataUpdateInfo,
-          parentId,
-        );
-        break;
+    if(item is Event){
+      await _addEvent(item, dataLoader, dataUpdateInfo);
+    }else if(item is Session){
+      await _addSession(
+        item,
+        dataLoader,
+        dataUpdateInfo,
+        parentId,
+      );
+    }else if(item is Track){
+      await _addTrack(item, dataLoader, dataUpdateInfo, parentId);
 
-      case "Organization":
-        await _addOrganization(
-          item as Organization,
-          dataLoader,
-          dataUpdateInfo,
-          parentId,
-        );
-        break;
-      default:
-        throw Exception(
-          "Unsupported item type for addition: ${item.runtimeType}",
-        );
+    }else if(item is AgendaDay){
+      await _addAgendaDay(
+        item,
+        dataLoader,
+        dataUpdateInfo,
+        parentId,
+      );
+    }else if(item is Speaker){
+      await _addSpeaker(
+        item,
+        dataLoader,
+        dataUpdateInfo,
+        parentId,
+      );
+    }else if(item is Sponsor){
+      await _addSponsor(
+        item,
+        dataLoader,
+        dataUpdateInfo,
+        parentId,
+      );
+    }else if(item is Organization){
+      await _addOrganization(
+        item,
+        dataLoader,
+        dataUpdateInfo,
+        parentId,
+      );
+    }else{
+      throw Exception("Unsupported item type");
     }
   }
 
@@ -117,52 +107,44 @@ class DataUpdate {
   }) async {
     if (items.isEmpty) return;
 
-    String itemType = items.first.runtimeType.toString();
-    switch (itemType) {
-      case "Session":
-        await _addSessions(
-          items.cast<Session>(),
-          dataLoader,
-          dataUpdateInfo,
-          overrideData: overrideData,
-        );
-        break;
-      case "Track":
-        await _addTracks(
-          items.cast<Track>(),
-          dataLoader,
-          dataUpdateInfo,
-          overrideData: overrideData,
-        );
-        break;
-      case "AgendaDay":
-        await _addAgendaDays(
-          items.cast<AgendaDay>(),
-          dataLoader,
-          dataUpdateInfo,
-          overrideData: overrideData,
-        );
-        break;
-      case "Speaker":
-        await _addSpeakers(
-          items.cast<Speaker>(),
-          dataLoader,
-          dataUpdateInfo,
-          overrideData: overrideData,
-        );
-        break;
-      case "Sponsor":
-        await _addSponsors(
-          items.cast<Sponsor>(),
-          dataLoader,
-          dataUpdateInfo,
-          overrideData: overrideData,
-        );
-        break;
-      default:
-        throw Exception(
-          "Unsupported item type for addition: ${items.first.runtimeType}",
-        );
+    if(items.first is Session){
+      await _addSessions(
+        items.cast<Session>(),
+        dataLoader,
+        dataUpdateInfo,
+        overrideData: overrideData,
+      );
+    }else if(items.first is Track){
+      await _addTracks(
+        items.cast<Track>(),
+        dataLoader,
+        dataUpdateInfo,
+        overrideData: overrideData,
+      );
+
+    }else if(items.first is AgendaDay){
+      await _addAgendaDays(
+        items.cast<AgendaDay>(),
+        dataLoader,
+        dataUpdateInfo,
+        overrideData: overrideData,
+      );
+    }else if(items.first is Speaker){
+      await _addSpeakers(
+        items.cast<Speaker>(),
+        dataLoader,
+        dataUpdateInfo,
+        overrideData: overrideData,
+      );
+    }else if(items.first is Sponsor){
+      await _addSponsors(
+        items.cast<Sponsor>(),
+        dataLoader,
+        dataUpdateInfo,
+        overrideData: overrideData,
+      );
+    }else{
+      throw Exception("Unsupported item type list ");
     }
   }
 

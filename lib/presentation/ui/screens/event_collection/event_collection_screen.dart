@@ -232,11 +232,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data == true) {
                 return AddFloatingActionButton(
                   onPressed: () async {
-                    final Event? newConfig = await AppRouter.router.push(AppRouter.eventFormPath);
-                    if (newConfig != null) {
+                    final Event? newEvent = await AppRouter.router.push(AppRouter.eventFormPath);
+                    if (newEvent != null) {
                       setState(() {
-                        _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newConfig.uid);
-                        _viewmodel.eventsToShow.value.add(newConfig);
+                        _viewmodel.eventsToShow.value.removeWhere((event) => event.uid == newEvent.uid);
+                        _viewmodel.eventsToShow.value.add(newEvent);
+                        _viewmodel.addEvent(newEvent);
                       });
                     }
                   },
