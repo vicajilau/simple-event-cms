@@ -16,7 +16,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   Future<Result<void>> addEvent(Event event);
   Future<Event?> getEventById(String eventId);
   Future<Result<void>> editEvent(Event event);
-  Future<Result<void>> deleteEvent(Event event);
+  Future<void> deleteEvent(Event event);
 }
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
@@ -92,18 +92,22 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  Future<Result<void>> deleteEvent(Event event) async {
+  Future<void> deleteEvent(Event event) async {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
 
       viewState.value = ViewState.isLoading;
-      final result =  await useCase.removeEvent(event);
-      viewState.value = ViewState.loadFinished;
-      return result;
+      final result = await useCase.removeEvent(event);
+      switch (result) {
+        case Ok<void>():
+          viewState.value = ViewState.loadFinished;
+        case Error():
+          viewState.value = ViewState.error;
+          setErrorKey(result.error);
+      }
     }
-    return Result.error(GithubException('Event not found'));
   }
 
   void _updateEventsToShow() async {
