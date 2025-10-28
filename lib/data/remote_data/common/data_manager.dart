@@ -13,11 +13,11 @@ class DataUpdate {
 
   static Future<void> deleteItemAndAssociations(
     String itemId,
-    Type itemType, {
+    String itemType, {
     String? eventUID,
     String agendaDayUidSelected = "",
   }) async {
-    switch (itemType.toString()) {
+    switch (itemType) {
       case "Event":
         await _deleteEvent(itemId, dataLoader, dataUpdateInfo);
         break;
