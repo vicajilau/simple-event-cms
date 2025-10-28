@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
@@ -8,6 +6,7 @@ import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
+import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
 import 'event_collection_view_model.dart';
 
@@ -104,6 +103,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         title: GestureDetector(
           onTap: () async {
             _titleTapCount++;
+
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
               var githubService = await SecureInfo.getGithubKey();
@@ -296,7 +296,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildEventCard(BuildContext context, Event item, bool isAdmin) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(
+        AppRouter.router.pushNamed(
           AppRouter.eventDetailName,
           pathParameters: {'eventId': item.uid},
         );
@@ -333,7 +333,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ? IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () async {
-                      final Event? eventEdited = await context.push(
+                      final Event? eventEdited = await AppRouter.router.push(
                         AppRouter.eventFormPath,
                         extra: item.uid,
                       );

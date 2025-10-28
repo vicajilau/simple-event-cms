@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/utils/auth_service.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
@@ -62,8 +61,6 @@ Future<void> setupDependencies() async {
   );
   getIt.registerLazySingleton<EventFormViewModel>(() => EventFormViewModelImpl());
   getIt.registerLazySingleton<AgendaFormViewModel>(() => AgendaFormViewModelImpl());
-    getIt.registerLazySingleton<AuthService>(() => AuthService());
-
 }
 
 /// Clears all registered dependencies

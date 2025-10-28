@@ -237,7 +237,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeEvent(String eventId) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(eventId, Event);
+      await DataUpdate.deleteItemAndAssociations(eventId, "Event");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeEvent: $e');
@@ -256,7 +256,7 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.deleteItemAndAssociations(
         agendaDayId,
-        AgendaDay,
+        "AgendaDay",
         eventUID: eventUID,
       );
       return Result.ok(null);
@@ -272,7 +272,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeSpeaker(String speakerId) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(speakerId, Speaker);
+      await DataUpdate.deleteItemAndAssociations(speakerId, "Speaker");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeSpeaker: $e');
@@ -286,7 +286,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeSponsor(String sponsorId) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(sponsorId, Sponsor);
+      await DataUpdate.deleteItemAndAssociations(sponsorId, "Sponsor");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeSponsor: $e');
@@ -300,7 +300,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> deleteSession(String sessionId,{String? agendaDayUID}) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(sessionId, Session,agendaDayUidSelected: agendaDayUID ?? "");
+      await DataUpdate.deleteItemAndAssociations(sessionId, "Session",agendaDayUidSelected: agendaDayUID ?? "");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in deleteSessionFromAgendaDay: $e');
@@ -485,7 +485,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(trackUID, Track);
+      await DataUpdate.deleteItemAndAssociations(trackUID, "Track");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeTrack: $e');

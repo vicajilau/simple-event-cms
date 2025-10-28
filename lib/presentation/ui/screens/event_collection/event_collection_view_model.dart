@@ -13,10 +13,10 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
-  Future<Result<void>> addEvent(Event event);
+  Future<void> addEvent(Event event);
   Future<Event?> getEventById(String eventId);
   Future<Result<void>> editEvent(Event event);
-  Future<Result<void>> deleteEvent(Event event);
+  Future<void> deleteEvent(Event event);
 }
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
@@ -66,14 +66,10 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  Future<Result<void>> addEvent(Event event) async {
+  Future<void> addEvent(Event event) async {
+    _allEvents.removeWhere((element) => element.uid == event.uid);
     _allEvents.add(event);
     _updateEventsToShow();
-
-    viewState.value = ViewState.isLoading;
-    final result =  await useCase.saveEvent(event);
-    viewState.value = ViewState.loadFinished;
-    return result;
   }
 
   @override
@@ -92,18 +88,22 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  Future<Result<void>> deleteEvent(Event event) async {
+  Future<void> deleteEvent(Event event) async {
     int index = _allEvents.indexWhere((element) => element.uid == event.uid);
     if (index != -1) {
       _allEvents.removeAt(index);
       _applyFilters();
 
       viewState.value = ViewState.isLoading;
-      final result =  await useCase.removeEvent(event);
-      viewState.value = ViewState.loadFinished;
-      return result;
+      final result = await useCase.removeEvent(event);
+      switch (result) {
+        case Ok<void>():
+          viewState.value = ViewState.loadFinished;
+        case Error():
+          viewState.value = ViewState.error;
+          setErrorKey(result.error);
+      }
     }
-    return Result.error(GithubException('Event not found'));
   }
 
   void _updateEventsToShow() async {

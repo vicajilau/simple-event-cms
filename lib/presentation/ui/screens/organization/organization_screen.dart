@@ -21,7 +21,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   late TextEditingController _secondaryColorOrganizationController;
   late TextEditingController _githubUserController;
   late TextEditingController _projectNameController;
-  late TextEditingController _yearController;
   late TextEditingController _branchController;
 
   final _viewModel = getIt<OrganizationViewModel>();
@@ -36,7 +35,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     _secondaryColorOrganizationController = TextEditingController(text: organization.secondaryColorOrganization);
     _githubUserController = TextEditingController(text: organization.githubUser);
     _projectNameController = TextEditingController(text: organization.projectName);
-    _yearController = TextEditingController(text: organization.year);
     _branchController = TextEditingController(text: organization.branch);
   }
 
@@ -47,7 +45,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     _secondaryColorOrganizationController.dispose();
     _githubUserController.dispose();
     _projectNameController.dispose();
-    _yearController.dispose();
     _branchController.dispose();
     super.dispose();
   }
@@ -115,16 +112,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                 },
               ),
               TextFormField(
-                controller: _yearController,
-                decoration: const InputDecoration(labelText: 'Year'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a year';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
                 controller: _branchController,
                 decoration: const InputDecoration(labelText: 'Branch'),
                 validator: (value) {
@@ -146,7 +133,6 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                           _secondaryColorOrganizationController.text,
                       githubUser: _githubUserController.text,
                       projectName: _projectNameController.text,
-                      year: _yearController.text,
                       branch: _branchController.text,
                     );
                     _viewModel.updateOrganization(organization,context);
