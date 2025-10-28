@@ -119,12 +119,21 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
       if (session.time.isNotEmpty) {
         final parts = session.time.split(' - ');
         if (parts.length == 2) {
-          _initSessionTime = TimeUtils.parseTime(parts.first);
-          _endSessionTime = TimeUtils.parseTime(parts.last);
+          // Convert AM/PM format to 24-hour format before parsing
+          final startTimeString = parts.first.replaceAll(' AM', '').replaceAll(' PM', '');
+          final endTimeString = parts.last.replaceAll(' AM', '').replaceAll(' PM', '');
+          var startTime = TimeUtils.parseTime(startTimeString);
+          var endTime = TimeUtils.parseTime(endTimeString);
+          if (parts.first.contains('PM') && startTime?.hour != 12) {
+            startTime = startTime?.replacing(hour: startTime.hour + 12);
+          }
+          if (parts.last.contains('PM') && endTime?.hour != 12) {
+            endTime = endTime?.replacing(hour: endTime.hour + 12);
+          }
+          _initSessionTime = startTime;
+          _endSessionTime = endTime;
         }
       }
-    } else {
-      // Creating a new session
     }
 
     setState(
