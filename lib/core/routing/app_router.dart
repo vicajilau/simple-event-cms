@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
@@ -26,69 +28,112 @@ class AppRouter {
   static const String sponsorFormName = 'sponsor_form';
   static const String organizationFormName = 'organization_form';
 
-  static final GoRouter router = GoRouter(
-    initialLocation: homePath,
-    routes: [
-      GoRoute(
-        path: homePath,
-        name: homeName,
-        builder: (context, state) => EventCollectionScreen(crossAxisCount: 4),
-        routes: [
-          GoRoute(
-            path: eventDetailPath,
-            name: eventDetailName,
-            builder: (context, state) {
-              final eventId = state.pathParameters['eventId'] ?? '';
-              return EventDetailScreen(eventId: eventId);
-            },
-          ),
-        ],
-      ),
-      GoRoute(
-        path: adminPath,
-        name: adminName,
-        builder: (context, state) => const AdminLoginScreen(),
-      ),
-      GoRoute(
-        path: eventFormPath,
-        name: eventFormName,
-        builder: (context, state) => state.extra == null
-            ? EventFormScreen()
-            : EventFormScreen(eventId: state.extra.toString()),
-      ),
-      GoRoute(
-        path: organizationFormPath,
-        name: organizationFormName,
-        builder: (context, state) => OrganizationScreen(),
-      ),
-      GoRoute(
-        path: agendaFormPath,
-        name: agendaFormName,
-        builder: (context, state) {
-          final agendaFormData = state.extra as AgendaFormData;
-          return AgendaFormScreen(data: agendaFormData);
-        },
-      ),
-      GoRoute(
-        path: speakerFormPath,
-        name: speakerFormName,
-        builder: (context, state) {
-          final extras = state.extra as Map<String, dynamic>;
-          final speaker = extras['speaker'] as Speaker?;
-          final eventId = extras['eventId'] as String;
-          return SpeakerFormScreen(speaker: speaker, eventUID: eventId);
-        },
-      ),
-      GoRoute(
-        path: sponsorFormPath,
-        name: sponsorFormName,
-        builder: (context, state) {
-          final extras = state.extra as Map<String, dynamic>;
-          final sponsor = extras['sponsor'] as Sponsor?;
-          final eventId = extras['eventId'] as String;
-          return SponsorFormScreen(sponsor: sponsor, eventUID: eventId);
-        },
-      ),
-    ],
-  );
+  // Router estático
+  static late GoRouter router;
+
+  static Future<bool> _hasAdminSession() async {
+    final githubData = await SecureInfo.getGithubKey();
+    return githubData.token != null && githubData.token!.isNotEmpty;
+  }
+
+  static void init() {
+    router = GoRouter(
+      initialLocation: homePath,
+      redirect: (context, state) async {
+        final hasAdminSession = await _hasAdminSession();
+
+        // si ya hay token guardado y el usuario intenta ir al login admin, lo mandamos al home
+        if (hasAdminSession && state.matchedLocation == adminPath) {
+          return homePath;
+        }
+
+        return null;
+      },
+      routes: [
+        GoRoute(
+          path: homePath,
+          name: homeName,
+          builder: (context, state) => EventCollectionScreen(crossAxisCount: 4),
+          routes: [
+            GoRoute(
+              path: eventDetailPath,
+              name: eventDetailName,
+              builder: (context, state) {
+                final eventId = state.pathParameters['eventId'] ?? '';
+                return EventDetailScreen(eventId: eventId);
+              },
+            ),
+          ],
+        ),
+
+        GoRoute(
+          path: adminPath,
+          name: adminName,
+          builder: (context, state) {
+            return FutureBuilder(
+              future: _hasAdminSession(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (snapshot.data == true) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (context.mounted) context.go(homePath);
+                  });
+                  return const SizedBox.shrink();
+                }
+
+                return const AdminLoginScreen();
+              },
+            );
+          },
+        ),
+
+        GoRoute(
+          path: eventFormPath,
+
+          name: eventFormName,
+          builder: (context, state) => state.extra == null
+              ? EventFormScreen()
+              : EventFormScreen(eventId: state.extra.toString()),
+        ),
+        GoRoute(
+          path: organizationFormPath,
+          name: organizationFormName,
+          builder: (context, state) => OrganizationScreen(),
+        ),
+        GoRoute(
+          path: agendaFormPath,
+          name: agendaFormName,
+          builder: (context, state) {
+            final agendaFormData = state.extra as AgendaFormData;
+            return AgendaFormScreen(data: agendaFormData);
+          },
+        ),
+        GoRoute(
+          path: speakerFormPath,
+          name: speakerFormName,
+          builder: (context, state) {
+            final extras = state.extra as Map<String, dynamic>;
+            final speaker = extras['speaker'] as Speaker?;
+            final eventId = extras['eventId'] as String;
+            return SpeakerFormScreen(speaker: speaker, eventUID: eventId);
+          },
+        ),
+        GoRoute(
+          path: sponsorFormPath,
+          name: sponsorFormName,
+          builder: (context, state) {
+            final extras = state.extra as Map<String, dynamic>;
+            final sponsor = extras['sponsor'] as Sponsor?;
+            final eventId = extras['eventId'] as String;
+            return SponsorFormScreen(sponsor: sponsor, eventUID: eventId);
+          },
+        ),
+      ],
+    );
+  }
 }
