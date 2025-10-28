@@ -8,7 +8,6 @@ class Organization  extends GitHubModel {
   final String secondaryColorOrganization;
   final String githubUser;
   final String projectName;
-  final String year;
   final String branch;
 
   Organization({
@@ -18,7 +17,6 @@ class Organization  extends GitHubModel {
     required this.secondaryColorOrganization,
     required this.githubUser,
     required this.projectName,
-    required this.year,
     required this.branch,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
@@ -31,7 +29,6 @@ class Organization  extends GitHubModel {
       secondaryColorOrganization: json['secondaryColorOrganization'],
       githubUser: json['github_user'],
       projectName: json['project_name'],
-      year: json['year'],
       branch: json['branch'],
     );
   }
@@ -44,7 +41,6 @@ class Organization  extends GitHubModel {
       'secondaryColorOrganization': secondaryColorOrganization,
       'github_user': githubUser,
       'project_name': projectName,
-      'year': year,
       'branch': branch,
     };
   }
