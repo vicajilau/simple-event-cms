@@ -5,6 +5,7 @@ import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
+import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
 import 'event_collection_view_model.dart';
 
@@ -105,9 +106,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         title: GestureDetector(
           onTap: () async {
             _titleTapCount++;
+
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
-              AppRouter.router.push(AppRouter.adminPath);
+              var githubService = await SecureInfo.getGithubKey();
+              if(githubService.token == null){
+                AppRouter.router.push(AppRouter.adminPath);
+              }
+
             }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
