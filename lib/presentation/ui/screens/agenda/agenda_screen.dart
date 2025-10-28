@@ -45,8 +45,6 @@ class _AgendaScreenState extends State<AgendaScreen> {
         );
       }
     });
-
-
   }
 
   @override
@@ -322,6 +320,10 @@ class _SessionCardsState extends State<SessionCards> {
                       eventUID: session.eventUID,
                       agendaDayUID: session.agendaDayUID,
                     ),
+                    widget.viewModel.speakers.value
+                        .where((element) => element.uid == session.speakerUID)
+                        .firstOrNull!
+                        .name,
                     onDeleteTap: () {
                       showDialog(
                         context: context,
@@ -332,7 +334,10 @@ class _SessionCardsState extends State<SessionCards> {
                             onDeletePressed: () async {
                               await widget.viewModel
                                   .removeSessionAndReloadAgenda(
-                                      session.uid, widget.eventId,agendaDayUID:session.agendaDayUID);
+                                    session.uid,
+                                    widget.eventId,
+                                    agendaDayUID: session.agendaDayUID,
+                                  );
                             },
                           );
                         },
@@ -347,7 +352,8 @@ class _SessionCardsState extends State<SessionCards> {
 
   Widget _buildSessionCard(
     BuildContext context,
-    Session session, {
+    Session session,
+    String speakerName, {
     required Function() onDeleteTap,
   }) {
     return Card(
@@ -413,8 +419,7 @@ class _SessionCardsState extends State<SessionCards> {
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
-            if (session.speakerUID.toString().isNotEmpty &&
-                session.type != 'break') ...[
+            if (speakerName.isNotEmpty && session.type != 'break') ...[
               const SizedBox(height: 8),
               Row(
                 children: [
@@ -425,7 +430,7 @@ class _SessionCardsState extends State<SessionCards> {
                   ),
                   const SizedBox(width: 4),
                   Text(
-                    session.speakerUID.toString(),
+                    speakerName,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w500,
