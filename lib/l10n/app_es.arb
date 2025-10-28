@@ -63,7 +63,7 @@
   "speakerLabel": "Speaker*",
   "noSpeakersMessage": "No hay speakers. Añade uno.",
   "selectSpeakerHint": "Selecciona un speaker",
-  `"selectSpeakerError": "Por favor, selecciona un speaker",
+  "selectSpeakerError": "Por favor, selecciona un speaker",
   "talkTypeLabel": "Tipo de charla*",
   "selectTalkTypeHint": "Selecciona el tipo de charla",
   "selectTalkTypeError": "Por favor, selecciona el tipo de charla",
