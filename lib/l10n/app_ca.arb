@@ -68,7 +68,6 @@
   "selectTalkTypeError": "Si us plau, selecciona el tipus de xerrada",
   "descriptionLabel": "Descripció",
   "talkDescriptionHint": "Introdueix la descripció de la xerrada...",
-  "cancelButton": "Cancel·lar",
   "timeSelectionError": "Si us plau, selecciona tant l'hora d'inici com la de finalització.",
   "noSessionsFound": "No s'han trobat sessions",
   "deleteSessionTitle": "Eliminar sessió",
@@ -135,5 +134,9 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Hi ha errors al formulari"
+  "formError": "Hi ha errors al formulari",
+  "cancelButton": "Cancel·lar",
+  "confirmLogout": "Confirmar Tancament de Sessió",
+  "confirmLogoutMessage": "Estàs segur que vols tancar la sessió?",
+  "logout": "Tancar Sessió"
 }

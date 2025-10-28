@@ -1,3 +1,4 @@
+
 {
   "@@locale": "es",
   "loadingAgenda": "Cargando agenda...",
@@ -62,13 +63,12 @@
   "speakerLabel": "Speaker*",
   "noSpeakersMessage": "No hay speakers. Añade uno.",
   "selectSpeakerHint": "Selecciona un speaker",
-  "selectSpeakerError": "Por favor, selecciona un speaker",
+  `"selectSpeakerError": "Por favor, selecciona un speaker",
   "talkTypeLabel": "Tipo de charla*",
   "selectTalkTypeHint": "Selecciona el tipo de charla",
   "selectTalkTypeError": "Por favor, selecciona el tipo de charla",
   "descriptionLabel": "Descripción",
   "talkDescriptionHint": "Introduce descripción de la charla...",
-  "cancelButton": "Cancelar",
   "timeSelectionError": "Por favor, seleccionar ambas horas: inicio y final.",
   "noSessionsFound": "No se encontraron sesiones",
   "deleteSessionTitle": "Eliminar sesión",
@@ -135,5 +135,9 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Hay errores en el formulario"
+  "formError": "Hay errores en el formulario",
+  "confirmLogout": "Confirmar cierre de sesión",
+  "confirmLogoutMessage": "¿Estás seguro de que quieres cerrar sesión?",
+  "cancel": "Cancelar",
+  "logout": "Cerrar sesión"
 }
