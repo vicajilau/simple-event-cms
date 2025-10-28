@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/utils/auth_service.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 import '../../presentation/ui/screens/organization/organization_screen.dart';
@@ -30,16 +31,19 @@ class AppRouter {
   // Router estático
   static late GoRouter router;
 
-  /// Método para inicializar el router con AuthService
-  static void init(AuthService authService) {
+  static Future<bool> _hasAdminSession() async {
+    final githubData = await SecureInfo.getGithubKey();
+    return githubData.token != null && githubData.token!.isNotEmpty;
+  }
+
+  static void init() {
     router = GoRouter(
       initialLocation: homePath,
-      refreshListenable: authService, // 🔁 escucha cambios de sesión admin
-      redirect: (context, state) {
-        final isAdmin = authService.isAdmin;
+      redirect: (context, state) async {
+        final hasAdminSession = await _hasAdminSession();
 
-        // 🔒 Bloqueo: si ya es admin y va al login admin, lo mandamos al home
-        if (isAdmin && state.matchedLocation == adminPath) {
+        // si ya hay token guardado y el usuario intenta ir al login admin, lo mandamos al home
+        if (hasAdminSession && state.matchedLocation == adminPath) {
           return homePath;
         }
 
@@ -61,13 +65,36 @@ class AppRouter {
             ),
           ],
         ),
+
         GoRoute(
           path: adminPath,
           name: adminName,
-          builder: (context, state) => const AdminLoginScreen(),
+          builder: (context, state) {
+            return FutureBuilder(
+              future: _hasAdminSession(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Scaffold(
+                    body: Center(child: CircularProgressIndicator()),
+                  );
+                }
+
+                if (snapshot.data == true) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (context.mounted) context.go(homePath);
+                  });
+                  return const SizedBox.shrink();
+                }
+
+                return const AdminLoginScreen();
+              },
+            );
+          },
         ),
+
         GoRoute(
           path: eventFormPath,
+
           name: eventFormName,
           builder: (context, state) => state.extra == null
               ? EventFormScreen()
