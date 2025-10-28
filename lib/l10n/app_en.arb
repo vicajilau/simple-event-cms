@@ -1,3 +1,4 @@
+
 {
   "@@locale": "en",
   "loadingAgenda": "Loading agenda...",
@@ -135,5 +136,9 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "There are errors in the form"
+  "formError": "There are errors in the form",
+  "confirmLogout": "Confirm Logout",
+  "confirmLogoutMessage": "Are you sure you want to log out?",
+  "cancel": "Cancel",
+  "logout": "Logout"
 }

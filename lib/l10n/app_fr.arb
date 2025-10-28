@@ -68,7 +68,6 @@
   "selectTalkTypeError": "Veuillez sélectionner le type de conférence",
   "descriptionLabel": "Description",
   "talkDescriptionHint": "Entrez la description de la conférence...",
-  "cancelButton": "Annuler",
   "timeSelectionError": "Veuillez sélectionner les heures de début et de fin.",
   "noSessionsFound": "Aucune session trouvée",
   "deleteSessionTitle": "Supprimer la session",
@@ -135,5 +134,10 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Il y a des erreurs dans le formulaire"
+  "formError": "Il y a des erreurs dans le formulaire",
+  "cancelButton": "Annuler",
+  "cancel": "Annuler",
+  "confirmLogout": "Confirmer la déconnexion",
+  "confirmLogoutMessage": "Êtes-vous sûr de vouloir vous déconnecter ?",
+  "logout": "Déconnexion"
 }

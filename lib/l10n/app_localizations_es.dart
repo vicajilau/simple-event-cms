@@ -419,4 +419,17 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get formError => 'Hay errores en el formulario';
+
+  @override
+  String get confirmLogout => 'Confirmar cierre de sesión';
+
+  @override
+  String get confirmLogoutMessage =>
+      '¿Estás seguro de que quieres cerrar sesión?';
+
+  @override
+  String get cancel => 'Cancelar';
+
+  @override
+  String get logout => 'Cerrar sesión';
 }

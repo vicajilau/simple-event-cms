@@ -1,3 +1,4 @@
+
 {
   "@@locale": "es",
   "loadingAgenda": "Cargando agenda...",
@@ -68,7 +69,6 @@
   "selectTalkTypeError": "Por favor, selecciona el tipo de charla",
   "descriptionLabel": "Descripción",
   "talkDescriptionHint": "Introduce descripción de la charla...",
-  "cancelButton": "Cancelar",
   "timeSelectionError": "Por favor, seleccionar ambas horas: inicio y final.",
   "noSessionsFound": "No se encontraron sesiones",
   "deleteSessionTitle": "Eliminar sesión",
@@ -135,5 +135,10 @@
   "addButton": "add button",
   "addRoomTitle": "add room",
   "roomNameHint": "Room name",
-  "formError": "Hay errores en el formulario"
+  "formError": "Hay errores en el formulario",
+  "confirmLogout": "Confirmar cierre de sesión",
+  "confirmLogoutMessage": "¿Estás seguro de que quieres cerrar sesión?",
+  "cancel": "Cancelar",
+  "cancelButton": "Cancelar",
+  "logout": "Cerrar sesión"
 }

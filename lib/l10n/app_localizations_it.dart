@@ -33,8 +33,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get loading => 'Caricamento...';
 
   @override
-  String get errorLoadingImage =>
-      'Errore durante il caricamento dell\'immagine';
+  String get errorLoadingImage => 'Errore durante il caricamento d\'immagine';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -412,14 +411,27 @@ class AppLocalizationsIt extends AppLocalizations {
   String get updateButton => 'Aggiorna';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Aggiungi pulsante';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Aggiungi stanza';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nome della stanza';
 
   @override
   String get formError => 'Ci sono errori nel modulo';
+
+  @override
+  String get confirmLogout => 'Conferma disconnessione';
+
+  @override
+  String get confirmLogoutMessage =>
+      'Sei sicuro di voler effettuare la disconnessione?';
+
+  @override
+  String get cancel => 'Annulla';
+
+  @override
+  String get logout => 'Disconnettersi';
 }

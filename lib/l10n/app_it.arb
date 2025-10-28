@@ -1,3 +1,4 @@
+
 {
   "@@locale": "it",
   "loadingAgenda": "Caricamento agenda...",
@@ -8,7 +9,7 @@
   "loadingSponsors": "Caricamento sponsor...",
   "noSponsorsRegistered": "Nessuno sponsor registrato",
   "loading": "Caricamento...",
-  "errorLoadingImage": "Errore durante il caricamento dell'immagine",
+  "errorLoadingImage": "Errore durante il caricamento d'immagine",
   "keynote": "KEYNOTE",
   "talk": "PRESENTAZIONE",
   "workshop": "WORKSHOP",
@@ -68,7 +69,6 @@
   "selectTalkTypeError": "Seleziona il tipo di presentazione",
   "descriptionLabel": "Descrizione",
   "talkDescriptionHint": "Inserisci la descrizione della presentazione...",
-  "cancelButton": "Annulla",
   "timeSelectionError": "Seleziona sia l'ora di inizio che quella di fine.",
   "noSessionsFound": "Nessuna sessione trovata",
   "deleteSessionTitle": "Elimina sessione",
@@ -132,8 +132,13 @@
   "silverSponsor": "Sponsor Argento",
   "bronzeSponsor": "Sponsor Bronzo",
   "updateButton": "Aggiorna",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
-  "roomNameHint": "Room name",
-  "formError": "Ci sono errori nel modulo"
+  "addButton": "Aggiungi pulsante",
+  "addRoomTitle": "Aggiungi stanza",
+  "roomNameHint": "Nome della stanza",
+  "formError": "Ci sono errori nel modulo",
+  "confirmLogout": "Conferma disconnessione",
+  "confirmLogoutMessage": "Sei sicuro di voler effettuare la disconnessione?",
+  "cancel": "Annulla",
+  "cancelButton": "Annulla",
+  "logout": "Disconnettersi"
 }
