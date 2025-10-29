@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -16,6 +14,12 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get noEventsScheduled => 'Non hai eventos programados';
+
+  @override
+  String get availablesEventsTitle => 'Eventos dispoñibles';
+
+  @override
+  String get availablesEventsText => 'Estes son os eventos que podes cargar para velos en modo sen conexión.';
 
   @override
   String get loadingSpeakers => 'Cargando relatores...';
@@ -183,8 +187,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get endTimeLabel => 'Hora de finalización:';
 
   @override
-  String get timeValidationError =>
-      'A hora de inicio debe ser anterior á hora de finalización.';
+  String get timeValidationError => 'A hora de inicio debe ser anterior á hora de finalización.';
 
   @override
   String get speakerLabel => 'Relator*';
@@ -217,8 +220,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get cancelButton => 'Cancelar';
 
   @override
-  String get timeSelectionError =>
-      'Por favor, selecciona tanto a hora de inicio como a de finalización.';
+  String get timeSelectionError => 'Por favor, selecciona tanto a hora de inicio como a de finalización.';
 
   @override
   String get noSessionsFound => 'Non se atoparon sesións';
@@ -227,8 +229,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get deleteSessionTitle => 'Eliminar sesión';
 
   @override
-  String get deleteSessionMessage =>
-      'Estás seguro de que queres eliminar a sesión?';
+  String get deleteSessionMessage => 'Estás seguro de que queres eliminar a sesión?';
 
   @override
   String get editEventTitle => 'Editar evento';
@@ -288,8 +289,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get secondaryColorLabel => 'Cor secundaria';
 
   @override
-  String get secondaryColorHint =>
-      'Introduce a cor secundaria (p. ex., #000000)';
+  String get secondaryColorHint => 'Introduce a cor secundaria (p. ex., #000000)';
 
   @override
   String get venueTitle => 'Lugar';
@@ -340,7 +340,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get projectNameHint => 'Por favor, introduce o nome do proxecto';
 
   @override
-  String get tokenLabel => 'Token (clásico con permisos de escritura)';
+  String get tokenHintLabel => 'Introduce a túa clave de cliente para continuar';
 
   @override
   String get tokenHint => 'Por favor, introduce un token de GitHub válido';
@@ -350,12 +350,11 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'O proxecto \"$projectName\" non existe nos teus repositorios de GitHub.';
+    return 'O proxecto \'$projectName\' non existe nos teus repositorios de GitHub.';
   }
 
   @override
-  String get authNetworkError =>
-      'Erro de autenticación ou de rede. Comproba as túas credenciais e o nome do proxecto.';
+  String get authNetworkError => 'Erro de autenticación ou de rede. Comproba as túas credenciais e o nome do proxecto.';
 
   @override
   String get closeButton => 'Pechar';
@@ -409,13 +408,13 @@ class AppLocalizationsGl extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'engadir botón';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'engadir sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nome da sala';
 
   @override
   String get formError => 'Hai erros no formulario';
@@ -424,12 +423,26 @@ class AppLocalizationsGl extends AppLocalizations {
   String get confirmLogout => 'Confirmar peche de sesión';
 
   @override
-  String get confirmLogoutMessage =>
-      'Estás seguro de que queres pechar a sesión?';
+  String get confirmLogoutMessage => 'Estás seguro de que queres pechar a sesión?';
 
   @override
   String get cancel => 'Cancelar';
 
   @override
   String get logout => 'Pechar sesión';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de acceso';
+
+  @override
+  String get enterGithubTokenMessage => 'Por favor, introduce o teu token de GitHub para continuar';
+
+  @override
+  String get events => 'Eventos';
+
+  @override
+  String get sessions => 'Sesións';
+
+  @override
+  String get organization => 'Organización';
 }

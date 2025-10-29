@@ -8,7 +8,7 @@
   "loadingSponsors": "Carregando patrocinadores...",
   "noSponsorsRegistered": "Nenhum patrocinador registrado",
   "loading": "Carregando...",
-  "errorLoadingImage": "Erro ao carregar a imagem",
+  "errorLoadingImage": "Erro ao carregar la imagem",
   "keynote": "KEYNOTE",
   "talk": "PALESTRA",
   "workshop": "WORKSHOP",
@@ -139,5 +139,9 @@
   "cancel": "Cancelar",
   "confirmLogout": "Confirmar Saída",
   "confirmLogoutMessage": "Tem a certeza que quer sair?",
-  "logout": "Sair"
+  "logout": "Sair",
+  "enterGithubTokenTitle": "Token de Acesso",
+  "tokenHintLabel": "Introduza o seu token do GitHub...",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

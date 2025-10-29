@@ -109,7 +109,7 @@
   "loginTitle": "Saioa hasi",
   "projectNameLabel": "Proiektuaren izena",
   "projectNameHint": "Mesedez, sartu proiektuaren izena",
-  "tokenLabel": "Token-a (klasikoa idazteko baimenekin)",
+  "tokenHintLabel": "Introduce tu client secret para continuar",
   "tokenHint": "Mesedez, sartu baliozko GitHub token bat",
   "unknownAuthError": "Autentifikazio-errore ezezaguna.",
   "projectNotFoundError": "“{projectName}” proiektua ez da existitzen zure GitHub-eko biltegietan.",
@@ -139,5 +139,8 @@
   "confirmLogout": "Berretsi saioa ixtea",
   "confirmLogoutMessage": "Ziur zaude saioa itxi nahi duzula?",
   "cancel": "Ezeztatu",
-  "logout": "Saioa itxi"
+  "logout": "Saioa itxi",
+  "enterGithubTokenTitle": "Sarbide-tokena",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

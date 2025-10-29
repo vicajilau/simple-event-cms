@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -16,6 +14,12 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noEventsScheduled => 'Nessun evento programmato';
+
+  @override
+  String get availablesEventsTitle => 'Eventi disponibili';
+
+  @override
+  String get availablesEventsText => 'Seleziona un evento per iniziare';
 
   @override
   String get loadingSpeakers => 'Caricamento relatori...';
@@ -132,7 +136,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get saveButton => 'Salva';
 
   @override
-  String get errorLoadingData => 'Errore durante il caricamento dei dati';
+  String get errorLoadingData => 'Errore during il caricamento dei dati';
 
   @override
   String get errorUnknown => 'Errore sconosciuto';
@@ -183,8 +187,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get endTimeLabel => 'Ora di fine:';
 
   @override
-  String get timeValidationError =>
-      'L\'ora di inizio deve precedere l\'ora di fine.';
+  String get timeValidationError => 'L\'ora di inizio deve precedere l\'ora di fine.';
 
   @override
   String get speakerLabel => 'Relatore*';
@@ -211,15 +214,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get descriptionLabel => 'Descrizione';
 
   @override
-  String get talkDescriptionHint =>
-      'Inserisci la descrizione della presentazione...';
+  String get talkDescriptionHint => 'Inserisci la descrizione della presentazione...';
 
   @override
   String get cancelButton => 'Annulla';
 
   @override
-  String get timeSelectionError =>
-      'Seleziona sia l\'ora di inizio che quella di fine.';
+  String get timeSelectionError => 'Seleziona sia l\'ora di inizio che quella di fine.';
 
   @override
   String get noSessionsFound => 'Nessuna sessione trovata';
@@ -228,8 +229,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get deleteSessionTitle => 'Elimina sessione';
 
   @override
-  String get deleteSessionMessage =>
-      'Sei sicuro di voler eliminare la sessione?';
+  String get deleteSessionMessage => 'Sei sicuro di voler eliminare la sessione?';
 
   @override
   String get editEventTitle => 'Modifica evento';
@@ -289,8 +289,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get secondaryColorLabel => 'Colore secondario';
 
   @override
-  String get secondaryColorHint =>
-      'Inserisci il colore secondario (es. #000000)';
+  String get secondaryColorHint => 'Inserisci il colore secondario (es. #000000)';
 
   @override
   String get venueTitle => 'Luogo';
@@ -320,8 +319,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get errorPrefix => 'Errore: ';
 
   @override
-  String get errorLoadingConfig =>
-      'Errore during il caricamento della configurazione: ';
+  String get errorLoadingConfig => 'Errore during il caricamento della configurazione: ';
 
   @override
   String get configNotAvailable => 'Errore: Configurazione non disponibile';
@@ -342,7 +340,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get projectNameHint => 'Inserisci il nome del progetto';
 
   @override
-  String get tokenLabel => 'Token (classico con autorizzazioni di scrittura)';
+  String get tokenHintLabel => 'Inserisci il tuo client secret per continuare';
 
   @override
   String get tokenHint => 'Inserisci un token GitHub valido';
@@ -356,8 +354,7 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError =>
-      'Errore di autenticazione o di rete. Controlla le tue credenziali e il nome del progetto.';
+  String get authNetworkError => 'Errore di autenticazione o di rete. Controlla le tue credenziali e il nome del progetto.';
 
   @override
   String get closeButton => 'Chiudi';
@@ -426,12 +423,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get confirmLogout => 'Conferma disconnessione';
 
   @override
-  String get confirmLogoutMessage =>
-      'Sei sicuro di voler effettuare la disconnessione?';
+  String get confirmLogoutMessage => 'Sei sicuro di voler effettuare la disconnessione?';
 
   @override
   String get cancel => 'Annulla';
 
   @override
   String get logout => 'Disconnettersi';
+
+  @override
+  String get enterGithubTokenTitle => 'Token di accesso';
+
+  @override
+  String get enterGithubTokenMessage => 'Inserisci il tuo token GitHub per continuare';
+
+  @override
+  String get events => 'Eventi';
+
+  @override
+  String get sessions => 'Sessioni';
+
+  @override
+  String get organization => 'Organizzazione';
 }

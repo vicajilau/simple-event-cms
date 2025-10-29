@@ -139,5 +139,9 @@
   "cancel": "Annuler",
   "confirmLogout": "Confirmer la déconnexion",
   "confirmLogoutMessage": "Êtes-vous sûr de vouloir vous déconnecter ?",
-  "logout": "Déconnexion"
+  "logout": "Déconnexion",
+  "enterGithubTokenTitle": "Jeton d'accès",
+  "tokenHintLabel": "Entrez votre jeton GitHub...",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

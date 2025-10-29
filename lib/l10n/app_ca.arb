@@ -108,7 +108,7 @@
   "loginTitle": "Inici de sessió",
   "projectNameLabel": "Nom del projecte",
   "projectNameHint": "Si us plau, introdueix el nom del projecte",
-  "tokenLabel": "Token (clàssic amb permisos d'escriptura)",
+  "tokenHintLabel": "Introduce tu client secret para continuar",
   "tokenHint": "Si us plau, introdueix un token de GitHub vàlid",
   "unknownAuthError": "Error d'autenticació desconegut.",
   "projectNotFoundError": "El projecte \"{projectName}\" no existeix als teus repositoris de GitHub.",
@@ -139,5 +139,8 @@
   "cancel": "Cancel·lar",
   "confirmLogout": "Confirmar Tancament de Sessió",
   "confirmLogoutMessage": "Estàs segur que vols tancar la sessió?",
-  "logout": "Tancar Sessió"
+  "logout": "Tancar Sessió",
+  "enterGithubTokenTitle": "Token d'accés",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }
