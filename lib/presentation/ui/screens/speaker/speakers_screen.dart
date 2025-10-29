@@ -14,13 +14,15 @@ class SpeakersScreen extends StatefulWidget {
   /// Data loader for fetching speaker information
   final SpeakerViewModel viewmodel = getIt<SpeakerViewModel>();
   final String eventId;
-  SpeakersScreen({super.key,required this.eventId});
+  SpeakersScreen({super.key, required this.eventId});
 
   @override
   State<SpeakersScreen> createState() => _SpeakersScreenState();
 }
 
 class _SpeakersScreenState extends State<SpeakersScreen> {
+  List<Widget> screens = [];
+
   @override
   void initState() {
     super.initState();
@@ -30,6 +32,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
+
     return ValueListenableBuilder(
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
@@ -61,218 +64,361 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
 
             return LayoutBuilder(
               builder: (context, constraints) {
-                return GridView.builder(
+                final raw = (constraints.maxWidth / 250).floor();
+                final crossAxisCount = raw.clamp(1, 3).toInt();
+
+                return Padding(
                   padding: const EdgeInsets.all(16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    mainAxisExtent: kIsWeb ? 400 : 350,
-                    crossAxisCount: (constraints.maxWidth / 250).floor(),
-                    childAspectRatio: 0.75,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                  ),
-                  itemCount: speakers.length,
-                  itemBuilder: (context, index) {
-                    final speaker = speakers[index];
-                    return Stack(
-                      children: [
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.surfaceContainerHighest,
-                                    ),
-                                    child: speaker.image != null
-                                        ? ClipRRect(
-                                            borderRadius: BorderRadius.circular(
-                                              8,
-                                            ),
-                                            child: Image.network(
-                                              speaker.image!,
-                                              fit: BoxFit.fill,
-                                              loadingBuilder: (context, child, loadingProgress) {
-                                                if (loadingProgress == null) {
-                                                  return child;
-                                                }
-                                                return Container(
-                                                  width: double.infinity,
-                                                  height: double.infinity,
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          8,
-                                                        ),
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .surfaceContainerHighest,
-                                                  ),
-                                                  child: Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        SizedBox(
-                                                          width: 32,
-                                                          height: 32,
-                                                          child: CircularProgressIndicator(
-                                                            strokeWidth: 3,
-                                                            value:
-                                                                loadingProgress
-                                                                        .expectedTotalBytes !=
-                                                                    null
-                                                                ? loadingProgress
-                                                                          .cumulativeBytesLoaded /
-                                                                      loadingProgress
-                                                                          .expectedTotalBytes!
-                                                                : null,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        Text(
-                                                          location.loading,
-                                                          style: Theme.of(context)
-                                                              .textTheme
-                                                              .bodySmall
-                                                              ?.copyWith(
-                                                                color: Theme.of(context)
-                                                                    .colorScheme
-                                                                    .onSurfaceVariant,
-                                                              ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              errorBuilder: (context, error, stackTrace) {
-                                                debugPrint(
-                                                  'Error loading image for ${speaker.name}: $error',
-                                                );
-                                                return Center(
-                                                  child: Column(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.person,
-                                                        size: 48,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
-                                                      ),
-                                                      const SizedBox(height: 4),
-                                                      Text(
-                                                        location.errorLoadingImage,
-                                                        style: Theme.of(
-                                                          context,
-                                                        ).textTheme.bodySmall,
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          )
-                                        : Center(
-                                            child: Icon(
-                                              Icons.person,
-                                              size: 48,
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSurfaceVariant,
-                                            ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 32),
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Ponentes',
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Spacer(),
+                            FutureBuilder<bool>(
+                              future: widget.viewmodel.checkToken(),
+                              builder: (context, snapshot) {
+                                final canEdit = snapshot.data == true;
+                                if (!canEdit) return const SizedBox.shrink();
+
+                                return Row(
+                                  children: [
+                                    OutlinedButton.icon(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.save_outlined,
+                                        size: 20,
+                                      ),
+                                      label: const Text('Guardar Ponente'),
+                                      style: OutlinedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 12,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
                                           ),
+                                        ),
+                                        side: BorderSide(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          width: 2,
+                                        ),
+                                        foregroundColor: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    ElevatedButton.icon(
+                                      onPressed: () async {
+                                        _addSpeaker(widget.eventId);
+                                      },
+                                      icon: const Icon(Icons.add, size: 20),
+                                      label: const Text('Agregar Ponente'),
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 16,
+                                          vertical: 12,
+                                        ),
+                                        elevation: 0,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            5,
+                                          ),
+                                        ),
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Expanded(
+                        child: GridView.builder(
+                          padding: const EdgeInsets.all(16),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisExtent: kIsWeb ? 400 : 350,
+                                crossAxisCount: crossAxisCount,
+                                childAspectRatio: 0.75,
+                                crossAxisSpacing: 16,
+                                mainAxisSpacing: 16,
+                              ),
+                          itemCount: speakers.length,
+                          itemBuilder: (context, index) {
+                            final speaker = speakers[index];
+                            return Stack(
+                              children: [
+                                Card(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(24),
+                                    side: const BorderSide(
+                                      color: Colors.black,
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                width: double.infinity,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .surfaceContainerHighest,
+                                                ),
+                                                child: speaker.image != null
+                                                    ? ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              8,
+                                                            ),
+                                                        child: Image.network(
+                                                          speaker.image!,
+                                                          fit: BoxFit.fill,
+                                                          loadingBuilder:
+                                                              (
+                                                                context,
+                                                                child,
+                                                                loadingProgress,
+                                                              ) {
+                                                                if (loadingProgress ==
+                                                                    null) {
+                                                                  return child;
+                                                                }
+                                                                return Container(
+                                                                  width: double
+                                                                      .infinity,
+                                                                  height: double
+                                                                      .infinity,
+                                                                  decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                          8,
+                                                                        ),
+                                                                    color: Theme.of(
+                                                                      context,
+                                                                    ).colorScheme.surfaceContainerHighest,
+                                                                  ),
+                                                                  child: Center(
+                                                                    child: Column(
+                                                                      mainAxisAlignment:
+                                                                          MainAxisAlignment
+                                                                              .center,
+                                                                      children: [
+                                                                        SizedBox(
+                                                                          width:
+                                                                              32,
+                                                                          height:
+                                                                              32,
+                                                                          child: CircularProgressIndicator(
+                                                                            strokeWidth:
+                                                                                3,
+                                                                            value:
+                                                                                loadingProgress.expectedTotalBytes !=
+                                                                                    null
+                                                                                ? loadingProgress.cumulativeBytesLoaded /
+                                                                                      loadingProgress.expectedTotalBytes!
+                                                                                : null,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(
+                                                                          height:
+                                                                              8,
+                                                                        ),
+                                                                        Text(
+                                                                          location
+                                                                              .loading,
+                                                                          style:
+                                                                              Theme.of(
+                                                                                context,
+                                                                              ).textTheme.bodySmall?.copyWith(
+                                                                                color: Theme.of(
+                                                                                  context,
+                                                                                ).colorScheme.onSurfaceVariant,
+                                                                              ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                );
+                                                              },
+                                                          errorBuilder:
+                                                              (
+                                                                context,
+                                                                error,
+                                                                stackTrace,
+                                                              ) {
+                                                                debugPrint(
+                                                                  'Error loading image for ${speaker.name}: $error',
+                                                                );
+                                                                return Center(
+                                                                  child: Column(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(
+                                                                        Icons
+                                                                            .person,
+                                                                        size:
+                                                                            48,
+                                                                        color: Theme.of(
+                                                                          context,
+                                                                        ).colorScheme.onSurfaceVariant,
+                                                                      ),
+                                                                      const SizedBox(
+                                                                        height:
+                                                                            4,
+                                                                      ),
+                                                                      Text(
+                                                                        location
+                                                                            .errorLoadingImage,
+                                                                        style: Theme.of(
+                                                                          context,
+                                                                        ).textTheme.bodySmall,
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              },
+                                                        ),
+                                                      )
+                                                    : Center(
+                                                        child: Icon(
+                                                          Icons.person,
+                                                          size: 48,
+                                                          color: Theme.of(context)
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          speaker.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          speaker.bio,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurfaceVariant,
+                                              ),
+                                          textAlign: TextAlign.center,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        const SizedBox(height: 24),
+                                        SocialIconsRow(social: speaker.social),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  speaker.name,
-                                  style: Theme.of(context).textTheme.titleMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  speaker.bio,
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onSurfaceVariant,
-                                      ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 3,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 8),
-                                SocialIconsRow(social: speaker.social),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 20,
-                          right: 30,
-                          child: FutureBuilder<bool>(
-                            future: widget.viewmodel.checkToken(),
-                            builder: (context, snapshot) {
-                              return snapshot.data == true
-                                  ? Row(
-                                      children: [
-                                        IconWidget(
-                                          icon: Icons.edit,
-                                          onTap: () async {
-                                            Map<String, dynamic> arguments  = {
-                                              'speaker': speaker,
-                                              'eventId': widget.eventId,
-                                            };
-                                            final Speaker? updatedSpeaker =
-                                                await AppRouter.router.push(
-                                                  AppRouter.speakerFormPath,
-                                                  extra: arguments
-                                                );
+                                Positioned(
+                                  top: 210,
+                                  left: 45,
+                                  child: FutureBuilder<bool>(
+                                    future: widget.viewmodel.checkToken(),
+                                    builder: (context, snapshot) {
+                                      return snapshot.data == true
+                                          ? Row(
+                                              children: [
+                                                IconWidget(
+                                                  icon: Icons.edit,
+                                                  onTap: () async {
+                                                    Map<String, dynamic>
+                                                    arguments = {
+                                                      'speaker': speaker,
+                                                      'eventId': widget.eventId,
+                                                    };
+                                                    final Speaker?
+                                                    updatedSpeaker =
+                                                        await AppRouter.router
+                                                            .push(
+                                                              AppRouter
+                                                                  .speakerFormPath,
+                                                              extra: arguments,
+                                                            );
 
-                                            if (updatedSpeaker != null) {
-                                              widget.viewmodel.editSpeaker(
-                                                updatedSpeaker,
-                                                widget.eventId
-                                              );
-                                            }
-                                          },
-                                        ),
-                                        const SizedBox(width: 8),
-                                        IconWidget(
-                                          icon: Icons.delete,
-                                          onTap: () {
-                                            widget.viewmodel.removeSpeaker(
-                                              speaker.uid,
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox.shrink();
-                            },
-                          ),
+                                                    if (updatedSpeaker !=
+                                                        null) {
+                                                      widget.viewmodel
+                                                          .editSpeaker(
+                                                            updatedSpeaker,
+                                                            widget.eventId,
+                                                          );
+                                                    }
+                                                  },
+                                                ),
+                                                const SizedBox(width: 8),
+                                                IconWidget(
+                                                  icon: Icons.delete,
+                                                  onTap: () {
+                                                    widget.viewmodel
+                                                        .removeSpeaker(
+                                                          speaker.uid,
+                                                        );
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          : const SizedBox.shrink();
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ],
-                    );
-                  },
+                      ),
+                    ],
+                  ),
                 );
               },
             );
@@ -280,6 +426,18 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
         );
       },
     );
+  }
+
+  void _addSpeaker(String parentId) async {
+    final Speaker? newSpeaker = await AppRouter.router.push(
+      AppRouter.speakerFormPath,
+      extra: {'eventId': parentId},
+    );
+
+    if (newSpeaker != null) {
+      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
+      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
+    }
   }
 
   /**/
