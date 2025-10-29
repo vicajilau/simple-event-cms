@@ -170,9 +170,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               widget.viewmodel.onEventFilterChanged(filter);
             },
           ),
-          FutureBuilder(future:  SecureInfo.getGithubKey(), builder: (context, snapshot) {
+          FutureBuilder(future: SecureInfo.getGithubKey(), builder: (context, snapshot) {
             if(snapshot.data?.token != null){
-              return IconButton(onPressed: ()=>{}, icon: Icon(Icons.logout),color: Colors.red);
+              return IconButton(onPressed: ()=>{
+                setState(() async {
+                  widget.viewmodel.viewState.value = ViewState.isLoading;
+                  await SecureInfo.removeGithubKey();
+                  widget.viewmodel.viewState.value = ViewState.loadFinished;
+                })
+              }, icon: Icon(Icons.logout),color: Colors.red);
             }
             return const SizedBox.shrink();
           })
