@@ -7,7 +7,7 @@ import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
-import 'package:sec/presentation/ui/widgets/error_view.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import 'agenda_view_model.dart';
@@ -24,19 +24,32 @@ class ExpansionTileState {
 class AgendaScreen extends StatefulWidget {
   final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
   final String eventId;
+  final TabController? tabController;
 
-  AgendaScreen({super.key, required this.eventId});
+  AgendaScreen({super.key, required this.eventId, this.tabController});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
 }
 
-class _AgendaScreenState extends State<AgendaScreen> {
+class _AgendaScreenState extends State<AgendaScreen>
+    with WidgetsBindingObserver {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _loadAgenda();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  void _loadAgenda() {
     widget.viewmodel.loadAgendaDays(widget.eventId).then((value) {
       for (var day in widget.viewmodel.agendaDays.value) {
         _updateTileState(
@@ -48,6 +61,14 @@ class _AgendaScreenState extends State<AgendaScreen> {
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadAgenda();
+    }
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
     return ValueListenableBuilder(
@@ -56,58 +77,67 @@ class _AgendaScreenState extends State<AgendaScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          return Center(
-            child: ErrorView(errorMessage: widget.viewmodel.errorMessage),
-          );
+          // Using WidgetsBinding.instance.addPostFrameCallback to show a dialog
+          // after the build phase is complete, preventing build-time state changes.
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => CustomErrorDialog(
+                  errorMessage: widget.viewmodel.errorMessage,
+                  onCancel: () => {
+                    widget.viewmodel.setErrorKey(null),
+                    widget.viewmodel.viewState.value = ViewState.loadFinished,
+                    Navigator.of(context).pop(),
+                  },
+                  buttonText: location.closeButton,
+                ),
+              );
+            }
+          });
         }
 
-        return FutureBuilder(
-          future: widget.viewmodel.loadAgendaDays(widget.eventId),
-          builder: (context, value) {
-            if (widget.viewmodel.agendaDays.value.isEmpty) {
-              return Center(child: Text(location.noSessionsFound));
-            }
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.viewmodel.agendaDays.value.length,
-              itemBuilder: (context, index) {
-                final String agendaDayId =
-                    widget.viewmodel.agendaDays.value[index].uid;
-                final String date =
-                    widget.viewmodel.agendaDays.value[index].date;
-                final bool isExpanded =
-                    _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
-                final int tabBarIndex =
-                    _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-                return ExpansionTile(
-                  shape: const Border(),
-                  initiallyExpanded: isExpanded,
-                  showTrailingIcon: false,
-                  onExpansionChanged: (value) {
-                    setState(() {
-                      final tabBarIndex =
-                          _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-                      _updateTileState(
-                        key: agendaDayId,
-                        value: ExpansionTileState(
-                          isExpanded: value,
-                          tabBarIndex: tabBarIndex,
-                        ),
-                      );
-                    });
-                  },
-                  title: _buildTitleExpansionTile(isExpanded, date),
-                  children: <Widget>[
-                    _buildExpansionTileBody(
-                      widget.viewmodel.agendaDays.value[index].resolvedTracks ??
-                          [],
-                      tabBarIndex,
-                      agendaDayId,
-                      widget.eventId.toString(),
+        if (widget.viewmodel.agendaDays.value.isEmpty) {
+          return Center(child: Text(location.noSessionsFound));
+        }
+        return ListView.builder(
+          shrinkWrap: true,
+          itemCount: widget.viewmodel.agendaDays.value.length,
+          itemBuilder: (context, index) {
+            final String agendaDayId =
+                widget.viewmodel.agendaDays.value[index].uid;
+            final String date = widget.viewmodel.agendaDays.value[index].date;
+            final bool isExpanded =
+                _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
+            final int tabBarIndex =
+                _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+            return ExpansionTile(
+              shape: const Border(),
+              initiallyExpanded: isExpanded,
+              showTrailingIcon: false,
+              onExpansionChanged: (value) {
+                setState(() {
+                  final tabBarIndex =
+                      _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+                  _updateTileState(
+                    key: agendaDayId,
+                    value: ExpansionTileState(
+                      isExpanded: value,
+                      tabBarIndex: tabBarIndex,
                     ),
-                  ],
-                );
+                  );
+                });
               },
+              title: _buildTitleExpansionTile(isExpanded, date),
+              children: <Widget>[
+                _buildExpansionTileBody(
+                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
+                  tabBarIndex,
+                  agendaDayId,
+                  widget.eventId.toString(),
+                ),
+              ],
             );
           },
         );
@@ -166,6 +196,7 @@ class _AgendaScreenState extends State<AgendaScreen> {
             }),
           ),
           CustomTabBarView(
+            tabController: widget.tabController,
             agendaDayId: agendaDayId,
             tracks: tracks,
             currentIndex: tabBarIndex,
@@ -201,6 +232,7 @@ class CustomTabBarView extends StatefulWidget {
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
   final String agendaDayId, eventId;
+  final TabController? tabController;
 
   CustomTabBarView({
     super.key,
@@ -209,6 +241,7 @@ class CustomTabBarView extends StatefulWidget {
     required this.onIndexChanged,
     required this.agendaDayId,
     required this.eventId,
+    this.tabController,
   });
 
   @override
@@ -223,6 +256,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
     super.initState();
     sessionCards = List.generate(widget.tracks.length, (index) {
       return SessionCards(
+        tabController: widget.tabController,
         sessions: widget.tracks[index].resolvedSessions
             .where(
               (session) =>
@@ -260,12 +294,15 @@ class SessionCards extends StatefulWidget {
   final AgendaViewModel viewModel = getIt<AgendaViewModel>();
   final String agendaDayId, trackId, eventId;
   final List<Session> sessions;
+  final TabController? tabController;
+
   SessionCards({
     super.key,
     required this.sessions,
     required this.agendaDayId,
     required this.trackId,
     required this.eventId,
+    this.tabController,
   });
 
   @override
@@ -423,17 +460,27 @@ class _SessionCardsState extends State<SessionCards> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Icon(
-                    Icons.person,
-                    size: 16,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    speakerName,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.w500,
+                  GestureDetector(
+                    onTap: () async {
+                      widget.tabController?.animateTo(1);
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.person,
+                          size: 16,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          speakerName,
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                        ),
+                      ],
                     ),
                   ),
                 ],

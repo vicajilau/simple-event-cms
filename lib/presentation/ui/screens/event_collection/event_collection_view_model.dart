@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
@@ -7,6 +8,8 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
+import '../../../../core/models/github/github_data.dart';
+import '../../../../core/routing/app_router.dart';
 import '../../../view_model_common.dart';
 
 abstract class EventCollectionViewModel extends ViewModelCommon {
@@ -23,6 +26,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
+  final organization = getIt<Organization>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -39,22 +43,34 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventFilter currentFilter = EventFilter.all;
 
   List<Event> _allEvents = [];
+  DateTime? _lastEventsFetchTime;
 
   @override
   Future<void> setup([Object? argument]) async {
+    await SecureInfo.saveGithubKey(
+      GithubData(projectName: organization.projectName),
+    );
     loadEvents();
   }
 
   void loadEvents() async {
     viewState.value = ViewState.isLoading;
-    final result = await useCase.getEvents();
-    switch (result) {
+    if (await _shouldSkipFetch()) {
+      viewState.value = ViewState.loadFinished;
+      await _handleSingleEventNavigation();
+      return;
+    }
+
+    final eventsResult = await useCase.getEvents();
+    switch (eventsResult) {
       case Ok<List<Event>>():
-        _allEvents = result.value;
+        _lastEventsFetchTime = DateTime.now();
+        _allEvents = eventsResult.value;
         _updateEventsToShow();
         viewState.value = ViewState.loadFinished;
+        await _handleSingleEventNavigation();
       case Error():
-        setErrorKey(result.error);
+        setErrorKey(eventsResult.error);
         viewState.value = ViewState.error;
     }
   }
@@ -80,7 +96,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
       _updateEventsToShow();
 
       viewState.value = ViewState.isLoading;
-      final result =  await useCase.saveEvent(event);
+      final result = await useCase.saveEvent(event);
       viewState.value = ViewState.loadFinished;
       return result;
     }
@@ -146,7 +162,10 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+    eventsToShow.dispose();
+    viewState.dispose();
+  }
 
   @override
   Future<bool> checkToken() async {
@@ -156,7 +175,15 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   @override
   Future<Event?> getEventById(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final result =  await useCase.getEventById(eventId);
+    final event = _allEvents.where(
+      (event) => event.uid == eventId
+    ).firstOrNull;
+    if (await _shouldSkipFetch() && event?.uid.isNotEmpty == true) {
+      viewState.value = ViewState.loadFinished;
+      return event;
+    }
+
+    final result = await useCase.getEventById(eventId);
     switch (result) {
       case Ok<Event?>():
         viewState.value = ViewState.loadFinished;
@@ -168,4 +195,25 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     }
   }
 
+  Future<bool> _shouldSkipFetch() async {
+    final gitHubService = await SecureInfo.getGithubKey();
+    final isTokenNull = gitHubService.token == null;
+    final isCacheValid = _lastEventsFetchTime != null &&
+        DateTime.now().difference(_lastEventsFetchTime!) <
+            const Duration(minutes: 5);
+
+    return isCacheValid && _allEvents.isNotEmpty && isTokenNull;
+  }
+
+  Future<void> _handleSingleEventNavigation() async {
+    final gitHubService = await SecureInfo.getGithubKey();
+    final isTokenNull = gitHubService.token == null;
+
+    if (_allEvents.length == 1 && isTokenNull) {
+      await AppRouter.router.pushNamed(
+        AppRouter.eventDetailName,
+        pathParameters: {'eventId': _allEvents.first.uid},
+      );
+    }
+  }
 }

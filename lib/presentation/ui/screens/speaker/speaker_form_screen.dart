@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/models/models.dart';
@@ -164,6 +165,13 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: Text(location.cancelButton),
+                  ),
+                  const SizedBox(width: 8),
                   FilledButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate() &&

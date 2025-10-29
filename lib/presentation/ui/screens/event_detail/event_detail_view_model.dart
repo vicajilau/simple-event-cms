@@ -8,7 +8,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 abstract class EventDetailViewModel extends ViewModelCommon {
-  String eventTitle();
+  ValueNotifier<String> eventTitle = ValueNotifier('');
   Future<void> loadEventData(String eventId);
 }
 
@@ -35,10 +35,9 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     }
   }
 
-  @override
-  String eventTitle() {
-    return event?.eventName ?? '';
-  }
+
+  @override ValueNotifier<String> eventTitle = ValueNotifier('');
+
 
   @override
   Future<void> loadEventData(String eventId) async {
@@ -55,7 +54,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
                 (e) => e.uid == eventId,
             orElse: () => result.value.first, // Fallback al primer evento
           );
-
+          eventTitle.value = event!.eventName;
           viewState.value = ViewState.loadFinished;
         }
       case Error():
