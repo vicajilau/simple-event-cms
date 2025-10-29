@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -147,9 +146,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   );
                   if (confirm == true) {
                     setState(() async {
-                      await SecureInfo.saveGithubKey(
-                        GithubData(projectName: organization.projectName),
-                      );
+                      await SecureInfo.removeGithubKey();
                     });
                   }
                 }
@@ -173,6 +170,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               widget.viewmodel.onEventFilterChanged(filter);
             },
           ),
+          FutureBuilder(future:  SecureInfo.getGithubKey(), builder: (context, snapshot) {
+            if(snapshot.data?.token != null){
+              return IconButton(onPressed: ()=>{}, icon: Icon(Icons.logout),color: Colors.red);
+            }
+            return const SizedBox.shrink();
+          })
         ],
       ),
       body: ValueListenableBuilder<ViewState>(
