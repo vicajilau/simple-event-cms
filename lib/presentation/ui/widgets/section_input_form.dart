@@ -18,7 +18,13 @@ class SectionInputForm extends StatelessWidget {
       spacing: 8,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: AppFonts.labelMediumForm),
+        Text(
+          label,
+          style: AppFonts.labelMediumForm.copyWith(
+            fontSize: 19,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         childInput,
       ],
     );
