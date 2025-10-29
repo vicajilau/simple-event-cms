@@ -176,6 +176,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 setState(() async {
                   widget.viewmodel.viewState.value = ViewState.isLoading;
                   await SecureInfo.removeGithubKey();
+                  await _loadConfiguration();
                   widget.viewmodel.viewState.value = ViewState.loadFinished;
                 })
               }, icon: Icon(Icons.logout),color: Colors.red);

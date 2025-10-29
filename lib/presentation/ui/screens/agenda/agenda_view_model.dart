@@ -56,8 +56,27 @@ class AgendaViewModelImp extends AgendaViewModel {
     }
   }
 
-  bool _isCacheValid() {
-    if (_lastAgendaLoadTime == null || agendaDays.value.isEmpty) {
+  bool _isCacheValid(String eventId) {
+    if (_lastAgendaLoadTime == null ||
+        agendaDays.value.isEmpty ||
+        agendaDays.value
+            .where(
+              (agendaDay) =>
+                  agendaDay.eventsUID.contains(eventId) &&
+                  agendaDay.resolvedTracks != null &&
+                  agendaDay.resolvedTracks!.isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .toList()
+                      .where((session) => session.agendaDayUID == agendaDay.uid && session.eventUID == eventId)
+                      .toList()
+                      .isNotEmpty,
+            )
+            .toList()
+            .isEmpty) {
       return false;
     }
     final timeSinceLastLoad = DateTime.now().difference(_lastAgendaLoadTime!);
@@ -70,18 +89,19 @@ class AgendaViewModelImp extends AgendaViewModel {
     var githubService = await SecureInfo.getGithubKey();
 
     // If cache is recent and we are not in admin mode (github token is null), return cached data.
-    if (_isCacheValid() && githubService.token == null) {
+    if (_isCacheValid(eventId) && githubService.token == null) {
       viewState.value = ViewState.loadFinished;
       return const Result.ok(null);
     }
-
 
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
         _lastAgendaLoadTime = DateTime.now();
         agendaDays.value = result.value;
-        final resultSpeakers = await agendaUseCase.getSpeakersForEventId(eventId);
+        final resultSpeakers = await agendaUseCase.getSpeakersForEventId(
+          eventId,
+        );
         switch (resultSpeakers) {
           case Ok<List<Speaker>>():
             speakers.value = resultSpeakers.value;
