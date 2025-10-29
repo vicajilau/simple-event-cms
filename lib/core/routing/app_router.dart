@@ -8,7 +8,6 @@ import '../../presentation/ui/screens/organization/organization_screen.dart';
 class AppRouter {
   // Paths
   static const String homePath = '/';
-  static const String adminPath = '/admin';
   static const String eventFormPath = '/events/edit';
   static const String eventDetailPath = '/event/detail/:eventId';
   static const String agendaFormPath = '/agenda/form';
@@ -18,7 +17,6 @@ class AppRouter {
 
   // Names
   static const String homeName = 'home';
-  static const String adminName = 'admin';
   static const String eventFormName = 'admin_edit_event';
   static const String eventDetailName = 'event_detail';
   static const String agendaFormName = 'agenda_form';
