@@ -62,7 +62,59 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       valueListenable: widget.viewmodel.eventTitle,
       builder: (context, viewState, child) {
         return Scaffold(
-          appBar: AppBar(title: Text(widget.viewmodel.eventTitle.value)),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(100.0),
+            child: AppBar(
+              backgroundColor: Colors.white,
+              titleSpacing: 0.0,
+              centerTitle: false,
+              elevation: 0,
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      widget.viewmodel.eventTitle.value,
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  Expanded(
+                    child: TabBar(
+                      controller: _tabController,
+                      labelColor: Colors.blue,
+                      unselectedLabelColor: Colors.grey,
+                      indicatorColor: Colors.black,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                      unselectedLabelStyle:
+                          const TextStyle(fontWeight: FontWeight.bold),
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            location.agenda,
+                          ),
+                        ),
+                        Tab(
+                            child: Text(
+                          location.speakers,
+                        )),
+                        Tab(
+                            child: Text(
+                          location.sponsors,
+                        )),
+                      ],
+                    ),
+                  ),
+                  const Divider(
+                    height: 4,
+                    color: Colors.black,
+                  ),
+
+                ],
+              ),
+            ),
+          ),
           body: ValueListenableBuilder<ViewState>(
             valueListenable: widget.viewmodel.viewState,
             builder: (context, viewState, child) {
@@ -93,26 +145,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
               return TabBarView(controller: _tabController, children: screens);
             },
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            onTap: (index) {
-              _tabController.animateTo(index);
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.schedule),
-                label: location.agenda,
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.people),
-                label: location.speakers,
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.business),
-                label: location.sponsors,
-              ),
-            ],
           ),
           floatingActionButton: FutureBuilder<bool>(
             future: widget.viewmodel.checkToken(),

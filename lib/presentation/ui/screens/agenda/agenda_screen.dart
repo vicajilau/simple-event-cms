@@ -149,7 +149,7 @@ class _AgendaScreenState extends State<AgendaScreen>
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primaryContainer,
+        color: const Color(0xddd1f0f4),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

@@ -103,6 +103,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         titleSpacing: 0.0,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1.0),
+          child: Container(color: Colors.grey[300], height: 1.0),
+        ),
         centerTitle: false,
         title: GestureDetector(
           onTap: () async {
@@ -180,12 +184,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           ),
         ),
         actions: <Widget>[
-          EventFilterButton(
-            selectedFilter: widget.viewmodel.currentFilter,
-            onFilterChanged: (EventFilter filter) {
-              widget.viewmodel.onEventFilterChanged(filter);
-            },
-          ),
           FutureBuilder(
             future: SecureInfo.getGithubKey(),
             builder: (context, snapshot) {
