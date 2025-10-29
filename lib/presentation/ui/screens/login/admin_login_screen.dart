@@ -7,14 +7,21 @@ import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
-class AdminLoginScreen extends StatelessWidget {
+class AdminLoginScreen extends StatefulWidget {
+  final void Function() onLoginSuccess;
+
+  const AdminLoginScreen(this.onLoginSuccess, {super.key});
+
+  @override
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
+}
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Organization organization = getIt<Organization>();
   final ValueNotifier<String> _token = ValueNotifier('');
-  final void Function() onLoginSuccess;
 
-  AdminLoginScreen(this.onLoginSuccess, {super.key});
+  final ValueNotifier<bool> _obscureText = ValueNotifier(true);
 
   Future<void> _submit(BuildContext context) async {
     final location = AppLocalizations.of(context)!;
@@ -36,7 +43,7 @@ class AdminLoginScreen extends StatelessWidget {
           // Check if there is basic authentication or token
           if (context.mounted) {
             // Close the dialog that contains this view
-            onLoginSuccess();
+            widget.onLoginSuccess();
             context.pop();
           }
         } else {
@@ -84,13 +91,25 @@ class AdminLoginScreen extends StatelessWidget {
               children: <Widget>[
                 SizedBox(
                   width: 300, // Limita la anchura del TextFormField
-                  child: TextFormField(
-                    obscuringCharacter: '*',
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: location.tokenLabel),
-                    validator: (value) =>
-                    value!.isEmpty ? location.tokenHint : null,
-                    onSaved: (value) => _token.value = value!,
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: _obscureText,
+                    builder: (context, isObscure, child) {
+                      return TextFormField(
+                        obscuringCharacter: '*',
+                        obscureText: isObscure,
+                        decoration: InputDecoration(
+                          labelText: location.tokenLabel,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isObscure ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () => _obscureText.value = !isObscure,
+                          ),
+                        ),
+                        validator: (value) => value!.isEmpty ? location.tokenHint : null,
+                        onSaved: (value) => _token.value = value!,
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -106,3 +125,4 @@ class AdminLoginScreen extends StatelessWidget {
     );
   }
 }
+
