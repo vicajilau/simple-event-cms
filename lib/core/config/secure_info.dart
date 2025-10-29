@@ -20,8 +20,13 @@ abstract class SecureInfo {
   /// Throws an exception if an error occurs during writing.
   static Future<void> saveGithubKey(GithubData githubService) async {
     try {
+      var githubDataSaving = await getGithubKey();
+      var githubDataUpdated = GithubData(
+        token: githubDataSaving.token ?? githubService.token,
+        projectName: githubDataSaving.projectName ?? githubService.projectName,
+      );
       // Convert the GithubService object to a JSON string
-      String githubServiceJson = jsonEncode(githubService.toJson());
+      String githubServiceJson = jsonEncode(githubDataUpdated.toJson());
       // Save the JSON string in secure storage
       await _storage.write(key: 'github_service', value: githubServiceJson);
     } catch (e) {

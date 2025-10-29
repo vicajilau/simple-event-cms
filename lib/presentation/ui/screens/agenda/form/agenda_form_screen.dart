@@ -5,6 +5,7 @@ import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/time_utils.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
@@ -168,19 +169,21 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
           // Using WidgetsBinding.instance.addPostFrameCallback to show a dialog
           // after the build phase is complete, preventing build-time state changes.
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return CustomErrorDialog(
+            if (mounted) {
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => CustomErrorDialog(
                   errorMessage: widget.viewmodel.errorMessage,
-                  onCancel: () {
-                    Navigator.of(context).pop();
+                  onCancel: () => {
+                    widget.viewmodel.setErrorKey(null),
+                    widget.viewmodel.viewState.value = ViewState.loadFinished,
+                    Navigator.of(context).pop()
                   },
                   buttonText: location.closeButton,
-                );
-              },
-            );
+                ),
+              );
+            }
           });
         }
         return FormScreenWrapper(
@@ -489,7 +492,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
               setState(
-                () => agendaFormViewModel.viewState.value = ViewState.error,
+                () {
+                  agendaFormViewModel.setErrorKey(NetworkException(_timeErrorMessage??location.timeSelectionError));
+                  agendaFormViewModel.viewState.value = ViewState.error;
+                },
               );
               setState(() {
                 _timeErrorMessage = location.timeSelectionError;
@@ -497,7 +503,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
               setState(
-                () => agendaFormViewModel.viewState.value = ViewState.error,
+                () {
+                  agendaFormViewModel.setErrorKey(NetworkException(_timeErrorMessage??location.timeValidationError));
+                  agendaFormViewModel.viewState.value = ViewState.error;
+                },
               );
               isTimeValid =
                   false; // Error message is already set by the time picker logic

@@ -6,11 +6,13 @@ import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
+import '../../../../core/config/secure_info.dart';
+
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   abstract final ValueNotifier<List<Speaker>> speakers;
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId);
-  Future<List<Speaker>> getSpeakersForEventId(String eventId);
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId);
   Future<Result<void>> loadAgendaDays(String eventId);
   Future<Result<void>> removeSessionAndReloadAgenda(
     String sessionId,
@@ -28,6 +30,8 @@ class AgendaViewModelImp extends AgendaViewModel {
 
   @override
   ValueNotifier<List<AgendaDay>> agendaDays = ValueNotifier([]);
+
+  DateTime? _lastAgendaLoadTime;
 
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
@@ -52,15 +56,39 @@ class AgendaViewModelImp extends AgendaViewModel {
     }
   }
 
+  bool _isCacheValid() {
+    if (_lastAgendaLoadTime == null || agendaDays.value.isEmpty) {
+      return false;
+    }
+    final timeSinceLastLoad = DateTime.now().difference(_lastAgendaLoadTime!);
+    return timeSinceLastLoad.inMinutes < 5;
+  }
+
   @override
   Future<Result<void>> loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
+    var githubService = await SecureInfo.getGithubKey();
+
+    // If cache is recent and we are not in admin mode (github token is null), return cached data.
+    if (_isCacheValid() && githubService.token == null) {
+      viewState.value = ViewState.loadFinished;
+      return const Result.ok(null);
+    }
+
+
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
+        _lastAgendaLoadTime = DateTime.now();
         agendaDays.value = result.value;
-        speakers.value = await getSpeakersForEventId(eventId);
-
+        final resultSpeakers = await agendaUseCase.getSpeakersForEventId(eventId);
+        switch (resultSpeakers) {
+          case Ok<List<Speaker>>():
+            speakers.value = resultSpeakers.value;
+          case Error():
+            viewState.value = ViewState.error;
+            setErrorKey(resultSpeakers.error);
+        }
         viewState.value = ViewState.loadFinished;
         return result;
       case Error():
@@ -86,18 +114,8 @@ class AgendaViewModelImp extends AgendaViewModel {
   }
 
   @override
-  Future<List<Speaker>> getSpeakersForEventId(String eventId) async {
-    viewState.value = ViewState.isLoading;
-    final result = await agendaUseCase.getSpeakersForEventId(eventId);
-    switch (result) {
-      case Ok<List<Speaker>>():
-        viewState.value = ViewState.loadFinished;
-        return result.value;
-      case Error():
-        viewState.value = ViewState.error;
-        setErrorKey(result.error);
-        return [];
-    }
+  Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId) async {
+    return await agendaUseCase.getSpeakersForEventId(eventId);
   }
 
   @override

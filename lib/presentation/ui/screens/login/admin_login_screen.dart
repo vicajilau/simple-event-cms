@@ -8,17 +8,20 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
 class AdminLoginScreen extends StatefulWidget {
-  const AdminLoginScreen({super.key});
+  final void Function() onLoginSuccess;
+
+  const AdminLoginScreen(this.onLoginSuccess, {super.key});
 
   @override
-  State<AdminLoginScreen> createState() => _LoginPageState();
+  State<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
-class _LoginPageState extends State<AdminLoginScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Organization organization = getIt<Organization>();
-  String _projectName = '';
-  String _token = '';
+  final ValueNotifier<String> _token = ValueNotifier('');
+
+  final ValueNotifier<bool> _obscureText = ValueNotifier(true);
 
   Future<void> _submit(BuildContext context) async {
     final location = AppLocalizations.of(context)!;
@@ -26,56 +29,39 @@ class _LoginPageState extends State<AdminLoginScreen> {
       _formKey.currentState!.save();
       // Here you can add the authentication logic
       try {
-        var github = GitHub(auth: Authentication.withToken(_token));
+        var github = GitHub(auth: Authentication.withToken(_token.value));
         final user = await github.users.getCurrentUser();
 
-        // Verify if the project exists in the user's repositories
-        final repositories = github.repositories.listUserRepositories(
-          user.login!,
-        );
-        bool projectExists = false;
-        await for (var repo in repositories) {
-          if (repo.name == _projectName) {
-            projectExists = true;
-            break; // Exit the loop once the project is found
-          }
-        }
-
         // If authentication is successful and there is no exception:
-        if (user.login != null && projectExists) {
+        if (user.login != null) {
           await SecureInfo.saveGithubKey(
             GithubData(
               token: github.auth.token.toString(),
-              projectName: _projectName,
+              projectName: organization.projectName,
             ),
           );
           // Check if there is basic authentication or token
           if (context.mounted) {
-            // Redirect to the events screen after successful login
-            context.go('/');
+            // Close the dialog that contains this view
+            widget.onLoginSuccess();
+            context.pop();
           }
         } else {
           // This block might not be reached if authentication fails earlier
-          if (user.login == null) {
-            _showErrorSnackbar(location.unknownAuthError);
-          } else if (!projectExists) {
-            _showErrorSnackbar(
-              location.projectNotFoundError.toString().replaceFirst('{projectName}', _projectName),
-            );
+          if (user.login == null && context.mounted) {
+            _showErrorSnackbar(location.unknownAuthError,context);
           }
         }
       } catch (e) {
         // Catch common authentication or network exceptions
         // ignore: use_build_context_synchronously
-        _showErrorSnackbar(
-          location.authNetworkError,
-        );
+        _showErrorSnackbar(location.authNetworkError,context);
         debugPrint('Error de autenticación: $e');
       }
     }
   }
 
-  void _showErrorSnackbar(String message) {
+  void _showErrorSnackbar(String message, BuildContext context) {
     final location = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -93,37 +79,50 @@ class _LoginPageState extends State<AdminLoginScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    return Scaffold(
-      appBar: AppBar(title: Text(location.loginTitle)),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextFormField(
-                decoration: InputDecoration(labelText: location.projectNameLabel),
-                validator: (value) =>
-                    value!.isEmpty ? location.projectNameHint : null,
-                onSaved: (value) => _projectName = value!,
-              ),
-              const SizedBox(height: 20),
-              TextFormField(
-                decoration: InputDecoration(labelText: location.tokenLabel),
-                validator: (value) =>
-                    value!.isEmpty ? location.tokenHint : null,
-                onSaved: (value) => _token = value!,
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => _submit(context),
-                child: Text(location.loginTitle),
-              ),
-            ],
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                SizedBox(
+                  width: 300, // Limita la anchura del TextFormField
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: _obscureText,
+                    builder: (context, isObscure, child) {
+                      return TextFormField(
+                        obscuringCharacter: '*',
+                        obscureText: isObscure,
+                        decoration: InputDecoration(
+                          labelText: location.tokenLabel,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              isObscure ? Icons.visibility_off : Icons.visibility,
+                            ),
+                            onPressed: () => _obscureText.value = !isObscure,
+                          ),
+                        ),
+                        validator: (value) => value!.isEmpty ? location.tokenHint : null,
+                        onSaved: (value) => _token.value = value!,
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () => _submit(context),
+                  child: Text(location.loginTitle),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
+

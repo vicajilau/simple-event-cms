@@ -128,6 +128,13 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  TextButton(
+                    onPressed: () {
+                      context.pop();
+                    },
+                    child: Text(location.cancelButton),
+                  ),
+                  const SizedBox(width: 8),
                   FilledButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
@@ -148,6 +155,7 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                     },
                     child: Text(isEditing ? location.updateButton : location.saveButton),
                   ),
+
                 ],
               ),
             ],

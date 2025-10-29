@@ -8,7 +8,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 abstract class EventDetailViewModel extends ViewModelCommon {
-  String eventTitle();
+  ValueNotifier<String> eventTitle = ValueNotifier('');
   Future<void> loadEventData(String eventId);
 }
 
@@ -24,7 +24,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   String errorMessage = '';
 
-
   @override
   void dispose() {}
 
@@ -36,26 +35,21 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   }
 
   @override
-  String eventTitle() {
-    return event?.eventName ?? '';
-  }
-
-  @override
   Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
 
     switch (result) {
       case Ok<List<Event>>():
-        if(result.value.isEmpty){
+        if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;
-        }else{
+        } else {
           event = result.value.firstWhere(
-                (e) => e.uid == eventId,
+            (e) => e.uid == eventId,
             orElse: () => result.value.first, // Fallback al primer evento
           );
-
+          eventTitle.value = event!.eventName;
           viewState.value = ViewState.loadFinished;
         }
       case Error():

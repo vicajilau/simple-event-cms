@@ -194,6 +194,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 builder: (_) => CustomErrorDialog(
                   errorMessage: eventFormViewModel.errorMessage,
                   onCancel: () => {
+                    widget.eventCollectionViewModel.setErrorKey(null),
                     eventFormViewModel.viewState.value = ViewState.loadFinished,
                     Navigator.of(context).pop()
                   },

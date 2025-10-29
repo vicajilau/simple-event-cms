@@ -4,10 +4,12 @@ import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
+import '../login/admin_login_screen.dart';
 import 'event_collection_view_model.dart';
 
 /// Main home screen widget that displays the event_collection information and navigation
@@ -108,7 +110,20 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               _titleTapCount = 0;
               var githubService = await SecureInfo.getGithubKey();
               if (githubService.token == null) {
-                AppRouter.router.push(AppRouter.adminPath);
+                if (context.mounted) {
+                  await showDialog<bool>(
+                    context: context,
+                    builder: (context) => Dialog(
+                      child: AdminLoginScreen(
+                        () {
+                          setState(() {
+                            _loadConfiguration();
+                          });
+                        },
+                      ),
+                    ),
+                  );
+                }
               } else {
                 if (context.mounted) {
                   final bool? confirm = await showDialog<bool>(
@@ -116,9 +131,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     builder: (BuildContext context) {
                       return AlertDialog(
                         title: Text(location.confirmLogout),
-                        content: Text(
-                          location.confirmLogoutMessage,
-                        ),
+                        content: Text(location.confirmLogoutMessage),
                         actions: <Widget>[
                           TextButton(
                             onPressed: () => Navigator.of(context).pop(false),
@@ -134,7 +147,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   );
                   if (confirm == true) {
                     setState(() async {
-                      await SecureInfo.saveGithubKey(GithubData());
+                      await SecureInfo.saveGithubKey(
+                        GithubData(projectName: organization.projectName),
+                      );
                     });
                   }
                 }
@@ -165,18 +180,26 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         builder: (context, viewState, child) {
           if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
-          }
-
-          if (viewState == ViewState.error) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ErrorView(errorMessage: widget.viewmodel.errorMessage),
-                  const SizedBox(height: 16),
-                ],
-              ),
-            );
+          } else if (viewState == ViewState.error) {
+            // Using WidgetsBinding.instance.addPostFrameCallback to show a dialog
+            // after the build phase is complete, preventing build-time state changes.
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => CustomErrorDialog(
+                    errorMessage: widget.viewmodel.errorMessage,
+                    onCancel: () => {
+                      widget.viewmodel.setErrorKey(null),
+                      widget.viewmodel.viewState.value = ViewState.loadFinished,
+                      Navigator.of(context).pop(),
+                    },
+                    buttonText: location.closeButton,
+                  ),
+                );
+              }
+            });
           }
 
           return ValueListenableBuilder<List<Event>>(

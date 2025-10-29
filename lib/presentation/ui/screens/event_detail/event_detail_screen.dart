@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
@@ -35,21 +36,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() async {
-      await widget.viewmodel.loadEventData(widget.eventId);
       setState(() {
         _selectedIndex = _tabController.index;
       });
     });
     screens = [
-      AgendaScreen(
-        eventId: widget.eventId,
-      ),
-      SpeakersScreen(
-        eventId: widget.eventId,
-      ),
-      SponsorsScreen(
-        eventId: widget.eventId,
-      ),
+      AgendaScreen(eventId: widget.eventId, tabController: _tabController),
+      SpeakersScreen(eventId: widget.eventId),
+      SponsorsScreen(eventId: widget.eventId),
     ];
   }
 
@@ -63,95 +57,91 @@ class _EventDetailScreenState extends State<EventDetailScreen>
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
-    final eventTitle = widget.viewmodel.eventTitle();
 
-    return Scaffold(
-      appBar: AppBar(title: Text(eventTitle)),
-      body: ValueListenableBuilder<ViewState>(
-        valueListenable: widget.viewmodel.viewState,
-        builder: (context, viewState, child) {
-          if (viewState == ViewState.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (viewState == ViewState.error) {
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ErrorView(errorMessage: widget.viewmodel.errorMessage),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: widget.viewmodel.setup,
-                    child: Text(location.retry),
-                  ),
-                ],
-              ),
-            );
-          }
+    return ValueListenableBuilder<String>(
+      valueListenable: widget.viewmodel.eventTitle,
+      builder: (context, viewState, child) {
+        return Scaffold(
+          appBar: AppBar(title: Text(widget.viewmodel.eventTitle.value)),
+          body: ValueListenableBuilder<ViewState>(
+            valueListenable: widget.viewmodel.viewState,
+            builder: (context, viewState, child) {
+              if (viewState == ViewState.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (viewState == ViewState.error) {
+                // Using WidgetsBinding.instance.addPostFrameCallback to show a dialog
+                // after the build phase is complete, preventing build-time state changes.
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => CustomErrorDialog(
+                        errorMessage: widget.viewmodel.errorMessage,
+                        onCancel: () => {
+                          widget.viewmodel.setErrorKey(null),
+                          widget.viewmodel.viewState.value =
+                              ViewState.loadFinished,
+                          Navigator.of(context).pop(),
+                        },
+                        buttonText: location.closeButton,
+                      ),
+                    );
+                  }
+                });
+              }
 
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              // Agenda Tab
-              AgendaScreen(
-                eventId: widget.eventId,
+              return TabBarView(controller: _tabController, children: screens);
+            },
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            onTap: (index) {
+              _tabController.animateTo(index);
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.schedule),
+                label: location.agenda,
               ),
-              // Speakers Tab
-              SpeakersScreen(
-                eventId: widget.eventId,
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.people),
+                label: location.speakers,
               ),
-              // Sponsors Tab
-              SponsorsScreen(
-                eventId: widget.eventId,
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.business),
+                label: location.sponsors,
               ),
             ],
-          );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          _tabController.animateTo(index);
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.schedule),
-            label: location.agenda,
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.people),
-            label: location.speakers,
+          floatingActionButton: FutureBuilder<bool>(
+            future: widget.viewmodel.checkToken(),
+            builder: (context, snapshot) {
+              if (snapshot.data == true) {
+                return AddFloatingActionButton(
+                  onPressed: () async {
+                    if (_selectedIndex == 0) {
+                      _addSession(widget.eventId);
+                    } else if (_selectedIndex == 1) {
+                      _addSpeaker(widget.eventId);
+                    } else if (_selectedIndex == 2) {
+                      _addSponsor(widget.eventId);
+                    }
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.business),
-            label: location.sponsors,
-          ),
-        ],
-      ),
-      floatingActionButton: FutureBuilder<bool>(
-        future: widget.viewmodel.checkToken(),
-        builder: (context, snapshot) {
-          if (snapshot.data == true) {
-            return AddFloatingActionButton(
-              onPressed: () async {
-                if (_selectedIndex == 0) {
-                  _addSession(widget.eventId);
-                } else if (_selectedIndex == 1) {
-                  _addSpeaker(widget.eventId);
-                } else if (_selectedIndex == 2) {
-                  _addSponsor(widget.eventId);
-                }
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
+        );
+      },
     );
   }
 
   void _addSession(String eventId) async {
     List<AgendaDay>? agendaDays = await AppRouter.router.push(
-      AppRouter.agendaFormPath,extra: AgendaFormData(eventId: eventId)
+      AppRouter.agendaFormPath,
+      extra: AgendaFormData(eventId: eventId),
     );
 
     if (agendaDays != null) {
@@ -162,7 +152,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,extra: {'eventId':parentId}
+      AppRouter.speakerFormPath,
+      extra: {'eventId': parentId},
     );
 
     if (newSpeaker != null) {
@@ -173,7 +164,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,extra: {'eventId':parentId}
+      AppRouter.sponsorFormPath,
+      extra: {'eventId': parentId},
     );
 
     if (newSponsor != null) {
