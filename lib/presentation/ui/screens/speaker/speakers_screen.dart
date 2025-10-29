@@ -97,6 +97,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                       icon: const Icon(
                                         Icons.save_outlined,
                                         size: 20,
+                                        color: Color(0xFF38B6FF),
                                       ),
                                       label: const Text('Guardar Ponente'),
                                       style: OutlinedButton.styleFrom(
@@ -109,17 +110,14 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                             5,
                                           ),
                                         ),
-                                        side: BorderSide(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
+                                        side: const BorderSide(
+                                          color: Color(0xFF38B6FF),
                                           width: 2,
                                         ),
-                                        foregroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
+                                        foregroundColor: Color(0xFF38B6FF),
                                         textStyle: const TextStyle(
                                           fontWeight: FontWeight.w600,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
@@ -128,9 +126,14 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                       onPressed: () async {
                                         _addSpeaker(widget.eventId);
                                       },
-                                      icon: const Icon(Icons.add, size: 20),
+                                      icon: const Icon(
+                                        Icons.add,
+                                        size: 20,
+                                        color: Colors.white,
+                                      ),
                                       label: const Text('Agregar Ponente'),
                                       style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xFF38B6FF),
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 16,
                                           vertical: 12,
@@ -143,6 +146,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                         ),
                                         textStyle: const TextStyle(
                                           fontWeight: FontWeight.w600,
+                                          fontSize: 16,
                                         ),
                                       ),
                                     ),
