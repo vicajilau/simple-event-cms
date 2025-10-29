@@ -109,7 +109,7 @@
   "loginTitle": "Login",
   "projectNameLabel": "Nombre del Proyecto",
   "projectNameHint": "Por favor, introduce el nombre del proyecto",
-  "tokenLabel": "Token (clásico con permisos de escritura)",
+  "tokenHintLabel": "Introduce tu client secret para continuar",
   "tokenHint": "Por favor, introduce un token de GitHub válido",
   "unknownAuthError": "Fallo de autenticación desconocido.",
   "projectNotFoundError": "El proyecto \"{projectName}\" no existe en tus repositorios de GitHub.",
@@ -140,5 +140,8 @@
   "confirmLogoutMessage": "¿Estás seguro de que quieres cerrar sesión?",
   "cancel": "Cancelar",
   "cancelButton": "Cancelar",
-  "logout": "Cerrar sesión"
+  "logout": "Cerrar sesión",
+  "enterGithubTokenTitle": "Token de acceso",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

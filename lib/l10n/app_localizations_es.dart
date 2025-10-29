@@ -340,7 +340,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projectNameHint => 'Por favor, introduce el nombre del proyecto';
 
   @override
-  String get tokenLabel => 'Token (clásico con permisos de escritura)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Por favor, introduce un token de GitHub válido';
@@ -432,4 +432,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get logout => 'Cerrar sesión';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de acceso';
+
+  @override
+  String get enterGithubTokenMessage => 'Por favor, introduce tu token de GitHub para continuar. Puedes generar uno en la configuración de desarrollador de tu perfil de GitHub.';
+
+  @override
+  String get availablesEventsTitle => 'Eventos disponibles';
+
+  @override
+  String get availablesEventsText => 'Estos son los eventos que tienes disponibles en tu organización de GitHub, si quieres añadir uno nuevo, tienes que crear un nuevo repositorio en GitHub y volver a la pantalla de login para seleccionarlo.';
+
+  @override
+  String get events => 'Eventos';
+
+  @override
+  String get organization => 'Organización';
+
+  @override
+  String get sessions => 'Sesiones';
 }

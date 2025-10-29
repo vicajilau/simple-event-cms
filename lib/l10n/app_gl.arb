@@ -108,7 +108,6 @@
   "loginTitle": "Iniciar sesión",
   "projectNameLabel": "Nome do proxecto",
   "projectNameHint": "Por favor, introduce o nome do proxecto",
-  "tokenLabel": "Token (clásico con permisos de escritura)",
   "tokenHint": "Por favor, introduce un token de GitHub válido",
   "unknownAuthError": "Fallo de autenticación descoñecido.",
   "projectNotFoundError": "O proxecto \"{projectName}\" non existe nos teus repositorios de GitHub.",
@@ -139,5 +138,9 @@
   "cancel": "Cancelar",
   "confirmLogout": "Confirmar peche de sesión",
   "confirmLogoutMessage": "Estás seguro de que queres pechar a sesión?",
-  "logout": "Pechar sesión"
+  "logout": "Pechar sesión",
+  "enterGithubTokenTitle": "Token de acceso",
+  "tokenHintLabel": "Introduce o teu token de GitHub...",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

@@ -109,7 +109,7 @@
   "loginTitle": "Accesso",
   "projectNameLabel": "Nome del progetto",
   "projectNameHint": "Inserisci il nome del progetto",
-  "tokenLabel": "Token (classico con autorizzazioni di scrittura)",
+  "tokenHintLabel": "Introduce tu client secret para continuar",
   "tokenHint": "Inserisci un token GitHub valido",
   "unknownAuthError": "Errore di autenticazione sconosciuto.",
   "projectNotFoundError": "Il progetto \"{projectName}\" non esiste nei tuoi repository GitHub.",
@@ -140,5 +140,8 @@
   "confirmLogoutMessage": "Sei sicuro di voler effettuare la disconnessione?",
   "cancel": "Annulla",
   "cancelButton": "Annulla",
-  "logout": "Disconnettersi"
+  "logout": "Disconnettersi",
+  "enterGithubTokenTitle": "Token di accesso",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }

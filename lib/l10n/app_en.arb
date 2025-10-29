@@ -110,7 +110,7 @@
   "loginTitle": "Login",
   "projectNameLabel": "Project Name",
   "projectNameHint": "Please enter the project name",
-  "tokenLabel": "Token (classic with write permissions)",
+  "tokenHintLabel": "Introduce tu client secret para continuar",
   "tokenHint": "Please enter a valid GitHub token",
   "unknownAuthError": "Unknown authentication failure.",
   "projectNotFoundError": "The project \"{projectName}\" does not exist in your GitHub repositories.",
@@ -140,5 +140,8 @@
   "confirmLogout": "Confirm Logout",
   "confirmLogoutMessage": "Are you sure you want to log out?",
   "cancel": "Cancel",
-  "logout": "Logout"
+  "logout": "Logout",
+  "enterGithubTokenTitle": "Access Token",
+  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
 }
