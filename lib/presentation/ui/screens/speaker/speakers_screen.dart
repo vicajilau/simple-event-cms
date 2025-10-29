@@ -74,89 +74,121 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Ponentes',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Spacer(),
-                            FutureBuilder<bool>(
-                              future: widget.viewmodel.checkToken(),
-                              builder: (context, snapshot) {
-                                final canEdit = snapshot.data == true;
-                                if (!canEdit) return const SizedBox.shrink();
+                        child: LayoutBuilder(
+                          builder: (context, header) {
+                            final isNarrow = header.maxWidth < 520;
 
-                                return Row(
-                                  children: [
-                                    OutlinedButton.icon(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.save_outlined,
-                                        size: 20,
-                                        color: Color(0xFF38B6FF),
-                                      ),
-                                      label: const Text('Guardar Ponente'),
-                                      style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        side: const BorderSide(
-                                          color: Color(0xFF38B6FF),
-                                          width: 2,
-                                        ),
-                                        foregroundColor: Color(0xFF38B6FF),
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                            final actions = Wrap(
+                              spacing: 12,
+                              runSpacing: 8,
+                              crossAxisAlignment: WrapCrossAlignment.center,
+                              children: [
+                                OutlinedButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.save_outlined,
+                                    size: 20,
+                                    color: Color(0xFF38B6FF),
+                                  ),
+                                  label: const Text('Guardar Ponente'),
+                                  style: OutlinedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
                                     ),
-                                    const SizedBox(width: 12),
-                                    ElevatedButton.icon(
-                                      onPressed: () async {
-                                        _addSpeaker(widget.eventId);
-                                      },
-                                      icon: const Icon(
-                                        Icons.add,
-                                        size: 20,
-                                        color: Colors.white,
-                                      ),
-                                      label: const Text('Agregar Ponente'),
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xFF38B6FF),
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 16,
-                                        ),
-                                      ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
                                     ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
+                                    side: const BorderSide(
+                                      color: Color(0xFF38B6FF),
+                                      width: 2,
+                                    ),
+                                    foregroundColor: Color(0xFF38B6FF),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    _addSpeaker(widget.eventId);
+                                  },
+                                  icon: const Icon(
+                                    Icons.add,
+                                    size: 20,
+                                    color: Colors.white,
+                                  ),
+                                  label: const Text('Agregar Ponente'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF38B6FF),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 12,
+                                    ),
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            if (isNarrow) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Ponentes',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 12),
+                                  FutureBuilder<bool>(
+                                    future: widget.viewmodel.checkToken(),
+                                    builder: (context, snapshot) =>
+                                        snapshot.data == true
+                                        ? actions
+                                        : const SizedBox.shrink(),
+                                  ),
+                                ],
+                              );
+                            }
+
+                            return Row(
+                              children: [
+                                const Expanded(
+                                  child: Text(
+                                    'Ponentes',
+                                    style: TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                FutureBuilder<bool>(
+                                  future: widget.viewmodel.checkToken(),
+                                  builder: (context, snapshot) =>
+                                      snapshot.data == true
+                                      ? actions
+                                      : const SizedBox.shrink(),
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       ),
+
                       const SizedBox(height: 16),
                       Expanded(
                         child: GridView.builder(
