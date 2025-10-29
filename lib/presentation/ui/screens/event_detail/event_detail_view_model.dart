@@ -24,7 +24,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   String errorMessage = '';
 
-
   @override
   void dispose() {}
 
@@ -35,10 +34,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     }
   }
 
-
-  @override ValueNotifier<String> eventTitle = ValueNotifier('');
-
-
   @override
   Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
@@ -46,12 +41,12 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
     switch (result) {
       case Ok<List<Event>>():
-        if(result.value.isEmpty){
+        if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;
-        }else{
+        } else {
           event = result.value.firstWhere(
-                (e) => e.uid == eventId,
+            (e) => e.uid == eventId,
             orElse: () => result.value.first, // Fallback al primer evento
           );
           eventTitle.value = event!.eventName;
