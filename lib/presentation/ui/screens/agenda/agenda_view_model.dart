@@ -59,7 +59,24 @@ class AgendaViewModelImp extends AgendaViewModel {
   bool _isCacheValid(String eventId) {
     if (_lastAgendaLoadTime == null ||
         agendaDays.value.isEmpty ||
-        agendaDays.value.firstOrNull?.eventsUID.contains(eventId) == false) {
+        agendaDays.value
+            .where(
+              (agendaDay) =>
+                  agendaDay.eventsUID.contains(eventId) &&
+                  agendaDay.resolvedTracks != null &&
+                  agendaDay.resolvedTracks!.isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .toList()
+                      .where((session) => session.agendaDayUID == agendaDay.uid && session.eventUID == eventId)
+                      .toList()
+                      .isNotEmpty,
+            )
+            .toList()
+            .isEmpty) {
       return false;
     }
     final timeSinceLastLoad = DateTime.now().difference(_lastAgendaLoadTime!);
