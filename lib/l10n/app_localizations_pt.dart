@@ -33,7 +33,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loading => 'Carregando...';
 
   @override
-  String get errorLoadingImage => 'Erro ao carregar a imagem';
+  String get errorLoadingImage => 'Erro ao carregar la imagem';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -340,7 +340,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get projectNameHint => 'Por favor, insira o nome do projeto';
 
   @override
-  String get tokenLabel => 'Token (clássico com permissões de escrita)';
+  String get tokenHintLabel => 'Introduza o seu token do GitHub...';
 
   @override
   String get tokenHint => 'Por favor, insira um token do GitHub válido';
@@ -431,4 +431,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get logout => 'Sair';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de Acesso';
 }

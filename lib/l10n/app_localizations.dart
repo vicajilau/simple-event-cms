@@ -764,11 +764,11 @@ abstract class AppLocalizations {
   /// **'Please enter the project name'**
   String get projectNameHint;
 
-  /// No description provided for @tokenLabel.
+  /// No description provided for @tokenHintLabel.
   ///
   /// In en, this message translates to:
-  /// **'Token (classic with write permissions)'**
-  String get tokenLabel;
+  /// **'Introduce tu client secret para continuar'**
+  String get tokenHintLabel;
 
   /// No description provided for @tokenHint.
   ///
@@ -943,6 +943,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @enterGithubTokenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Token'**
+  String get enterGithubTokenTitle;
 }
 
 class _AppLocalizationsDelegate

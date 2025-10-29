@@ -337,7 +337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenLabel => 'Token (classic with write permissions)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';
@@ -428,4 +428,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get enterGithubTokenTitle => 'Access Token';
 }

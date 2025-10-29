@@ -339,7 +339,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenLabel => 'Token-a (klasikoa idazteko baimenekin)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
@@ -430,4 +430,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get logout => 'Saioa itxi';
+
+  @override
+  String get enterGithubTokenTitle => 'Sarbide-tokena';
 }

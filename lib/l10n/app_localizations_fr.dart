@@ -343,7 +343,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get projectNameHint => 'Veuillez entrer le nom du projet';
 
   @override
-  String get tokenLabel => 'Jeton (classique avec droits d\'écriture)';
+  String get tokenHintLabel => 'Entrez votre jeton GitHub...';
 
   @override
   String get tokenHint => 'Veuillez entrer un jeton GitHub valide';
@@ -435,4 +435,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logout => 'Déconnexion';
+
+  @override
+  String get enterGithubTokenTitle => 'Jeton d\'accès';
 }
