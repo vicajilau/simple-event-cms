@@ -126,9 +126,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get linkedinHint => 'Introduce la URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introduce la URL de la web';
-
-  @override
   String get saveButton => 'Guardar';
 
   @override
@@ -391,6 +388,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Introduce la URL de la web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -437,20 +437,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de acceso';
 
   @override
-  String get enterGithubTokenMessage => 'Por favor, introduce tu token de GitHub para continuar. Puedes generar uno en la configuración de desarrollador de tu perfil de GitHub.';
+  String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get availablesEventsTitle => 'Eventos disponibles';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get availablesEventsText => 'Estos son los eventos que tienes disponibles en tu organización de GitHub, si quieres añadir uno nuevo, tienes que crear un nuevo repositorio en GitHub y volver a la pantalla de login para seleccionarlo.';
+  String get addSpeaker => 'Agregar Ponente';
 
   @override
-  String get events => 'Eventos';
+  String get createSpeaker => 'Crear Ponente';
 
   @override
-  String get organization => 'Organización';
-
-  @override
-  String get sessions => 'Sesiones';
+  String get addSponsor => 'Agregar Patrocinador';
 }

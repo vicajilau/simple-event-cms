@@ -39,7 +39,6 @@
   "twitterHint": "Sartu Twitter URLa",
   "githubHint": "Sartu GitHub URLa",
   "linkedinHint": "Sartu LinkedIn URLa",
-  "websiteHint": "Sartu webgunearen URLa",
   "saveButton": "Gorde",
   "errorLoadingData": "Errorea datuak kargatzean",
   "errorUnknown": "Errore ezezaguna",
@@ -142,5 +141,7 @@
   "logout": "Saioa itxi",
   "enterGithubTokenTitle": "Sarbide-tokena",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",  "addSpeaker": "Hizlaria Gehitu",
+  "createSpeaker": "Hizlaria Sortu",
+  "addSponsor": "Babeslea Gehitu"
 }

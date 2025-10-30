@@ -121,7 +121,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                   size: 20,
                                   color: Colors.white,
                                 ),
-                                label: const Text('Agregar Patrocinador'),
+                                label:  Text(location.addSponsor),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF38B6FF),
                                   foregroundColor: Colors.white,

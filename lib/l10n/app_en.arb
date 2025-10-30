@@ -40,7 +40,6 @@
   "twitterHint": "Enter the Twitter URL",
   "githubHint": "Enter the GitHub URL",
   "linkedinHint": "Enter the LinkedIn URL",
-  "websiteHint": "Enter the website URL",
   "saveButton": "Save",
   "errorLoadingData": "Error loading data",
   "errorUnknown": "Unknown error",
@@ -143,5 +142,7 @@
   "logout": "Logout",
   "enterGithubTokenTitle": "Access Token",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese", "addSpeaker": "Add Speaker",
+  "createSpeaker": "Create Speaker",
+  "addSponsor": "Add Sponsor"
 }

@@ -40,7 +40,6 @@
   "twitterHint": "Inserisci l'URL di Twitter",
   "githubHint": "Inserisci l'URL di GitHub",
   "linkedinHint": "Inserisci l'URL di LinkedIn",
-  "websiteHint": "Inserisci l'URL del sito web",
   "saveButton": "Salva",
   "errorLoadingData": "Errore durante il caricamento dei dati",
   "errorUnknown": "Errore sconosciuto",
@@ -143,5 +142,7 @@
   "logout": "Disconnettersi",
   "enterGithubTokenTitle": "Token di accesso",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese", "addSpeaker": "Aggiungi Relatore",
+  "createSpeaker": "Crea Relatore",
+  "addSponsor": "Aggiungi Sponsor"
 }

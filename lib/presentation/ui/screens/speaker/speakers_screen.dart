@@ -103,7 +103,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                     size: 20,
                                     color: Colors.white,
                                   ),
-                                  label: const Text('Agregar Ponente'),
+                                  label:  Text(location.addSpeaker),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF38B6FF),
                                     foregroundColor: Colors.white,
@@ -128,8 +128,8 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Ponentes',
+                                   Text(
+                                    location.speakers,
                                     style: TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w700,
@@ -150,10 +150,10 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
 
                             return Row(
                               children: [
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Ponentes',
-                                    style: TextStyle(
+                                    location.speakers,
+                                    style: const TextStyle(
                                       fontSize: 22,
                                       fontWeight: FontWeight.w700,
                                     ),

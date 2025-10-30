@@ -78,7 +78,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(
-                    'Crear ponente',
+                    location.createSpeaker,
                     style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: const Color(0xFF38B6FF),
                       fontSize: 22,

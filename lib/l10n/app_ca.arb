@@ -39,7 +39,6 @@
   "twitterHint": "Introdueix la URL de Twitter",
   "githubHint": "Introdueix la URL de GitHub",
   "linkedinHint": "Introdueix la URL de LinkedIn",
-  "websiteHint": "Introdueix la URL del lloc web",
   "saveButton": "Desa",
   "errorLoadingData": "Error carregant les dades",
   "errorUnknown": "Error desconegut",
@@ -142,5 +141,7 @@
   "logout": "Tancar Sessió",
   "enterGithubTokenTitle": "Token d'accés",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese","addSpeaker": "Afegir Ponent",
+  "createSpeaker": "Crear Ponent",
+  "addSponsor": "Afegir Patrocinador"
 }

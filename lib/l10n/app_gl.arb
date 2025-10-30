@@ -39,7 +39,6 @@
   "twitterHint": "Introduce a URL de Twitter",
   "githubHint": "Introduce a URL de GitHub",
   "linkedinHint": "Introduce a URL de LinkedIn",
-  "websiteHint": "Introduce a URL do sitio web",
   "saveButton": "Gardar",
   "errorLoadingData": "Erro ao cargar os datos",
   "errorUnknown": "Erro descoñecido",
@@ -142,5 +141,7 @@
   "enterGithubTokenTitle": "Token de acceso",
   "tokenHintLabel": "Introduce o teu token de GitHub...",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese","addSpeaker": "Engadir Poñente",
+  "createSpeaker": "Crear Poñente",
+  "addSponsor": "Engadir Patrocinador"
 }
