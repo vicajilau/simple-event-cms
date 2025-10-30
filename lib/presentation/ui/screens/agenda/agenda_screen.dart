@@ -101,45 +101,48 @@ class _AgendaScreenState extends State<AgendaScreen>
         if (widget.viewmodel.agendaDays.value.isEmpty) {
           return Center(child: Text(location.noSessionsFound));
         }
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.viewmodel.agendaDays.value.length,
-          itemBuilder: (context, index) {
-            final String agendaDayId =
-                widget.viewmodel.agendaDays.value[index].uid;
-            final String date = widget.viewmodel.agendaDays.value[index].date;
-            final bool isExpanded =
-                _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
-            final int tabBarIndex =
-                _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-            return ExpansionTile(
-              shape: const Border(),
-              initiallyExpanded: isExpanded,
-              showTrailingIcon: false,
-              onExpansionChanged: (value) {
-                setState(() {
-                  final tabBarIndex =
-                      _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
-                  _updateTileState(
-                    key: agendaDayId,
-                    value: ExpansionTileState(
-                      isExpanded: value,
-                      tabBarIndex: tabBarIndex,
-                    ),
-                  );
-                });
-              },
-              title: _buildTitleExpansionTile(isExpanded, date),
-              children: <Widget>[
-                _buildExpansionTileBody(
-                  widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
-                  tabBarIndex,
-                  agendaDayId,
-                  widget.eventId.toString(),
-                ),
-              ],
-            );
-          },
+        return Padding(
+          padding: const EdgeInsets.only(right: 28.0,left: 28.0),
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.viewmodel.agendaDays.value.length,
+            itemBuilder: (context, index) {
+              final String agendaDayId =
+                  widget.viewmodel.agendaDays.value[index].uid;
+              final String date = widget.viewmodel.agendaDays.value[index].date;
+              final bool isExpanded =
+                  _expansionTilesStates[agendaDayId]?.isExpanded ?? false;
+              final int tabBarIndex =
+                  _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+              return ExpansionTile(
+                shape: const Border(),
+                initiallyExpanded: isExpanded,
+                showTrailingIcon: false,
+                onExpansionChanged: (value) {
+                  setState(() {
+                    final tabBarIndex =
+                        _expansionTilesStates[agendaDayId]?.tabBarIndex ?? 0;
+                    _updateTileState(
+                      key: agendaDayId,
+                      value: ExpansionTileState(
+                        isExpanded: value,
+                        tabBarIndex: tabBarIndex,
+                      ),
+                    );
+                  });
+                },
+                title: _buildTitleExpansionTile(isExpanded, date),
+                children: <Widget>[
+                  _buildExpansionTileBody(
+                    widget.viewmodel.agendaDays.value[index].resolvedTracks ?? [],
+                    tabBarIndex,
+                    agendaDayId,
+                    widget.eventId.toString(),
+                  ),
+                ],
+              );
+            },
+          ),
         );
       },
     );
@@ -155,7 +158,7 @@ class _AgendaScreenState extends State<AgendaScreen>
       child: Row(
         children: [
           Icon(
-            Icons.calendar_today,
+            Icons.calendar_month,
             color: Theme.of(context).colorScheme.onPrimaryContainer,
           ),
           const SizedBox(width: 12),

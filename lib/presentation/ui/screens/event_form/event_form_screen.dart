@@ -218,7 +218,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   widget.eventId != null
                       ? location.editingEvent
                       : location.creatingEvent,
-                  style: AppFonts.titleHeadingForm,
+                  style: AppFonts.titleHeadingForm
+                      .copyWith(color: Colors.blue),
                 ),
                 SectionInputForm(
                   label: location.eventNameLabel,
@@ -425,6 +426,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                     FilledButton(
                       onPressed: _onSubmit,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
                       child: Text(location.saveButton),
                     ),
                   ],

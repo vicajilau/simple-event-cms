@@ -184,6 +184,57 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           ),
         ),
         actions: <Widget>[
+          const SizedBox(width: 8),
+          DropdownButtonHideUnderline(
+            child: DropdownButton<String>(
+              value: null,
+              hint: Row(
+                children: [
+                  const Icon(
+                    Icons.filter_alt_outlined,
+                    size: 20,
+                    color: Colors.blue,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Filter Event', // This is now the default text
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ],
+              ),
+              icon: Padding(
+                padding: const EdgeInsets.only(right: 8.0),
+                child: Icon(Icons.arrow_drop_down, color: Colors.blue),
+              ),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  final filter = EventFilter.values
+                      .where((e) => e.label == newValue)
+                      .firstOrNull;
+                  if (filter == null) {
+                    widget.viewmodel.onEventFilterChanged(EventFilter.all);
+                  } else {
+                    widget.viewmodel.onEventFilterChanged(filter);
+                  }
+                }
+              },
+              items: <DropdownMenuItem<String>>[
+                DropdownMenuItem(
+                  value: EventFilter.all.label,
+                  child: Text(EventFilter.all.label),
+                ),
+                DropdownMenuItem(
+                  value: EventFilter.current.label,
+                  child: Text(EventFilter.current.label),
+                ),
+                DropdownMenuItem(
+                  value: EventFilter.past.label,
+                  child: Text(EventFilter.past.label),
+                ),
+              ], // No items in the dropdown
+            ),
+          ),
+          const SizedBox(width: 8),
           FutureBuilder(
             future: SecureInfo.getGithubKey(),
             builder: (context, snapshot) {
@@ -280,58 +331,59 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                        right: 16.0,
-                        top: 16.0,
-                        left: 16.0,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          OutlinedButton(
-                            onPressed: () {
-                              // Action for the border button
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(color: Colors.blue),
-                              foregroundColor: Colors.blue,
+                    FutureBuilder<bool>(
+                      future: widget.viewmodel.checkToken(),
+                      builder: (context, snapshot) {
+                        if (snapshot.data == true) {
+                          return Padding(
+                            padding: const EdgeInsets.only(
+                              right: 16.0,
+                              top: 16.0,
+                              left: 16.0,
                             ),
                             child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                const Icon(
-                                  Icons.filter_alt_outlined,
-                                  size: 20,
-                                  color: Colors.blue,
+                                ElevatedButton(
+                                  onPressed: () async {
+                                    final Event? newEvent = await AppRouter
+                                        .router
+                                        .push(AppRouter.eventFormPath);
+                                    if (newEvent != null) {
+                                      setState(() {
+                                        _viewmodel.eventsToShow.value
+                                            .removeWhere(
+                                              (event) =>
+                                                  event.uid == newEvent.uid,
+                                            );
+                                        _viewmodel.eventsToShow.value.add(
+                                          newEvent,
+                                        );
+                                        _viewmodel.addEvent(newEvent);
+                                      });
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.add, size: 20),
+                                      Text(
+                                        'Add Event',
+                                      ), // Assuming 'Add Event' is in localizations
+                                      const SizedBox(width: 8),
+                                    ],
+                                  ),
                                 ),
-                                Text(
-                                  'Filter Event',
-                                ), // Assuming 'Add Event' is in localizations
-                                const SizedBox(width: 8),
                               ],
                             ),
-                          ),
-                          const SizedBox(width: 8), // Space between buttons
-                          ElevatedButton(
-                            onPressed: () {
-                              // Action to add event
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.add, size: 20),
-                                Text(
-                                  'Add Event',
-                                ), // Assuming 'Add Event' is in localizations
-                                const SizedBox(width: 8),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                          );
+                        }else{
+                          return const SizedBox.shrink();
+                        }
+                      },
                     ),
                     GridView.builder(
                       shrinkWrap: true, // Important for nesting in a Column
@@ -399,30 +451,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             },
           ),
           const SizedBox(height: 16), // Spacing between buttons
-          FutureBuilder<bool>(
-            future: widget.viewmodel.checkToken(),
-            builder: (context, snapshot) {
-              if (snapshot.data == true) {
-                return AddFloatingActionButton(
-                  onPressed: () async {
-                    final Event? newEvent = await AppRouter.router.push(
-                      AppRouter.eventFormPath,
-                    );
-                    if (newEvent != null) {
-                      setState(() {
-                        _viewmodel.eventsToShow.value.removeWhere(
-                          (event) => event.uid == newEvent.uid,
-                        );
-                        _viewmodel.eventsToShow.value.add(newEvent);
-                        _viewmodel.addEvent(newEvent);
-                      });
-                    }
-                  },
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -462,7 +490,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
               if (!isAdmin) SizedBox(height: 8.0),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0,bottom: 8.0),
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
                 child: Center(
                   child: Text(
                     organizationName.toString(),

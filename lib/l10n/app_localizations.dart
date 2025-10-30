@@ -985,6 +985,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Organization'**
   String get organization;
+
+  /// No description provided for @organizationName.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization Name'**
+  String get organizationName;
+
+  /// No description provided for @organizationNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the organization name'**
+  String get organizationNameHint;
+
+  /// No description provided for @githubUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Github User'**
+  String get githubUser;
+
+  /// No description provided for @githubUserHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the github user'**
+  String get githubUserHint;
+
+  /// No description provided for @branch.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch'**
+  String get branch;
+
+  /// No description provided for @branchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the branch'**
+  String get branchHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

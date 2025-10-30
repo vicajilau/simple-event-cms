@@ -445,4 +445,22 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get organization => 'Organización';
+
+  @override
+  String get branch => 'Rama';
+
+  @override
+  String get branchHint => 'Introduce o nome da rama';
+
+  @override
+  String get githubUser => 'Usuario de GitHub';
+
+  @override
+  String get githubUserHint => 'Introduce o teu usuario de GitHub';
+
+  @override
+  String get organizationName => 'Nome da organización';
+
+  @override
+  String get organizationNameHint => 'Introduce o nome da túa organización';
 }

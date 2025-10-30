@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -183,20 +181,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get endTimeLabel => 'Hora final:';
 
   @override
-  String get timeValidationError =>
-      'La hora de inicio debe ser anterior a la hora final.';
+  String get timeValidationError => 'La hora de inicio debe ser anterior a la hora final.';
 
   @override
-  String get speakerLabel => 'Speaker*';
+  String get speakerLabel => 'Ponente*';
 
   @override
-  String get noSpeakersMessage => 'No hay speakers. Añade uno.';
+  String get noSpeakersMessage => 'No hay ponentes. Añade uno.';
 
   @override
-  String get selectSpeakerHint => 'Selecciona un speaker';
+  String get selectSpeakerHint => 'Selecciona un ponente';
 
   @override
-  String get selectSpeakerError => 'Por favor, selecciona un speaker';
+  String get selectSpeakerError => 'Por favor, selecciona un ponente';
 
   @override
   String get talkTypeLabel => 'Tipo de charla*';
@@ -217,8 +214,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cancelButton => 'Cancelar';
 
   @override
-  String get timeSelectionError =>
-      'Por favor, seleccionar ambas horas: inicio y final.';
+  String get timeSelectionError => 'Por favor, seleccionar ambas horas: inicio y final.';
 
   @override
   String get noSessionsFound => 'No se encontraron sesiones';
@@ -227,8 +223,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deleteSessionTitle => 'Eliminar sesión';
 
   @override
-  String get deleteSessionMessage =>
-      '¿Estás seguro de que quieres eliminar la sesión?';
+  String get deleteSessionMessage => '¿Estás seguro de que quieres eliminar la sesión?';
 
   @override
   String get editEventTitle => 'Edición evento';
@@ -288,8 +283,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get secondaryColorLabel => 'Color Secundario';
 
   @override
-  String get secondaryColorHint =>
-      'Introduce el color secundario (ej. #000000)';
+  String get secondaryColorHint => 'Introduce el color secundario (ej. #000000)';
 
   @override
   String get venueTitle => 'Venue';
@@ -354,26 +348,25 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError =>
-      'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.';
+  String get authNetworkError => 'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.';
 
   @override
   String get closeButton => 'Cerrar';
 
   @override
-  String get editSponsorTitle => 'Editar Sponsor';
+  String get editSponsorTitle => 'Editar Patrocinador';
 
   @override
-  String get createSponsorTitle => 'Crear Sponsor';
+  String get createSponsorTitle => 'Crear Patrocinador';
 
   @override
-  String get editingSponsor => 'Editando Sponsor';
+  String get editingSponsor => 'Editando Patrocinador';
 
   @override
-  String get creatingSponsor => 'Creando Sponsor';
+  String get creatingSponsor => 'Creando Patrocinador';
 
   @override
-  String get sponsorNameHint => 'Introduce el nombre del Sponsor';
+  String get sponsorNameHint => 'Introduce el nombre del Patrocinador';
 
   @override
   String get sponsorNameValidation => 'Nombre';
@@ -409,13 +402,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'botón de añadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'añadir sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nombre de la sala';
 
   @override
   String get formError => 'Hay errores en el formulario';
@@ -424,8 +417,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get confirmLogout => 'Confirmar cierre de sesión';
 
   @override
-  String get confirmLogoutMessage =>
-      '¿Estás seguro de que quieres cerrar sesión?';
+  String get confirmLogoutMessage => '¿Estás seguro de que quieres cerrar sesión?';
 
   @override
   String get cancel => 'Cancelar';
@@ -437,20 +429,38 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de acceso';
 
   @override
-  String get enterGithubTokenMessage => 'Por favor, introduce tu token de GitHub para continuar. Puedes generar uno en la configuración de desarrollador de tu perfil de GitHub.';
-
-  @override
-  String get availablesEventsTitle => 'Eventos disponibles';
-
-  @override
-  String get availablesEventsText => 'Estos son los eventos que tienes disponibles en tu organización de GitHub, si quieres añadir uno nuevo, tienes que crear un nuevo repositorio en GitHub y volver a la pantalla de login para seleccionarlo.';
+  String get enterGithubTokenMessage => 'Por favor, introduce tu token de GitHub para continuar';
 
   @override
   String get events => 'Eventos';
 
   @override
+  String get sessions => 'Sesiones';
+
+  @override
   String get organization => 'Organización';
 
   @override
-  String get sessions => 'Sesiones';
+  String get organizationName => 'Nombre de la organización';
+
+  @override
+  String get organizationNameHint => 'Introduce el nombre de la organización';
+
+  @override
+  String get githubUser => 'Usuario de Github';
+
+  @override
+  String get githubUserHint => 'Introduce el usuario de github';
+
+  @override
+  String get branch => 'Rama';
+
+  @override
+  String get branchHint => 'Introduce la rama';
+
+  @override
+  String get availablesEventsTitle => 'Eventos Disponibles';
+
+  @override
+  String get availablesEventsText => 'Estos son los eventos que están disponibles en la app. Puedes cambiar entre ellos desde el menú lateral.';
 }

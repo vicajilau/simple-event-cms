@@ -16,12 +16,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noEventsScheduled => 'Aucun événement programmé';
 
   @override
-  String get availablesEventsTitle => 'Événements disponibles';
-
-  @override
-  String get availablesEventsText => 'Vous pouvez sélectionner l\'un des événements suivants disponibles :';
-
-  @override
   String get loadingSpeakers => 'Chargement des intervenants...';
 
   @override
@@ -445,4 +439,28 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get organization => 'Organisation';
+
+  @override
+  String get organizationName => 'Nom de l\'organisation';
+
+  @override
+  String get organizationNameHint => 'Entrez le nom de l\'organisation';
+
+  @override
+  String get githubUser => 'Utilisateur Github';
+
+  @override
+  String get githubUserHint => 'Entrez l\'utilisateur github';
+
+  @override
+  String get branch => 'Branche';
+
+  @override
+  String get branchHint => 'Entrez la branche';
+
+  @override
+  String get availablesEventsTitle => 'Événements disponibles';
+
+  @override
+  String get availablesEventsText => 'Voici les événements disponibles dans l\'application. Vous pouvez basculer entre eux depuis le menu latéral.';
 }
