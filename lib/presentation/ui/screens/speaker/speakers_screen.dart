@@ -85,7 +85,18 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                               children: [
                                 ElevatedButton.icon(
                                   onPressed: () async {
-                                    _addSpeaker(widget.eventId);
+                                    final Speaker? newSpeaker = await AppRouter
+                                        .router
+                                        .push(
+                                          AppRouter.speakerFormPath,
+                                          extra: {'eventId': widget.eventId},
+                                        );
+                                    if (newSpeaker != null) {
+                                      widget.viewmodel.addSpeaker(
+                                        newSpeaker,
+                                        widget.eventId,
+                                      );
+                                    }
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -379,7 +390,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                           ? Row(
                                               children: [
                                                 IconWidget(
-                                                  icon: Icons.edit,
+                                                  icon: Icons.edit_outlined,
                                                   onTap: () async {
                                                     Map<String, dynamic>
                                                     arguments = {
@@ -407,7 +418,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                 ),
                                                 const SizedBox(width: 8),
                                                 IconWidget(
-                                                  icon: Icons.delete,
+                                                  icon: Icons.delete_outlined,
                                                   onTap: () {
                                                     widget.viewmodel
                                                         .removeSpeaker(
@@ -436,52 +447,37 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
       },
     );
   }
-
-  void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSpeaker != null) {
-      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
-    }
-  }
-
-  /**/
 }
 
 class IconWidget extends StatelessWidget {
   final IconData icon;
   final VoidCallback? onTap;
-  const IconWidget({super.key, required this.icon, this.onTap});
+
+  final Color color;
+  final double iconSize;
+  final double padding;
+
+  const IconWidget({
+    super.key,
+    required this.icon,
+    this.onTap,
+    this.color = Colors.black,
+    this.iconSize = 14,
+    this.padding = 5,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        width: 24,
-        height: 24,
+        padding: EdgeInsets.all(padding),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onPrimary,
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.onSurface.withValues(alpha: 0.5),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          color: color.withValues(alpha: 0.10),
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Icon(
-          icon,
-          size: 16,
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-        ),
+        child: Icon(icon, size: iconSize, color: Colors.black),
       ),
     );
   }

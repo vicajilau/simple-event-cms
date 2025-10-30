@@ -195,6 +195,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     }
   }
 
+//todo monta: borrar esto? ya esta en sponsor screen
   void _addSponsor(String parentId) async {
     final Sponsor? newSponsor = await AppRouter.router.push(
       AppRouter.sponsorFormPath,

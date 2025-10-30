@@ -125,7 +125,6 @@
   "logoHint": "Introduce la URL del logo",
   "logoValidation": "Logo",
   "websiteLabel": "Web*",
-  "websiteHint": "Introduce la URL de la web",
   "websiteValidation": "Web",
   "mainSponsor": "Patrocinador Principal",
   "goldSponsor": "Patrocinador Gold",
@@ -143,5 +142,5 @@
   "logout": "Cerrar sesión",
   "enterGithubTokenTitle": "Token de acceso",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese"
 }
