@@ -151,6 +151,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     }
   }
 
+//todo monta: borrar esto? ya esta en speakers screen
   void _addSpeaker(String parentId) async {
     final Speaker? newSpeaker = await AppRouter.router.push(
       AppRouter.speakerFormPath,

@@ -32,8 +32,8 @@ class FormScreenWrapper extends StatelessWidget {
                     Color(0xFFB8E3FF),
                     Color(0xFF38B6FF),
                   ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+                  begin: Alignment.centerLeft, 
+                  end: Alignment.centerRight, 
                 ),
               ),
               child: Center(
