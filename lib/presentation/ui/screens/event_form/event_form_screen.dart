@@ -31,14 +31,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _endDateController = TextEditingController();
   final TextEditingController _timezoneController = TextEditingController();
-  final TextEditingController _baseUrlController = TextEditingController();
   final TextEditingController _primaryColorController = TextEditingController();
   final TextEditingController _secondaryColorController =
       TextEditingController();
-  final TextEditingController _venueNameController = TextEditingController();
-  final TextEditingController _venueAddressController = TextEditingController();
-  final TextEditingController _venueCityController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
+
   // Focus nodes
   final FocusNode _nameFocus = FocusNode();
   final FocusNode _startDateFocus = FocusNode();
@@ -102,10 +98,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _timezoneController.text = event.eventDates.timezone;
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
-          _venueNameController.text = event.venue?.name ?? '';
-          _venueAddressController.text = event.venue?.address ?? '';
-          _venueCityController.text = event.venue?.city ?? '';
-          _descriptionController.text = event.description ?? '';
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -122,13 +114,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
     _startDateController.dispose();
     _endDateController.dispose();
     _timezoneController.dispose();
-    _baseUrlController.dispose();
     _primaryColorController.dispose();
     _secondaryColorController.dispose();
-    _venueNameController.dispose();
-    _venueAddressController.dispose();
-    _venueCityController.dispose();
-    _descriptionController.dispose();
 
     // dispose focus nodes
     _nameFocus.dispose();
@@ -336,17 +323,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
-                  label: location.baseUrlLabel,
-                  childInput: TextFormField(
-                    key: _baseUrlFieldKey,
-                    focusNode: _baseUrlFocus,
-                    controller: _baseUrlController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.baseUrlHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
                   label: location.primaryColorLabel,
                   childInput: TextFormField(
                     key: _primaryColorFieldKey,
@@ -365,52 +341,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     controller: _secondaryColorController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
                       hintText: location.secondaryColorHint,
-                    ),
-                  ),
-                ),
-                Text(location.venueTitle, style: AppFonts.titleHeadingForm),
-                SectionInputForm(
-                  label: location.venueNameLabel,
-                  childInput: TextFormField(
-                    key: _venueNameFieldKey,
-                    focusNode: _venueNameFocus,
-                    controller: _venueNameController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueNameHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.venueAddressLabel,
-                  childInput: TextFormField(
-                    key: _venueAddressFieldKey,
-                    focusNode: _venueAddressFocus,
-                    controller: _venueAddressController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueAddressHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.venueCityLabel,
-                  childInput: TextFormField(
-                    key: _venueCityFieldKey,
-                    focusNode: _venueCityFocus,
-                    controller: _venueCityController,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.venueCityHint,
-                    ),
-                  ),
-                ),
-                SectionInputForm(
-                  label: location.descriptionLabel,
-                  childInput: TextFormField(
-                    key: _descriptionFieldKey,
-                    focusNode: _descriptionFocus,
-                    controller: _descriptionController,
-                    maxLines: 3,
-                    decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.eventDescriptionHint,
                     ),
                   ),
                 ),
@@ -520,12 +450,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       eventDates: eventDates,
-      venue: Venue(
-        name: _venueNameController.text,
-        address: _venueAddressController.text,
-        city: _venueCityController.text,
-      ),
-      description: _descriptionController.text,
     );
     var result = await eventFormViewModel.onSubmit(eventModified);
     if(result){
