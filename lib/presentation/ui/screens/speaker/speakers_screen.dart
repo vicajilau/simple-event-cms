@@ -83,33 +83,6 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                               runSpacing: 8,
                               crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
-                                OutlinedButton.icon(
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.save_outlined,
-                                    size: 20,
-                                    color: Color(0xFF38B6FF),
-                                  ),
-                                  label: const Text('Guardar Ponente'),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    side: const BorderSide(
-                                      color: Color(0xFF38B6FF),
-                                      width: 2,
-                                    ),
-                                    foregroundColor: Color(0xFF38B6FF),
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
                                 ElevatedButton.icon(
                                   onPressed: () async {
                                     _addSpeaker(widget.eventId);
