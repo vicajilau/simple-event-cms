@@ -1,13 +1,15 @@
-
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
+import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
+import 'package:sec/presentation/ui/widgets/section_input_form.dart';
+
+import '../../../../core/utils/app_decorations.dart';
+import '../../../../core/utils/app_fonts.dart';
 
 class OrganizationScreen extends StatefulWidget {
-
-
-
   const OrganizationScreen({super.key});
 
   @override
@@ -30,9 +32,12 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void initState() {
     super.initState();
     // Initialize controllers with empty strings
-    _organizationNameController = TextEditingController(text: organization.organizationName);
-    _primaryColorOrganizationController = TextEditingController(text: organization.primaryColorOrganization);
-    _secondaryColorOrganizationController = TextEditingController(text: organization.secondaryColorOrganization);
+    _organizationNameController =
+        TextEditingController(text: organization.organizationName);
+    _primaryColorOrganizationController =
+        TextEditingController(text: organization.primaryColorOrganization);
+    _secondaryColorOrganizationController =
+        TextEditingController(text: organization.secondaryColorOrganization);
     _githubUserController = TextEditingController(text: organization.githubUser);
     _projectNameController = TextEditingController(text: organization.projectName);
     _branchController = TextEditingController(text: organization.branch);
@@ -51,97 +56,144 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Organization'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              TextFormField(
+    final location = AppLocalizations.of(context)!;
+    return FormScreenWrapper(
+      pageTitle: location.organization,
+      widgetFormChild: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 16,
+          children: [
+            Text(
+              location.organization,
+              style: AppFonts.titleHeadingForm.copyWith(color: Colors.blue),
+            ),
+            SectionInputForm(
+              label: location.organizationName,
+              childInput: TextFormField(
                 controller: _organizationNameController,
-                decoration: const InputDecoration(labelText: 'Organization Name'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.organizationNameHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter an organization name';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+            SectionInputForm(
+              label: location.primaryColorLabel,
+              childInput: TextFormField(
                 controller: _primaryColorOrganizationController,
-                decoration: const InputDecoration(labelText: 'Primary Color'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.primaryColorHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a primary color';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+            SectionInputForm(
+              label: location.secondaryColorLabel,
+              childInput: TextFormField(
                 controller: _secondaryColorOrganizationController,
-                decoration: const InputDecoration(labelText: 'Secondary Color'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.secondaryColorHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a secondary color';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+            SectionInputForm(
+              label: location.githubUser,
+              childInput: TextFormField(
                 controller: _githubUserController,
-                decoration: const InputDecoration(labelText: 'GitHub User'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.githubUserHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a GitHub user';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+            SectionInputForm(
+              label: location.projectNameLabel,
+              childInput: TextFormField(
                 controller: _projectNameController,
-                decoration: const InputDecoration(labelText: 'Project Name'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.projectNameHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a project name';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              TextFormField(
+            ),
+            SectionInputForm(
+              label: location.branch,
+              childInput: TextFormField(
                 controller: _branchController,
-                decoration: const InputDecoration(labelText: 'Branch'),
+                decoration: AppDecorations.textFieldDecoration.copyWith(
+                  hintText: location.branchHint,
+                ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a branch';
+                    return location.requiredField;
                   }
                   return null;
                 },
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final organization = Organization(
-                      organizationName: _organizationNameController.text,
-                      primaryColorOrganization:
-                          _primaryColorOrganizationController.text,
-                      secondaryColorOrganization:
-                          _secondaryColorOrganizationController.text,
-                      githubUser: _githubUserController.text,
-                      projectName: _projectNameController.text,
-                      branch: _branchController.text,
-                    );
-                    _viewModel.updateOrganization(organization,context);
-                  }
-                },
-                child: const Text('Continue'),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              spacing: 12,
+              children: [
+                OutlinedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(location.cancelButton),
+                ),
+                FilledButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      final organization = Organization(
+                        organizationName: _organizationNameController.text,
+                        primaryColorOrganization:
+                            _primaryColorOrganizationController.text,
+                        secondaryColorOrganization:
+                            _secondaryColorOrganizationController.text,
+                        githubUser: _githubUserController.text,
+                        projectName: _projectNameController.text,
+                        branch: _branchController.text,
+                      );
+                      _viewModel.updateOrganization(organization, context);
+                    }
+                  },
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: Text(location.saveButton),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

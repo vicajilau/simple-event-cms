@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/models.dart';
-import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
-import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import '../agenda/agenda_screen.dart';
-import '../agenda/form/agenda_form_screen.dart';
 import '../speaker/speakers_screen.dart';
 import '../sponsor/sponsors_screen.dart';
 import 'event_detail_view_model.dart';
@@ -27,7 +23,6 @@ class EventDetailScreen extends StatefulWidget {
 class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0;
   List<Widget> screens = [];
 
   @override
@@ -35,11 +30,6 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     super.initState();
     widget.viewmodel.setup(widget.eventId);
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(() async {
-      setState(() {
-        _selectedIndex = _tabController.index;
-      });
-    });
     screens = [
       AgendaScreen(eventId: widget.eventId, tabController: _tabController),
       SpeakersScreen(eventId: widget.eventId),
@@ -68,49 +58,48 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               backgroundColor: Colors.white,
               titleSpacing: 0.0,
               centerTitle: false,
+              iconTheme: const IconThemeData(color: Colors.blue),
               elevation: 0,
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      widget.viewmodel.eventTitle.value,
-                      style: const TextStyle(color: Colors.black),
-                    ),
-                  ),
+                children: <Widget>[
                   Expanded(
-                    child: TabBar(
-                      controller: _tabController,
-                      labelColor: Colors.blue,
-                      unselectedLabelColor: Colors.grey,
-                      indicatorColor: Colors.black,
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                      unselectedLabelStyle:
-                          const TextStyle(fontWeight: FontWeight.bold),
-                      tabs: [
-                        Tab(
-                          child: Text(
-                            location.agenda,
-                          ),
+                    child: Row(
+                      children: [
+                        if (Navigator.of(context).canPop()) const SizedBox(width: 8.0),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Icon(Icons.calendar_today, color: Colors.blue, size: 20),
                         ),
-                        Tab(
-                            child: Text(
-                          location.speakers,
-                        )),
-                        Tab(
-                            child: Text(
-                          location.sponsors,
-                        )),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0),
+                          child: Text(
+                            widget.viewmodel.eventTitle.value,
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        )
                       ],
                     ),
                   ),
-                  const Divider(
-                    height: 4,
-                    color: Colors.black,
+                  TabBar(
+                    controller: _tabController,
+                    isScrollable: true, // `true` for variable tab widths
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 58.0),
+                    labelColor: Colors.blue,
+                    unselectedLabelColor: Colors.grey,
+                    dividerHeight: 0,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                    indicatorColor: Colors.transparent,
+                    unselectedLabelStyle: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    tabs: [
+                      Tab(child: Text(location.agenda)),
+                      Tab(child: Text(location.speakers)),
+                      Tab(child: Text(location.sponsors)),
+                    ],
                   ),
-
+                  const Spacer(), // Pushes the TabBar to the center
                 ],
               ),
             ),
@@ -132,8 +121,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                         errorMessage: widget.viewmodel.errorMessage,
                         onCancel: () => {
                           widget.viewmodel.setErrorKey(null),
-                          widget.viewmodel.viewState.value =
-                              ViewState.loadFinished,
+                          widget.viewmodel.viewState.value = ViewState.loadFinished,
                           Navigator.of(context).pop(),
                         },
                         buttonText: location.closeButton,
@@ -146,31 +134,12 @@ class _EventDetailScreenState extends State<EventDetailScreen>
               return TabBarView(controller: _tabController, children: screens);
             },
           ),
-          floatingActionButton: FutureBuilder<bool>(
-            future: widget.viewmodel.checkToken(),
-            builder: (context, snapshot) {
-              if (snapshot.data == true) {
-                return AddFloatingActionButton(
-                  onPressed: () async {
-                    if (_selectedIndex == 0) {
-                      _addSession(widget.eventId);
-                    } else if (_selectedIndex == 1) {
-                      _addSpeaker(widget.eventId);
-                    } else if (_selectedIndex == 2) {
-                      _addSponsor(widget.eventId);
-                    }
-                  },
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
         );
       },
     );
   }
 
-  void _addSession(String eventId) async {
+  /*void _addSession(String eventId) async {
     List<AgendaDay>? agendaDays = await AppRouter.router.push(
       AppRouter.agendaFormPath,
       extra: AgendaFormData(eventId: eventId),
@@ -205,5 +174,5 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
       await sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
     }
-  }
+  }*/
 }

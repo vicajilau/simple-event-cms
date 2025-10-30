@@ -16,12 +16,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get noEventsScheduled => 'Ez dago gertaera programaturik';
 
   @override
-  String get availablesEventsTitle => 'Gertaera erabilgarriak';
-
-  @override
-  String get availablesEventsText => 'Gertaera berri bat sortu dezakezu edo eskuragarri daudenen artean aukeratu.';
-
-  @override
   String get loadingSpeakers => 'Hizlariak kargatzen...';
 
   @override
@@ -445,4 +439,28 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get organization => 'Antolakuntza';
+
+  @override
+  String get organizationName => 'Antolakuntzaren izena';
+
+  @override
+  String get organizationNameHint => 'Sartu antolakuntzaren izena';
+
+  @override
+  String get githubUser => 'Github erabiltzailea';
+
+  @override
+  String get githubUserHint => 'Sartu github erabiltzailea';
+
+  @override
+  String get branch => 'Adarra';
+
+  @override
+  String get branchHint => 'Sartu adarra';
+
+  @override
+  String get availablesEventsTitle => 'Gertaera erabilgarriak';
+
+  @override
+  String get availablesEventsText => 'Hauek dira aplikazioan eskuragarri dauden gertaerak. Alda ditzakezu alboko menutik.';
 }

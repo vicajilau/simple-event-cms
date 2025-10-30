@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -425,12 +423,6 @@ class AppLocalizationsCa extends AppLocalizations {
   String get cancel => 'Cancel·lar';
 
   @override
-  String get availablesEventsTitle => 'Esdeveniments Disponibles';
-
-  @override
-  String get availablesEventsText => 'Selecciona un dels teus esdeveniments per continuar';
-
-  @override
   String get logout => 'Tancar Sessió';
 
   @override
@@ -447,4 +439,28 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get organization => 'Organització';
+
+  @override
+  String get organizationName => 'Nom de la organització';
+
+  @override
+  String get organizationNameHint => 'Introdueix el nom de la organització';
+
+  @override
+  String get githubUser => 'Usuari de Github';
+
+  @override
+  String get githubUserHint => 'Introdueix l\'usuari de github';
+
+  @override
+  String get branch => 'Branca';
+
+  @override
+  String get branchHint => 'Introdueix la branca';
+
+  @override
+  String get availablesEventsTitle => 'Esdeveniments Disponibles';
+
+  @override
+  String get availablesEventsText => 'Aquests són els esdeveniments disponibles a l\'aplicació. Pots canviar entre ells des del menú lateral.';
 }
