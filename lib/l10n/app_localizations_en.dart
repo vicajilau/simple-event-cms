@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -334,7 +332,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenHintLabel => 'Introduce tu client secret para continuar';
+  String get tokenHintLabel => 'Please enter your client secret to continue';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';
@@ -432,12 +430,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get enterGithubTokenTitle => 'Access Token';
 
-  @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
-
-  @override
-  String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+  String get enterGithubTokenMessage =>
+      'Please enter your GitHub token to continue';
 
   @override
   String get addSpeaker => 'Add Speaker';
@@ -447,4 +441,33 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addSponsor => 'Add Sponsor';
+  String get sessions => 'Sessions';
+
+  @override
+  String get organization => 'Organization';
+
+  @override
+  String get organizationName => 'Organization Name';
+
+  @override
+  String get organizationNameHint => 'Enter the organization name';
+
+  @override
+  String get githubUser => 'Github User';
+
+  @override
+  String get githubUserHint => 'Enter the github user';
+
+  @override
+  String get branch => 'Branch';
+
+  @override
+  String get branchHint => 'Enter the branch';
+
+  @override
+  String get availablesEventsTitle => 'Available Events';
+
+  @override
+  String get availablesEventsText =>
+      'These are the events that are available in the app. You can switch between them from the side menu.';
 }

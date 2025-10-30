@@ -453,4 +453,23 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addSponsor => 'Aggiungi Sponsor';
+  String get organization => 'Organizzazione';
+
+  @override
+  String get branch => 'Ramo';
+
+  @override
+  String get branchHint => 'Inserisci il nome del ramo';
+
+  @override
+  String get githubUser => 'Utente GitHub';
+
+  @override
+  String get githubUserHint => 'Inserisci il nome utente GitHub';
+
+  @override
+  String get organizationName => 'Nome Organizzazione';
+
+  @override
+  String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
 }

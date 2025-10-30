@@ -1,5 +1,6 @@
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
+
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -440,13 +441,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterGithubTokenTitle => 'Jeton d\'accès';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
-
-  @override
-  String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
-
-  @override
   String get addSpeaker => 'Ajouter un Intervenant';
 
   @override
@@ -454,4 +448,30 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get addSponsor => 'Ajouter un Sponsor';
+  String get organization => 'Organisation';
+
+  @override
+  String get organizationName => 'Nom de l\'organisation';
+
+  @override
+  String get organizationNameHint => 'Entrez le nom de l\'organisation';
+
+  @override
+  String get githubUser => 'Utilisateur Github';
+
+  @override
+  String get githubUserHint => 'Entrez l\'utilisateur github';
+
+  @override
+  String get branch => 'Branche';
+
+  @override
+  String get branchHint => 'Entrez la branche';
+
+  @override
+  String get availablesEventsTitle => 'Événements disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Voici les événements disponibles dans l\'application. Vous pouvez basculer entre eux depuis le menu latéral.';
 }
