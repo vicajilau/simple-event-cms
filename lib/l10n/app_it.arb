@@ -155,5 +155,6 @@
   "addSession": "Aggiungi Sessione",
   "addSpeaker": "Aggiungi Relatore",
   "addSponsor": "Aggiungi Sponsor",
-  "retryLater": "Vuelve a intentarlo más tarde"
+  "retryLater": "Riprova più tardi",
+  "commonError": "Errore nel recupero dei dati, riprova più tardi"
 }

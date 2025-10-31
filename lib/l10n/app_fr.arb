@@ -154,5 +154,6 @@
   "eventManager": "Gestionnaire d'événements",
   "addSession": "Ajouter une Session",
   "addSpeaker": "Ajouter un Intervenant",
-  "addSponsor": "Ajouter un Sponsor"
+  "addSponsor": "Ajouter un Sponsor",
+  "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard"
 }

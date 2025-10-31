@@ -353,7 +353,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'El projecte \"$projectName\" no existeix als teus repositoris de GitHub.';
+    return 'El projecte \"$projectName\" no existeix en els teus repositoris de GitHub.';
   }
 
   @override
@@ -412,13 +412,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get updateButton => 'Actualitzar';
 
   @override
-  String get addButton => 'Add Button';
+  String get addButton => 'Afegir';
 
   @override
-  String get addRoomTitle => 'Add Room';
+  String get addRoomTitle => 'Afegir Sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nom de la sala';
 
   @override
   String get formError => 'Hi ha errors al formulari';
@@ -427,7 +427,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get confirmLogout => 'Confirmar Tancament de Sessió';
 
   @override
-  String get confirmLogoutMessage => 'Estàs segur que vols tancar la sessió?';
+  String get confirmLogoutMessage =>
+      'N\'estàs segur, que vols tancar la sessió?';
 
   @override
   String get cancel => 'Cancel·lar';
@@ -480,4 +481,8 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get retryLater => 'Torna a intentar-ho més tard';
+
+  @override
+  String get commonError =>
+      'Error en obtenir les dades, si us plau, torna a intentar-ho més tard';
 }

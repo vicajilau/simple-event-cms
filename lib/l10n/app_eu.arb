@@ -148,11 +148,12 @@
   "organizationNameHint": "Sartu antolakuntzaren izena",
   "githubUser": "GitHub erabiltzailea",
   "githubUserHint": "Sartu GitHub erabiltzailea",
-  "branch": "Rama",
-  "branchHint": "Introduce la rama",
+  "branch": "Adarra",
+  "branchHint": "Sartu adarra",
   "eventManager": "Ekitaldi kudeatzailea",
   "addSession": "Saioa gehitu",
   "addSpeaker": "Hizlaria gehitu",
   "addSponsor": "Babeslea gehitu",
-  "retryLater": "Saiatu berriro geroago"
+  "retryLater": "Saiatu berriro geroago",
+  "commonError": "Errorea datuak eskuratzean, saiatu berriro geroago mesedez"
 }

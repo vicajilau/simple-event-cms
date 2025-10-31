@@ -477,4 +477,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get retryLater => 'Please try again later';
+
+  @override
+  String get commonError => 'Error fetching data, Please retry later';
 }

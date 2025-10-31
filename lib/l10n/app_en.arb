@@ -155,6 +155,7 @@
   "addSession": "Add Session",
   "addSpeaker": "Add Speaker",
   "addSponsor": "Add Sponsor",
-  "retryLater": "Please try again later"
+  "retryLater": "Please try again later",
+  "commonError": "Error fetching data, Please retry later"
 }
 
