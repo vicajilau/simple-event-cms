@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -223,7 +225,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteSessionTitle => 'Delete session';
 
   @override
-  String get deleteSessionMessage => 'Are you sure you want to delete the session?';
+  String get deleteSessionMessage =>
+      'Are you sure you want to delete the session?';
 
   @override
   String get editEventTitle => 'Edit event';
@@ -334,7 +337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenHintLabel => 'Please enter your client secret to continue';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';
@@ -348,7 +351,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Authentication or network error. Check your credentials and project name.';
+  String get authNetworkError =>
+      'Authentication or network error. Check your credentials and project name.';
 
   @override
   String get closeButton => 'Close';

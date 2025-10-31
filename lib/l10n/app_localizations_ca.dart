@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -11,6 +13,9 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get retry => 'Tornar a intentar';
+
+  @override
+  String get enterGithubTokenMessage => 'Introdueix el token d\'accés de GitHub';
 
   @override
   String get noEventsScheduled => 'No hi ha esdeveniments programats';
@@ -154,7 +159,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get talkTitleHint => 'Introdueix el títol de la xerrada';
 
   @override
-  String get talkTitleError => 'Si us plau, introdueix un títol per a la xerrada';
+  String get talkTitleError =>
+      'Si us plau, introdueix un títol per a la xerrada';
 
   @override
   String get eventDayLabel => 'Dia de l\'esdeveniment*';
@@ -181,7 +187,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get endTimeLabel => 'Hora de finalització:';
 
   @override
-  String get timeValidationError => 'L\'hora d\'inici ha de ser anterior a l\'hora de finalització.';
+  String get timeValidationError =>
+      'L\'hora d\'inici ha de ser anterior a l\'hora de finalització.';
 
   @override
   String get speakerLabel => 'Ponent*';
@@ -202,7 +209,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get selectTalkTypeHint => 'Selecciona el tipus de xerrada';
 
   @override
-  String get selectTalkTypeError => 'Si us plau, selecciona el tipus de xerrada';
+  String get selectTalkTypeError =>
+      'Si us plau, selecciona el tipus de xerrada';
 
   @override
   String get descriptionLabel => 'Descripció';
@@ -214,7 +222,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get cancelButton => 'Cancel·lar';
 
   @override
-  String get timeSelectionError => 'Si us plau, selecciona tant l\'hora d\'inici com la de finalització.';
+  String get timeSelectionError =>
+      'Si us plau, selecciona tant l\'hora d\'inici com la de finalització.';
 
   @override
   String get noSessionsFound => 'No s\'han trobat sessions';
@@ -277,13 +286,15 @@ class AppLocalizationsCa extends AppLocalizations {
   String get primaryColorLabel => 'Color primari';
 
   @override
-  String get primaryColorHint => 'Introdueix el color primari (p. ex., #FFFFFF)';
+  String get primaryColorHint =>
+      'Introdueix el color primari (p. ex., #FFFFFF)';
 
   @override
   String get secondaryColorLabel => 'Color secundari';
 
   @override
-  String get secondaryColorHint => 'Introdueix el color secundari (p. ex., #000000)';
+  String get secondaryColorHint =>
+      'Introdueix el color secundari (p. ex., #000000)';
 
   @override
   String get venueTitle => 'Lloc';
@@ -307,7 +318,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get venueCityHint => 'Introdueix la ciutat del lloc';
 
   @override
-  String get eventDescriptionHint => 'Introdueix la descripció de l\'esdeveniment';
+  String get eventDescriptionHint =>
+      'Introdueix la descripció de l\'esdeveniment';
 
   @override
   String get errorPrefix => 'Error: ';
@@ -334,7 +346,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get projectNameHint => 'Si us plau, introdueix el nom del projecte';
 
   @override
-  String get tokenHintLabel => 'Introdueix el teu secret de client per continuar';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Si us plau, introdueix un token de GitHub vàlid';
@@ -348,7 +360,8 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Error d\'autenticació o de xarxa. Comprova les teves credencials i el nom del projecte.';
+  String get authNetworkError =>
+      'Error d\'autenticació o de xarxa. Comprova les teves credencials i el nom del projecte.';
 
   @override
   String get closeButton => 'Tancar';
@@ -402,13 +415,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get updateButton => 'Actualitzar';
 
   @override
-  String get addButton => 'botó d\'afegir';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'afegir sala';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Nom de la sala';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Hi ha errors al formulari';
@@ -429,41 +442,39 @@ class AppLocalizationsCa extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token d\'accés';
 
   @override
-  String get enterGithubTokenMessage => 'Si us plau, introdueix el teu token de GitHub per continuar';
+  String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get events => 'Esdeveniments';
-
-  @override
-  String get sessions => 'Sessions';
-
-  @override
-  String get organization => 'Organització';
-
-  @override
-  String get organizationName => 'Nom de la organització';
-
-  @override
-  String get organizationNameHint => 'Introdueix el nom de la organització';
-
-  @override
-  String get githubUser => 'Usuari de Github';
-
-  @override
-  String get githubUserHint => 'Introdueix l\'usuari de github';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
   String get branch => 'Branca';
 
   @override
-  String get branchHint => 'Introdueix la branca';
+  String get branchHint => 'Introdueix el nom de la branca';
 
   @override
-  String get availablesEventsTitle => 'Esdeveniments Disponibles';
+  String get eventManager => 'Gestor d\'Esdeveniments';
 
   @override
-  String get availablesEventsText => 'Aquests són els esdeveniments disponibles a l\'aplicació. Pots canviar entre ells des del menú lateral.';
+  String get events => 'Esdeveniments';
 
   @override
-  String get eventManager => 'Gestor d\'esdeveniments';
+  String get githubUser => 'Usuari de GitHub';
+
+  @override
+  String get githubUserHint => 'Introdueix el teu usuari de GitHub';
+
+  @override
+  String get organization => 'Organització';
+
+  @override
+  String get sessions => 'Sessions';
+
+  @override
+  String get organizationName => 'Nom de l\'organització';
+
+  @override
+  String get organizationNameHint => 'Introdueix el nom de l\'organització';
 }

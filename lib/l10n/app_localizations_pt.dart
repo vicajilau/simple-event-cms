@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -31,7 +33,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loading => 'Carregando...';
 
   @override
-  String get errorLoadingImage => 'Erro ao carregar a imagem';
+  String get errorLoadingImage => 'Erro ao carregar la imagem';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -181,7 +183,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get endTimeLabel => 'Hora de término:';
 
   @override
-  String get timeValidationError => 'A hora de início deve ser anterior à hora de término.';
+  String get timeValidationError =>
+      'A hora de início deve ser anterior à hora de término.';
 
   @override
   String get speakerLabel => 'Palestrante*';
@@ -214,7 +217,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get cancelButton => 'Cancelar';
 
   @override
-  String get timeSelectionError => 'Por favor, selecione os horários de início e término.';
+  String get timeSelectionError =>
+      'Por favor, selecione os horários de início e término.';
 
   @override
   String get noSessionsFound => 'Nenhuma sessão encontrada';
@@ -223,7 +227,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get deleteSessionTitle => 'Excluir sessão';
 
   @override
-  String get deleteSessionMessage => 'Tem certeza de que deseja excluir a sessão?';
+  String get deleteSessionMessage =>
+      'Tem certeza de que deseja excluir a sessão?';
 
   @override
   String get editEventTitle => 'Editar evento';
@@ -283,7 +288,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get secondaryColorLabel => 'Cor secundária';
 
   @override
-  String get secondaryColorHint => 'Insira a cor secundária (por exemplo, #000000)';
+  String get secondaryColorHint =>
+      'Insira a cor secundária (por exemplo, #000000)';
 
   @override
   String get venueTitle => 'Local';
@@ -334,7 +340,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get projectNameHint => 'Por favor, insira o nome do projeto';
 
   @override
-  String get tokenHintLabel => 'Por favor, insira o segredo do seu cliente para continuar';
+  String get tokenHintLabel => 'Introduza o seu token do GitHub...';
 
   @override
   String get tokenHint => 'Por favor, insira um token do GitHub válido';
@@ -348,7 +354,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Erro de autenticação ou de rede. Verifique suas credenciais e o nome do projeto.';
+  String get authNetworkError =>
+      'Erro de autenticação ou de rede. Verifique suas credenciais e o nome do projeto.';
 
   @override
   String get closeButton => 'Fechar';
@@ -402,13 +409,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get updateButton => 'Atualizar';
 
   @override
-  String get addButton => 'adicionar botão';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'adicionar sala';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Nome da sala';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Há erros no formulário';

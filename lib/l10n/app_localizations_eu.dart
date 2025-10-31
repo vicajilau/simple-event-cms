@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -181,7 +183,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get endTimeLabel => 'Amaiera ordua:';
 
   @override
-  String get timeValidationError => 'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
+  String get timeValidationError =>
+      'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
 
   @override
   String get speakerLabel => 'Hizlaria*';
@@ -214,7 +217,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cancelButton => 'Ezeztatu';
 
   @override
-  String get timeSelectionError => 'Mesedez, aukeratu hasiera eta amaiera orduak.';
+  String get timeSelectionError =>
+      'Mesedez, aukeratu hasiera eta amaiera orduak.';
 
   @override
   String get noSessionsFound => 'Ez da saiorik aurkitu';
@@ -283,7 +287,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get secondaryColorLabel => 'Bigarren mailako kolorea';
 
   @override
-  String get secondaryColorHint => 'Sartu bigarren mailako kolorea (adib. #000000)';
+  String get secondaryColorHint =>
+      'Sartu bigarren mailako kolorea (adib. #000000)';
 
   @override
   String get venueTitle => 'Lekua';
@@ -334,7 +339,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenHintLabel => 'Sartu zure bezeroaren sekretua jarraitzeko';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
@@ -348,7 +353,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
+  String get authNetworkError =>
+      'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
 
   @override
   String get closeButton => 'Itxi';
@@ -402,13 +408,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get updateButton => 'Eguneratu';
 
   @override
-  String get addButton => 'botoia gehitu';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'gela gehitu';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Gelaren izena';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Formularioan akatsak daude';
