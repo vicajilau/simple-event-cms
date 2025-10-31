@@ -105,52 +105,6 @@ class _AgendaScreenState extends State<AgendaScreen>
             padding: const EdgeInsets.only(right: 28.0, left: 28.0),
             child: Column(
               children: [
-                FutureBuilder<bool>(
-                  future: widget.viewmodel.checkToken(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data == true) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          right: 16.0,
-                          top: 16.0,
-                          left: 16.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                                  AppRouter.agendaFormPath,
-                                  extra: AgendaFormData(eventId: widget.eventId),
-                                );
-
-                                if (agendaDays != null) {
-                                  widget.viewmodel.loadAgendaDays(widget.eventId);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.add, size: 20),
-                                  Text(
-                                    'Add Session',
-                                  ), // Assuming 'Add Event' is in localizations
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }else{
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

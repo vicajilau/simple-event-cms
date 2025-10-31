@@ -254,40 +254,4 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         );
   }
 
-  /*void _addSession(String eventId) async {
-    List<AgendaDay>? agendaDays = await AppRouter.router.push(
-      AppRouter.agendaFormPath,
-      extra: AgendaFormData(eventId: eventId),
-    );
-
-    if (agendaDays != null) {
-      final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
-    }
-  }
-
-//todo monta: borrar esto? ya esta en speakers screen
-  void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSpeaker != null) {
-      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
-    }
-  }
-
-  void _addSponsor(String parentId) async {
-    final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSponsor != null) {
-      final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      await sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
-    }
-  }*/
 }

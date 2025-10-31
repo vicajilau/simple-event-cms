@@ -152,6 +152,6 @@
   "branchHint": "Introduce la rama",
   "eventManager": "Gestor de eventos",
                                        "addSession": "Add Session",
-                                       "addSpeaker": "add speaker",
-                                       "addSponsor": "add sponsor"
+                                       "addSpeaker": "Add speaker",
+                                       "addSponsor": "Add sponsor"
 }
