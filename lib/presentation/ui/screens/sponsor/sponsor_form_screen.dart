@@ -136,14 +136,6 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  //todo montacer: borrar boton cancel?
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: Text(location.cancelButton),
-                  ),
-                  const SizedBox(width: 8),
                   FilledButton(
                     style: FilledButton.styleFrom(
                       backgroundColor: Color(0xFF38B6FF),
