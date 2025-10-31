@@ -143,12 +143,15 @@
   "enterGithubTokenTitle": "Token d'accés",
   "availablesEventsTitle": "Eventos Disponibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
-  "organization": "Organización",
-  "organizationName": "Nombre de la Organización",
-  "organizationNameHint": "Introduce el nombre de la organización",
-  "githubUser": "Usuario de GitHub",
-  "githubUserHint": "Introduce el usuario de GitHub",
-  "branch": "Rama",
-  "branchHint": "Introduce la rama",
-  "eventManager": "Gestor de eventos"
+  "organization": "Organització",
+  "organizationName": "Nom de l'Organització",
+  "organizationNameHint": "Introdueix el nom de l'organització",
+  "githubUser": "Usuari de GitHub",
+  "githubUserHint": "Introdueix l'usuari de GitHub",
+  "branch": "Branca",
+  "branchHint": "Introdueix la branca",
+  "eventManager": "Gestor d'esdeveniments",
+  "addSession": "Afegir sessió",
+  "addSpeaker": "Afegir ponent",
+  "addSponsor": "Afegir patrocinador"
 }

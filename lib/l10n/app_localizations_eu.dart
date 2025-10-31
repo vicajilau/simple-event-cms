@@ -435,26 +435,26 @@ class AppLocalizationsEu extends AppLocalizations {
   String get enterGithubTokenTitle => 'Sarbide-tokena';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Ekitaldi Eskuragarriak';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait';
 
   @override
-  String get organization => 'Organización';
+  String get organization => 'Antolakuntza';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Antolakuntzaren izena';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Sartu antolakuntzaren izena';
 
   @override
-  String get githubUser => 'Usuario de GitHub';
+  String get githubUser => 'GitHub erabiltzailea';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Sartu GitHub erabiltzailea';
 
   @override
   String get branch => 'Rama';
@@ -464,4 +464,13 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'add session';
+
+  @override
+  String get addSpeaker => 'add speaker';
+
+  @override
+  String get addSponsor => 'add sponsor';
 }

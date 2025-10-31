@@ -455,17 +455,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get organizationNameHint => 'Introduce el nombre de la organización';
 
   @override
-  String get githubUser => 'Usuario de GitHub';
+  String get githubUser => 'Utente GitHub';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Inserisci l\'utente GitHub';
 
   @override
-  String get branch => 'Rama';
+  String get branch => 'Branch';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Inserisci il branch';
 
   @override
-  String get eventManager => 'Gestor de eventos';
+  String get eventManager => 'Gestore eventi';
+
+  @override
+  String get addSession => 'Aggiungi sessione';
+
+  @override
+  String get addSpeaker => 'Aggiungi relatore';
+
+  @override
+  String get addSponsor => 'Aggiungi sponsor';
 }

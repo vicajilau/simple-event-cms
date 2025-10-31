@@ -465,4 +465,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'add session';
+
+  @override
+  String get addSpeaker => 'add speaker';
+
+  @override
+  String get addSponsor => 'add sponsor';
 }

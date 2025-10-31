@@ -433,33 +433,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterGithubTokenTitle => 'Access Token';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Available Events';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Explore upcoming events and\nfind something that interests you';
 
   @override
-  String get organization => 'Organización';
+  String get organization => 'Organization';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Organization Name';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Enter the organization name';
 
   @override
-  String get githubUser => 'Usuario de GitHub';
+  String get githubUser => 'GitHub User';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Enter the GitHub user';
 
   @override
-  String get branch => 'Rama';
+  String get branch => 'Branch';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Enter the branch';
 
   @override
-  String get eventManager => 'Gestor de eventos';
+  String get eventManager => 'Event manager';
+
+  @override
+  String get addSession => 'add session';
+
+  @override
+  String get addSpeaker => 'add speaker';
+
+  @override
+  String get addSponsor => 'add sponsor';
 }

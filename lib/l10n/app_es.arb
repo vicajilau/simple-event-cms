@@ -132,8 +132,8 @@
   "silverSponsor": "Patrocinador Silver",
   "bronzeSponsor": "Patrocinador Bronze",
   "updateButton": "Actualizar",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
+  "addButton": "Añadir",
+  "addRoomTitle": "Añadir sala",
   "roomNameHint": "Room name",
   "formError": "Hay errores en el formulario",
   "confirmLogout": "Confirmar cierre de sesión",
@@ -151,5 +151,8 @@
   "githubUserHint": "Introduce el usuario de GitHub",
   "branch": "Rama",
   "branchHint": "Introduce la rama",
-  "eventManager": "Gestor de eventos"
+  "eventManager": "Gestor de eventos",
+  "addSession": "Añadir sesión",
+  "addSpeaker": "Añadir ponente",
+  "addSponsor": "Añadir patrocinador"
 }

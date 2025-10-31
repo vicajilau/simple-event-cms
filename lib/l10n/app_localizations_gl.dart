@@ -466,4 +466,13 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'Engadir sesión';
+
+  @override
+  String get addSpeaker => 'Engadir relator';
+
+  @override
+  String get addSponsor => 'Engadir patrocinador';
 }

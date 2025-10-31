@@ -409,10 +409,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Añadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Añadir sala';
 
   @override
   String get roomNameHint => 'Room name';
@@ -466,4 +466,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'Añadir sesión';
+
+  @override
+  String get addSpeaker => 'Añadir ponente';
+
+  @override
+  String get addSponsor => 'Añadir patrocinador';
 }

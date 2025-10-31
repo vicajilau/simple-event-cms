@@ -150,5 +150,8 @@
   "githubUserHint": "Introduce el usuario de GitHub",
   "branch": "Rama",
   "branchHint": "Introduce la rama",
-  "eventManager": "Gestor de eventos"
+  "eventManager": "Gestor de eventos",
+  "addSession": "Engadir sesión",
+  "addSpeaker": "Engadir relator",
+  "addSponsor": "Engadir patrocinador"
 }

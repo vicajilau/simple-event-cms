@@ -446,26 +446,35 @@ class AppLocalizationsCa extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get organization => 'Organización';
+  String get organization => 'Organització';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Nom de l\'Organització';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Introdueix el nom de l\'organització';
 
   @override
-  String get githubUser => 'Usuario de GitHub';
+  String get githubUser => 'Usuari de GitHub';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Introdueix l\'usuari de GitHub';
 
   @override
-  String get branch => 'Rama';
+  String get branch => 'Branca';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Introdueix la branca';
 
   @override
-  String get eventManager => 'Gestor de eventos';
+  String get eventManager => 'Gestor d\'esdeveniments';
+
+  @override
+  String get addSession => 'Afegir sessió';
+
+  @override
+  String get addSpeaker => 'Afegir ponent';
+
+  @override
+  String get addSponsor => 'Afegir patrocinador';
 }

@@ -953,62 +953,80 @@ abstract class AppLocalizations {
   /// No description provided for @availablesEventsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Eventos Disponibles'**
+  /// **'Available Events'**
   String get availablesEventsTitle;
 
   /// No description provided for @availablesEventsText.
   ///
   /// In en, this message translates to:
-  /// **'Explorar a los próximos eventos y \n encuentra algo que te interese'**
+  /// **'Explore upcoming events and\nfind something that interests you'**
   String get availablesEventsText;
 
   /// No description provided for @organization.
   ///
   /// In en, this message translates to:
-  /// **'Organización'**
+  /// **'Organization'**
   String get organization;
 
   /// No description provided for @organizationName.
   ///
   /// In en, this message translates to:
-  /// **'Nombre de la Organización'**
+  /// **'Organization Name'**
   String get organizationName;
 
   /// No description provided for @organizationNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Introduce el nombre de la organización'**
+  /// **'Enter the organization name'**
   String get organizationNameHint;
 
   /// No description provided for @githubUser.
   ///
   /// In en, this message translates to:
-  /// **'Usuario de GitHub'**
+  /// **'GitHub User'**
   String get githubUser;
 
   /// No description provided for @githubUserHint.
   ///
   /// In en, this message translates to:
-  /// **'Introduce el usuario de GitHub'**
+  /// **'Enter the GitHub user'**
   String get githubUserHint;
 
   /// No description provided for @branch.
   ///
   /// In en, this message translates to:
-  /// **'Rama'**
+  /// **'Branch'**
   String get branch;
 
   /// No description provided for @branchHint.
   ///
   /// In en, this message translates to:
-  /// **'Introduce la rama'**
+  /// **'Enter the branch'**
   String get branchHint;
 
   /// No description provided for @eventManager.
   ///
   /// In en, this message translates to:
-  /// **'Gestor de eventos'**
+  /// **'Event manager'**
   String get eventManager;
+
+  /// No description provided for @addSession.
+  ///
+  /// In en, this message translates to:
+  /// **'add session'**
+  String get addSession;
+
+  /// No description provided for @addSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'add speaker'**
+  String get addSpeaker;
+
+  /// No description provided for @addSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'add sponsor'**
+  String get addSponsor;
 }
 
 class _AppLocalizationsDelegate
