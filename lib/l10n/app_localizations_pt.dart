@@ -436,41 +436,30 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de Acesso';
 
   @override
-  String get enterGithubTokenMessage => 'Por favor, insira o seu token do GitHub para continuar';
+  String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get events => 'Eventos';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get sessions => 'Sessões';
+  String get organization => 'Organización';
 
   @override
-  String get organization => 'Organização';
+  String get organizationName => 'Nombre de la Organización';
 
   @override
-  String get organizationName => 'Nome da organização';
+  String get organizationNameHint => 'Introduce el nombre de la organización';
 
   @override
-  String get organizationNameHint => 'Insira o nome da organização';
+  String get githubUser => 'Usuario de GitHub';
 
   @override
-  String get githubUser => 'Usuário do Github';
+  String get githubUserHint => 'Introduce el usuario de GitHub';
 
   @override
-  String get githubUserHint => 'Insira o usuário do github';
+  String get branch => 'Rama';
 
   @override
-  String get branch => 'Filial';
-
-  @override
-  String get branchHint => 'Insira a filial';
-
-  @override
-  String get availablesEventsTitle => 'Eventos Disponíveis';
-
-  @override
-  String get availablesEventsText => 'Estes são os eventos disponíveis no aplicativo. Você pode alternar entre eles no menu lateral.';
-
-  @override
-  String get eventManager => 'Gerenciador de Eventos';
+  String get branchHint => 'Introduce la rama';
 }

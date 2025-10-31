@@ -440,41 +440,30 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterGithubTokenTitle => 'Jeton d\'accès';
 
   @override
-  String get enterGithubTokenMessage => 'Veuillez saisir votre jeton GitHub pour continuer';
+  String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get events => 'Événements';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get sessions => 'Sessions';
+  String get organization => 'Organización';
 
   @override
-  String get organization => 'Organisation';
+  String get organizationName => 'Nombre de la Organización';
 
   @override
-  String get organizationName => 'Nom de l\'organisation';
+  String get organizationNameHint => 'Introduce el nombre de la organización';
 
   @override
-  String get organizationNameHint => 'Entrez le nom de l\'organisation';
+  String get githubUser => 'Usuario de GitHub';
 
   @override
-  String get githubUser => 'Utilisateur Github';
+  String get githubUserHint => 'Introduce el usuario de GitHub';
 
   @override
-  String get githubUserHint => 'Entrez l\'utilisateur github';
+  String get branch => 'Rama';
 
   @override
-  String get branch => 'Branche';
-
-  @override
-  String get branchHint => 'Entrez la branche';
-
-  @override
-  String get availablesEventsTitle => 'Événements disponibles';
-
-  @override
-  String get availablesEventsText => 'Voici les événements disponibles dans l\'application. Vous pouvez basculer entre eux depuis le menu latéral.';
-
-  @override
-  String get eventManager => 'Gestionnaire d\'événements';
+  String get branchHint => 'Introduce la rama';
 }

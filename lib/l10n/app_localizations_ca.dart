@@ -15,9 +15,6 @@ class AppLocalizationsCa extends AppLocalizations {
   String get retry => 'Tornar a intentar';
 
   @override
-  String get enterGithubTokenMessage => 'Introdueix el token d\'accés de GitHub';
-
-  @override
   String get noEventsScheduled => 'No hi ha esdeveniments programats';
 
   @override
@@ -449,32 +446,23 @@ class AppLocalizationsCa extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get branch => 'Branca';
+  String get organization => 'Organización';
 
   @override
-  String get branchHint => 'Introdueix el nom de la branca';
+  String get organizationName => 'Nombre de la Organización';
 
   @override
-  String get eventManager => 'Gestor d\'Esdeveniments';
+  String get organizationNameHint => 'Introduce el nombre de la organización';
 
   @override
-  String get events => 'Esdeveniments';
+  String get githubUser => 'Usuario de GitHub';
 
   @override
-  String get githubUser => 'Usuari de GitHub';
+  String get githubUserHint => 'Introduce el usuario de GitHub';
 
   @override
-  String get githubUserHint => 'Introdueix el teu usuari de GitHub';
+  String get branch => 'Rama';
 
   @override
-  String get organization => 'Organització';
-
-  @override
-  String get sessions => 'Sessions';
-
-  @override
-  String get organizationName => 'Nom de l\'organització';
-
-  @override
-  String get organizationNameHint => 'Introdueix el nom de l\'organització';
+  String get branchHint => 'Introduce la rama';
 }

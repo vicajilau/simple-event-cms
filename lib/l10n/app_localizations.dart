@@ -962,68 +962,47 @@ abstract class AppLocalizations {
   /// **'Explorar a los próximos eventos y \n encuentra algo que te interese'**
   String get availablesEventsText;
 
-  /// No description provided for @events.
-  ///
-  /// In en, this message translates to:
-  /// **'Events'**
-  String get events;
-
-  /// No description provided for @sessions.
-  ///
-  /// In en, this message translates to:
-  /// **'Sessions'**
-  String get sessions;
-
   /// No description provided for @organization.
   ///
   /// In en, this message translates to:
-  /// **'Organization'**
+  /// **'Organización'**
   String get organization;
 
   /// No description provided for @organizationName.
   ///
   /// In en, this message translates to:
-  /// **'Organization Name'**
+  /// **'Nombre de la Organización'**
   String get organizationName;
 
   /// No description provided for @organizationNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the organization name'**
+  /// **'Introduce el nombre de la organización'**
   String get organizationNameHint;
 
   /// No description provided for @githubUser.
   ///
   /// In en, this message translates to:
-  /// **'Github User'**
+  /// **'Usuario de GitHub'**
   String get githubUser;
 
   /// No description provided for @githubUserHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the github user'**
+  /// **'Introduce el usuario de GitHub'**
   String get githubUserHint;
 
   /// No description provided for @branch.
   ///
   /// In en, this message translates to:
-  /// **'Branch'**
+  /// **'Rama'**
   String get branch;
 
   /// No description provided for @branchHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the branch'**
+  /// **'Introduce la rama'**
   String get branchHint;
-
-  /// No description provided for @eventManager.
-  ///
-  /// In en, this message translates to:
-  /// **'Event Manager'**
-  String get eventManager;
-
-
-  String get enterGithubTokenMessage;
 }
 
 class _AppLocalizationsDelegate
