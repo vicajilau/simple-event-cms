@@ -180,13 +180,21 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                                   break;
                               }
                             },
-                            child: Text(
-                              _selectedIndex == 0
-                                  ? location.addSession
-                                  : _selectedIndex == 1
-                                      ? location.addSpeaker
-                                      : location.addSponsor,
-                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.add, size: 20),
+                                const SizedBox(width: 8),
+                                Text(
+                                  _selectedIndex == 0
+                                      ? location.addSession
+                                      : _selectedIndex == 1
+                                          ? location.addSpeaker
+                                          : location.addSponsor,
+                                ),
+                              ],
+                            )
+                            ,
                           ),
                         ),
                       ],

@@ -464,11 +464,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get eventManager => 'Event manager';
 
   @override
-  String get addSession => 'add session';
+  String get addSession => 'Add Session';
 
   @override
-  String get addSpeaker => 'add speaker';
+  String get addSpeaker => 'add Speaker';
 
   @override
-  String get addSponsor => 'add sponsor';
+  String get addSponsor => 'add Sponsor';
 }

@@ -468,11 +468,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventManager => 'Gestor de eventos';
 
   @override
-  String get addSession => 'Añadir sesión';
+  String get addSession => 'Añadir Sesión';
 
   @override
-  String get addSpeaker => 'Añadir ponente';
+  String get addSpeaker => 'Añadir Ponente';
 
   @override
-  String get addSponsor => 'Añadir patrocinador';
+  String get addSponsor => 'Añadir Patrocinador';
 }

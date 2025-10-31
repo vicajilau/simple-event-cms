@@ -152,7 +152,7 @@
   "branch": "Rama",
   "branchHint": "Introduce la rama",
   "eventManager": "Gestor de eventos",
-  "addSession": "Añadir sesión",
-  "addSpeaker": "Añadir ponente",
-  "addSponsor": "Añadir patrocinador"
+  "addSession": "Añadir Sesión",
+  "addSpeaker": "Añadir Ponente",
+  "addSponsor": "Añadir Patrocinador"
 }

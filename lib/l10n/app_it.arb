@@ -152,7 +152,7 @@
   "branch": "Branch",
   "branchHint": "Inserisci il branch",
   "eventManager": "Gestore eventi",
-  "addSession": "Aggiungi sessione",
-  "addSpeaker": "Aggiungi relatore",
-  "addSponsor": "Aggiungi sponsor"
+  "addSession": "Aggiungi Sessione",
+  "addSpeaker": "Aggiungi Relatore",
+  "addSponsor": "Aggiungi Sponsor"
 }

@@ -151,7 +151,7 @@
   "branch": "Branca",
   "branchHint": "Introdueix la branca",
   "eventManager": "Gestor d'esdeveniments",
-  "addSession": "Afegir sessió",
-  "addSpeaker": "Afegir ponent",
-  "addSponsor": "Afegir patrocinador"
+  "addSession": "Afegir Sessió",
+  "addSpeaker": "Afegir Ponent",
+  "addSponsor": "Afegir Patrocinador"
 }

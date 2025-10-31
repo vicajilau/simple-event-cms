@@ -470,11 +470,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get eventManager => 'Gestore eventi';
 
   @override
-  String get addSession => 'Aggiungi sessione';
+  String get addSession => 'Aggiungi Sessione';
 
   @override
-  String get addSpeaker => 'Aggiungi relatore';
+  String get addSpeaker => 'Aggiungi Relatore';
 
   @override
-  String get addSponsor => 'Aggiungi sponsor';
+  String get addSponsor => 'Aggiungi Sponsor';
 }

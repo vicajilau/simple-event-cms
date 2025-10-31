@@ -466,7 +466,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get eventManager => 'Gestor de eventos';
 
   @override
-  String get addSession => 'add session';
+  String get addSession => 'Add Session';
 
   @override
   String get addSpeaker => 'add speaker';

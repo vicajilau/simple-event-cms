@@ -470,11 +470,11 @@ class AppLocalizationsCa extends AppLocalizations {
   String get eventManager => 'Gestor d\'esdeveniments';
 
   @override
-  String get addSession => 'Afegir sessió';
+  String get addSession => 'Afegir Sessió';
 
   @override
-  String get addSpeaker => 'Afegir ponent';
+  String get addSpeaker => 'Afegir Ponent';
 
   @override
-  String get addSponsor => 'Afegir patrocinador';
+  String get addSponsor => 'Afegir Patrocinador';
 }

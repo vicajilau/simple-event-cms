@@ -471,11 +471,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get eventManager => 'Gestionnaire d\'événements';
 
   @override
-  String get addSession => 'Ajouter une session';
+  String get addSession => 'Ajouter une Session';
 
   @override
-  String get addSpeaker => 'Ajouter un intervenant';
+  String get addSpeaker => 'Ajouter un Intervenant';
 
   @override
-  String get addSponsor => 'Ajouter un sponsor';
+  String get addSponsor => 'Ajouter un Sponsor';
 }

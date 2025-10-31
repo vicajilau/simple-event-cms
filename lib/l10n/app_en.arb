@@ -152,8 +152,8 @@
   "branch": "Branch",
   "branchHint": "Enter the branch",
   "eventManager": "Event manager",
-                                       "addSession": "add session",
-                                       "addSpeaker": "add speaker",
-                                       "addSponsor": "add sponsor"
+  "addSession": "Add Session",
+  "addSpeaker": "add Speaker",
+  "addSponsor": "add Sponsor"
 }
 
