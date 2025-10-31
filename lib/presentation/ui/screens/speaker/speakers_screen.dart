@@ -228,8 +228,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                             loadingProgress,
                                                           ) {
                                                             if (loadingProgress ==
-                                                                null)
+                                                                null) {
                                                               return child;
+                                                            }
                                                             return Center(
                                                               child: Column(
                                                                 mainAxisAlignment:

@@ -22,8 +22,6 @@ class SponsorsScreen extends StatefulWidget {
 }
 
 class _SponsorsScreenState extends State<SponsorsScreen> {
-  final Map<String, List<dynamic>> groupedSponsors = {};
-
   @override
   void initState() {
     super.initState();
@@ -48,14 +46,14 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
       valueListenable: widget.viewmodel.viewState,
       builder: (context, value, child) {
         if (value == ViewState.isLoading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
           return Center(
             child: ErrorView(errorMessage: widget.viewmodel.errorMessage),
           );
         }
 
-        return ValueListenableBuilder(
+        return ValueListenableBuilder<List<Sponsor>>(
           valueListenable: widget.viewmodel.sponsors,
           builder: (context, sponsors, child) {
             if (sponsors.isEmpty) {
@@ -75,17 +73,26 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
               );
             }
 
-            // Group sponsors by type
-            final Map<String, List<dynamic>> groupedSponsors = {};
-            for (final sponsor in sponsors) {
-              final type = sponsor.type;
-              groupedSponsors.putIfAbsent(type, () => []).add(sponsor);
-            }
-
             return LayoutBuilder(
               builder: (context, constraints) {
                 final raw = (constraints.maxWidth / 250).floor();
                 final crossAxisCount = raw.clamp(1, 4).toInt();
+
+                final Map<String, List<Sponsor>> groups = {};
+                for (final sponsor in sponsors) {
+                  final key = _normalizeType(context, sponsor.type);
+                  (groups[key] ??= <Sponsor>[]).add(sponsor);
+                }
+
+                final knownOrder = <String>['main', 'gold', 'silver', 'bronze'];
+
+                final orderedKeys = <String>[
+                  ...knownOrder.where(groups.containsKey),
+                  ...groups.keys.where((k) => !knownOrder.contains(k)).toList()
+                    ..sort(
+                      (a, b) => a.toLowerCase().compareTo(b.toLowerCase()),
+                    ),
+                ];
 
                 return ListView(
                   padding: const EdgeInsets.all(16),
@@ -176,11 +183,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
 
                     const SizedBox(height: 16),
 
-                    ...groupedSponsors.entries.map((entry) {
-                      final type = entry.key;
-                      final sponsorList = entry.value;
-
+                    ...orderedKeys.map((type) {
+                      final sponsorList = groups[type]!;
                       return Column(
+                        key: ValueKey('section_$type'),
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
@@ -190,7 +196,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                             ),
                             child: Text(
                               _getCategoryDisplayName(context, type),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
                               ),
@@ -221,7 +227,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                     ),
                                   ),
                                   child: InkWell(
-                                    onTap: sponsor.website != null
+                                    onTap: sponsor.website.isNotEmpty
                                         ? () => context.openUrl(sponsor.website)
                                         : null,
                                     borderRadius: BorderRadius.circular(12),
@@ -231,12 +237,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          // ⬇️ Sustituye el Container anterior por un Stack
                                           Expanded(
                                             child: Stack(
                                               clipBehavior: Clip.hardEdge,
                                               children: [
-                                                // Fondo: el marco del logo
                                                 Container(
                                                   padding: const EdgeInsets.all(
                                                     8,
@@ -256,37 +260,25 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                           ),
                                                     ),
                                                   ),
-                                                  child: sponsor.logo != null
-                                                      ? NetworkImageWidget(
-                                                          imageUrl:
-                                                              sponsor.logo,
-                                                          fit: BoxFit.contain,
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                8,
-                                                              ),
-                                                          errorWidget: Center(
-                                                            child: Icon(
-                                                              Icons.business,
-                                                              size: 32,
-                                                              color: Theme.of(context)
-                                                                  .colorScheme
-                                                                  .onSurfaceVariant,
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : Center(
-                                                          child: Icon(
-                                                            Icons.business,
-                                                            size: 32,
-                                                            color: Theme.of(context)
-                                                                .colorScheme
-                                                                .onSurfaceVariant,
-                                                          ),
+                                                  child: NetworkImageWidget(
+                                                    imageUrl: sponsor.logo,
+                                                    fit: BoxFit.contain,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
                                                         ),
+                                                    errorWidget: Center(
+                                                      child: Icon(
+                                                        Icons.business,
+                                                        size: 32,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
 
-                                                // ⬇️ Overlay: acciones, ahora relativas al logo
                                                 Positioned(
                                                   bottom: 8,
                                                   left: 8,
@@ -331,8 +323,6 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                               ],
                                             ),
                                           ),
-
-                                          // ⬆️ Fin de la parte cambiada
                                           const SizedBox(height: 8),
                                           Text(
                                             sponsor.name,
@@ -368,15 +358,18 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
     );
   }
 
+  String _normalizeType(BuildContext context, String type) {
+    final location = AppLocalizations.of(context)!;
+    if (type == 'main' || type == location.mainSponsor) return 'main';
+    if (type == 'gold' || type == location.goldSponsor) return 'gold';
+    if (type == 'silver' || type == location.silverSponsor) return 'silver';
+    if (type == 'bronze' || type == location.bronzeSponsor) return 'bronze';
+    return type;
+  }
+
   String _getCategoryDisplayName(BuildContext context, String type) {
     final location = AppLocalizations.of(context)!;
 
-    if (type == location.mainSponsor) return location.mainSponsor;
-    if (type == location.goldSponsor) return location.goldSponsor;
-    if (type == location.silverSponsor) return location.silverSponsor;
-    if (type == location.bronzeSponsor) return location.bronzeSponsor;
-
-    // For backwards compatibility, we check against the old hardcoded values
     switch (type) {
       case 'main':
         return location.mainSponsor;
@@ -386,8 +379,13 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
         return location.silverSponsor;
       case 'bronze':
         return location.bronzeSponsor;
-      default:
-        return type;
     }
+
+    if (type == location.mainSponsor) return location.mainSponsor;
+    if (type == location.goldSponsor) return location.goldSponsor;
+    if (type == location.silverSponsor) return location.silverSponsor;
+    if (type == location.bronzeSponsor) return location.bronzeSponsor;
+
+    return type;
   }
 }
