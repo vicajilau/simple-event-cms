@@ -1013,19 +1013,19 @@ abstract class AppLocalizations {
   /// No description provided for @addSession.
   ///
   /// In en, this message translates to:
-  /// **'add session'**
+  /// **'Add Session'**
   String get addSession;
 
   /// No description provided for @addSpeaker.
   ///
   /// In en, this message translates to:
-  /// **'add speaker'**
+  /// **'add Speaker'**
   String get addSpeaker;
 
   /// No description provided for @addSponsor.
   ///
   /// In en, this message translates to:
-  /// **'add sponsor'**
+  /// **'add Sponsor'**
   String get addSponsor;
 }
 
