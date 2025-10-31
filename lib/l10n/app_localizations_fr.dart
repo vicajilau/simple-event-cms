@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -181,7 +183,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get endTimeLabel => 'Heure de fin :';
 
   @override
-  String get timeValidationError => 'L\'heure de début doit être antérieure à l\'heure de fin.';
+  String get timeValidationError =>
+      'L\'heure de début doit être antérieure à l\'heure de fin.';
 
   @override
   String get speakerLabel => 'Intervenant*';
@@ -202,7 +205,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get selectTalkTypeHint => 'Sélectionnez le type de conférence';
 
   @override
-  String get selectTalkTypeError => 'Veuillez sélectionner le type de conférence';
+  String get selectTalkTypeError =>
+      'Veuillez sélectionner le type de conférence';
 
   @override
   String get descriptionLabel => 'Description';
@@ -214,7 +218,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get cancelButton => 'Annuler';
 
   @override
-  String get timeSelectionError => 'Veuillez sélectionner les heures de début et de fin.';
+  String get timeSelectionError =>
+      'Veuillez sélectionner les heures de début et de fin.';
 
   @override
   String get noSessionsFound => 'Aucune session trouvée';
@@ -223,7 +228,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get deleteSessionTitle => 'Supprimer la session';
 
   @override
-  String get deleteSessionMessage => 'Êtes-vous sûr de vouloir supprimer la session ?';
+  String get deleteSessionMessage =>
+      'Êtes-vous sûr de vouloir supprimer la session ?';
 
   @override
   String get editEventTitle => 'Modifier l\'événement';
@@ -277,13 +283,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get primaryColorLabel => 'Couleur principale';
 
   @override
-  String get primaryColorHint => 'Entrez la couleur principale (par ex. #FFFFFF)';
+  String get primaryColorHint =>
+      'Entrez la couleur principale (par ex. #FFFFFF)';
 
   @override
   String get secondaryColorLabel => 'Couleur secondaire';
 
   @override
-  String get secondaryColorHint => 'Entrez la couleur secondaire (par ex. #000000)';
+  String get secondaryColorHint =>
+      'Entrez la couleur secondaire (par ex. #000000)';
 
   @override
   String get venueTitle => 'Lieu';
@@ -313,7 +321,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorPrefix => 'Erreur : ';
 
   @override
-  String get errorLoadingConfig => 'Erreur lors du chargement de la configuration : ';
+  String get errorLoadingConfig =>
+      'Erreur lors du chargement de la configuration : ';
 
   @override
   String get configNotAvailable => 'Erreur : Configuration non disponible';
@@ -334,7 +343,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get projectNameHint => 'Veuillez entrer le nom du projet';
 
   @override
-  String get tokenHintLabel => 'Veuillez saisir le secret de votre client pour continuer';
+  String get tokenHintLabel => 'Entrez votre jeton GitHub...';
 
   @override
   String get tokenHint => 'Veuillez entrer un jeton GitHub valide';
@@ -348,7 +357,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Erreur d\'authentification ou de réseau. Vérifiez vos informations d\'identification et le nom du projet.';
+  String get authNetworkError =>
+      'Erreur d\'authentification ou de réseau. Vérifiez vos informations d\'identification et le nom du projet.';
 
   @override
   String get closeButton => 'Fermer';
@@ -402,13 +412,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateButton => 'Mettre à jour';
 
   @override
-  String get addButton => 'bouton d\'ajout';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'ajouter une salle';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Nom de la salle';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Il y a des erreurs dans le formulaire';
@@ -417,7 +427,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get confirmLogout => 'Confirmer la déconnexion';
 
   @override
-  String get confirmLogoutMessage => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+  String get confirmLogoutMessage =>
+      'Êtes-vous sûr de vouloir vous déconnecter ?';
 
   @override
   String get cancel => 'Annuler';
@@ -429,13 +440,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterGithubTokenTitle => 'Jeton d\'accès';
 
   @override
-  String get enterGithubTokenMessage => 'Veuillez saisir votre jeton GitHub pour continuer';
+  String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get events => 'Événements';
-
-  @override
-  String get sessions => 'Sessions';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
   String get organization => 'Organisation';
@@ -447,10 +456,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get organizationNameHint => 'Entrez le nom de l\'organisation';
 
   @override
-  String get githubUser => 'Utilisateur Github';
+  String get githubUser => 'Utilisateur GitHub';
 
   @override
-  String get githubUserHint => 'Entrez l\'utilisateur github';
+  String get githubUserHint => 'Entrez l\'utilisateur GitHub';
 
   @override
   String get branch => 'Branche';
@@ -459,8 +468,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get branchHint => 'Entrez la branche';
 
   @override
-  String get availablesEventsTitle => 'Événements disponibles';
+  String get eventManager => 'Gestionnaire d\'événements';
 
   @override
-  String get availablesEventsText => 'Voici les événements disponibles dans l\'application. Vous pouvez basculer entre eux depuis le menu latéral.';
+  String get addSession => 'Ajouter une Session';
+
+  @override
+  String get addSpeaker => 'Ajouter un Intervenant';
+
+  @override
+  String get addSponsor => 'Ajouter un Sponsor';
 }

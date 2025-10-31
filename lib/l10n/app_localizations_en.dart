@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -223,7 +225,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deleteSessionTitle => 'Delete session';
 
   @override
-  String get deleteSessionMessage => 'Are you sure you want to delete the session?';
+  String get deleteSessionMessage =>
+      'Are you sure you want to delete the session?';
 
   @override
   String get editEventTitle => 'Edit event';
@@ -334,7 +337,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenHintLabel => 'Please enter your client secret to continue';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';
@@ -348,7 +351,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Authentication or network error. Check your credentials and project name.';
+  String get authNetworkError =>
+      'Authentication or network error. Check your credentials and project name.';
 
   @override
   String get closeButton => 'Close';
@@ -429,13 +433,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterGithubTokenTitle => 'Access Token';
 
   @override
-  String get enterGithubTokenMessage => 'Please enter your GitHub token to continue';
+  String get availablesEventsTitle => 'Available Events';
 
   @override
-  String get events => 'Events';
-
-  @override
-  String get sessions => 'Sessions';
+  String get availablesEventsText =>
+      'Explore upcoming events and\nfind something that interests you';
 
   @override
   String get organization => 'Organization';
@@ -447,10 +449,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get organizationNameHint => 'Enter the organization name';
 
   @override
-  String get githubUser => 'Github User';
+  String get githubUser => 'GitHub User';
 
   @override
-  String get githubUserHint => 'Enter the github user';
+  String get githubUserHint => 'Enter the GitHub user';
 
   @override
   String get branch => 'Branch';
@@ -459,8 +461,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get branchHint => 'Enter the branch';
 
   @override
-  String get availablesEventsTitle => 'Available Events';
+  String get eventManager => 'Event manager';
 
   @override
-  String get availablesEventsText => 'These are the events that are available in the app. You can switch between them from the side menu.';
+  String get addSession => 'Add Session';
+
+  @override
+  String get addSpeaker => 'add Speaker';
+
+  @override
+  String get addSponsor => 'add Sponsor';
 }

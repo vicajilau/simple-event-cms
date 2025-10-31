@@ -142,6 +142,18 @@
   "cancel": "Cancel",
   "logout": "Logout",
   "enterGithubTokenTitle": "Access Token",
-  "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsTitle": "Available Events",
+  "availablesEventsText": "Explore upcoming events and\nfind something that interests you",
+  "organization": "Organization",
+  "organizationName": "Organization Name",
+  "organizationNameHint": "Enter the organization name",
+  "githubUser": "GitHub User",
+  "githubUserHint": "Enter the GitHub user",
+  "branch": "Branch",
+  "branchHint": "Enter the branch",
+  "eventManager": "Event manager",
+  "addSession": "Add Session",
+  "addSpeaker": "add Speaker",
+  "addSponsor": "add Sponsor"
 }
+

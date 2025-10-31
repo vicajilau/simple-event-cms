@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -181,7 +183,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get endTimeLabel => 'Amaiera ordua:';
 
   @override
-  String get timeValidationError => 'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
+  String get timeValidationError =>
+      'Hasiera ordua amaiera ordua baino lehenago izan behar da.';
 
   @override
   String get speakerLabel => 'Hizlaria*';
@@ -214,7 +217,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get cancelButton => 'Ezeztatu';
 
   @override
-  String get timeSelectionError => 'Mesedez, aukeratu hasiera eta amaiera orduak.';
+  String get timeSelectionError =>
+      'Mesedez, aukeratu hasiera eta amaiera orduak.';
 
   @override
   String get noSessionsFound => 'Ez da saiorik aurkitu';
@@ -283,7 +287,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get secondaryColorLabel => 'Bigarren mailako kolorea';
 
   @override
-  String get secondaryColorHint => 'Sartu bigarren mailako kolorea (adib. #000000)';
+  String get secondaryColorHint =>
+      'Sartu bigarren mailako kolorea (adib. #000000)';
 
   @override
   String get venueTitle => 'Lekua';
@@ -334,7 +339,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenHintLabel => 'Sartu zure bezeroaren sekretua jarraitzeko';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
@@ -348,7 +353,8 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
+  String get authNetworkError =>
+      'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.';
 
   @override
   String get closeButton => 'Itxi';
@@ -402,13 +408,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get updateButton => 'Eguneratu';
 
   @override
-  String get addButton => 'botoia gehitu';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'gela gehitu';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Gelaren izena';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Formularioan akatsak daude';
@@ -429,13 +435,11 @@ class AppLocalizationsEu extends AppLocalizations {
   String get enterGithubTokenTitle => 'Sarbide-tokena';
 
   @override
-  String get enterGithubTokenMessage => 'Mesedez, sartu zure GitHub tokena jarraitzeko';
+  String get availablesEventsTitle => 'Ekitaldi Eskuragarriak';
 
   @override
-  String get events => 'Gertaerak';
-
-  @override
-  String get sessions => 'Saioak';
+  String get availablesEventsText =>
+      'Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait';
 
   @override
   String get organization => 'Antolakuntza';
@@ -447,20 +451,26 @@ class AppLocalizationsEu extends AppLocalizations {
   String get organizationNameHint => 'Sartu antolakuntzaren izena';
 
   @override
-  String get githubUser => 'Github erabiltzailea';
+  String get githubUser => 'GitHub erabiltzailea';
 
   @override
-  String get githubUserHint => 'Sartu github erabiltzailea';
+  String get githubUserHint => 'Sartu GitHub erabiltzailea';
 
   @override
-  String get branch => 'Adarra';
+  String get branch => 'Rama';
 
   @override
-  String get branchHint => 'Sartu adarra';
+  String get branchHint => 'Introduce la rama';
 
   @override
-  String get availablesEventsTitle => 'Gertaera erabilgarriak';
+  String get eventManager => 'Gestor de eventos';
 
   @override
-  String get availablesEventsText => 'Hauek dira aplikazioan eskuragarri dauden gertaerak. Alda ditzakezu alboko menutik.';
+  String get addSession => 'Add Session';
+
+  @override
+  String get addSpeaker => 'add speaker';
+
+  @override
+  String get addSponsor => 'add sponsor';
 }

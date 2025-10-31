@@ -144,4 +144,15 @@
   "enterGithubTokenTitle": "Token di accesso",
   "availablesEventsTitle": "Eventos Disponibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "organization": "Organización",
+  "organizationName": "Nombre de la Organización",
+  "organizationNameHint": "Introduce el nombre de la organización",
+  "githubUser": "Utente GitHub",
+  "githubUserHint": "Inserisci l'utente GitHub",
+  "branch": "Branch",
+  "branchHint": "Inserisci il branch",
+  "eventManager": "Gestore eventi",
+  "addSession": "Aggiungi Sessione",
+  "addSpeaker": "Aggiungi Relatore",
+  "addSponsor": "Aggiungi Sponsor"
 }
