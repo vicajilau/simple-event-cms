@@ -469,8 +469,8 @@ class AppLocalizationsEu extends AppLocalizations {
   String get addSession => 'Add Session';
 
   @override
-  String get addSpeaker => 'add speaker';
+  String get addSpeaker => 'Add speaker';
 
   @override
-  String get addSponsor => 'add sponsor';
+  String get addSponsor => 'Add sponsor';
 }

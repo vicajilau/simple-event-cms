@@ -412,10 +412,10 @@ class AppLocalizationsCa extends AppLocalizations {
   String get updateButton => 'Actualitzar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';

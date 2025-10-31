@@ -899,13 +899,13 @@ abstract class AppLocalizations {
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
-  /// **'add button'**
+  /// **'Add Button'**
   String get addButton;
 
   /// No description provided for @addRoomTitle.
   ///
   /// In en, this message translates to:
-  /// **'add room'**
+  /// **'Add Room'**
   String get addRoomTitle;
 
   /// No description provided for @roomNameHint.
@@ -1019,13 +1019,13 @@ abstract class AppLocalizations {
   /// No description provided for @addSpeaker.
   ///
   /// In en, this message translates to:
-  /// **'add Speaker'**
+  /// **'Add Speaker'**
   String get addSpeaker;
 
   /// No description provided for @addSponsor.
   ///
   /// In en, this message translates to:
-  /// **'add Sponsor'**
+  /// **'Add Sponsor'**
   String get addSponsor;
 }
 

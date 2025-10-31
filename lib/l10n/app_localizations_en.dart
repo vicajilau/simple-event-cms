@@ -406,10 +406,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateButton => 'Update';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -467,8 +467,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addSession => 'Add Session';
 
   @override
-  String get addSpeaker => 'add Speaker';
+  String get addSpeaker => 'Add Speaker';
 
   @override
-  String get addSponsor => 'add Sponsor';
+  String get addSponsor => 'Add Sponsor';
 }
