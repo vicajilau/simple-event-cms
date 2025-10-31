@@ -16,12 +16,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noEventsScheduled => 'Nenhum evento programado';
 
   @override
-  String get availablesEventsTitle => 'Eventos disponíveis';
-
-  @override
-  String get availablesEventsText => 'Selecione um evento para visualizar os detalhes:';
-
-  @override
   String get loadingSpeakers => 'Carregando palestrantes...';
 
   @override
@@ -447,20 +441,29 @@ class AppLocalizationsPt extends AppLocalizations {
   String get organization => 'Organização';
 
   @override
-  String get branch => 'Ramo';
-
-  @override
-  String get branchHint => 'Insira o nome do ramo';
-
-  @override
-  String get githubUser => 'Usuário do GitHub';
-
-  @override
-  String get githubUserHint => 'Insira o seu nome de usuário do GitHub';
-
-  @override
-  String get organizationName => 'Nome da Organização';
+  String get organizationName => 'Nome da organização';
 
   @override
   String get organizationNameHint => 'Insira o nome da organização';
+
+  @override
+  String get githubUser => 'Usuário do Github';
+
+  @override
+  String get githubUserHint => 'Insira o usuário do github';
+
+  @override
+  String get branch => 'Filial';
+
+  @override
+  String get branchHint => 'Insira a filial';
+
+  @override
+  String get availablesEventsTitle => 'Eventos Disponíveis';
+
+  @override
+  String get availablesEventsText => 'Estes são os eventos disponíveis no aplicativo. Você pode alternar entre eles no menu lateral.';
+
+  @override
+  String get eventManager => 'Gerenciador de Eventos';
 }

@@ -16,12 +16,6 @@ class AppLocalizationsGl extends AppLocalizations {
   String get noEventsScheduled => 'Non hai eventos programados';
 
   @override
-  String get availablesEventsTitle => 'Eventos dispoñibles';
-
-  @override
-  String get availablesEventsText => 'Estes son os eventos que podes cargar para velos en modo sen conexión.';
-
-  @override
   String get loadingSpeakers => 'Cargando relatores...';
 
   @override
@@ -447,20 +441,29 @@ class AppLocalizationsGl extends AppLocalizations {
   String get organization => 'Organización';
 
   @override
-  String get branch => 'Rama';
-
-  @override
-  String get branchHint => 'Introduce o nome da rama';
-
-  @override
-  String get githubUser => 'Usuario de GitHub';
-
-  @override
-  String get githubUserHint => 'Introduce o teu usuario de GitHub';
-
-  @override
   String get organizationName => 'Nome da organización';
 
   @override
-  String get organizationNameHint => 'Introduce o nome da túa organización';
+  String get organizationNameHint => 'Introduce o nome da organización';
+
+  @override
+  String get githubUser => 'Usuario de Github';
+
+  @override
+  String get githubUserHint => 'Introduce o usuario de github';
+
+  @override
+  String get branch => 'Rama';
+
+  @override
+  String get branchHint => 'Introduce a rama';
+
+  @override
+  String get availablesEventsTitle => 'Eventos dispoñibles';
+
+  @override
+  String get availablesEventsText => 'Estes son os eventos dispoñibles na aplicación. Podes cambiar entre eles dende o menú lateral.';
+
+  @override
+  String get eventManager => 'Xestor de eventos';
 }

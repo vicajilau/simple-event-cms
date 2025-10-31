@@ -463,4 +463,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get availablesEventsText => 'Voici les événements disponibles dans l\'application. Vous pouvez basculer entre eux depuis le menu latéral.';
+
+  @override
+  String get eventManager => 'Gestionnaire d\'événements';
 }

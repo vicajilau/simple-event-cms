@@ -463,4 +463,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get availablesEventsText => 'Hauek dira aplikazioan eskuragarri dauden gertaerak. Alda ditzakezu alboko menutik.';
+
+  @override
+  String get eventManager => 'Gertaeren kudeatzailea';
 }

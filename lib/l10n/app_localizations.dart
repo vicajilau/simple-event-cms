@@ -1021,6 +1021,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the branch'**
   String get branchHint;
+
+  /// No description provided for @eventManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Event Manager'**
+  String get eventManager;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
