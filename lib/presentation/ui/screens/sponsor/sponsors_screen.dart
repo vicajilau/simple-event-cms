@@ -68,12 +68,19 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 final raw = (constraints.maxWidth / 250).floor();
                 final crossAxisCount = raw.clamp(1, 4).toInt();
 
+                //_normalizeType() converts things like "Main Sponsor", "main", "Principal", etc
+                //into the same canonical key ("main", "gold", "silver", "bronze")
+
+                //This prevents duplicating categories due to translations
                 final Map<String, List<Sponsor>> groups = {};
                 for (final sponsor in sponsors) {
                   final key = _normalizeType(context, sponsor.type);
                   (groups[key] ??= <Sponsor>[]).add(sponsor);
                 }
-
+                //If there are sponsors of type main, gold, silver, bronze,
+                //they are displayed in that order
+                //If new/unknown types exist, they are also displayed,
+                //but sorted alphabetically afterward
                 final knownOrder = <String>['main', 'gold', 'silver', 'bronze'];
 
                 final orderedKeys = <String>[
@@ -87,92 +94,10 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 return ListView(
                   padding: const EdgeInsets.all(16),
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32),
-                      child: LayoutBuilder(
-                        builder: (context, header) {
-                          final isNarrow = header.maxWidth < 520;
-
-                          final actions = Wrap(
-                            spacing: 12,
-                            runSpacing: 8,
-                            crossAxisAlignment: WrapCrossAlignment.center,
-                            children: [
-                              ElevatedButton.icon(
-                                onPressed: () async {
-                                  final Sponsor? newSponsor = await AppRouter
-                                      .router
-                                      .push(
-                                        AppRouter.sponsorFormPath,
-                                        extra: {'eventId': widget.eventId},
-                                      );
-                                  if (newSponsor != null) {
-                                    widget.viewmodel.addSponsor(
-                                      newSponsor,
-                                      widget.eventId,
-                                    );
-                                  }
-                                },
-                                icon: const Icon(
-                                  Icons.add,
-                                  size: 20,
-                                  color: Colors.white,
-                                ),
-                                label: Text(location.addSponsor),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF38B6FF),
-                                  foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
-                                  ),
-                                  elevation: 0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  textStyle: const TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-
-                          if (isNarrow) {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 12),
-                                FutureBuilder<bool>(
-                                  future: widget.viewmodel.checkToken(),
-                                  builder: (context, snapshot) =>
-                                      snapshot.data == true
-                                      ? actions
-                                      : const SizedBox.shrink(),
-                                ),
-                              ],
-                            );
-                          }
-
-                          return Row(
-                            children: [
-                              const Expanded(child: SizedBox()),
-                              FutureBuilder<bool>(
-                                future: widget.viewmodel.checkToken(),
-                                builder: (context, snapshot) =>
-                                    snapshot.data == true
-                                    ? actions
-                                    : const SizedBox.shrink(),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-
                     const SizedBox(height: 16),
 
+                    //Each category becomes its own section
+                    //Using ValueKey prevents Flutter from “losing” state when the list changes
                     ...orderedKeys.map((type) {
                       final sponsorList = groups[type]!;
                       return Column(
