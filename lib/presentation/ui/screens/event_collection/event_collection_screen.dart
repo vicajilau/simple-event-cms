@@ -304,43 +304,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      width: double.infinity,
-                      color: const Color(0xFFe5f5f9),
-                      padding: const EdgeInsets.all(16.0),
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: 20.0,
-                            bottom: 20.0,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    location.availablesEventsTitle,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleSmall
-                                        ?.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  const SizedBox(height: 8.0),
-                                  Text(
-                                    location.availablesEventsText,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
                     _buildAddEventButton(),
                     GridView.builder(
                       shrinkWrap: true, // Important for nesting in a Column
@@ -415,47 +378,89 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   }
 
   Widget _buildAddEventButton() {
+    var location = AppLocalizations.of(context)!;
     return FutureBuilder<bool>(
       future: widget.viewmodel.checkToken(),
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return Padding(
             padding: const EdgeInsets.only(
-              right: 16.0,
               top: 16.0,
-              left: 16.0,
               bottom: 16.0,
             ),
-            child: Row(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                ElevatedButton(
-                  onPressed: () async {
-                    final Event? newEvent =
-                        await AppRouter.router.push(AppRouter.eventFormPath);
-                    if (newEvent != null) {
-                      setState(() {
-                        _viewmodel.eventsToShow.value.removeWhere(
-                          (event) => event.uid == newEvent.uid,
-                        );
-                        _viewmodel.eventsToShow.value.add(
-                          newEvent,
-                        );
-                        _viewmodel.addEvent(newEvent);
-                      });
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
+                Container(
+                  color: const Color(0xFFe5f5f9),
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 20.0,
+                        bottom: 20.0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                location.availablesEventsTitle,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                location.availablesEventsText,
+                                style: Theme.of(
+                                  context,
+                                ).textTheme.bodyMedium,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      const Icon(Icons.add, size: 20),
-                      Text(
-                        'Add Event',
-                      ), // Assuming 'Add Event' is in localizations
-                      const SizedBox(width: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final Event? newEvent = await AppRouter.router
+                              .push(AppRouter.eventFormPath);
+                          if (newEvent != null) {
+                            setState(() {
+                              _viewmodel.eventsToShow.value.removeWhere(
+                                (event) => event.uid == newEvent.uid,
+                              );
+                              _viewmodel.eventsToShow.value.add(
+                                newEvent,
+                              );
+                              _viewmodel.addEvent(newEvent);
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.add, size: 20),
+                            const SizedBox(width: 8),
+                            Text('Add Event'),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
