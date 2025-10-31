@@ -103,7 +103,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                     size: 20,
                                     color: Colors.white,
                                   ),
-                                  label:  Text(location.addSpeaker),
+                                  label: Text(location.addSpeaker),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF38B6FF),
                                     foregroundColor: Colors.white,
@@ -128,7 +128,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                   Text(
+                                  Text(
                                     location.speakers,
                                     style: TextStyle(
                                       fontSize: 22,
@@ -188,251 +188,222 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                           itemCount: speakers.length,
                           itemBuilder: (context, index) {
                             final speaker = speakers[index];
-                            return Stack(
-                              children: [
-                                Card(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(24),
-                                    side: const BorderSide(
-                                      color: Colors.black,
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      children: [
-                                        Expanded(
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                width: double.infinity,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .surfaceContainerHighest,
-                                                ),
-                                                child: speaker.image != null
-                                                    ? ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              8,
-                                                            ),
-                                                        child: Image.network(
-                                                          speaker.image!,
-                                                          fit: BoxFit.fill,
-                                                          loadingBuilder:
-                                                              (
-                                                                context,
-                                                                child,
-                                                                loadingProgress,
-                                                              ) {
-                                                                if (loadingProgress ==
-                                                                    null) {
-                                                                  return child;
-                                                                }
-                                                                return Container(
-                                                                  width: double
-                                                                      .infinity,
-                                                                  height: double
-                                                                      .infinity,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                          8,
-                                                                        ),
-                                                                    color: Theme.of(
-                                                                      context,
-                                                                    ).colorScheme.surfaceContainerHighest,
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Column(
-                                                                      mainAxisAlignment:
-                                                                          MainAxisAlignment
-                                                                              .center,
-                                                                      children: [
-                                                                        SizedBox(
-                                                                          width:
-                                                                              32,
-                                                                          height:
-                                                                              32,
-                                                                          child: CircularProgressIndicator(
-                                                                            strokeWidth:
-                                                                                3,
-                                                                            value:
-                                                                                loadingProgress.expectedTotalBytes !=
-                                                                                    null
-                                                                                ? loadingProgress.cumulativeBytesLoaded /
-                                                                                      loadingProgress.expectedTotalBytes!
-                                                                                : null,
-                                                                          ),
-                                                                        ),
-                                                                        const SizedBox(
-                                                                          height:
-                                                                              8,
-                                                                        ),
-                                                                        Text(
-                                                                          location
-                                                                              .loading,
-                                                                          style:
-                                                                              Theme.of(
-                                                                                context,
-                                                                              ).textTheme.bodySmall?.copyWith(
-                                                                                color: Theme.of(
-                                                                                  context,
-                                                                                ).colorScheme.onSurfaceVariant,
-                                                                              ),
-                                                                        ),
-                                                                      ],
+                            // Dentro de itemBuilder(...)
+                            return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24),
+                                side: const BorderSide(
+                                  color: Colors.black,
+                                  width: 1,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    // ⬇️ Esta parte cambia
+                                    Expanded(
+                                      child: Stack(
+                                        clipBehavior: Clip.hardEdge,
+                                        children: [
+                                          // Fondo: la foto
+                                          ClipRRect(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            child: Container(
+                                              width: double.infinity,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .surfaceContainerHighest,
+                                              child: speaker.image != null
+                                                  ? Image.network(
+                                                      speaker.image!,
+                                                      fit: BoxFit
+                                                          .cover, // normalmente mejor que fill
+                                                      loadingBuilder:
+                                                          (
+                                                            context,
+                                                            child,
+                                                            loadingProgress,
+                                                          ) {
+                                                            if (loadingProgress ==
+                                                                null)
+                                                              return child;
+                                                            return Center(
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  const SizedBox(
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    child: CircularProgressIndicator(
+                                                                      strokeWidth:
+                                                                          3,
                                                                     ),
                                                                   ),
-                                                                );
-                                                              },
-                                                          errorBuilder:
-                                                              (
-                                                                context,
-                                                                error,
-                                                                stackTrace,
-                                                              ) {
-                                                                debugPrint(
-                                                                  'Error loading image for ${speaker.name}: $error',
-                                                                );
-                                                                return Center(
-                                                                  child: Column(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .center,
-                                                                    children: [
-                                                                      Icon(
-                                                                        Icons
-                                                                            .person,
-                                                                        size:
-                                                                            48,
-                                                                        color: Theme.of(
-                                                                          context,
-                                                                        ).colorScheme.onSurfaceVariant,
-                                                                      ),
-                                                                      const SizedBox(
-                                                                        height:
-                                                                            4,
-                                                                      ),
-                                                                      Text(
-                                                                        location
-                                                                            .errorLoadingImage,
-                                                                        style: Theme.of(
-                                                                          context,
-                                                                        ).textTheme.bodySmall,
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                      ),
-                                                                    ],
+                                                                  const SizedBox(
+                                                                    height: 8,
                                                                   ),
-                                                                );
-                                                              },
-                                                        ),
-                                                      )
-                                                    : Center(
-                                                        child: Icon(
-                                                          Icons.person,
-                                                          size: 48,
-                                                          color: Theme.of(context)
-                                                              .colorScheme
-                                                              .onSurfaceVariant,
-                                                        ),
-                                                      ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          speaker.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium
-                                              ?.copyWith(
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          speaker.bio,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall
-                                              ?.copyWith(
-                                                color: Theme.of(
-                                                  context,
-                                                ).colorScheme.onSurfaceVariant,
-                                              ),
-                                          textAlign: TextAlign.center,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        const SizedBox(height: 24),
-                                        SocialIconsRow(social: speaker.social),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  top: 210,
-                                  left: 45,
-                                  child: FutureBuilder<bool>(
-                                    future: widget.viewmodel.checkToken(),
-                                    builder: (context, snapshot) {
-                                      return snapshot.data == true
-                                          ? Row(
-                                              children: [
-                                                IconWidget(
-                                                  icon: Icons.edit_outlined,
-                                                  onTap: () async {
-                                                    Map<String, dynamic>
-                                                    arguments = {
-                                                      'speaker': speaker,
-                                                      'eventId': widget.eventId,
-                                                    };
-                                                    final Speaker?
-                                                    updatedSpeaker =
-                                                        await AppRouter.router
-                                                            .push(
-                                                              AppRouter
-                                                                  .speakerFormPath,
-                                                              extra: arguments,
+                                                                  Text(
+                                                                    location
+                                                                        .loading,
+                                                                    style: Theme.of(context)
+                                                                        .textTheme
+                                                                        .bodySmall
+                                                                        ?.copyWith(
+                                                                          color: Theme.of(
+                                                                            context,
+                                                                          ).colorScheme.onSurfaceVariant,
+                                                                        ),
+                                                                  ),
+                                                                ],
+                                                              ),
                                                             );
-
-                                                    if (updatedSpeaker !=
-                                                        null) {
-                                                      widget.viewmodel
-                                                          .editSpeaker(
-                                                            updatedSpeaker,
-                                                            widget.eventId,
-                                                          );
-                                                    }
-                                                  },
-                                                ),
-                                                const SizedBox(width: 8),
-                                                IconWidget(
-                                                  icon: Icons.delete_outlined,
-                                                  onTap: () {
-                                                    widget.viewmodel
-                                                        .removeSpeaker(
-                                                          speaker.uid,
+                                                          },
+                                                      errorBuilder: (context, error, stack) {
+                                                        debugPrint(
+                                                          'Error loading image for ${speaker.name}: $error',
                                                         );
-                                                  },
-                                                ),
-                                              ],
-                                            )
-                                          : const SizedBox.shrink();
-                                    },
-                                  ),
+                                                        return Center(
+                                                          child: Column(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Icon(
+                                                                Icons.person,
+                                                                size: 48,
+                                                                color: Theme.of(context)
+                                                                    .colorScheme
+                                                                    .onSurfaceVariant,
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 4,
+                                                              ),
+                                                              Text(
+                                                                location
+                                                                    .errorLoadingImage,
+                                                                style: Theme.of(
+                                                                  context,
+                                                                ).textTheme.bodySmall,
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      },
+                                                    )
+                                                  : Center(
+                                                      child: Icon(
+                                                        Icons.person,
+                                                        size: 48,
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                    ),
+                                            ),
+                                          ),
+
+                                          // ⬇️ Overlay: tus acciones, ahora relativas a la imagen
+                                          Positioned(
+                                            // elige la esquina/posición que quieras
+                                            bottom: 8,
+                                            left: 8,
+                                            child: FutureBuilder<bool>(
+                                              future: widget.viewmodel
+                                                  .checkToken(),
+                                              builder: (context, snapshot) {
+                                                if (snapshot.data == true) {
+                                                  return Row(
+                                                    children: [
+                                                      IconWidget(
+                                                        icon:
+                                                            Icons.edit_outlined,
+                                                        onTap: () async {
+                                                          final args = {
+                                                            'speaker': speaker,
+                                                            'eventId':
+                                                                widget.eventId,
+                                                          };
+                                                          final Speaker?
+                                                          updated = await AppRouter
+                                                              .router
+                                                              .push(
+                                                                AppRouter
+                                                                    .speakerFormPath,
+                                                                extra: args,
+                                                              );
+                                                          if (updated != null) {
+                                                            widget.viewmodel
+                                                                .editSpeaker(
+                                                                  updated,
+                                                                  widget
+                                                                      .eventId,
+                                                                );
+                                                          }
+                                                        },
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      IconWidget(
+                                                        icon: Icons
+                                                            .delete_outlined,
+                                                        onTap: () => widget
+                                                            .viewmodel
+                                                            .removeSpeaker(
+                                                              speaker.uid,
+                                                            ),
+                                                      ),
+                                                    ],
+                                                  );
+                                                }
+                                                return const SizedBox.shrink();
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+
+                                    // ⬆️ Fin de la parte cambiada
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      speaker.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      speaker.bio,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.onSurfaceVariant,
+                                          ),
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 24),
+                                    SocialIconsRow(social: speaker.social),
+                                  ],
                                 ),
-                              ],
+                              ),
                             );
                           },
                         ),

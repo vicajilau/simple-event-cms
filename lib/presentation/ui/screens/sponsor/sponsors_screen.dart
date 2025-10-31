@@ -121,7 +121,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                   size: 20,
                                   color: Colors.white,
                                 ),
-                                label:  Text(location.addSponsor),
+                                label: Text(location.addSponsor),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF38B6FF),
                                   foregroundColor: Colors.white,
@@ -220,23 +220,24 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                       width: 1,
                                     ),
                                   ),
-                                  child: Stack(
-                                    children: [
-                                      InkWell(
-                                        onTap: sponsor.website != null
-                                            ? () => context.openUrl(
-                                                sponsor.website,
-                                              )
-                                            : null,
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Expanded(
-                                                child: Container(
+                                  child: InkWell(
+                                    onTap: sponsor.website != null
+                                        ? () => context.openUrl(sponsor.website)
+                                        : null,
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          // ⬇️ Sustituye el Container anterior por un Stack
+                                          Expanded(
+                                            child: Stack(
+                                              clipBehavior: Clip.hardEdge,
+                                              children: [
+                                                // Fondo: el marco del logo
+                                                Container(
                                                   padding: const EdgeInsets.all(
                                                     8,
                                                   ),
@@ -284,59 +285,70 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                           ),
                                                         ),
                                                 ),
-                                              ),
-                                              const SizedBox(height: 8),
-                                              Text(
-                                                sponsor.name,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium
-                                                    ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                textAlign: TextAlign.center,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ],
+
+                                                // ⬇️ Overlay: acciones, ahora relativas al logo
+                                                Positioned(
+                                                  bottom: 8,
+                                                  left: 8,
+                                                  child: FutureBuilder<bool>(
+                                                    future: widget.viewmodel
+                                                        .checkToken(),
+                                                    builder: (context, snapshot) {
+                                                      if (snapshot.data ==
+                                                          true) {
+                                                        return Row(
+                                                          children: [
+                                                            IconWidget(
+                                                              icon: Icons
+                                                                  .edit_outlined,
+                                                              onTap: () =>
+                                                                  _editSponsor(
+                                                                    sponsor,
+                                                                  ),
+                                                            ),
+                                                            const SizedBox(
+                                                              width: 8,
+                                                            ),
+                                                            IconWidget(
+                                                              icon: Icons
+                                                                  .delete_outlined,
+                                                              onTap: () async {
+                                                                await widget
+                                                                    .viewmodel
+                                                                    .removeSponsor(
+                                                                      sponsor
+                                                                          .uid,
+                                                                    );
+                                                              },
+                                                            ),
+                                                          ],
+                                                        );
+                                                      }
+                                                      return const SizedBox.shrink();
+                                                    },
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
+
+                                          // ⬆️ Fin de la parte cambiada
+                                          const SizedBox(height: 8),
+                                          Text(
+                                            sponsor.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                            textAlign: TextAlign.center,
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ],
                                       ),
-                                      Positioned(
-                                        top: 165,
-                                        left: 30,
-                                        child: FutureBuilder<bool>(
-                                          future: widget.viewmodel.checkToken(),
-                                          builder: (context, snapshot) {
-                                            return snapshot.data == true
-                                                ? Row(
-                                                    children: [
-                                                      IconWidget(
-                                                        icon:
-                                                            Icons.edit_outlined,
-                                                        onTap: () async {
-                                                          _editSponsor(sponsor);
-                                                        },
-                                                      ),
-                                                      const SizedBox(width: 8),
-                                                      IconWidget(
-                                                        icon: Icons
-                                                            .delete_outlined,
-                                                        onTap: () async {
-                                                          await widget.viewmodel
-                                                              .removeSponsor(
-                                                                sponsor.uid,
-                                                              );
-                                                        },
-                                                      ),
-                                                    ],
-                                                  )
-                                                : const SizedBox.shrink();
-                                          },
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               );
