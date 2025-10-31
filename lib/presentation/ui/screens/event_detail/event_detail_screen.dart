@@ -137,65 +137,75 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           ),
                         ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 52.0),
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              // The index of the currently selected tab can be obtained from the TabController.
-                              int selectedIndex = _tabController.index;
-                              // Now you can perform an action based on the selected index.
-                              switch (selectedIndex) {
-                                case 0:
-                                  List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                                    AppRouter.agendaFormPath,
-                                    extra: AgendaFormData(eventId: widget.eventId),
-                                  );
+                        FutureBuilder(
+                          future: widget.viewmodel.checkToken(),
+                          builder: (context, asyncSnapshot) {
+                            if(asyncSnapshot.data == true){
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 52.0),
+                                child: ElevatedButton(
+                                  onPressed: () async {
+                                    // The index of the currently selected tab can be obtained from the TabController.
+                                    int selectedIndex = _tabController.index;
+                                    // Now you can perform an action based on the selected index.
+                                    switch (selectedIndex) {
+                                      case 0:
+                                        List<AgendaDay>? agendaDays = await AppRouter.router.push(
+                                          AppRouter.agendaFormPath,
+                                          extra: AgendaFormData(eventId: widget.eventId),
+                                        );
 
-                                  if (agendaDays != null) {
-                                    final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-                                    agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
-                                  }
-                                  break;
-                                case 1:
-                                  final Speaker? newSpeaker = await AppRouter.router.push(
-                                    AppRouter.speakerFormPath,
-                                    extra: {'eventId': widget.eventId},
-                                  );
+                                        if (agendaDays != null) {
+                                          final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
+                                          agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
+                                        }
+                                        break;
+                                      case 1:
+                                        final Speaker? newSpeaker = await AppRouter.router.push(
+                                          AppRouter.speakerFormPath,
+                                          extra: {'eventId': widget.eventId},
+                                        );
 
-                                  if (newSpeaker != null) {
-                                    final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-                                    speakersScreen.viewmodel.addSpeaker(newSpeaker, widget.eventId);
-                                  }
-                                  break;
-                                case 2:
-                                  final Sponsor? newSponsor = await AppRouter.router.push(
-                                    AppRouter.sponsorFormPath,
-                                    extra: {'eventId': widget.eventId},
-                                  );
+                                        if (newSpeaker != null) {
+                                          final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
+                                          speakersScreen.viewmodel.addSpeaker(newSpeaker, widget.eventId);
+                                        }
+                                        break;
+                                      case 2:
+                                        final Sponsor? newSponsor = await AppRouter.router.push(
+                                          AppRouter.sponsorFormPath,
+                                          extra: {'eventId': widget.eventId},
+                                        );
 
-                                  if (newSponsor != null) {
-                                    final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-                                    await sponsorsScreen.viewmodel.addSponsor(newSponsor, widget.eventId);
-                                  }
-                                  break;
-                              }
-                            },
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Icon(Icons.add, size: 20),
-                                const SizedBox(width: 8),
-                                Text(
-                                  _selectedIndex == 0
-                                      ? location.addSession
-                                      : _selectedIndex == 1
-                                          ? location.addSpeaker
-                                          : location.addSponsor,
+                                        if (newSponsor != null) {
+                                          final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
+                                          await sponsorsScreen.viewmodel.addSponsor(newSponsor, widget.eventId);
+                                        }
+                                        break;
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.add, size: 20),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        _selectedIndex == 0
+                                            ? location.addSession
+                                            : _selectedIndex == 1
+                                            ? location.addSpeaker
+                                            : location.addSponsor,
+                                      ),
+                                    ],
+                                  )
+                                  ,
                                 ),
-                              ],
-                            )
-                            ,
-                          ),
+                              );
+                            }else{
+                              return const SizedBox();
+                            }
+
+                          }
                         ),
                       ],
                     ),
@@ -244,40 +254,4 @@ class _EventDetailScreenState extends State<EventDetailScreen>
         );
   }
 
-  /*void _addSession(String eventId) async {
-    List<AgendaDay>? agendaDays = await AppRouter.router.push(
-      AppRouter.agendaFormPath,
-      extra: AgendaFormData(eventId: eventId),
-    );
-
-    if (agendaDays != null) {
-      final AgendaScreen agendaScreen = (screens[0] as AgendaScreen);
-      agendaScreen.viewmodel.loadAgendaDays(widget.eventId);
-    }
-  }
-
-//todo monta: borrar esto? ya esta en speakers screen
-  void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSpeaker != null) {
-      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
-    }
-  }
-
-  void _addSponsor(String parentId) async {
-    final Sponsor? newSponsor = await AppRouter.router.push(
-      AppRouter.sponsorFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSponsor != null) {
-      final SponsorsScreen sponsorsScreen = (screens[2] as SponsorsScreen);
-      await sponsorsScreen.viewmodel.addSponsor(newSponsor, parentId);
-    }
-  }*/
 }

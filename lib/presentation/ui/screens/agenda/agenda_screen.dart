@@ -7,6 +7,7 @@ import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
@@ -98,59 +99,13 @@ class _AgendaScreenState extends State<AgendaScreen>
         }
 
         if (widget.viewmodel.agendaDays.value.isEmpty) {
-          return Center(child: Text(location.noSessionsFound));
+          return NoDataScreen(message: location.noSessionsFound);
         }
         return SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.only(right: 28.0, left: 28.0),
             child: Column(
               children: [
-                FutureBuilder<bool>(
-                  future: widget.viewmodel.checkToken(),
-                  builder: (context, snapshot) {
-                    if (snapshot.data == true) {
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          right: 16.0,
-                          top: 16.0,
-                          left: 16.0,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
-                                List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                                  AppRouter.agendaFormPath,
-                                  extra: AgendaFormData(eventId: widget.eventId),
-                                );
-
-                                if (agendaDays != null) {
-                                  widget.viewmodel.loadAgendaDays(widget.eventId);
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.add, size: 20),
-                                  Text(
-                                    'Add Session',
-                                  ), // Assuming 'Add Event' is in localizations
-                                  const SizedBox(width: 8),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }else{
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
                 ListView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,

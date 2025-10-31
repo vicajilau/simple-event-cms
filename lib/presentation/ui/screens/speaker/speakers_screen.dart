@@ -4,6 +4,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -46,20 +47,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
           valueListenable: widget.viewmodel.speakers,
           builder: (context, speakers, child) {
             if (speakers.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.people_outline,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(location.noSpeakersRegistered),
-                  ],
-                ),
-              );
+              return NoDataScreen(message: location.noSpeakersRegistered,icon:
+                Icons.people_outline,
+             );
             }
 
             return LayoutBuilder(
@@ -72,87 +62,6 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: Row(
-                          children: [
-                            const Text(
-                              'Ponentes',
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Spacer(),
-                            FutureBuilder<bool>(
-                              future: widget.viewmodel.checkToken(),
-                              builder: (context, snapshot) {
-                                final canEdit = snapshot.data == true;
-                                if (!canEdit) return const SizedBox.shrink();
-
-                                return Row(
-                                  children: [
-                                    OutlinedButton.icon(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.save_outlined,
-                                        size: 20,
-                                      ),
-                                      label: const Text('Guardar Ponente'),
-                                      style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        side: BorderSide(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                          width: 2,
-                                        ),
-                                        foregroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.primary,
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-                                    ElevatedButton.icon(
-                                      onPressed: () async {
-                                        _addSpeaker(widget.eventId);
-                                      },
-                                      icon: const Icon(Icons.add, size: 20),
-                                      label: const Text('Agregar Ponente'),
-                                      style: ElevatedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 16,
-                                          vertical: 12,
-                                        ),
-                                        elevation: 0,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                            5,
-                                          ),
-                                        ),
-                                        textStyle: const TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
                       const SizedBox(height: 16),
                       Expanded(
                         child: GridView.builder(
@@ -427,20 +336,6 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
       },
     );
   }
-
-  void _addSpeaker(String parentId) async {
-    final Speaker? newSpeaker = await AppRouter.router.push(
-      AppRouter.speakerFormPath,
-      extra: {'eventId': parentId},
-    );
-
-    if (newSpeaker != null) {
-      final SpeakersScreen speakersScreen = (screens[1] as SpeakersScreen);
-      speakersScreen.viewmodel.addSpeaker(newSpeaker, parentId);
-    }
-  }
-
-  /**/
 }
 
 class IconWidget extends StatelessWidget {

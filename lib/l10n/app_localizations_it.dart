@@ -439,20 +439,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token di accesso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventi disponibili';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Esplora i prossimi eventi e \n trova qualcosa che ti interessa';
 
   @override
-  String get organization => 'Organización';
+  String get organization => 'Organizzazione';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Nome dell\'Organizzazione';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
 
   @override
   String get githubUser => 'Utente GitHub';
@@ -477,4 +477,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get addSponsor => 'Aggiungi Sponsor';
+
+  @override
+  String get retryLater => 'Vuelve a intentarlo más tarde';
 }

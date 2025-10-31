@@ -133,8 +133,8 @@
   "silverSponsor": "Silver Sponsor",
   "bronzeSponsor": "Bronze Sponsor",
   "updateButton": "Update",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
+  "addButton": "Add Button",
+  "addRoomTitle": "Add Room",
   "roomNameHint": "Room name",
   "formError": "There are errors in the form",
   "confirmLogout": "Confirm Logout",
@@ -153,7 +153,8 @@
   "branchHint": "Enter the branch",
   "eventManager": "Event manager",
   "addSession": "Add Session",
-  "addSpeaker": "add Speaker",
-  "addSponsor": "add Sponsor"
+  "addSpeaker": "Add Speaker",
+  "addSponsor": "Add Sponsor",
+  "retryLater": "Please try again later"
 }
 

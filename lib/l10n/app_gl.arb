@@ -144,14 +144,15 @@
   "availablesEventsTitle": "Eventos Disponibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
   "organization": "Organización",
-  "organizationName": "Nombre de la Organización",
-  "organizationNameHint": "Introduce el nombre de la organización",
+  "organizationName": "Nome da Organización",
+  "organizationNameHint": "Introduce o nome da organización",
   "githubUser": "Usuario de GitHub",
-  "githubUserHint": "Introduce el usuario de GitHub",
+  "githubUserHint": "Introduce o usuario de GitHub",
   "branch": "Rama",
-  "branchHint": "Introduce la rama",
-  "eventManager": "Gestor de eventos",
+  "branchHint": "Introduce a rama",
+  "eventManager": "Xestor de eventos",
   "addSession": "Engadir sesión",
   "addSpeaker": "Engadir relator",
-  "addSponsor": "Engadir patrocinador"
+  "addSponsor": "Engadir patrocinador",
+  "retryLater": "Téntao de novo máis tarde"
 }

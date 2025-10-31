@@ -409,10 +409,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get updateButton => 'Atualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -470,8 +470,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addSession => 'Add Session';
 
   @override
-  String get addSpeaker => 'add Speaker';
+  String get addSpeaker => 'Add Speaker';
 
   @override
-  String get addSponsor => 'add Sponsor';
+  String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get retryLater => 'Please try again later';
 }
