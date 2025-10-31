@@ -463,4 +463,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get branchHint => 'Introduce la rama';
+
+  @override
+  String get eventManager => 'Gestor de eventos';
 }

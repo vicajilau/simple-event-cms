@@ -149,5 +149,6 @@
   "githubUser": "Usuario de GitHub",
   "githubUserHint": "Introduce el usuario de GitHub",
   "branch": "Rama",
-  "branchHint": "Introduce la rama"
+  "branchHint": "Introduce la rama",
+  "eventManager": "Gestor de eventos"
 }
