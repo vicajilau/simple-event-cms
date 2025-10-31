@@ -126,9 +126,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkedinHint => 'Enter the LinkedIn URL';
 
   @override
-  String get websiteHint => 'Enter the website URL';
-
-  @override
   String get saveButton => 'Save';
 
   @override
@@ -388,6 +385,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Enter the website URL';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -477,4 +477,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get commonError => 'Error fetching data, Please retry later';
+
+  @override
+  String get createSpeaker => 'Create Speaker';
 }

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/utils/app_decorations.dart';
-import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
 class SponsorFormScreen extends StatefulWidget {
   final Sponsor? sponsor;
   final String? eventUID;
-  const SponsorFormScreen({super.key, this.sponsor,required this.eventUID});
+  const SponsorFormScreen({super.key, this.sponsor, required this.eventUID});
 
   @override
   State<SponsorFormScreen> createState() => _SponsorFormScreenState();
@@ -65,7 +64,9 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
     final isEditing = widget.sponsor != null;
 
     return FormScreenWrapper(
-      pageTitle: isEditing ? location.editSponsorTitle : location.createSponsorTitle,
+      pageTitle: isEditing
+          ? location.editSponsorTitle
+          : location.createSponsorTitle,
       widgetFormChild: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -76,7 +77,11 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
             children: [
               Text(
                 isEditing ? location.editingSponsor : location.creatingSponsor,
-                style: AppFonts.titleHeadingForm,
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                  color: const Color(0xFF38B6FF),
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               SectionInputForm(
                 label: location.nameLabel,
@@ -85,8 +90,9 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                   decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: location.sponsorNameHint,
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? location.sponsorNameValidation : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? location.sponsorNameValidation
+                      : null,
                 ),
               ),
 
@@ -98,8 +104,9 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                   decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: location.logoHint,
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? location.logoValidation : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? location.logoValidation
+                      : null,
                 ),
               ),
 
@@ -111,8 +118,9 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                   decoration: AppDecorations.textFieldDecoration.copyWith(
                     hintText: location.websiteHint,
                   ),
-                  validator: (value) =>
-                      value == null || value.isEmpty ? location.websiteValidation : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? location.websiteValidation
+                      : null,
                 ),
               ),
               DropdownButtonFormField<String>(
@@ -128,14 +136,17 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: Text(location.cancelButton),
-                  ),
-                  const SizedBox(width: 8),
                   FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(0xFF38B6FF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 20,
+                      ),
+                    ),
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         final sponsor = Sponsor(
@@ -146,16 +157,17 @@ class _SponsorFormScreenState extends State<SponsorFormScreen> {
                           type: _selectedCategory,
                           logo: _logoController.text,
                           website: _websiteController.text,
-                          eventUID: widget.eventUID.toString()
+                          eventUID: widget.eventUID.toString(),
                         );
                         if (context.mounted) {
                           context.pop<Sponsor>(sponsor);
                         }
                       }
                     },
-                    child: Text(isEditing ? location.updateButton : location.saveButton),
+                    child: Text(
+                      isEditing ? location.updateButton : location.saveButton,
+                    ),
                   ),
-
                 ],
               ),
             ],

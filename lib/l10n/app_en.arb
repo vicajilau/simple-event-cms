@@ -1,4 +1,3 @@
-
 {
   "@@locale": "en",
   "loadingAgenda": "Loading agenda...",
@@ -40,7 +39,6 @@
   "twitterHint": "Enter the Twitter URL",
   "githubHint": "Enter the GitHub URL",
   "linkedinHint": "Enter the LinkedIn URL",
-  "websiteHint": "Enter the website URL",
   "saveButton": "Save",
   "errorLoadingData": "Error loading data",
   "errorUnknown": "Unknown error",
@@ -156,6 +154,6 @@
   "addSpeaker": "Add Speaker",
   "addSponsor": "Add Sponsor",
   "retryLater": "Please try again later",
-  "commonError": "Error fetching data, Please retry later"
+  "commonError": "Error fetching data, Please retry later",
+  "createSpeaker": "Create Speaker"
 }
-

@@ -126,9 +126,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get linkedinHint => 'Entrez l\'URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Entrez l\'URL du site web';
-
-  @override
   String get saveButton => 'Enregistrer';
 
   @override
@@ -394,6 +391,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Entrez l\'URL du site web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -480,9 +480,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get addSponsor => 'Ajouter un Sponsor';
 
   @override
-  String get retryLater => 'Please try again later';
+  String get retryLater => 'Try again later';
 
   @override
   String get commonError =>
       'Erreur lors de la récupération des données, veuillez réessayer plus tard';
+
+  @override
+  String get createSpeaker => 'Créer un Intervenant';
 }

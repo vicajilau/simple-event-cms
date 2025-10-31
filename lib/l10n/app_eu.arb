@@ -39,7 +39,6 @@
   "twitterHint": "Sartu Twitter URLa",
   "githubHint": "Sartu GitHub URLa",
   "linkedinHint": "Sartu LinkedIn URLa",
-  "websiteHint": "Sartu webgunearen URLa",
   "saveButton": "Gorde",
   "errorLoadingData": "Errorea datuak kargatzean",
   "errorUnknown": "Errore ezezaguna",
@@ -155,5 +154,6 @@
   "addSpeaker": "Hizlaria gehitu",
   "addSponsor": "Babeslea gehitu",
   "retryLater": "Saiatu berriro geroago",
-  "commonError": "Errorea datuak eskuratzean, saiatu berriro geroago mesedez"
+  "commonError": "Errorea datuak eskuratzean, saiatu berriro geroago mesedez",
+  "createSpeaker": "Hizlaria Sortu"
 }

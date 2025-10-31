@@ -126,9 +126,6 @@ class AppLocalizationsGl extends AppLocalizations {
   String get linkedinHint => 'Introduce a URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introduce a URL da web';
-
-  @override
   String get saveButton => 'Gardar';
 
   @override
@@ -391,6 +388,9 @@ class AppLocalizationsGl extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Introduce a URL da web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -482,4 +482,7 @@ class AppLocalizationsGl extends AppLocalizations {
   @override
   String get commonError =>
       'Erro ao obter os datos, por favor, téntao de novo máis tarde';
+
+  @override
+  String get createSpeaker => 'Crear Poñente';
 }

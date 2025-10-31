@@ -344,12 +344,6 @@ abstract class AppLocalizations {
   /// **'Enter the LinkedIn URL'**
   String get linkedinHint;
 
-  /// No description provided for @websiteHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the website URL'**
-  String get websiteHint;
-
   /// No description provided for @saveButton.
   ///
   /// In en, this message translates to:
@@ -860,6 +854,12 @@ abstract class AppLocalizations {
   /// **'Web*'**
   String get websiteLabel;
 
+  /// No description provided for @websiteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the website URL'**
+  String get websiteHint;
+
   /// No description provided for @websiteValidation.
   ///
   /// In en, this message translates to:
@@ -1039,6 +1039,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error fetching data, Please retry later'**
   String get commonError;
+
+  /// No description provided for @createSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Speaker'**
+  String get createSpeaker;
 }
 
 class _AppLocalizationsDelegate

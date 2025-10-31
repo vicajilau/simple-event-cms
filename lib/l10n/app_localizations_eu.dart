@@ -126,9 +126,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get linkedinHint => 'Sartu LinkedIn URLa';
 
   @override
-  String get websiteHint => 'Sartu webgunearen URLa';
-
-  @override
   String get saveButton => 'Gorde';
 
   @override
@@ -390,6 +387,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get websiteLabel => 'Webgunea*';
 
   @override
+  String get websiteHint => 'Sartu webgunearen URLa';
+
+  @override
   String get websiteValidation => 'Webgunea';
 
   @override
@@ -480,4 +480,7 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get commonError =>
       'Errorea datuak eskuratzean, saiatu berriro geroago mesedez';
+
+  @override
+  String get createSpeaker => 'Hizlaria Sortu';
 }
