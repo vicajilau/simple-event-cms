@@ -150,8 +150,9 @@
   "githubUserHint": "Sartu GitHub erabiltzailea",
   "branch": "Rama",
   "branchHint": "Introduce la rama",
-  "eventManager": "Gestor de eventos",
-                                       "addSession": "Add Session",
-                                       "addSpeaker": "Add speaker",
-                                       "addSponsor": "Add sponsor"
+  "eventManager": "Ekitaldi kudeatzailea",
+  "addSession": "Saioa gehitu",
+  "addSpeaker": "Hizlaria gehitu",
+  "addSponsor": "Babeslea gehitu",
+  "retryLater": "Saiatu berriro geroago"
 }

@@ -475,4 +475,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get addSponsor => 'Añadir Patrocinador';
+
+  @override
+  String get retryLater => 'Vuelve a intentarlo más tarde';
 }

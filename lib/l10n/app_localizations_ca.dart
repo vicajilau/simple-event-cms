@@ -439,11 +439,11 @@ class AppLocalizationsCa extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token d\'accés';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Esdeveniments Disponibles';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Explora els pròxims esdeveniments i \n troba alguna cosa que t\'interessi';
 
   @override
   String get organization => 'Organització';
@@ -477,4 +477,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get addSponsor => 'Afegir Patrocinador';
+
+  @override
+  String get retryLater => 'Torna a intentar-ho més tard';
 }

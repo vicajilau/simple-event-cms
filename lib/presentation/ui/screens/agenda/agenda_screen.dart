@@ -7,6 +7,7 @@ import 'package:sec/core/utils/date_utils.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/dialogs/dialogs.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
@@ -98,7 +99,7 @@ class _AgendaScreenState extends State<AgendaScreen>
         }
 
         if (widget.viewmodel.agendaDays.value.isEmpty) {
-          return Center(child: Text(location.noSessionsFound));
+          return NoDataScreen(message: location.noSessionsFound);
         }
         return SingleChildScrollView(
           child: Padding(

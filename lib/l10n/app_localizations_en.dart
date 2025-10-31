@@ -471,4 +471,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get retryLater => 'Please try again later';
 }

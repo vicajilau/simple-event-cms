@@ -4,6 +4,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -46,20 +47,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
           valueListenable: widget.viewmodel.speakers,
           builder: (context, speakers, child) {
             if (speakers.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.people_outline,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(location.noSpeakersRegistered),
-                  ],
-                ),
-              );
+              return NoDataScreen(message: location.noSpeakersRegistered,icon:
+                Icons.people_outline,
+             );
             }
 
             return LayoutBuilder(
@@ -346,7 +336,6 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
       },
     );
   }
-
 }
 
 class IconWidget extends StatelessWidget {

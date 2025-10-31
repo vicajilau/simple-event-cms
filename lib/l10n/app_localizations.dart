@@ -1027,6 +1027,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add Sponsor'**
   String get addSponsor;
+
+  /// No description provided for @retryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get retryLater;
 }
 
 class _AppLocalizationsDelegate

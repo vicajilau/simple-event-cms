@@ -154,6 +154,7 @@
   "eventManager": "Event manager",
   "addSession": "Add Session",
   "addSpeaker": "Add Speaker",
-  "addSponsor": "Add Sponsor"
+  "addSponsor": "Add Sponsor",
+  "retryLater": "Please try again later"
 }
 

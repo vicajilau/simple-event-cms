@@ -141,8 +141,8 @@
   "confirmLogoutMessage": "Estàs segur que vols tancar la sessió?",
   "logout": "Tancar Sessió",
   "enterGithubTokenTitle": "Token d'accés",
-  "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "availablesEventsTitle": "Esdeveniments Disponibles",
+  "availablesEventsText": "Explora els pròxims esdeveniments i \n troba alguna cosa que t'interessi",
   "organization": "Organització",
   "organizationName": "Nom de l'Organització",
   "organizationNameHint": "Introdueix el nom de l'organització",
@@ -153,5 +153,6 @@
   "eventManager": "Gestor d'esdeveniments",
   "addSession": "Afegir Sessió",
   "addSpeaker": "Afegir Ponent",
-  "addSponsor": "Afegir Patrocinador"
+  "addSponsor": "Afegir Patrocinador",
+   "retryLater": "Torna a intentar-ho més tard"
 }

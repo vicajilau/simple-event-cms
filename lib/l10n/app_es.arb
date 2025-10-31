@@ -154,5 +154,6 @@
   "eventManager": "Gestor de eventos",
   "addSession": "Añadir Sesión",
   "addSpeaker": "Añadir Ponente",
-  "addSponsor": "Añadir Patrocinador"
+  "addSponsor": "Añadir Patrocinador",
+  "retryLater": "Vuelve a intentarlo más tarde"
 }

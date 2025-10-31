@@ -463,14 +463,17 @@ class AppLocalizationsEu extends AppLocalizations {
   String get branchHint => 'Introduce la rama';
 
   @override
-  String get eventManager => 'Gestor de eventos';
+  String get eventManager => 'Ekitaldi kudeatzailea';
 
   @override
-  String get addSession => 'Add Session';
+  String get addSession => 'Saioa gehitu';
 
   @override
-  String get addSpeaker => 'Add speaker';
+  String get addSpeaker => 'Hizlaria gehitu';
 
   @override
-  String get addSponsor => 'Add sponsor';
+  String get addSponsor => 'Babeslea gehitu';
+
+  @override
+  String get retryLater => 'Saiatu berriro geroago';
 }

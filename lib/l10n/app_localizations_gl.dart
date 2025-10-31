@@ -447,25 +447,25 @@ class AppLocalizationsGl extends AppLocalizations {
   String get organization => 'Organización';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Nome da Organización';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Introduce o nome da organización';
 
   @override
   String get githubUser => 'Usuario de GitHub';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Introduce o usuario de GitHub';
 
   @override
   String get branch => 'Rama';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Introduce a rama';
 
   @override
-  String get eventManager => 'Gestor de eventos';
+  String get eventManager => 'Xestor de eventos';
 
   @override
   String get addSession => 'Engadir sesión';
@@ -475,4 +475,7 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get addSponsor => 'Engadir patrocinador';
+
+  @override
+  String get retryLater => 'Téntao de novo máis tarde';
 }
