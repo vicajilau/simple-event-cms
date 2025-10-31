@@ -143,4 +143,11 @@
   "enterGithubTokenTitle": "Sarbide-tokena",
   "availablesEventsTitle": "Eventos Disponibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "organization": "Organización",
+  "organizationName": "Nombre de la Organización",
+  "organizationNameHint": "Introduce el nombre de la organización",
+  "githubUser": "Usuario de GitHub",
+  "githubUserHint": "Introduce el usuario de GitHub",
+  "branch": "Rama",
+  "branchHint": "Introduce la rama"
 }
