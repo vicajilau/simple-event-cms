@@ -479,5 +479,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addSponsor => 'Aggiungi Sponsor';
 
   @override
-  String get retryLater => 'Vuelve a intentarlo más tarde';
+  String get retryLater => 'Riprova più tardi';
+
+  @override
+  String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
 }

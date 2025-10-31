@@ -1033,6 +1033,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please try again later'**
   String get retryLater;
+
+  /// No description provided for @commonError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching data, Please retry later'**
+  String get commonError;
 }
 
 class _AppLocalizationsDelegate

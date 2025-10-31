@@ -478,4 +478,8 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get retryLater => 'Téntao de novo máis tarde';
+
+  @override
+  String get commonError =>
+      'Erro ao obter os datos, por favor, téntao de novo máis tarde';
 }

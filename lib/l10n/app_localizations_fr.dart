@@ -481,4 +481,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get retryLater => 'Please try again later';
+
+  @override
+  String get commonError =>
+      'Erreur lors de la récupération des données, veuillez réessayer plus tard';
 }

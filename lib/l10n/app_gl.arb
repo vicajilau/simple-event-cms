@@ -154,5 +154,6 @@
   "addSession": "Engadir sesión",
   "addSpeaker": "Engadir relator",
   "addSponsor": "Engadir patrocinador",
-  "retryLater": "Téntao de novo máis tarde"
+  "retryLater": "Téntao de novo máis tarde",
+  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde"
 }

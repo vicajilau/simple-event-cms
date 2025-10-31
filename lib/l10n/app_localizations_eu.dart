@@ -457,10 +457,10 @@ class AppLocalizationsEu extends AppLocalizations {
   String get githubUserHint => 'Sartu GitHub erabiltzailea';
 
   @override
-  String get branch => 'Rama';
+  String get branch => 'Adarra';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Sartu adarra';
 
   @override
   String get eventManager => 'Ekitaldi kudeatzailea';
@@ -476,4 +476,8 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get retryLater => 'Saiatu berriro geroago';
+
+  @override
+  String get commonError =>
+      'Errorea datuak eskuratzean, saiatu berriro geroago mesedez';
 }
