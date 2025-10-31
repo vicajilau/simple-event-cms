@@ -142,7 +142,15 @@
   "enterGithubTokenTitle": "Jeton d'accès",
   "tokenHintLabel": "Entrez votre jeton GitHub...",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",  "addSpeaker": "Ajouter un Intervenant",
-  "createSpeaker": "Créer un Intervenant",
-  "addSponsor": "Ajouter un Sponsor"
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "addSpeaker": "Ajouter un Intervenant",
+  "addSponsor": "Ajouter un Sponsor",
+  "organization": "Organisation",
+  "organizationName": "Nom de l'organisation",
+  "organizationNameHint": "Entrez le nom de l'organisation",
+  "githubUser": "Utilisateur GitHub",
+  "githubUserHint": "Entrez le nom d'utilisateur GitHub",
+  "branch": "Branche",
+  "branchHint": "Entrez la branche",
+  "createSpeaker": "Créer un Intervenant"
 }

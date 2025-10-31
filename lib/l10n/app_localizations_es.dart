@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -178,19 +180,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get endTimeLabel => 'Hora final:';
 
   @override
-  String get timeValidationError => 'La hora de inicio debe ser anterior a la hora final.';
+  String get timeValidationError =>
+      'La hora de inicio debe ser anterior a la hora final.';
 
   @override
-  String get speakerLabel => 'Ponente*';
+  String get speakerLabel => 'Speaker*';
 
   @override
-  String get noSpeakersMessage => 'No hay ponentes. Añade uno.';
+  String get noSpeakersMessage => 'No hay speakers. Añade uno.';
 
   @override
-  String get selectSpeakerHint => 'Selecciona un ponente';
+  String get selectSpeakerHint => 'Selecciona un speaker';
 
   @override
-  String get selectSpeakerError => 'Por favor, selecciona un ponente';
+  String get selectSpeakerError => 'Por favor, selecciona un speaker';
 
   @override
   String get talkTypeLabel => 'Tipo de charla*';
@@ -211,7 +214,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get cancelButton => 'Cancelar';
 
   @override
-  String get timeSelectionError => 'Por favor, seleccionar ambas horas: inicio y final.';
+  String get timeSelectionError =>
+      'Por favor, seleccionar ambas horas: inicio y final.';
 
   @override
   String get noSessionsFound => 'No se encontraron sesiones';
@@ -220,7 +224,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get deleteSessionTitle => 'Eliminar sesión';
 
   @override
-  String get deleteSessionMessage => '¿Estás seguro de que quieres eliminar la sesión?';
+  String get deleteSessionMessage =>
+      '¿Estás seguro de que quieres eliminar la sesión?';
 
   @override
   String get editEventTitle => 'Edición evento';
@@ -280,7 +285,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get secondaryColorLabel => 'Color Secundario';
 
   @override
-  String get secondaryColorHint => 'Introduce el color secundario (ej. #000000)';
+  String get secondaryColorHint =>
+      'Introduce el color secundario (ej. #000000)';
 
   @override
   String get venueTitle => 'Venue';
@@ -345,25 +351,26 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get authNetworkError => 'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.';
+  String get authNetworkError =>
+      'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.';
 
   @override
   String get closeButton => 'Cerrar';
 
   @override
-  String get editSponsorTitle => 'Editar Patrocinador';
+  String get editSponsorTitle => 'Editar Sponsor';
 
   @override
-  String get createSponsorTitle => 'Crear Patrocinador';
+  String get createSponsorTitle => 'Crear Sponsor';
 
   @override
-  String get editingSponsor => 'Editando Patrocinador';
+  String get editingSponsor => 'Editando Sponsor';
 
   @override
-  String get creatingSponsor => 'Creando Patrocinador';
+  String get creatingSponsor => 'Creando Sponsor';
 
   @override
-  String get sponsorNameHint => 'Introduce el nombre del Patrocinador';
+  String get sponsorNameHint => 'Introduce el nombre del Sponsor';
 
   @override
   String get sponsorNameValidation => 'Nombre';
@@ -402,13 +409,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'botón de añadir';
+  String get addButton => 'add button';
 
   @override
-  String get addRoomTitle => 'añadir sala';
+  String get addRoomTitle => 'add room';
 
   @override
-  String get roomNameHint => 'Nombre de la sala';
+  String get roomNameHint => 'Room name';
 
   @override
   String get formError => 'Hay errores en el formulario';
@@ -417,7 +424,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get confirmLogout => 'Confirmar cierre de sesión';
 
   @override
-  String get confirmLogoutMessage => '¿Estás seguro de que quieres cerrar sesión?';
+  String get confirmLogoutMessage =>
+      '¿Estás seguro de que quieres cerrar sesión?';
 
   @override
   String get cancel => 'Cancelar';
@@ -429,42 +437,39 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de acceso';
 
   @override
-
-  @override
-  String get addSpeaker => 'Agregar Ponente';
-  String get enterGithubTokenMessage => 'Por favor, introduce tu token de GitHub para continuar';
-
-  @override
-  String get createSpeaker => 'Crear Ponente';
-
-  @override
-  String get addSponsor => 'Agregar Patrocinador';
-  String get sessions => 'Sesiones';
-
-  @override
-  String get organization => 'Organización';
-
-  @override
-  String get organizationName => 'Nombre de la organización';
-
-  @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
-
-  @override
-  String get githubUser => 'Usuario de Github';
-
-  @override
-  String get githubUserHint => 'Introduce el usuario de github';
-
-  @override
-  String get branch => 'Rama';
-
-  @override
-  String get branchHint => 'Introduce la rama';
-
-  @override
   String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
-  String get availablesEventsText => 'Estos son los eventos que están disponibles en la app. Puedes cambiar entre ellos desde el menú lateral.';
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+
+  @override
+  String get addSpeaker => 'Add Speaker';
+
+  @override
+  String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get organization => 'Organization';
+
+  @override
+  String get organizationName => 'Organization Name';
+
+  @override
+  String get organizationNameHint => 'Enter the organization name';
+
+  @override
+  String get githubUser => 'GitHub User';
+
+  @override
+  String get githubUserHint => 'Enter the GitHub username';
+
+  @override
+  String get branch => 'Branch';
+
+  @override
+  String get branchHint => 'Enter the branch';
+
+  @override
+  String get createSpeaker => 'Create Speaker';
 }

@@ -141,7 +141,15 @@
   "logout": "Tancar Sessió",
   "enterGithubTokenTitle": "Token d'accés",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese","addSpeaker": "Afegir Ponent",
-  "createSpeaker": "Crear Ponent",
-  "addSponsor": "Afegir Patrocinador"
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "addSpeaker": "Afegir Ponent",
+  "addSponsor": "Afegir Patrocinador",
+  "organization": "Organització",
+  "organizationName": "Nom de l'organització",
+  "organizationNameHint": "Introdueix el nom de l'organització",
+  "githubUser": "Usuari de GitHub",
+  "githubUserHint": "Introdueix l'usuari de GitHub",
+  "branch": "Branca",
+  "branchHint": "Introdueix la branca",
+  "createSpeaker": "Crear Ponent"
 }

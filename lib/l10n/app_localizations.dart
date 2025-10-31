@@ -968,17 +968,15 @@ abstract class AppLocalizations {
   /// **'Add Speaker'**
   String get addSpeaker;
 
-  /// No description provided for @createSpeaker.
-  ///
-  /// In en, this message translates to:
-  /// **'Create Speaker'**
-  String get createSpeaker;
-
   /// No description provided for @addSponsor.
   ///
   /// In en, this message translates to:
   /// **'Add Sponsor'**
   String get addSponsor;
+
+  /// No description provided for @organization.
+  ///
+  /// In en, this message translates to:
   /// **'Organization'**
   String get organization;
 
@@ -997,13 +995,13 @@ abstract class AppLocalizations {
   /// No description provided for @githubUser.
   ///
   /// In en, this message translates to:
-  /// **'Github User'**
+  /// **'GitHub User'**
   String get githubUser;
 
   /// No description provided for @githubUserHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the github user'**
+  /// **'Enter the GitHub username'**
   String get githubUserHint;
 
   /// No description provided for @branch.
@@ -1017,6 +1015,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the branch'**
   String get branchHint;
+
+  /// No description provided for @createSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Speaker'**
+  String get createSpeaker;
 }
 
 class _AppLocalizationsDelegate

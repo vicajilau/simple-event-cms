@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -436,28 +438,33 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get enterGithubTokenTitle => 'Token d\'accés';
 
+  @override
+  String get availablesEventsTitle => 'Eventos Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
   String get addSpeaker => 'Afegir Ponent';
 
   @override
-  String get createSpeaker => 'Crear Ponent';
+  String get addSponsor => 'Afegir Patrocinador';
 
   @override
-  String get addSponsor => 'Afegir Patrocinador';
   String get organization => 'Organització';
 
   @override
-  String get organizationName => 'Nom de la organització';
+  String get organizationName => 'Nom de l\'organització';
 
   @override
-  String get organizationNameHint => 'Introdueix el nom de la organització';
+  String get organizationNameHint => 'Introdueix el nom de l\'organització';
 
   @override
-  String get githubUser => 'Usuari de Github';
+  String get githubUser => 'Usuari de GitHub';
 
   @override
-  String get githubUserHint => 'Introdueix l\'usuari de github';
+  String get githubUserHint => 'Introdueix l\'usuari de GitHub';
 
   @override
   String get branch => 'Branca';
@@ -466,8 +473,5 @@ class AppLocalizationsCa extends AppLocalizations {
   String get branchHint => 'Introdueix la branca';
 
   @override
-  String get availablesEventsTitle => 'Esdeveniments Disponibles';
-
-  @override
-  String get availablesEventsText => 'Aquests són els esdeveniments disponibles a l\'aplicació. Pots canviar entre ells des del menú lateral.';
+  String get createSpeaker => 'Crear Ponent';
 }

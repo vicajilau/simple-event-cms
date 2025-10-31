@@ -446,27 +446,29 @@ class AppLocalizationsPt extends AppLocalizations {
   String get addSpeaker => 'Adicionar Palestrante';
 
   @override
-  String get createSpeaker => 'Criar Palestrante';
+  String get addSponsor => 'Adicionar Patrocinador';
 
   @override
-  String get addSponsor => 'Adicionar Patrocinador';
   String get organization => 'Organização';
 
   @override
-  String get branch => 'Ramo';
+  String get organizationName => 'Nome da organização';
 
   @override
-  String get branchHint => 'Insira o nome do ramo';
+  String get organizationNameHint => 'Insira o nome da organização';
 
   @override
   String get githubUser => 'Usuário do GitHub';
 
   @override
-  String get githubUserHint => 'Insira o seu nome de usuário do GitHub';
+  String get githubUserHint => 'Insira o usuário do GitHub';
 
   @override
-  String get organizationName => 'Nome da Organização';
+  String get branch => 'Ramo';
 
   @override
-  String get organizationNameHint => 'Insira o nome da organização';
+  String get branchHint => 'Insira o ramo';
+
+  @override
+  String get createSpeaker => 'Criar Palestrante';
 }

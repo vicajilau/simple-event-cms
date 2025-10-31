@@ -1,4 +1,3 @@
-
 {
   "@@locale": "it",
   "loadingAgenda": "Caricamento agenda...",
@@ -142,7 +141,15 @@
   "logout": "Disconnettersi",
   "enterGithubTokenTitle": "Token di accesso",
   "availablesEventsTitle": "Eventos Disponibles",
-  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese", "addSpeaker": "Aggiungi Relatore",
-  "createSpeaker": "Crea Relatore",
-  "addSponsor": "Aggiungi Sponsor"
+  "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
+  "addSpeaker": "Aggiungi Relatore",
+  "addSponsor": "Aggiungi Sponsor",
+  "organization": "Organizzazione",
+  "organizationName": "Nome dell'organizzazione",
+  "organizationNameHint": "Inserisci il nome dell'organizzazione",
+  "githubUser": "Utente GitHub",
+  "githubUserHint": "Inserisci l'utente GitHub",
+  "branch": "Ramo",
+  "branchHint": "Inserisci il ramo",
+  "createSpeaker": "Crea Relatore"
 }
