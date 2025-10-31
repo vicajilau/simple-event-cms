@@ -4,6 +4,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -46,20 +47,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
           valueListenable: widget.viewmodel.speakers,
           builder: (context, speakers, child) {
             if (speakers.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.people_outline,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(location.noSpeakersRegistered),
-                  ],
-                ),
-              );
+              return NoDataScreen(message: location.noSpeakersRegistered,icon:
+                Icons.people_outline,
+             );
             }
 
             return LayoutBuilder(
@@ -72,107 +62,6 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 32),
-                        child: LayoutBuilder(
-                          builder: (context, header) {
-                            final isNarrow = header.maxWidth < 520;
-
-                            final actions = Wrap(
-                              spacing: 12,
-                              runSpacing: 8,
-                              crossAxisAlignment: WrapCrossAlignment.center,
-                              children: [
-                                ElevatedButton.icon(
-                                  onPressed: () async {
-                                    final Speaker? newSpeaker = await AppRouter
-                                        .router
-                                        .push(
-                                          AppRouter.speakerFormPath,
-                                          extra: {'eventId': widget.eventId},
-                                        );
-                                    if (newSpeaker != null) {
-                                      widget.viewmodel.addSpeaker(
-                                        newSpeaker,
-                                        widget.eventId,
-                                      );
-                                    }
-                                  },
-                                  icon: const Icon(
-                                    Icons.add,
-                                    size: 20,
-                                    color: Colors.white,
-                                  ),
-                                  label: Text(location.addSpeaker),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color(0xFF38B6FF),
-                                    foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 12,
-                                    ),
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(5),
-                                    ),
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-
-                            if (isNarrow) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    location.speakers,
-                                    style: TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  const SizedBox(height: 12),
-                                  FutureBuilder<bool>(
-                                    future: widget.viewmodel.checkToken(),
-                                    builder: (context, snapshot) =>
-                                        snapshot.data == true
-                                        ? actions
-                                        : const SizedBox.shrink(),
-                                  ),
-                                ],
-                              );
-                            }
-
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    location.speakers,
-                                    style: const TextStyle(
-                                      fontSize: 22,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                FutureBuilder<bool>(
-                                  future: widget.viewmodel.checkToken(),
-                                  builder: (context, snapshot) =>
-                                      snapshot.data == true
-                                      ? actions
-                                      : const SizedBox.shrink(),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-
                       const SizedBox(height: 16),
                       Expanded(
                         child: GridView.builder(

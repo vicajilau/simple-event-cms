@@ -4,6 +4,7 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speakers_screen.dart';
+import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -57,19 +58,8 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
           valueListenable: widget.viewmodel.sponsors,
           builder: (context, sponsors, child) {
             if (sponsors.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.people_outline,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(location.noSponsorsRegistered),
-                  ],
-                ),
+              return NoDataScreen(message: location.noSponsorsRegistered,icon:
+              Icons.people_outline,
               );
             }
 

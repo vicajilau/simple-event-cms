@@ -3,6 +3,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/no_events/no_events_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
@@ -156,7 +157,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   }
                 }
               }
-            }
+              }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
               if (mounted) {
@@ -168,21 +169,23 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 26.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  color: Colors.blue,
-                ), // Your desired icon
-                SizedBox(width: 8), // Spacing between icon and title
-                Text(
-                  organizationName.toString(),
-                  style: const TextStyle(color: Colors.black, fontSize: 15),
+            child: Expanded(
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.calendar_today,
+                    color: Colors.blue,
+                  ), // Your desired icon
+                  const SizedBox(width: 8), // Spacing between icon and title
+                  Text(
+                    organizationName.toString(),
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                  ),
+              ]
                 ),
-              ],
             ),
           ),
-        ),
+      ),
         actions: <Widget>[
           const SizedBox(width: 8),
           DropdownButtonHideUnderline(
@@ -288,7 +291,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
-                return Center(child: Text(location.noEventsToShow));
+                return Column( // Use Column to layout the button and the screen vertically.
+                    children: [
+                      _buildAddEventButton(),
+                      Expanded( // Use Expanded to make MaintenanceScreen fill the remaining space.
+                        child: MaintenanceScreen(),
+                      ),
+                    ],
+                );
               }
 
               return SingleChildScrollView(
@@ -331,60 +341,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         ),
                       ),
                     ),
-                    FutureBuilder<bool>(
-                      future: widget.viewmodel.checkToken(),
-                      builder: (context, snapshot) {
-                        if (snapshot.data == true) {
-                          return Padding(
-                            padding: const EdgeInsets.only(
-                              right: 16.0,
-                              top: 16.0,
-                              left: 16.0,
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    final Event? newEvent = await AppRouter
-                                        .router
-                                        .push(AppRouter.eventFormPath);
-                                    if (newEvent != null) {
-                                      setState(() {
-                                        _viewmodel.eventsToShow.value
-                                            .removeWhere(
-                                              (event) =>
-                                                  event.uid == newEvent.uid,
-                                            );
-                                        _viewmodel.eventsToShow.value.add(
-                                          newEvent,
-                                        );
-                                        _viewmodel.addEvent(newEvent);
-                                      });
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.add, size: 20),
-                                      Text(
-                                        'Add Event',
-                                      ), // Assuming 'Add Event' is in localizations
-                                      const SizedBox(width: 8),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }else{
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    ),
+                    _buildAddEventButton(),
                     GridView.builder(
                       shrinkWrap: true, // Important for nesting in a Column
                       physics:
@@ -454,6 +411,61 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  Widget _buildAddEventButton() {
+    return FutureBuilder<bool>(
+      future: widget.viewmodel.checkToken(),
+      builder: (context, snapshot) {
+        if (snapshot.data == true) {
+          return Padding(
+            padding: const EdgeInsets.only(
+              right: 16.0,
+              top: 16.0,
+              left: 16.0,
+              bottom: 16.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  onPressed: () async {
+                    final Event? newEvent =
+                        await AppRouter.router.push(AppRouter.eventFormPath);
+                    if (newEvent != null) {
+                      setState(() {
+                        _viewmodel.eventsToShow.value.removeWhere(
+                          (event) => event.uid == newEvent.uid,
+                        );
+                        _viewmodel.eventsToShow.value.add(
+                          newEvent,
+                        );
+                        _viewmodel.addEvent(newEvent);
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.add, size: 20),
+                      Text(
+                        'Add Event',
+                      ), // Assuming 'Add Event' is in localizations
+                      const SizedBox(width: 8),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 

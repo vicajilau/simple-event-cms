@@ -444,16 +444,10 @@ class AppLocalizationsGl extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get addSpeaker => 'Engadir Poñente';
-
-  @override
-  String get addSponsor => 'Engadir Patrocinador';
-
-  @override
   String get organization => 'Organización';
 
   @override
-  String get organizationName => 'Nome da organización';
+  String get organizationName => 'Nome da Organización';
 
   @override
   String get organizationNameHint => 'Introduce o nome da organización';
@@ -469,6 +463,25 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get branchHint => 'Introduce a rama';
+
+  @override
+  String get eventManager => 'Xestor de eventos';
+
+  @override
+  String get addSession => 'Engadir sesión';
+
+  @override
+  String get addSpeaker => 'Engadir relator';
+
+  @override
+  String get addSponsor => 'Engadir patrocinador';
+
+  @override
+  String get retryLater => 'Téntao de novo máis tarde';
+
+  @override
+  String get commonError =>
+      'Erro ao obter os datos, por favor, téntao de novo máis tarde';
 
   @override
   String get createSpeaker => 'Crear Poñente';

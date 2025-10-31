@@ -439,23 +439,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token di accesso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventi disponibili';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
-
-  @override
-  String get addSpeaker => 'Aggiungi Relatore';
-
-  @override
-  String get addSponsor => 'Aggiungi Sponsor';
+      'Esplora i prossimi eventi e \n trova qualcosa che ti interessa';
 
   @override
   String get organization => 'Organizzazione';
 
   @override
-  String get organizationName => 'Nome dell\'organizzazione';
+  String get organizationName => 'Nome dell\'Organizzazione';
 
   @override
   String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
@@ -467,10 +461,28 @@ class AppLocalizationsIt extends AppLocalizations {
   String get githubUserHint => 'Inserisci l\'utente GitHub';
 
   @override
-  String get branch => 'Ramo';
+  String get branch => 'Branch';
 
   @override
-  String get branchHint => 'Inserisci il ramo';
+  String get branchHint => 'Inserisci il branch';
+
+  @override
+  String get eventManager => 'Gestore eventi';
+
+  @override
+  String get addSession => 'Aggiungi Sessione';
+
+  @override
+  String get addSpeaker => 'Aggiungi Relatore';
+
+  @override
+  String get addSponsor => 'Aggiungi Sponsor';
+
+  @override
+  String get retryLater => 'Riprova più tardi';
+
+  @override
+  String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
 
   @override
   String get createSpeaker => 'Crea Relatore';

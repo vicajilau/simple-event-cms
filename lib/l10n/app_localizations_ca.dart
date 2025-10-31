@@ -350,7 +350,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'El projecte \"$projectName\" no existeix als teus repositoris de GitHub.';
+    return 'El projecte \"$projectName\" no existeix en els teus repositoris de GitHub.';
   }
 
   @override
@@ -412,13 +412,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get updateButton => 'Actualitzar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Afegir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Afegir Sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nom de la sala';
 
   @override
   String get formError => 'Hi ha errors al formulari';
@@ -427,7 +427,8 @@ class AppLocalizationsCa extends AppLocalizations {
   String get confirmLogout => 'Confirmar Tancament de Sessió';
 
   @override
-  String get confirmLogoutMessage => 'Estàs segur que vols tancar la sessió?';
+  String get confirmLogoutMessage =>
+      'N\'estàs segur, que vols tancar la sessió?';
 
   @override
   String get cancel => 'Cancel·lar';
@@ -439,23 +440,17 @@ class AppLocalizationsCa extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token d\'accés';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Esdeveniments Disponibles';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
-
-  @override
-  String get addSpeaker => 'Afegir Ponent';
-
-  @override
-  String get addSponsor => 'Afegir Patrocinador';
+      'Explora els pròxims esdeveniments i \n troba alguna cosa que t\'interessi';
 
   @override
   String get organization => 'Organització';
 
   @override
-  String get organizationName => 'Nom de l\'organització';
+  String get organizationName => 'Nom de l\'Organització';
 
   @override
   String get organizationNameHint => 'Introdueix el nom de l\'organització';
@@ -471,6 +466,25 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get branchHint => 'Introdueix la branca';
+
+  @override
+  String get eventManager => 'Gestor d\'esdeveniments';
+
+  @override
+  String get addSession => 'Afegir Sessió';
+
+  @override
+  String get addSpeaker => 'Afegir Ponent';
+
+  @override
+  String get addSponsor => 'Afegir Patrocinador';
+
+  @override
+  String get retryLater => 'Torna a intentar-ho més tard';
+
+  @override
+  String get commonError =>
+      'Error en obtenir les dades, si us plau, torna a intentar-ho més tard';
 
   @override
   String get createSpeaker => 'Crear Ponent';

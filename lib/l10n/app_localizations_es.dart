@@ -409,10 +409,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Añadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Añadir sala';
 
   @override
   String get roomNameHint => 'Room name';
@@ -444,31 +444,43 @@ class AppLocalizationsEs extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get addSpeaker => 'Add Speaker';
+  String get organization => 'Organización';
 
   @override
-  String get addSponsor => 'Add Sponsor';
+  String get organizationName => 'Nombre de la Organización';
 
   @override
-  String get organization => 'Organization';
+  String get organizationNameHint => 'Introduce el nombre de la organización';
 
   @override
-  String get organizationName => 'Organization Name';
+  String get githubUser => 'Usuario de GitHub';
 
   @override
-  String get organizationNameHint => 'Enter the organization name';
+  String get githubUserHint => 'Introduce el usuario de GitHub';
 
   @override
-  String get githubUser => 'GitHub User';
+  String get branch => 'Rama';
 
   @override
-  String get githubUserHint => 'Enter the GitHub username';
+  String get branchHint => 'Introduce la rama';
 
   @override
-  String get branch => 'Branch';
+  String get eventManager => 'Gestor de eventos';
 
   @override
-  String get branchHint => 'Enter the branch';
+  String get addSession => 'Añadir Sesión';
+
+  @override
+  String get addSpeaker => 'Añadir Ponente';
+
+  @override
+  String get addSponsor => 'Añadir Patrocinador';
+
+  @override
+  String get retryLater => 'Vuelve a intentarlo más tarde';
+
+  @override
+  String get commonError => 'Error fetching data, Please retry later';
 
   @override
   String get createSpeaker => 'Create Speaker';

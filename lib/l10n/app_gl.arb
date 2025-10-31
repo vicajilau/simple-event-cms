@@ -142,14 +142,18 @@
   "tokenHintLabel": "Introduce o teu token de GitHub...",
   "availablesEventsTitle": "Eventos Disponibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
-  "addSpeaker": "Engadir Poñente",
-  "addSponsor": "Engadir Patrocinador",
   "organization": "Organización",
-  "organizationName": "Nome da organización",
+  "organizationName": "Nome da Organización",
   "organizationNameHint": "Introduce o nome da organización",
   "githubUser": "Usuario de GitHub",
   "githubUserHint": "Introduce o usuario de GitHub",
   "branch": "Rama",
   "branchHint": "Introduce a rama",
-  "createSpeaker": "Crear Poñente"
+  "createSpeaker": "Crear Poñente",
+  "eventManager": "Xestor de eventos",
+  "addSession": "Engadir sesión",
+  "addSpeaker": "Engadir relator",
+  "addSponsor": "Engadir patrocinador",
+  "retryLater": "Téntao de novo máis tarde",
+  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde"
 }

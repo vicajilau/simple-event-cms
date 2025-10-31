@@ -77,7 +77,7 @@ class CommonsServicesImp extends CommonsServices {
         } else {
           // Handle other potential network or API errors during fetch.
           throw NetworkException(
-            "Error fetching data from GitHub: $e",
+            "Error fetching data, Please retry later",
             cause: e,
             stackTrace: st,
             url: url,
@@ -85,7 +85,7 @@ class CommonsServicesImp extends CommonsServices {
         }
       }
       if (res.file == null || res.file!.content == null) {
-        throw NetworkException("The response content is null");
+        throw NetworkException("Error fetching data, Please retry later");
       }
       final file = utf8.decode(
         base64.decode(
@@ -124,14 +124,14 @@ class CommonsServicesImp extends CommonsServices {
       // or the parsing in the specific _loadAll methods will need to handle it.
       // For now, this error helps identify such mismatches.
       throw JsonDecodeException(
-        "Decoded JSON for path $path is not a List as expected by loadData's return type, nor the handled eventPath map structure.",
+        "Error fetching data, Please retry later",
       );
     } catch (e, st) {
       if (e.toString().contains("No element")) {
         return [].toList();
       } else {
         throw JsonDecodeException(
-          "Error loading configuration from $path",
+          "Error fetching data, Please retry later",
           cause: e,
           stackTrace: st,
         );

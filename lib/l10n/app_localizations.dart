@@ -899,13 +899,13 @@ abstract class AppLocalizations {
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
-  /// **'add button'**
+  /// **'Add Button'**
   String get addButton;
 
   /// No description provided for @addRoomTitle.
   ///
   /// In en, this message translates to:
-  /// **'add room'**
+  /// **'Add Room'**
   String get addRoomTitle;
 
   /// No description provided for @roomNameHint.
@@ -953,26 +953,14 @@ abstract class AppLocalizations {
   /// No description provided for @availablesEventsTitle.
   ///
   /// In en, this message translates to:
-  /// **'Eventos Disponibles'**
+  /// **'Available Events'**
   String get availablesEventsTitle;
 
   /// No description provided for @availablesEventsText.
   ///
   /// In en, this message translates to:
-  /// **'Explorar a los próximos eventos y \n encuentra algo que te interese'**
+  /// **'Explore upcoming events and\nfind something that interests you'**
   String get availablesEventsText;
-
-  /// No description provided for @addSpeaker.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Speaker'**
-  String get addSpeaker;
-
-  /// No description provided for @addSponsor.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Sponsor'**
-  String get addSponsor;
 
   /// No description provided for @organization.
   ///
@@ -1001,7 +989,7 @@ abstract class AppLocalizations {
   /// No description provided for @githubUserHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the GitHub username'**
+  /// **'Enter the GitHub user'**
   String get githubUserHint;
 
   /// No description provided for @branch.
@@ -1015,6 +1003,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter the branch'**
   String get branchHint;
+
+  /// No description provided for @eventManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Event manager'**
+  String get eventManager;
+
+  /// No description provided for @addSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Session'**
+  String get addSession;
+
+  /// No description provided for @addSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Speaker'**
+  String get addSpeaker;
+
+  /// No description provided for @addSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Sponsor'**
+  String get addSponsor;
+
+  /// No description provided for @retryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get retryLater;
+
+  /// No description provided for @commonError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching data, Please retry later'**
+  String get commonError;
 
   /// No description provided for @createSpeaker.
   ///

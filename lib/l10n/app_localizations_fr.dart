@@ -412,13 +412,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateButton => 'Mettre à jour';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Ajouter';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Ajouter une salle';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nom de la salle';
 
   @override
   String get formError => 'Il y a des erreurs dans le formulaire';
@@ -440,17 +440,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get enterGithubTokenTitle => 'Jeton d\'accès';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Événements Disponibles';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
-
-  @override
-  String get addSpeaker => 'Ajouter un Intervenant';
-
-  @override
-  String get addSponsor => 'Ajouter un Sponsor';
+      'Explorez les événements à venir et \n trouvez quelque chose qui vous intéresse';
 
   @override
   String get organization => 'Organisation';
@@ -465,13 +459,32 @@ class AppLocalizationsFr extends AppLocalizations {
   String get githubUser => 'Utilisateur GitHub';
 
   @override
-  String get githubUserHint => 'Entrez le nom d\'utilisateur GitHub';
+  String get githubUserHint => 'Entrez l\'utilisateur GitHub';
 
   @override
   String get branch => 'Branche';
 
   @override
   String get branchHint => 'Entrez la branche';
+
+  @override
+  String get eventManager => 'Gestionnaire d\'événements';
+
+  @override
+  String get addSession => 'Ajouter une Session';
+
+  @override
+  String get addSpeaker => 'Ajouter un Intervenant';
+
+  @override
+  String get addSponsor => 'Ajouter un Sponsor';
+
+  @override
+  String get retryLater => 'Try again later';
+
+  @override
+  String get commonError =>
+      'Erreur lors de la récupération des données, veuillez réessayer plus tard';
 
   @override
   String get createSpeaker => 'Créer un Intervenant';

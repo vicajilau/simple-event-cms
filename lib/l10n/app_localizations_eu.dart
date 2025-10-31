@@ -435,38 +435,51 @@ class AppLocalizationsEu extends AppLocalizations {
   String get enterGithubTokenTitle => 'Sarbide-tokena';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Ekitaldi Eskuragarriak';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait';
 
   @override
-  String get addSpeaker => 'Hizlaria Gehitu';
+  String get organization => 'Antolakuntza';
 
   @override
-  String get addSponsor => 'Babeslea Gehitu';
+  String get organizationName => 'Antolakuntzaren izena';
 
   @override
-  String get organization => 'Erakundea';
-
-  @override
-  String get organizationName => 'Erakundearen izena';
-
-  @override
-  String get organizationNameHint => 'Idatzi erakundearen izena';
+  String get organizationNameHint => 'Sartu antolakuntzaren izena';
 
   @override
   String get githubUser => 'GitHub erabiltzailea';
 
   @override
-  String get githubUserHint => 'Idatzi GitHub erabiltzailea';
+  String get githubUserHint => 'Sartu GitHub erabiltzailea';
 
   @override
   String get branch => 'Adarra';
 
   @override
-  String get branchHint => 'Idatzi adarra';
+  String get branchHint => 'Sartu adarra';
+
+  @override
+  String get eventManager => 'Ekitaldi kudeatzailea';
+
+  @override
+  String get addSession => 'Saioa gehitu';
+
+  @override
+  String get addSpeaker => 'Hizlaria gehitu';
+
+  @override
+  String get addSponsor => 'Babeslea gehitu';
+
+  @override
+  String get retryLater => 'Saiatu berriro geroago';
+
+  @override
+  String get commonError =>
+      'Errorea datuak eskuratzean, saiatu berriro geroago mesedez';
 
   @override
   String get createSpeaker => 'Hizlaria Sortu';

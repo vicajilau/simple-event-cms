@@ -131,8 +131,8 @@
   "silverSponsor": "Patrocinador Prata",
   "bronzeSponsor": "Patrocinador Bronze",
   "updateButton": "Atualizar",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
+  "addButton": "Add Button",
+  "addRoomTitle": "Add Room",
   "roomNameHint": "Room name",
   "formError": "Há erros no formulário",
   "cancelButton": "Cancelar",
@@ -153,5 +153,9 @@
   "githubUserHint": "Insira o usuário do GitHub",
   "branch": "Ramo",
   "branchHint": "Insira o ramo",
-  "createSpeaker": "Criar Palestrante"
+  "createSpeaker": "Criar Palestrante",
+   "eventManager": "Gestor de eventos",
+  "addSession": "Adicionar Sessão",
+  "retryLater": "Tente novamente mais tarde",
+  "commonError": "Erro ao buscar dados, tente novamente mais tarde"
 }

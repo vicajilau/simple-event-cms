@@ -409,10 +409,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get updateButton => 'Atualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -443,12 +443,6 @@ class AppLocalizationsPt extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get addSpeaker => 'Adicionar Palestrante';
-
-  @override
-  String get addSponsor => 'Adicionar Patrocinador';
-
-  @override
   String get organization => 'Organização';
 
   @override
@@ -468,6 +462,24 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get branchHint => 'Insira o ramo';
+
+  @override
+  String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'Adicionar Sessão';
+
+  @override
+  String get addSpeaker => 'Adicionar Palestrante';
+
+  @override
+  String get addSponsor => 'Adicionar Patrocinador';
+
+  @override
+  String get retryLater => 'Tente novamente mais tarde';
+
+  @override
+  String get commonError => 'Erro ao buscar dados, tente novamente mais tarde';
 
   @override
   String get createSpeaker => 'Criar Palestrante';

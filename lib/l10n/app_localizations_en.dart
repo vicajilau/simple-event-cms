@@ -406,10 +406,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateButton => 'Update';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -433,17 +433,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterGithubTokenTitle => 'Access Token';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Available Events';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
-
-  @override
-  String get addSpeaker => 'Add Speaker';
-
-  @override
-  String get addSponsor => 'Add Sponsor';
+      'Explore upcoming events and\nfind something that interests you';
 
   @override
   String get organization => 'Organization';
@@ -458,13 +452,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String get githubUser => 'GitHub User';
 
   @override
-  String get githubUserHint => 'Enter the GitHub username';
+  String get githubUserHint => 'Enter the GitHub user';
 
   @override
   String get branch => 'Branch';
 
   @override
   String get branchHint => 'Enter the branch';
+
+  @override
+  String get eventManager => 'Event manager';
+
+  @override
+  String get addSession => 'Add Session';
+
+  @override
+  String get addSpeaker => 'Add Speaker';
+
+  @override
+  String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get retryLater => 'Please try again later';
+
+  @override
+  String get commonError => 'Error fetching data, Please retry later';
 
   @override
   String get createSpeaker => 'Create Speaker';
