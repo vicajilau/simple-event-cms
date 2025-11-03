@@ -1,4 +1,3 @@
-
 {
   "@@locale": "es",
   "loadingAgenda": "Cargando agenda...",
@@ -40,7 +39,6 @@
   "twitterHint": "Introduce la URL de Twitter",
   "githubHint": "Introduce la URL de GitHub",
   "linkedinHint": "Introduce la URL de LinkedIn",
-  "websiteHint": "Introduce la URL de la web",
   "saveButton": "Guardar",
   "errorLoadingData": "Error cargando los datos",
   "errorUnknown": "Error desconocido",
@@ -156,5 +154,6 @@
   "addSpeaker": "Añadir Ponente",
   "addSponsor": "Añadir Patrocinador",
   "retryLater": "Vuelve a intentarlo más tarde",
-  "commonError": "Error fetching data, Please retry later"
+  "commonError": "Error fetching data, Please retry later",
+  "createSpeaker": "Create Speaker"
 }

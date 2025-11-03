@@ -1,4 +1,3 @@
-
 {
   "@@locale": "it",
   "loadingAgenda": "Caricamento agenda...",
@@ -40,7 +39,6 @@
   "twitterHint": "Inserisci l'URL di Twitter",
   "githubHint": "Inserisci l'URL di GitHub",
   "linkedinHint": "Inserisci l'URL di LinkedIn",
-  "websiteHint": "Inserisci l'URL del sito web",
   "saveButton": "Salva",
   "errorLoadingData": "Errore durante il caricamento dei dati",
   "errorUnknown": "Errore sconosciuto",
@@ -156,5 +154,6 @@
   "addSpeaker": "Aggiungi Relatore",
   "addSponsor": "Aggiungi Sponsor",
   "retryLater": "Riprova più tardi",
-  "commonError": "Errore nel recupero dei dati, riprova più tardi"
+  "commonError": "Errore nel recupero dei dati, riprova più tardi",
+  "createSpeaker": "Crea Relatore"
 }

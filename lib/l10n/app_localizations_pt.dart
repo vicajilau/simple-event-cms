@@ -126,9 +126,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get linkedinHint => 'Insira a URL do LinkedIn';
 
   @override
-  String get websiteHint => 'Insira a URL do site';
-
-  @override
   String get saveButton => 'Salvar';
 
   @override
@@ -391,6 +388,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Insira a URL do site';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -443,41 +443,44 @@ class AppLocalizationsPt extends AppLocalizations {
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get organization => 'Organización';
+  String get organization => 'Organização';
 
   @override
-  String get organizationName => 'Nombre de la Organización';
+  String get organizationName => 'Nome da organização';
 
   @override
-  String get organizationNameHint => 'Introduce el nombre de la organización';
+  String get organizationNameHint => 'Insira o nome da organização';
 
   @override
-  String get githubUser => 'Usuario de GitHub';
+  String get githubUser => 'Usuário do GitHub';
 
   @override
-  String get githubUserHint => 'Introduce el usuario de GitHub';
+  String get githubUserHint => 'Insira o usuário do GitHub';
 
   @override
-  String get branch => 'Rama';
+  String get branch => 'Ramo';
 
   @override
-  String get branchHint => 'Introduce la rama';
+  String get branchHint => 'Insira o ramo';
 
   @override
   String get eventManager => 'Gestor de eventos';
 
   @override
-  String get addSession => 'Add Session';
+  String get addSession => 'Adicionar Sessão';
 
   @override
-  String get addSpeaker => 'Add Speaker';
+  String get addSpeaker => 'Adicionar Palestrante';
 
   @override
-  String get addSponsor => 'Add Sponsor';
+  String get addSponsor => 'Adicionar Patrocinador';
 
   @override
-  String get retryLater => 'Please try again later';
+  String get retryLater => 'Tente novamente mais tarde';
 
   @override
-  String get commonError => 'Error fetching data, Please retry later';
+  String get commonError => 'Erro ao buscar dados, tente novamente mais tarde';
+
+  @override
+  String get createSpeaker => 'Criar Palestrante';
 }

@@ -39,7 +39,6 @@
   "twitterHint": "Entrez l'URL de Twitter",
   "githubHint": "Entrez l'URL de GitHub",
   "linkedinHint": "Entrez l'URL de LinkedIn",
-  "websiteHint": "Entrez l'URL du site web",
   "saveButton": "Enregistrer",
   "errorLoadingData": "Erreur lors du chargement des données",
   "errorUnknown": "Erreur inconnue",
@@ -155,5 +154,7 @@
   "addSession": "Ajouter une Session",
   "addSpeaker": "Ajouter un Intervenant",
   "addSponsor": "Ajouter un Sponsor",
-  "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard"
+  "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard",
+  "createSpeaker": "Créer un Intervenant",
+  "retryLater": "Try again later"
 }
