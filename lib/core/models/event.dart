@@ -26,6 +26,9 @@ class Event extends GitHubModel {
 
   /// Optional description of the event_collection
   final String? description;
+  
+  /// The location of the event
+  final String? location;
 
   /// the name of the room where the event_collection will take place
   final List<Track> tracks;
@@ -40,6 +43,7 @@ class Event extends GitHubModel {
     required this.secondaryColor,
     required this.eventDates,
     this.description,
+    this.location,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
   }) : super();
@@ -63,6 +67,7 @@ class Event extends GitHubModel {
       secondaryColor: json['secondaryColor'],
       eventDates: EventDates.fromJson(json['eventDates']),
       description: json['description'],
+      location: json['location'],
       tracks: tracks,
     );
   }
@@ -78,6 +83,7 @@ class Event extends GitHubModel {
       'secondaryColor': secondaryColor,
       'eventDates': eventDates.toJson(),
       'description': description,
+      'location': location,
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }

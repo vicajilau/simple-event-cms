@@ -47,6 +47,7 @@ dependencies:
   go_router: ^16.3.0
   get_it: ^8.3.0
   uuid: ^4.5.1
+  osm_nominatim: ^4.0.1
 
 dev_dependencies:
   flutter_test:

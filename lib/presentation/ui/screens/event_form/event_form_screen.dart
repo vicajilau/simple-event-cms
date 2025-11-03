@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:osm_nominatim/osm_nominatim.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/app_decorations.dart';
@@ -16,6 +19,9 @@ class EventFormScreen extends StatefulWidget {
   final EventCollectionViewModel eventCollectionViewModel =
       getIt<EventCollectionViewModel>();
   final String? eventId;
+  final nominatim = Nominatim(
+    userAgent: 'Dart osm_nominatim',
+  );
   EventFormScreen({super.key, this.eventId});
 
   @override
@@ -34,6 +40,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _primaryColorController = TextEditingController();
   final TextEditingController _secondaryColorController =
       TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   // Focus nodes
   final FocusNode _nameFocus = FocusNode();
@@ -47,6 +54,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final FocusNode _venueAddressFocus = FocusNode();
   final FocusNode _venueCityFocus = FocusNode();
   final FocusNode _descriptionFocus = FocusNode();
+  final FocusNode _locationFocus = FocusNode();
 
   // Form field keys
   final GlobalKey<FormFieldState> _nameFieldKey = GlobalKey<FormFieldState>();
@@ -70,13 +78,22 @@ class _EventFormScreenState extends State<EventFormScreen> {
       GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _descriptionFieldKey =
       GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _locationFieldKey =
+      GlobalKey<FormFieldState>();
 
   bool _hasEndDate = true;
   List<Track> _tracks = [];
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
+    // Initialize Nominatim for web to avoid isolate errors.
+    // This should be called before any other Nominatim method.
+    // It's safe to call this on all platforms.
+    // Configure Nominatim with enhanced settings
+
+
     if (widget.eventId != null) {
       eventFormViewModel.viewState.value = ViewState.isLoading;
       widget.eventCollectionViewModel.getEventById(
@@ -93,6 +110,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _hasEndDate = startDate != endDate;
           if (_hasEndDate) {
             _endDateController.text = endDate;
+          }
+          if (event.location != null) {
+            _locationController.text = event.location!;
           }
           _tracks = event.tracks;
           _timezoneController.text = event.eventDates.timezone;
@@ -116,6 +136,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     _timezoneController.dispose();
     _primaryColorController.dispose();
     _secondaryColorController.dispose();
+    _locationController.dispose();
 
     // dispose focus nodes
     _nameFocus.dispose();
@@ -129,6 +150,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
     _venueAddressFocus.dispose();
     _venueCityFocus.dispose();
     _descriptionFocus.dispose();
+    _locationFocus.dispose();
+    _debounce?.cancel();
 
     super.dispose();
   }
@@ -161,15 +184,56 @@ class _EventFormScreenState extends State<EventFormScreen> {
     }
   }
 
+  /// Placeholder for your suggestions API.
+  /// You should replace this with a real implementation using an API like Google Places.
+  Future<Iterable<String>> _getSuggestions(
+      TextEditingValue textEditingValue) async {
+    // Cancel any existing timer
+    _debounce?.cancel();
+
+    // If the user has cleared the text, don't fetch suggestions.
+    if (textEditingValue.text.isEmpty) {
+      return const Iterable<String>.empty();
+    }
+
+    // Start a new timer
+    final completer = Completer<Iterable<String>>();
+    _debounce = Timer(const Duration(seconds: 1), () async {
+    try {
+      final searchResult = await widget.nominatim.searchByName(
+        query: textEditingValue.text,
+        limit: 3,
+        addressDetails: true,
+        extraTags: true,
+        nameDetails: true,
+      );
+
+      // Before returning, check if the text has changed. If it has, this result is stale,
+      // and we should return an empty list to avoid showing outdated suggestions.
+      // This prevents race conditions when typing quickly.
+      if (textEditingValue.text != _locationController.text) {
+        completer.complete(Iterable<String>.empty());
+      }
+
+        completer.complete(searchResult.map((s) => s.displayName.toString()));
+    } catch (e) {
+      // Handle potential network errors or exceptions from the library
+        completer.complete(const Iterable<String>.empty());
+    }
+    });
+
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final location = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
     return ValueListenableBuilder<ViewState>(
       valueListenable: eventFormViewModel.viewState,
       builder: (context, snapshot, child) {
         if (snapshot == ViewState.isLoading) {
           return FormScreenWrapper(
-            pageTitle: location.loadingTitle,
+            pageTitle: localizations.loadingTitle,
             widgetFormChild: const Center(child: CircularProgressIndicator()),
           );
         } else if (snapshot == ViewState.error) {
@@ -185,7 +249,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     eventFormViewModel.viewState.value = ViewState.loadFinished,
                     Navigator.of(context).pop()
                   },
-                  buttonText: location.closeButton,
+                  buttonText: localizations.closeButton,
                 ),
               );
             }
@@ -193,8 +257,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
         }
         return FormScreenWrapper(
           pageTitle: widget.eventId != null
-              ? location.editEventTitle
-              : location.createEventTitle,
+              ? localizations.editEventTitle
+              : localizations.createEventTitle,
           widgetFormChild: Form(
             key: _formKey,
             child: Column(
@@ -203,28 +267,67 @@ class _EventFormScreenState extends State<EventFormScreen> {
               children: [
                 Text(
                   widget.eventId != null
-                      ? location.editingEvent
-                      : location.creatingEvent,
+                      ? localizations.editingEvent
+                      : localizations.creatingEvent,
                   style: AppFonts.titleHeadingForm
                       .copyWith(color: Colors.blue),
                 ),
                 SectionInputForm(
-                  label: location.eventNameLabel,
+                  label: localizations.eventNameLabel,
                   childInput: TextFormField(
                     key: _nameFieldKey,
                     focusNode: _nameFocus,
                     controller: _nameController,
                     maxLines: 1,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.eventNameHint,
+                      hintText: localizations.eventNameHint,
                     ),
                     validator: (value) => (value == null || value.isEmpty)
-                        ? location.requiredField
+                        ? localizations.requiredField
                         : null,
                   ),
                 ),
+                 SectionInputForm(
+                  label: "Location", // Consider adding this to your AppLocalizations
+                  childInput: Autocomplete<String>(
+                    optionsBuilder: _getSuggestions,
+                    onSelected: (String selection) {
+                      _locationController.text = selection;
+                    },
+                    fieldViewBuilder: (
+                      BuildContext context,
+                      TextEditingController fieldTextEditingController,
+                      FocusNode fieldFocusNode,
+                      VoidCallback onFieldSubmitted,
+                    ) {
+                      // We need to use a separate controller for the field view
+                      // and sync it with our main controller.
+                      // This is a common pattern for Autocomplete.
+                      if (_locationController.text.isNotEmpty && fieldTextEditingController.text.isEmpty) {
+                         fieldTextEditingController.text = _locationController.text;
+                      }
+                      
+                      // The Autocomplete widget manages its own controller and focus node.
+                      // We must use the ones provided by the fieldViewBuilder.
+                      return TextFormField(
+                        controller: fieldTextEditingController,
+                        focusNode: fieldFocusNode,
+                        decoration: AppDecorations.textFieldDecoration.copyWith(
+                          hintText: "Enter event location", // Consider localizing
+                        ),
+                        onChanged: (text) {
+                           // Sync our controller with the field's controller
+                           _locationController.text = text;
+                        },
+                        validator: (value) => (value == null || value.isEmpty)
+                            ? localizations.requiredField
+                            : null,
+                      );
+                    },
+                  ),
+                ),
                 SectionInputForm(
-                  label: location.startDateLabel,
+                  label: localizations.startDateLabel,
                   childInput: Row(
                     children: [
                       Expanded(
@@ -234,11 +337,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
                           controller: _startDateController,
                           readOnly: true,
                           decoration: AppDecorations.textFieldDecoration
-                              .copyWith(hintText: location.dateHint),
+                              .copyWith(hintText: localizations.dateHint),
                           onTap: () =>
                               _selectDate(context, _startDateController),
                           validator: (value) => (value == null || value.isEmpty)
-                              ? location.requiredField
+                              ? localizations.requiredField
                               : null,
                         ),
                       ),
@@ -247,7 +350,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 ),
                 if (_hasEndDate)
                   SectionInputForm(
-                    label: location.endDateLabel,
+                    label: localizations.endDateLabel,
                     childInput: Row(
                       children: [
                         Expanded(
@@ -257,7 +360,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                             controller: _endDateController,
                             readOnly: true,
                             decoration: AppDecorations.textFieldDecoration
-                                .copyWith(hintText: location.dateHint),
+                                .copyWith(hintText: localizations.dateHint),
                             onTap: () =>
                                 _selectDate(context, _endDateController),
                           ),
@@ -284,7 +387,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         });
                       },
                       child: Text(
-                        location.addEndDate,
+                        localizations.addEndDate,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           decoration: TextDecoration.underline,
@@ -293,7 +396,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                   ),
                 SectionInputForm(
-                  label: location.roomsLabel,
+                  label: localizations.roomsLabel,
                   childInput: SizedBox(
                     height: 200,
                     child: AddRoom(
@@ -312,35 +415,35 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
-                  label: location.timezoneLabel,
+                  label: localizations.timezoneLabel,
                   childInput: TextFormField(
                     key: _timezoneFieldKey,
                     focusNode: _timezoneFocus,
                     controller: _timezoneController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.timezoneHint,
+                      hintText: localizations.timezoneHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: location.primaryColorLabel,
+                  label: localizations.primaryColorLabel,
                   childInput: TextFormField(
                     key: _primaryColorFieldKey,
                     focusNode: _primaryColorFocus,
                     controller: _primaryColorController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.primaryColorHint,
+                      hintText: localizations.primaryColorHint,
                     ),
                   ),
                 ),
                 SectionInputForm(
-                  label: location.secondaryColorLabel,
+                  label: localizations.secondaryColorLabel,
                   childInput: TextFormField(
                     key: _secondaryColorFieldKey,
                     focusNode: _secondaryColorFocus,
                     controller: _secondaryColorController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
-                      hintText: location.secondaryColorHint,
+                      hintText: localizations.secondaryColorHint,
                     ),
                   ),
                 ),
@@ -352,14 +455,14 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: Text(location.cancelButton),
+                      child: Text(localizations.cancelButton),
                     ),
                     FilledButton(
                       onPressed: _onSubmit,
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.blue,
                       ),
-                      child: Text(location.saveButton),
+                      child: Text(localizations.saveButton),
                     ),
                   ],
                 ),
@@ -372,15 +475,16 @@ class _EventFormScreenState extends State<EventFormScreen> {
   }
 
   Future<void> _onSubmit() async {
-    final location = AppLocalizations.of(context)!;
+    final localizations = AppLocalizations.of(context)!;
 
-    // Primero forzamos la validación para que los errores aparezcan
+    // First, force validation to show errors.
     final isValid = _formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
-      // Lista ordenada de pares (key, focusNode) en el mismo orden visual del formulario.
+      // Ordered list of (key, focusNode) pairs in the same visual order as the form.
       final fields = <MapEntry<GlobalKey<FormFieldState>, FocusNode>>[
         MapEntry(_nameFieldKey, _nameFocus),
+        MapEntry(_locationFieldKey, _locationFocus),
         MapEntry(_startDateFieldKey, _startDateFocus),
         MapEntry(_endDateFieldKey, _endDateFocus),
         MapEntry(_timezoneFieldKey, _timezoneFocus),
@@ -393,35 +497,37 @@ class _EventFormScreenState extends State<EventFormScreen> {
         MapEntry(_descriptionFieldKey, _descriptionFocus),
       ];
 
-      // Encontrar los que tienen error
-      final invalid = fields.where((f) {
+      // Find the ones with errors
+      final invalidFields = fields.where((f) {
         final state = f.key.currentState;
         return state != null && state.hasError;
       }).toList();
 
-      final lastInvalid = invalid.last;
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (_) => CustomErrorDialog(
-          errorMessage: location.formError,
-          onCancel: () => Navigator.of(context).pop(),
-          buttonText: location.closeButton,
-        ),
-      );
+      if (invalidFields.isNotEmpty) {
+        final firstInvalidField = invalidFields.first;
+        
+        await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => CustomErrorDialog(
+            errorMessage: localizations.formError,
+            onCancel: () => Navigator.of(context).pop(),
+            buttonText: localizations.closeButton,
+          ),
+        );
 
-      if (!mounted) return;
+        if (!mounted) return;
 
-      lastInvalid.value.requestFocus();
+        firstInvalidField.value.requestFocus();
 
-      // Hacemos scroll automatico para que sea visible el error
-      await Scrollable.ensureVisible(
-        lastInvalid.value.context!,
-        duration: Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-        alignment: 0.3,
-      );
-
+        // Automatically scroll to make the error visible.
+        await Scrollable.ensureVisible(
+          firstInvalidField.value.context!,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+          alignment: 0.3,
+        );
+      }
       return;
     }
 
@@ -442,6 +548,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     final eventModified = Event(
       uid: eventId,
       eventName: _nameController.text,
+      location: _locationController.text,
       tracks: _tracks.map((track) {
         track.eventUid = eventId;
         return track;
