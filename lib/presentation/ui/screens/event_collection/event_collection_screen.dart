@@ -44,18 +44,22 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     try {
       // Use dependency injection instead of creating instances manually
 
-      widget.viewmodel.setup();
+      await widget.viewmodel.setup();
 
-      setState(() {
-        organizationName = organization.organizationName;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          organizationName = organization.organizationName;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      final location = AppLocalizations.of(context)!;
-      setState(() {
-        _errorMessage = '${location.errorLoadingConfig}$e';
-        _isLoading = false;
-      });
+      if (mounted) {
+        final location = AppLocalizations.of(context)!;
+        setState(() {
+          _errorMessage = '${location.errorLoadingConfig}$e';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -157,7 +161,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   }
                 }
               }
-              }
+            }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
               if (mounted) {
@@ -169,23 +173,22 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 26.0),
-            child: Expanded(
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    color: Colors.blue,
-                  ), // Your desired icon
-                  const SizedBox(width: 8), // Spacing between icon and title
-                  Text(
-                    organizationName.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-              ]
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.calendar_today,
+                  color: Colors.blue,
+                ), // Your desired icon
+                const SizedBox(width: 8), // Spacing between icon and title
+                Text(
+                  organizationName.toString(),
+                  style: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
+              ],
             ),
           ),
-      ),
+        ),
         actions: <Widget>[
           const SizedBox(width: 8),
           DropdownButtonHideUnderline(
@@ -291,13 +294,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
-                return Column( // Use Column to layout the button and the screen vertically.
-                    children: [
-                      _buildAddEventButton(),
-                      Expanded( // Use Expanded to make MaintenanceScreen fill the remaining space.
-                        child: MaintenanceScreen(),
-                      ),
-                    ],
+                return Column(
+                  // Use Column to layout the button and the screen vertically.
+                  children: [
+                    _buildAddEventButton(),
+                    Expanded(
+                      // Use Expanded to make MaintenanceScreen fill the remaining space.
+                      child: MaintenanceScreen(),
+                    ),
+                  ],
                 );
               }
 
@@ -384,10 +389,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return Padding(
-            padding: const EdgeInsets.only(
-              top: 16.0,
-              bottom: 16.0,
-            ),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -396,10 +398,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0,
-                      ),
+                      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -408,17 +407,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             children: [
                               Text(
                                 location.availablesEventsTitle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
+                                style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8.0),
                               Text(
                                 location.availablesEventsText,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
                           ),
@@ -434,16 +429,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          final Event? newEvent = await AppRouter.router
-                              .push(AppRouter.eventFormPath);
+                          final Event? newEvent = await AppRouter.router.push(
+                            AppRouter.eventFormPath,
+                          );
                           if (newEvent != null) {
                             setState(() {
                               _viewmodel.eventsToShow.value.removeWhere(
                                 (event) => event.uid == newEvent.uid,
                               );
-                              _viewmodel.eventsToShow.value.add(
-                                newEvent,
-                              );
+                              _viewmodel.eventsToShow.value.add(newEvent);
                               _viewmodel.addEvent(newEvent);
                             });
                           }

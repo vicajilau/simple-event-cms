@@ -34,10 +34,6 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
-  @override
-  void setup([Object? argument]) {
-    if (argument is String) {}
-  }
 
   @override
   Future<bool> checkToken() async {
@@ -241,5 +237,10 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
         viewState.value = ViewState.error;
         return false;
     }
+  }
+
+  @override
+  Future<void> setup([Object? argument]) {
+    return Future.value();
   }
 }

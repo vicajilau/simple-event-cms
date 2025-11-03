@@ -32,7 +32,7 @@ class EventFormViewModelImpl extends EventFormViewModel {
   void dispose() {}
 
   @override
-  void setup([Object? argument]) {}
+  Future<void> setup([Object? argument]) async {}
 
   @override
   Future<bool> onSubmit(Event event) async {

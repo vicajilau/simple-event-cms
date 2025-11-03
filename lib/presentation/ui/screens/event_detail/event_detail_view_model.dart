@@ -28,7 +28,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   void dispose() {}
 
   @override
-  void setup([Object? argument]) {
+  Future<void> setup([Object? argument]) async {
     if (argument is String) {
       loadEventData(argument);
     }
