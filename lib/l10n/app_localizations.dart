@@ -344,12 +344,6 @@ abstract class AppLocalizations {
   /// **'Enter the LinkedIn URL'**
   String get linkedinHint;
 
-  /// No description provided for @websiteHint.
-  ///
-  /// In en, this message translates to:
-  /// **'Enter the website URL'**
-  String get websiteHint;
-
   /// No description provided for @saveButton.
   ///
   /// In en, this message translates to:
@@ -764,11 +758,11 @@ abstract class AppLocalizations {
   /// **'Please enter the project name'**
   String get projectNameHint;
 
-  /// No description provided for @tokenLabel.
+  /// No description provided for @tokenHintLabel.
   ///
   /// In en, this message translates to:
-  /// **'Token (classic with write permissions)'**
-  String get tokenLabel;
+  /// **'Introduce tu client secret para continuar'**
+  String get tokenHintLabel;
 
   /// No description provided for @tokenHint.
   ///
@@ -860,6 +854,12 @@ abstract class AppLocalizations {
   /// **'Web*'**
   String get websiteLabel;
 
+  /// No description provided for @websiteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the website URL'**
+  String get websiteHint;
+
   /// No description provided for @websiteValidation.
   ///
   /// In en, this message translates to:
@@ -899,13 +899,13 @@ abstract class AppLocalizations {
   /// No description provided for @addButton.
   ///
   /// In en, this message translates to:
-  /// **'add button'**
+  /// **'Add Button'**
   String get addButton;
 
   /// No description provided for @addRoomTitle.
   ///
   /// In en, this message translates to:
-  /// **'add room'**
+  /// **'Add Room'**
   String get addRoomTitle;
 
   /// No description provided for @roomNameHint.
@@ -943,6 +943,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @enterGithubTokenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access Token'**
+  String get enterGithubTokenTitle;
+
+  /// No description provided for @availablesEventsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Events'**
+  String get availablesEventsTitle;
+
+  /// No description provided for @availablesEventsText.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore upcoming events and\nfind something that interests you'**
+  String get availablesEventsText;
+
+  /// No description provided for @organization.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization'**
+  String get organization;
+
+  /// No description provided for @organizationName.
+  ///
+  /// In en, this message translates to:
+  /// **'Organization Name'**
+  String get organizationName;
+
+  /// No description provided for @organizationNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the organization name'**
+  String get organizationNameHint;
+
+  /// No description provided for @githubUser.
+  ///
+  /// In en, this message translates to:
+  /// **'GitHub User'**
+  String get githubUser;
+
+  /// No description provided for @githubUserHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the GitHub user'**
+  String get githubUserHint;
+
+  /// No description provided for @branch.
+  ///
+  /// In en, this message translates to:
+  /// **'Branch'**
+  String get branch;
+
+  /// No description provided for @branchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the branch'**
+  String get branchHint;
+
+  /// No description provided for @eventManager.
+  ///
+  /// In en, this message translates to:
+  /// **'Event manager'**
+  String get eventManager;
+
+  /// No description provided for @addSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Session'**
+  String get addSession;
+
+  /// No description provided for @addSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Speaker'**
+  String get addSpeaker;
+
+  /// No description provided for @addSponsor.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Sponsor'**
+  String get addSponsor;
+
+  /// No description provided for @retryLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Please try again later'**
+  String get retryLater;
+
+  /// No description provided for @commonError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error fetching data, Please retry later'**
+  String get commonError;
+
+  /// No description provided for @createSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Speaker'**
+  String get createSpeaker;
 }
 
 class _AppLocalizationsDelegate

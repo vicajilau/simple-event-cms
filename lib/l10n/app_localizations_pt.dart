@@ -33,7 +33,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get loading => 'Carregando...';
 
   @override
-  String get errorLoadingImage => 'Erro ao carregar a imagem';
+  String get errorLoadingImage => 'Erro ao carregar la imagem';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -124,9 +124,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get linkedinHint => 'Insira a URL do LinkedIn';
-
-  @override
-  String get websiteHint => 'Insira a URL do site';
 
   @override
   String get saveButton => 'Salvar';
@@ -340,7 +337,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get projectNameHint => 'Por favor, insira o nome do projeto';
 
   @override
-  String get tokenLabel => 'Token (clássico com permissões de escrita)';
+  String get tokenHintLabel => 'Introduza o seu token do GitHub...';
 
   @override
   String get tokenHint => 'Por favor, insira um token do GitHub válido';
@@ -391,6 +388,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Insira a URL do site';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -409,10 +409,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get updateButton => 'Atualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -431,4 +431,56 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get logout => 'Sair';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de Acesso';
+
+  @override
+  String get availablesEventsTitle => 'Eventos Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+
+  @override
+  String get organization => 'Organização';
+
+  @override
+  String get organizationName => 'Nome da organização';
+
+  @override
+  String get organizationNameHint => 'Insira o nome da organização';
+
+  @override
+  String get githubUser => 'Usuário do GitHub';
+
+  @override
+  String get githubUserHint => 'Insira o usuário do GitHub';
+
+  @override
+  String get branch => 'Ramo';
+
+  @override
+  String get branchHint => 'Insira o ramo';
+
+  @override
+  String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'Adicionar Sessão';
+
+  @override
+  String get addSpeaker => 'Adicionar Palestrante';
+
+  @override
+  String get addSponsor => 'Adicionar Patrocinador';
+
+  @override
+  String get retryLater => 'Tente novamente mais tarde';
+
+  @override
+  String get commonError => 'Erro ao buscar dados, tente novamente mais tarde';
+
+  @override
+  String get createSpeaker => 'Criar Palestrante';
 }

@@ -126,9 +126,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get linkedinHint => 'Entrez l\'URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Entrez l\'URL du site web';
-
-  @override
   String get saveButton => 'Enregistrer';
 
   @override
@@ -343,7 +340,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get projectNameHint => 'Veuillez entrer le nom du projet';
 
   @override
-  String get tokenLabel => 'Jeton (classique avec droits d\'écriture)';
+  String get tokenHintLabel => 'Entrez votre jeton GitHub...';
 
   @override
   String get tokenHint => 'Veuillez entrer un jeton GitHub valide';
@@ -394,6 +391,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Entrez l\'URL du site web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -412,13 +412,13 @@ class AppLocalizationsFr extends AppLocalizations {
   String get updateButton => 'Mettre à jour';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Ajouter';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Ajouter une salle';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nom de la salle';
 
   @override
   String get formError => 'Il y a des erreurs dans le formulaire';
@@ -435,4 +435,57 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get logout => 'Déconnexion';
+
+  @override
+  String get enterGithubTokenTitle => 'Jeton d\'accès';
+
+  @override
+  String get availablesEventsTitle => 'Événements Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explorez les événements à venir et \n trouvez quelque chose qui vous intéresse';
+
+  @override
+  String get organization => 'Organisation';
+
+  @override
+  String get organizationName => 'Nom de l\'organisation';
+
+  @override
+  String get organizationNameHint => 'Entrez le nom de l\'organisation';
+
+  @override
+  String get githubUser => 'Utilisateur GitHub';
+
+  @override
+  String get githubUserHint => 'Entrez l\'utilisateur GitHub';
+
+  @override
+  String get branch => 'Branche';
+
+  @override
+  String get branchHint => 'Entrez la branche';
+
+  @override
+  String get eventManager => 'Gestionnaire d\'événements';
+
+  @override
+  String get addSession => 'Ajouter une Session';
+
+  @override
+  String get addSpeaker => 'Ajouter un Intervenant';
+
+  @override
+  String get addSponsor => 'Ajouter un Sponsor';
+
+  @override
+  String get retryLater => 'Try again later';
+
+  @override
+  String get commonError =>
+      'Erreur lors de la récupération des données, veuillez réessayer plus tard';
+
+  @override
+  String get createSpeaker => 'Créer un Intervenant';
 }

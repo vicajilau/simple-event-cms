@@ -126,9 +126,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkedinHint => 'Enter the LinkedIn URL';
 
   @override
-  String get websiteHint => 'Enter the website URL';
-
-  @override
   String get saveButton => 'Save';
 
   @override
@@ -337,7 +334,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenLabel => 'Token (classic with write permissions)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';
@@ -388,6 +385,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Enter the website URL';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -406,10 +406,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get updateButton => 'Update';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Add Button';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Add Room';
 
   @override
   String get roomNameHint => 'Room name';
@@ -428,4 +428,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get enterGithubTokenTitle => 'Access Token';
+
+  @override
+  String get availablesEventsTitle => 'Available Events';
+
+  @override
+  String get availablesEventsText =>
+      'Explore upcoming events and\nfind something that interests you';
+
+  @override
+  String get organization => 'Organization';
+
+  @override
+  String get organizationName => 'Organization Name';
+
+  @override
+  String get organizationNameHint => 'Enter the organization name';
+
+  @override
+  String get githubUser => 'GitHub User';
+
+  @override
+  String get githubUserHint => 'Enter the GitHub user';
+
+  @override
+  String get branch => 'Branch';
+
+  @override
+  String get branchHint => 'Enter the branch';
+
+  @override
+  String get eventManager => 'Event manager';
+
+  @override
+  String get addSession => 'Add Session';
+
+  @override
+  String get addSpeaker => 'Add Speaker';
+
+  @override
+  String get addSponsor => 'Add Sponsor';
+
+  @override
+  String get retryLater => 'Please try again later';
+
+  @override
+  String get commonError => 'Error fetching data, Please retry later';
+
+  @override
+  String get createSpeaker => 'Create Speaker';
 }

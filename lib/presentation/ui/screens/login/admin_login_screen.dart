@@ -15,8 +15,8 @@ class AdminLoginScreen extends StatefulWidget {
   @override
   State<AdminLoginScreen> createState() => _AdminLoginScreenState();
 }
-class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final Organization organization = getIt<Organization>();
   final ValueNotifier<String> _token = ValueNotifier('');
@@ -49,13 +49,13 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         } else {
           // This block might not be reached if authentication fails earlier
           if (user.login == null && context.mounted) {
-            _showErrorSnackbar(location.unknownAuthError,context);
+            _showErrorSnackbar(location.unknownAuthError, context);
           }
         }
       } catch (e) {
         // Catch common authentication or network exceptions
         // ignore: use_build_context_synchronously
-        _showErrorSnackbar(location.authNetworkError,context);
+        _showErrorSnackbar(location.authNetworkError, context);
         debugPrint('Error de autenticación: $e');
       }
     }
@@ -82,42 +82,87 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  width: 300, // Limita la anchura del TextFormField
-                  child: ValueListenableBuilder<bool>(
-                    valueListenable: _obscureText,
-                    builder: (context, isObscure, child) {
-                      return TextFormField(
-                        obscuringCharacter: '*',
-                        obscureText: isObscure,
-                        decoration: InputDecoration(
-                          labelText: location.tokenLabel,
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              isObscure ? Icons.visibility_off : Icons.visibility,
-                            ),
-                            onPressed: () => _obscureText.value = !isObscure,
-                          ),
-                        ),
-                        validator: (value) => value!.isEmpty ? location.tokenHint : null,
-                        onSaved: (value) => _token.value = value!,
-                      );
-                    },
+        Container(
+          width: 350, // Limita la anchura del Container
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black, // Color del borde
+              width: 1.5, // Ancho del borde
+            ),
+            borderRadius: BorderRadius.circular(
+              23.0,
+            ), // Opcional: para bordes redondeados
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    location.enterGithubTokenTitle,
+                    style: Theme.of(context).textTheme.titleMedium,
+                    textAlign: TextAlign.left,
                   ),
-                ),
-                const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () => _submit(context),
-                  child: Text(location.loginTitle),
-                ),
-              ],
+                  const SizedBox(height: 16),
+                  Center(
+                    child: IntrinsicWidth(
+                      child: ValueListenableBuilder<bool>(
+                        valueListenable: _obscureText,
+                        builder: (context, isObscure, child) {
+                          return TextFormField(
+                            obscuringCharacter: '*',
+                            obscureText: isObscure,
+                            decoration: InputDecoration(
+                              hintText: location.tokenHintLabel,
+                              hintStyle: TextStyle(fontSize: 12),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  15.0,
+                                ), // Radio para bordes redondeados
+                                borderSide: BorderSide(color: Colors.black),
+                              ),
+                              prefixIcon: IconButton(
+                                icon: Icon(
+                                  isObscure
+                                      ? Icons.key_off_rounded
+                                      : Icons.key_rounded,
+                                ),
+                                onPressed: () =>
+                                    _obscureText.value = !isObscure,
+                              ),
+                            ),
+                            validator: (value) =>
+                                value!.isEmpty ? location.tokenHint : null,
+                            onSaved: (value) => _token.value = value!,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () => _submit(context),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.device_hub_rounded,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            location.loginTitle,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -125,4 +170,3 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
     );
   }
 }
-

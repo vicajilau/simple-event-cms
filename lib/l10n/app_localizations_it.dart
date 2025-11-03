@@ -126,9 +126,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get linkedinHint => 'Inserisci l\'URL di LinkedIn';
 
   @override
-  String get websiteHint => 'Inserisci l\'URL del sito web';
-
-  @override
   String get saveButton => 'Salva';
 
   @override
@@ -342,7 +339,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get projectNameHint => 'Inserisci il nome del progetto';
 
   @override
-  String get tokenLabel => 'Token (classico con autorizzazioni di scrittura)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Inserisci un token GitHub valido';
@@ -393,6 +390,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Inserisci l\'URL del sito web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -434,4 +434,56 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get logout => 'Disconnettersi';
+
+  @override
+  String get enterGithubTokenTitle => 'Token di accesso';
+
+  @override
+  String get availablesEventsTitle => 'Eventi disponibili';
+
+  @override
+  String get availablesEventsText =>
+      'Esplora i prossimi eventi e \n trova qualcosa che ti interessa';
+
+  @override
+  String get organization => 'Organizzazione';
+
+  @override
+  String get organizationName => 'Nome dell\'Organizzazione';
+
+  @override
+  String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
+
+  @override
+  String get githubUser => 'Utente GitHub';
+
+  @override
+  String get githubUserHint => 'Inserisci l\'utente GitHub';
+
+  @override
+  String get branch => 'Branch';
+
+  @override
+  String get branchHint => 'Inserisci il branch';
+
+  @override
+  String get eventManager => 'Gestore eventi';
+
+  @override
+  String get addSession => 'Aggiungi Sessione';
+
+  @override
+  String get addSpeaker => 'Aggiungi Relatore';
+
+  @override
+  String get addSponsor => 'Aggiungi Sponsor';
+
+  @override
+  String get retryLater => 'Riprova più tardi';
+
+  @override
+  String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
+
+  @override
+  String get createSpeaker => 'Crea Relatore';
 }

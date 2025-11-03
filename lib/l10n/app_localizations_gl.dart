@@ -126,9 +126,6 @@ class AppLocalizationsGl extends AppLocalizations {
   String get linkedinHint => 'Introduce a URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introduce a URL da web';
-
-  @override
   String get saveButton => 'Gardar';
 
   @override
@@ -340,7 +337,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get projectNameHint => 'Por favor, introduce o nome do proxecto';
 
   @override
-  String get tokenLabel => 'Token (clásico con permisos de escritura)';
+  String get tokenHintLabel => 'Introduce o teu token de GitHub...';
 
   @override
   String get tokenHint => 'Por favor, introduce un token de GitHub válido';
@@ -391,6 +388,9 @@ class AppLocalizationsGl extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Introduce a URL da web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -432,4 +432,57 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get logout => 'Pechar sesión';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de acceso';
+
+  @override
+  String get availablesEventsTitle => 'Eventos Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+
+  @override
+  String get organization => 'Organización';
+
+  @override
+  String get organizationName => 'Nome da Organización';
+
+  @override
+  String get organizationNameHint => 'Introduce o nome da organización';
+
+  @override
+  String get githubUser => 'Usuario de GitHub';
+
+  @override
+  String get githubUserHint => 'Introduce o usuario de GitHub';
+
+  @override
+  String get branch => 'Rama';
+
+  @override
+  String get branchHint => 'Introduce a rama';
+
+  @override
+  String get eventManager => 'Xestor de eventos';
+
+  @override
+  String get addSession => 'Engadir sesión';
+
+  @override
+  String get addSpeaker => 'Engadir relator';
+
+  @override
+  String get addSponsor => 'Engadir patrocinador';
+
+  @override
+  String get retryLater => 'Téntao de novo máis tarde';
+
+  @override
+  String get commonError =>
+      'Erro ao obter os datos, por favor, téntao de novo máis tarde';
+
+  @override
+  String get createSpeaker => 'Crear Poñente';
 }

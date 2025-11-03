@@ -23,29 +23,17 @@ class SponsorUseCaseImp implements SponsorUseCase {
             .toList();
         return Result.ok(filteredSponsors);
       case Error<List<Sponsor>>():
-        return Result.error(result.error);
+        return result;
     }
   }
 
   @override
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId) async {
-    final result = await repository.saveSponsor(sponsor, parentId);
-    switch (result) {
-      case Ok<void>():
-        return result;
-      case Error<void>():
-        return Result.error(result.error);
-    }
+    return await repository.saveSponsor(sponsor, parentId);
   }
 
   @override
   Future<Result<void>> removeSponsor(String sponsorId) async {
-    final result = await repository.removeSponsor(sponsorId);
-    switch (result) {
-      case Ok<void>():
-        return result;
-    case Error<void>():
-        return Result.error(result.error);
-    }
+    return  await repository.removeSponsor(sponsorId);
   }
 }

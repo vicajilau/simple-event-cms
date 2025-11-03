@@ -126,9 +126,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get linkedinHint => 'Introduce la URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introduce la URL de la web';
-
-  @override
   String get saveButton => 'Guardar';
 
   @override
@@ -340,7 +337,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get projectNameHint => 'Por favor, introduce el nombre del proyecto';
 
   @override
-  String get tokenLabel => 'Token (clásico con permisos de escritura)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Por favor, introduce un token de GitHub válido';
@@ -391,6 +388,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Introduce la URL de la web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -409,10 +409,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Añadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Añadir sala';
 
   @override
   String get roomNameHint => 'Room name';
@@ -432,4 +432,56 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get logout => 'Cerrar sesión';
+
+  @override
+  String get enterGithubTokenTitle => 'Token de acceso';
+
+  @override
+  String get availablesEventsTitle => 'Eventos Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+
+  @override
+  String get organization => 'Organización';
+
+  @override
+  String get organizationName => 'Nombre de la Organización';
+
+  @override
+  String get organizationNameHint => 'Introduce el nombre de la organización';
+
+  @override
+  String get githubUser => 'Usuario de GitHub';
+
+  @override
+  String get githubUserHint => 'Introduce el usuario de GitHub';
+
+  @override
+  String get branch => 'Rama';
+
+  @override
+  String get branchHint => 'Introduce la rama';
+
+  @override
+  String get eventManager => 'Gestor de eventos';
+
+  @override
+  String get addSession => 'Añadir Sesión';
+
+  @override
+  String get addSpeaker => 'Añadir Ponente';
+
+  @override
+  String get addSponsor => 'Añadir Patrocinador';
+
+  @override
+  String get retryLater => 'Vuelve a intentarlo más tarde';
+
+  @override
+  String get commonError => 'Error fetching data, Please retry later';
+
+  @override
+  String get createSpeaker => 'Create Speaker';
 }

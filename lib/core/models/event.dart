@@ -24,9 +24,6 @@ class Event extends GitHubModel {
   /// Event date information including start, end dates and timezone
   final EventDates eventDates;
 
-  /// Venue information where the event_collection will take place
-  final Venue? venue;
-
   /// Optional description of the event_collection
   final String? description;
 
@@ -42,7 +39,6 @@ class Event extends GitHubModel {
     required this.primaryColor,
     required this.secondaryColor,
     required this.eventDates,
-    this.venue,
     this.description,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
@@ -66,7 +62,6 @@ class Event extends GitHubModel {
       primaryColor: json['primaryColor'],
       secondaryColor: json['secondaryColor'],
       eventDates: EventDates.fromJson(json['eventDates']),
-      venue: json['venue'] != null ? Venue.fromJson(json['venue']) : null,
       description: json['description'],
       tracks: tracks,
     );
@@ -82,7 +77,6 @@ class Event extends GitHubModel {
       'primaryColor': primaryColor,
       'secondaryColor': secondaryColor,
       'eventDates': eventDates.toJson(),
-      'venue': venue?.toJson(),
       'description': description,
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };

@@ -49,7 +49,7 @@ class SocialIconSvg extends StatelessWidget {
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
+            border: Border.all(color: Colors.black, width: 1),
           ),
           child: tint
               ? SvgPicture.asset(
@@ -93,7 +93,8 @@ class SocialIconsRow extends StatelessWidget {
         SocialIconSvg(
           svgPath: 'assets/X_icon.svg',
           url: social.twitter!,
-          color: const Color(0xFF1DA1F2),
+          color: const Color(0xFF000000),
+
           tooltip: 'Twitter/X',
           tint: true,
           iconSize: iconSize,
@@ -109,7 +110,7 @@ class SocialIconsRow extends StatelessWidget {
         SocialIconSvg(
           svgPath: 'assets/LinkedIn_icon.svg',
           url: social.linkedin!,
-          color: const Color(0xFF0077B5),
+          color: const Color(0xFF000000),
           tooltip: 'LinkedIn',
           iconSize: iconSize,
         ),
@@ -124,7 +125,7 @@ class SocialIconsRow extends StatelessWidget {
         SocialIconSvg(
           svgPath: 'assets/GitHub_icon.svg',
           url: social.github!,
-          color: const Color(0xFF333333),
+          color: const Color(0xFF000000),
           tooltip: 'GitHub',
           tint: true,
           iconSize: iconSize,
@@ -140,7 +141,7 @@ class SocialIconsRow extends StatelessWidget {
         SocialIconSvg(
           svgPath: 'assets/Website_icon.svg',
           url: social.website!,
-          color: const Color(0xFF4CAF50),
+          color: const Color(0xFF000000),
           tooltip: 'Website',
           tint: true,
           iconSize: iconSize,

@@ -126,9 +126,6 @@ class AppLocalizationsCa extends AppLocalizations {
   String get linkedinHint => 'Introdueix la URL de LinkedIn';
 
   @override
-  String get websiteHint => 'Introdueix la URL de la web';
-
-  @override
   String get saveButton => 'Desa';
 
   @override
@@ -343,7 +340,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get projectNameHint => 'Si us plau, introdueix el nom del projecte';
 
   @override
-  String get tokenLabel => 'Token (clàssic amb permisos d\'escriptura)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Si us plau, introdueix un token de GitHub vàlid';
@@ -353,7 +350,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String projectNotFoundError(Object projectName) {
-    return 'El projecte \"$projectName\" no existeix als teus repositoris de GitHub.';
+    return 'El projecte \"$projectName\" no existeix en els teus repositoris de GitHub.';
   }
 
   @override
@@ -394,6 +391,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get websiteLabel => 'Web*';
 
   @override
+  String get websiteHint => 'Introdueix la URL de la web';
+
+  @override
   String get websiteValidation => 'Web';
 
   @override
@@ -412,13 +412,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get updateButton => 'Actualitzar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Afegir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Afegir Sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nom de la sala';
 
   @override
   String get formError => 'Hi ha errors al formulari';
@@ -427,11 +427,65 @@ class AppLocalizationsCa extends AppLocalizations {
   String get confirmLogout => 'Confirmar Tancament de Sessió';
 
   @override
-  String get confirmLogoutMessage => 'Estàs segur que vols tancar la sessió?';
+  String get confirmLogoutMessage =>
+      'N\'estàs segur, que vols tancar la sessió?';
 
   @override
   String get cancel => 'Cancel·lar';
 
   @override
   String get logout => 'Tancar Sessió';
+
+  @override
+  String get enterGithubTokenTitle => 'Token d\'accés';
+
+  @override
+  String get availablesEventsTitle => 'Esdeveniments Disponibles';
+
+  @override
+  String get availablesEventsText =>
+      'Explora els pròxims esdeveniments i \n troba alguna cosa que t\'interessi';
+
+  @override
+  String get organization => 'Organització';
+
+  @override
+  String get organizationName => 'Nom de l\'Organització';
+
+  @override
+  String get organizationNameHint => 'Introdueix el nom de l\'organització';
+
+  @override
+  String get githubUser => 'Usuari de GitHub';
+
+  @override
+  String get githubUserHint => 'Introdueix l\'usuari de GitHub';
+
+  @override
+  String get branch => 'Branca';
+
+  @override
+  String get branchHint => 'Introdueix la branca';
+
+  @override
+  String get eventManager => 'Gestor d\'esdeveniments';
+
+  @override
+  String get addSession => 'Afegir Sessió';
+
+  @override
+  String get addSpeaker => 'Afegir Ponent';
+
+  @override
+  String get addSponsor => 'Afegir Patrocinador';
+
+  @override
+  String get retryLater => 'Torna a intentar-ho més tard';
+
+  @override
+  String get commonError =>
+      'Error en obtenir les dades, si us plau, torna a intentar-ho més tard';
+
+  @override
+  String get createSpeaker => 'Crear Ponent';
 }

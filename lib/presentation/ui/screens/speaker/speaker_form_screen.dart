@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 
@@ -78,8 +77,12 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(
-                    location.speakerForm,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    location.createSpeaker,
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                      color: const Color(0xFF38B6FF),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               SectionInputForm(
@@ -165,14 +168,17 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(
-                    onPressed: () {
-                      context.pop();
-                    },
-                    child: Text(location.cancelButton),
-                  ),
-                  const SizedBox(width: 8),
                   FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: Color(0xFF38B6FF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 12,
+                        horizontal: 20,
+                      ),
+                    ),
                     onPressed: () {
                       if (_formKey.currentState!.validate() &&
                           context.mounted) {
@@ -196,7 +202,10 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                         );
                       }
                     },
-                    child: Text(location.saveButton),
+                    child: Text(
+                      location.saveButton,
+                      style: const TextStyle(fontSize: 19),
+                    ),
                   ),
                 ],
               ),

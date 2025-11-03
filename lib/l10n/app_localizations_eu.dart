@@ -126,9 +126,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get linkedinHint => 'Sartu LinkedIn URLa';
 
   @override
-  String get websiteHint => 'Sartu webgunearen URLa';
-
-  @override
   String get saveButton => 'Gorde';
 
   @override
@@ -339,7 +336,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenLabel => 'Token-a (klasikoa idazteko baimenekin)';
+  String get tokenHintLabel => 'Introduce tu client secret para continuar';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
@@ -390,6 +387,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get websiteLabel => 'Webgunea*';
 
   @override
+  String get websiteHint => 'Sartu webgunearen URLa';
+
+  @override
   String get websiteValidation => 'Webgunea';
 
   @override
@@ -430,4 +430,57 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get logout => 'Saioa itxi';
+
+  @override
+  String get enterGithubTokenTitle => 'Sarbide-tokena';
+
+  @override
+  String get availablesEventsTitle => 'Ekitaldi Eskuragarriak';
+
+  @override
+  String get availablesEventsText =>
+      'Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait';
+
+  @override
+  String get organization => 'Antolakuntza';
+
+  @override
+  String get organizationName => 'Antolakuntzaren izena';
+
+  @override
+  String get organizationNameHint => 'Sartu antolakuntzaren izena';
+
+  @override
+  String get githubUser => 'GitHub erabiltzailea';
+
+  @override
+  String get githubUserHint => 'Sartu GitHub erabiltzailea';
+
+  @override
+  String get branch => 'Adarra';
+
+  @override
+  String get branchHint => 'Sartu adarra';
+
+  @override
+  String get eventManager => 'Ekitaldi kudeatzailea';
+
+  @override
+  String get addSession => 'Saioa gehitu';
+
+  @override
+  String get addSpeaker => 'Hizlaria gehitu';
+
+  @override
+  String get addSponsor => 'Babeslea gehitu';
+
+  @override
+  String get retryLater => 'Saiatu berriro geroago';
+
+  @override
+  String get commonError =>
+      'Errorea datuak eskuratzean, saiatu berriro geroago mesedez';
+
+  @override
+  String get createSpeaker => 'Hizlaria Sortu';
 }
