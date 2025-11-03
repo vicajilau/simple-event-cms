@@ -48,5 +48,5 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
   void dispose() {}
 
   @override
-  void setup([Object? argument]) {}
+  Future<void> setup([Object? argument]) async {}
 }

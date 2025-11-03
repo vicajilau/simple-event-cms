@@ -9,7 +9,7 @@ abstract class ViewModelCommon {
   abstract final ValueNotifier<ViewState> viewState;
   abstract String errorMessage;
 
-  void setup([Object? argument]);
+  Future<void> setup([Object? argument]);
   void dispose();
   Future<bool> checkToken();
   void setErrorKey(CustomException? exception) {
