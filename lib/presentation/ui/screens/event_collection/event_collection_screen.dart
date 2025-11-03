@@ -6,6 +6,7 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/no_events/no_events_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
@@ -44,18 +45,22 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     try {
       // Use dependency injection instead of creating instances manually
 
-      widget.viewmodel.setup();
+      await widget.viewmodel.setup();
 
-      setState(() {
-        organizationName = organization.organizationName;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          organizationName = organization.organizationName;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      final location = AppLocalizations.of(context)!;
-      setState(() {
-        _errorMessage = '${location.errorLoadingConfig}$e';
-        _isLoading = false;
-      });
+      if (mounted) {
+        final location = AppLocalizations.of(context)!;
+        setState(() {
+          _errorMessage = '${location.errorLoadingConfig}$e';
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -157,7 +162,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   }
                 }
               }
-              }
+            }
             // Reset counter after 3 seconds
             Future.delayed(const Duration(seconds: 3), () {
               if (mounted) {
@@ -169,23 +174,22 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           },
           child: Padding(
             padding: const EdgeInsets.only(left: 26.0),
-            child: Expanded(
-              child: Row(
-                children: [
-                  const Icon(
-                    Icons.calendar_today,
-                    color: Colors.blue,
-                  ), // Your desired icon
-                  const SizedBox(width: 8), // Spacing between icon and title
-                  Text(
-                    organizationName.toString(),
-                    style: const TextStyle(color: Colors.black, fontSize: 15),
-                  ),
-              ]
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.calendar_today,
+                  color: Colors.blue,
+                ), // Your desired icon
+                const SizedBox(width: 8), // Spacing between icon and title
+                Text(
+                  organizationName.toString(),
+                  style: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
+              ],
             ),
           ),
-      ),
+        ),
         actions: <Widget>[
           const SizedBox(width: 8),
           DropdownButtonHideUnderline(
@@ -291,13 +295,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
-                return Column( // Use Column to layout the button and the screen vertically.
-                    children: [
-                      _buildAddEventButton(),
-                      Expanded( // Use Expanded to make MaintenanceScreen fill the remaining space.
-                        child: MaintenanceScreen(),
-                      ),
-                    ],
+                return Column(
+                  // Use Column to layout the button and the screen vertically.
+                  children: [
+                    _buildAddEventButton(),
+                    Expanded(
+                      // Use Expanded to make MaintenanceScreen fill the remaining space.
+                      child: MaintenanceScreen(),
+                    ),
+                  ],
                 );
               }
 
@@ -384,10 +390,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return Padding(
-            padding: const EdgeInsets.only(
-              top: 16.0,
-              bottom: 16.0,
-            ),
+            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -396,10 +399,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 20.0,
-                        bottom: 20.0,
-                      ),
+                      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -408,17 +408,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             children: [
                               Text(
                                 location.availablesEventsTitle,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleSmall
+                                style: Theme.of(context).textTheme.titleSmall
                                     ?.copyWith(fontWeight: FontWeight.bold),
                               ),
                               const SizedBox(height: 8.0),
                               Text(
                                 location.availablesEventsText,
-                                style: Theme.of(
-                                  context,
-                                ).textTheme.bodyMedium,
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
                           ),
@@ -434,16 +430,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          final Event? newEvent = await AppRouter.router
-                              .push(AppRouter.eventFormPath);
+                          final Event? newEvent = await AppRouter.router.push(
+                            AppRouter.eventFormPath,
+                          );
                           if (newEvent != null) {
                             setState(() {
                               _viewmodel.eventsToShow.value.removeWhere(
                                 (event) => event.uid == newEvent.uid,
                               );
-                              _viewmodel.eventsToShow.value.add(
-                                newEvent,
-                              );
+                              _viewmodel.eventsToShow.value.add(newEvent);
                               _viewmodel.addEvent(newEvent);
                             });
                           }
@@ -483,86 +478,119 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         );
       },
       child: Card(
-        child: IntrinsicHeight(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (isAdmin)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () async {
-                      final Event? eventEdited = await AppRouter.router.push(
-                        AppRouter.eventFormPath,
-                        extra: item.uid,
-                      );
-                      if (eventEdited != null) {
-                        await widget.viewmodel.editEvent(eventEdited);
-                      }
-                    },
-                  ),
-                ),
-              SizedBox(height: 20.0),
-
-              if (!isAdmin) SizedBox(height: 8.0),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: Center(
-                  child: Text(
-                    organizationName.toString(),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (isAdmin)
+              Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                  icon: const Icon(Icons.edit, size: 20),
+                  onPressed: () async {
+                    final Event? eventEdited = await AppRouter.router.push(
+                      AppRouter.eventFormPath,
+                      extra: item.uid,
+                    );
+                    if (eventEdited != null) {
+                      await widget.viewmodel.editEvent(eventEdited);
+                    }
+                  },
                 ),
               ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 16.0, left: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        item.eventName,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+            Expanded(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: isAdmin ? 0.0 : 20.0,
+                      bottom: 8.0,
+                    ),
+                    child: Center(
+                      child: Text(
+                        organizationName.toString(),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 2,
+                        textAlign: TextAlign.center,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
+                    ),
+                  ),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        top: 16.0,
+                        left: 16.0,
+                        right: 16.0,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.eventName,
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Text(
                               "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
                               style: Theme.of(context).textTheme.bodySmall,
                               overflow: TextOverflow.ellipsis,
                             ),
-                          ],
-                        ),
+                          ),
+                          if (item.location != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Center(
+                                child: InkWell(
+                                  onTap: () async {
+                                    final location = item.location.toString();
+                                    final uri = Uri.parse(
+                                      'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}',
+                                    );
+                                    if (await canLaunchUrl(uri)) {
+                                      await launchUrl(uri);
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Icon(
+                                        Icons.location_on,
+                                        color: Colors.blue,
+                                        size: 36,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
+                ],
+              ),
+            ),
+            if (isAdmin)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: IconButton(
+                  constraints: const BoxConstraints(),
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                  icon: const Icon(Icons.delete, size: 20),
+                  onPressed: () async {
+                    await widget.viewmodel.deleteEvent(item);
+                  },
                 ),
               ),
-              if (isAdmin)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      await widget.viewmodel.deleteEvent(item);
-                    },
-                  ),
-                ),
-            ],
-          ),
+          ],
         ),
       ),
     );

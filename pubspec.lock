@@ -293,6 +293,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  osm_nominatim:
+    dependency: "direct main"
+    description:
+      name: osm_nominatim
+      sha256: "058e36e0cb93f3318f3516e1ab7bdb845867370c13c5490eb3e8b3bc2ac41bf8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.1"
   path:
     dependency: transitive
     description:

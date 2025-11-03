@@ -72,7 +72,7 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   }
 
   @override
-  void setup([Object? argument]) {
+  Future<void> setup([Object? argument]) async {
     if (argument is String) {
       _loadSpeakers(argument);
     }
