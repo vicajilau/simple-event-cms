@@ -212,7 +212,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     if (_allEvents.length == 1 && isTokenNull) {
       await AppRouter.router.pushNamed(
         AppRouter.eventDetailName,
-        pathParameters: {'eventId': _allEvents.first.uid},
+        pathParameters: {'eventId': _allEvents.first.uid,'location': _allEvents.first.location ?? ""},
       );
     }
   }

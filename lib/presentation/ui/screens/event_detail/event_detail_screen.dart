@@ -16,9 +16,9 @@ import 'event_detail_view_model.dart';
 /// Event detail screen that uses dependency injection for data loading
 class EventDetailScreen extends StatefulWidget {
   final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
-  final String eventId;
+  final String eventId,location;
 
-  EventDetailScreen({super.key, required this.eventId});
+  EventDetailScreen({super.key, required this.eventId, required this.location});
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
@@ -41,7 +41,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
       });
     });
     screens = [
-      AgendaScreen(eventId: widget.eventId, tabController: _tabController),
+      AgendaScreen(eventId: widget.eventId, tabController: _tabController,location: widget.location,),
       SpeakersScreen(eventId: widget.eventId),
       SponsorsScreen(eventId: widget.eventId),
     ];
