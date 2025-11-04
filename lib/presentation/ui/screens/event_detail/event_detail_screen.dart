@@ -17,8 +17,9 @@ import 'event_detail_view_model.dart';
 class EventDetailScreen extends StatefulWidget {
   final EventDetailViewModel viewmodel = getIt<EventDetailViewModel>();
   final String eventId,location;
+  final bool onlyOneEvent;
 
-  EventDetailScreen({super.key, required this.eventId, required this.location});
+  EventDetailScreen({super.key, required this.eventId, required this.location, this.onlyOneEvent = false});
 
   @override
   State<EventDetailScreen> createState() => _EventDetailScreenState();
@@ -66,6 +67,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                 preferredSize: const Size.fromHeight(100.0),
                 child: AppBar(
                   backgroundColor: Colors.white,
+                  automaticallyImplyLeading: widget.onlyOneEvent,
                   titleSpacing: 0.0,
                   centerTitle: false,
                   iconTheme: const IconThemeData(color: Colors.blue),
