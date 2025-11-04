@@ -220,20 +220,19 @@ class DataUpdateInfo {
     if (daysOriginal.indexWhere((day) => day.eventsUID.contains(eventId)) !=
         -1) {
       for (var value in daysOriginal) {
+        var agendaDay = value;
         if (value.eventsUID.contains(eventId)) {
-          value.eventsUID.remove(eventId);
+          agendaDay.eventsUID.remove(eventId);
         }
-        if (value.eventsUID.isNotEmpty) {
-          eventDays.add(value);
+        if (agendaDay.eventsUID.isNotEmpty) {
+          eventDays.add(agendaDay);
         }
       }
-      if (eventDays.isNotEmpty) {
         await dataCommons.updateDataList(
           eventDays,
           "events/${eventDays.first.pathUrl}",
           eventDays.first.updateMessage,
         );
-      }
     }
     if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
         -1) {
