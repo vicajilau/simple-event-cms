@@ -310,11 +310,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               Event? upcomingEvent;
               final now = DateTime.now();
               final futureEvents = eventsToShow
-                  .where((e) => DateTime.parse(e.eventDates.startDate).isAfter(now))
+                  .where(
+                    (e) => DateTime.parse(e.eventDates.startDate).isAfter(now),
+                  )
                   .toList();
               if (futureEvents.isNotEmpty) {
-                futureEvents.sort((a, b) =>
-                    a.eventDates.startDate.compareTo(b.eventDates.startDate));
+                futureEvents.sort(
+                  (a, b) =>
+                      a.eventDates.startDate.compareTo(b.eventDates.startDate),
+                );
                 upcomingEvent = futureEvents.first;
               }
               return SingleChildScrollView(
@@ -330,7 +334,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(
                             maxCrossAxisExtent:
-                                400.0, // Adjust this value as needed
+                                460.0, // Adjust this value as needed
                             crossAxisSpacing: 8.0,
                             mainAxisSpacing: 8.0,
                             childAspectRatio:
@@ -344,8 +348,31 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           future: widget.viewmodel.checkToken(),
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
-                            return _buildEventCard(
-                                context, item, canDismiss, isUpcoming);
+                            return Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Text(
+                                    isUpcoming ? location.nextEvent : '',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blueAccent,
+                                        ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _buildEventCard(
+                                    context,
+                                    item,
+                                    canDismiss,
+                                    isUpcoming,
+                                  ),
+                                ),
+                              ],
+                            );
                           },
                         );
                       },
@@ -482,15 +509,19 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   }
 
   Widget _buildEventCard(
-      BuildContext context, Event item, bool isAdmin, bool isUpcoming) {
-    final location = AppLocalizations.of(context)!;
+    BuildContext context,
+    Event item,
+    bool isAdmin,
+    bool isUpcoming,
+  ) {
 
     final cardContent = Card(
       shape: isUpcoming
           ? RoundedRectangleBorder(
               side: const BorderSide(color: Colors.blueAccent, width: 2.5),
               borderRadius: BorderRadius.circular(
-                  12.0), // The default radius for Card is 12.0
+                12.0,
+              ), // The default radius for Card is 12.0
             )
           : null,
       child: Column(
@@ -525,9 +556,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   child: Center(
                     child: Text(
                       organizationName.toString(),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
+                      style: Theme.of(context).textTheme.headlineSmall
                           ?.copyWith(fontWeight: FontWeight.bold),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
@@ -548,9 +577,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       children: [
                         Text(
                           item.eventName,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 2,
@@ -608,32 +635,17 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       ),
     );
 
-    return Column(
-      children: [
-        if (isUpcoming)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              location.nextEvent,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.blueAccent),
-            ),
-          ),
-        Expanded(
-          child: GestureDetector(
-            onTap: () {
-              AppRouter.router.pushNamed(
-                AppRouter.eventDetailName,
-                pathParameters: {
-                  'eventId': item.uid,
-                  'location': item.location ?? ""
-                },
-              );
-            },
-            child: cardContent,
-          ),
-        ),
-      ],
+    return GestureDetector(
+      onTap: () {
+        AppRouter.router.pushNamed(
+          AppRouter.eventDetailName,
+          pathParameters: {
+            'eventId': item.uid,
+            'location': item.location ?? "",
+          },
+        );
+      },
+      child: cardContent,
     );
   }
 }
