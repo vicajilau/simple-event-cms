@@ -270,9 +270,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> removeSpeaker(String speakerId) async {
+  Future<Result<void>> removeSpeaker(String speakerId,String eventUID) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(speakerId, "Speaker");
+      await DataUpdate.deleteItemAndAssociations(speakerId, "Speaker",eventUID: eventUID);
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in removeSpeaker: $e');
@@ -454,7 +454,7 @@ class SecRepositoryImp extends SecRepository {
     try {
       final speakers = await dataLoader.loadSpeakers();
       return Result.ok(
-        speakers.where((speaker) => speaker.eventUID == eventId).toList(),
+        speakers.where((speaker) => speaker.eventUIDS.contains(eventId)).toList(),
       );
     } on Exception catch (e) {
       debugPrint('Error in getSpeakersForEventId: $e');

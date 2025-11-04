@@ -247,6 +247,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                             .viewmodel
                                                             .removeSpeaker(
                                                               speaker.uid,
+                                                              widget.eventId,
                                                             ),
                                                       ),
                                                     ],

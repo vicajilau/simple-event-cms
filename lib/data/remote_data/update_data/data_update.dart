@@ -179,17 +179,28 @@ class DataUpdateInfo {
 
   /// Removes speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
-  Future<void> removeSpeaker(String speakerId) async {
+  Future<void> removeSpeaker(String speakerId, String eventUID) async {
     var speakersOriginal = await dataLoader.loadSpeakers();
     var speakerToRemove = speakersOriginal.firstWhere(
       (agenda) => agenda.uid == speakerId,
     );
-    await dataCommons.removeData(
-      speakersOriginal,
-      speakerToRemove,
-      "events/${speakerToRemove.pathUrl}",
-      speakerToRemove.updateMessage,
-    );
+    if(speakerToRemove.eventUIDS.length == 1){
+      await dataCommons.removeData(
+        speakersOriginal,
+        speakerToRemove,
+        "events/${speakerToRemove.pathUrl}",
+        speakerToRemove.updateMessage,
+      );
+    }else{
+      speakerToRemove.eventUIDS.remove(eventUID);
+      await dataCommons.updateData(
+        speakersOriginal,
+        speakerToRemove,
+        "events/${speakerToRemove.pathUrl}",
+        speakerToRemove.updateMessage,
+      );
+    }
+
   }
 
   /// Removes sponsor information from the sponsors.json file
@@ -213,6 +224,7 @@ class DataUpdateInfo {
     var eventsOriginal = await dataLoader.loadEvents();
     var tracksOriginal = (await dataLoader.loadAllTracks());
     var sessionsOriginal = (await dataLoader.loadAllSessions());
+    var speakersOriginal = (await dataLoader.loadSpeakers());
     var daysOriginal = (await dataLoader.loadAllDays());
     List<AgendaDay> eventDays = [];
     List<Session> sessionsFromEvent = [];
@@ -234,7 +246,7 @@ class DataUpdateInfo {
           "events/${eventDays.first.pathUrl}",
           eventDays.first.updateMessage,
         );
-      }else{
+      } else {
         await dataCommons.removeDataList(
           daysOriginal,
           daysOriginal,
@@ -242,6 +254,15 @@ class DataUpdateInfo {
           daysOriginal.first.updateMessage,
         );
       }
+    }
+    if (speakersOriginal.indexWhere((speaker) => speaker.eventUIDS.contains(eventId)) !=
+        -1) {
+      await dataCommons.removeDataList(
+        speakersOriginal,
+        speakersOriginal.where((speaker) => speaker.eventUIDS.contains(eventId)).toList(),
+        "events/${speakersOriginal.first.pathUrl}",
+        "events/${speakersOriginal.first.updateMessage}",
+      );
     }
     if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
         -1) {
@@ -262,7 +283,6 @@ class DataUpdateInfo {
         sessionsFromEvent.first.updateMessage,
       );
     }
-
 
     if (tracksOriginal.indexWhere((track) => track.eventUid == eventId) != -1) {
       await dataCommons.updateDataList(

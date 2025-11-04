@@ -382,8 +382,8 @@ class _SessionCardsState extends State<SessionCards> {
                     ),
                     widget.viewModel.speakers.value
                         .where((element) => element.uid == session.speakerUID)
-                        .firstOrNull!
-                        .name,
+                        .firstOrNull
+                        ?.name ?? "",
                     onDeleteTap: () {
                       showDialog(
                         context: context,
