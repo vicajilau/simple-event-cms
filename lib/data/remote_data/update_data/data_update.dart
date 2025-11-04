@@ -228,11 +228,20 @@ class DataUpdateInfo {
           eventDays.add(agendaDay);
         }
       }
+      if (eventDays.isNotEmpty) {
         await dataCommons.updateDataList(
           eventDays,
           "events/${eventDays.first.pathUrl}",
           eventDays.first.updateMessage,
         );
+      }else{
+        await dataCommons.removeDataList(
+          daysOriginal,
+          daysOriginal,
+          "events/${daysOriginal.first.pathUrl}",
+          daysOriginal.first.updateMessage,
+        );
+      }
     }
     if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
         -1) {
