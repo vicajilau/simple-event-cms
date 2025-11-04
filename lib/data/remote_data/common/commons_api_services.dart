@@ -52,47 +52,98 @@ class CommonsServicesImp extends CommonsServices {
   @override
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
-      final url = 'events/$path';
-      var githubService = await SecureInfo.getGithubKey();
-      var github = GitHub(
-        auth: githubService.token == null
-            ? Authentication.anonymous()
-            : Authentication.withToken(githubService.token),
+    final url = 'events/$path';
+    var githubService = await SecureInfo.getGithubKey();
+    var github = GitHub(
+      auth: githubService.token == null
+          ? Authentication.anonymous()
+          : Authentication.withToken(githubService.token),
+    );
+    var repositorySlug = RepositorySlug(
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+    );
+    RepositoryContents res;
+    try {
+      res = await github.repositories.getContents(
+        repositorySlug,
+        url,
+        ref: organization.branch,
       );
-      var repositorySlug = RepositorySlug(
-        organization.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ??
-            organization.projectName,
-      );
-      RepositoryContents res;
-      try {
-        res = await github.repositories.getContents(
-          repositorySlug,
-          url,
-          ref: organization.branch,
+    } catch (e, st) {
+      if (e is RateLimitHit) {
+        throw NetworkException(
+          "GitHub API rate limit exceeded. Please try again later.",
+          cause: e,
+          stackTrace: st,
+          url: url,
         );
-      } catch (e, st) {
-        if (e is GitHubError && e.message == "Not Found") {
-          return [].toList();
-        } else {
-          // Handle other potential network or API errors during fetch.
-          throw NetworkException(
-            "Error fetching data, Please retry later",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        }
+      } else if (e is NotFound) {
+        return [].toList();
+      } else if (e is InvalidJSON) {
+        throw NetworkException(
+          "Invalid JSON received from GitHub.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is RepositoryNotFound) {
+        throw NetworkException(
+          "Repository not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is UserNotFound) {
+        throw NetworkException(
+          "User not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is OrganizationNotFound) {
+        throw NetworkException(
+          "Organization not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is TeamNotFound) {
+        throw NetworkException(
+          "Team not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is AccessForbidden) {
+        throw NetworkException(
+          "Access forbidden. Check your token and permissions.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else if (e is NotReady) {
+        throw NetworkException(
+          "The requested resource is not ready. Please try again later.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      } else {
+        throw NetworkException(
+          "An unknown GitHub error occurred, please retry later",
+        );
       }
-      if (res.file == null || res.file!.content == null) {
-        throw NetworkException("Error fetching data, Please retry later");
-      }
-      final file = utf8.decode(
-        base64.decode(
-          res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
-        ),
-      );
-      content = file;
+    }
+    if (res.file == null || res.file!.content == null) {
+      throw NetworkException("Error fetching data, Please retry later");
+    }
+    final file = utf8.decode(
+      base64.decode(
+        res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+      ),
+    );
+    content = file;
 
     try {
       // Handle cases where content might be a list or a map containing a list
@@ -123,9 +174,7 @@ class CommonsServicesImp extends CommonsServices {
       // are single JSON objects at the root rather than arrays, this will need adjustment
       // or the parsing in the specific _loadAll methods will need to handle it.
       // For now, this error helps identify such mismatches.
-      throw JsonDecodeException(
-        "Error fetching data, Please retry later",
-      );
+      throw JsonDecodeException("Error fetching data, Please retry later");
     } catch (e, st) {
       if (e.toString().contains("No element")) {
         return [].toList();
