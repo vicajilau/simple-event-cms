@@ -6,7 +6,6 @@ import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/no_events/no_events_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
@@ -474,7 +473,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       onTap: () {
         AppRouter.router.pushNamed(
           AppRouter.eventDetailName,
-          pathParameters: {'eventId': item.uid},
+          pathParameters: {'eventId': item.uid,'location': item.location ?? ""},
         );
       },
       child: Card(
@@ -544,33 +543,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (item.location != null)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Center(
-                                child: InkWell(
-                                  onTap: () async {
-                                    final location = item.location.toString();
-                                    final uri = Uri.parse(
-                                      'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}',
-                                    );
-                                    if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri);
-                                    }
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on,
-                                        color: Colors.blue,
-                                        size: 36,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
                         ],
                       ),
                     ),

@@ -10,6 +10,7 @@ import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart'
 import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/view_model_common.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'agenda_view_model.dart';
 
@@ -26,8 +27,9 @@ class AgendaScreen extends StatefulWidget {
   final AgendaViewModel viewmodel = getIt<AgendaViewModel>();
   final String eventId;
   final TabController? tabController;
+  final String? location;
 
-  AgendaScreen({super.key, required this.eventId, this.tabController});
+  AgendaScreen({super.key, required this.eventId, required this.location, this.tabController});
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -229,6 +231,7 @@ class _AgendaScreenState extends State<AgendaScreen>
                 ),
               );
             },
+            location: widget.location.toString(),
           ),
         ],
       ),
@@ -248,7 +251,7 @@ class CustomTabBarView extends StatefulWidget {
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final String agendaDayId, eventId;
+  final String agendaDayId, eventId,location;
   final TabController? tabController;
 
   CustomTabBarView({
@@ -258,6 +261,7 @@ class CustomTabBarView extends StatefulWidget {
     required this.onIndexChanged,
     required this.agendaDayId,
     required this.eventId,
+    required this.location,
     this.tabController,
   });
 
@@ -284,6 +288,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
         eventId: widget.eventId,
+        location: widget.location,
       );
     });
   }
@@ -309,7 +314,7 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
 
 class SessionCards extends StatefulWidget {
   final AgendaViewModel viewModel = getIt<AgendaViewModel>();
-  final String agendaDayId, trackId, eventId;
+  final String agendaDayId, trackId, eventId, location;
   final List<Session> sessions;
   final TabController? tabController;
 
@@ -319,6 +324,7 @@ class SessionCards extends StatefulWidget {
     required this.agendaDayId,
     required this.trackId,
     required this.eventId,
+    required this.location,
     this.tabController,
   });
 
@@ -376,8 +382,8 @@ class _SessionCardsState extends State<SessionCards> {
                     ),
                     widget.viewModel.speakers.value
                         .where((element) => element.uid == session.speakerUID)
-                        .firstOrNull!
-                        .name,
+                        .firstOrNull
+                        ?.name ?? "",
                     onDeleteTap: () {
                       showDialog(
                         context: context,
@@ -530,6 +536,33 @@ class _SessionCardsState extends State<SessionCards> {
                 return const SizedBox.shrink();
               },
             ),
+            if (widget.location.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Center(
+                  child: InkWell(
+                    onTap: () async {
+                      final location = widget.location.toString();
+                      final uri = Uri.parse(
+                        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}',
+                      );
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          color: Colors.blue,
+                          size: 36,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),

@@ -14,7 +14,7 @@ class Speaker extends GitHubModel {
   /// Social media links of the speaker
   final Social social;
 
-  String eventUID;
+  List<String> eventUIDS;
 
   /// Creates a new Speaker instance
   Speaker({
@@ -23,7 +23,7 @@ class Speaker extends GitHubModel {
     required this.bio,
     required this.image,
     required this.social,
-    required this.eventUID,
+    required this.eventUIDS,
     super.pathUrl = PathsGithub.speakerPath,
     super.updateMessage = PathsGithub.speakerUpdateMessage,
   });
@@ -33,7 +33,9 @@ class Speaker extends GitHubModel {
     name: json["name"],
     bio: json["bio"],
     image: json["image"],
-    eventUID: json["eventUID"],
+    eventUIDS: (json['eventUIDS'] as List<dynamic>)
+        .map<String>((eventUID) => eventUID['UID'].toString())
+        .toSet().toList(),
     social: Social.fromJson(json["social"]),
   );
 
@@ -44,7 +46,7 @@ class Speaker extends GitHubModel {
     "bio": bio,
     "image": image,
     "social": social.toJson(),
-    "eventUID": eventUID,
+    "eventUIDS": eventUIDS.map((uid) => {'UID': uid}).toList(),
   };
 }
 

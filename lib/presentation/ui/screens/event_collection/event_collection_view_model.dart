@@ -175,9 +175,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   @override
   Future<Event?> getEventById(String eventId) async {
     viewState.value = ViewState.isLoading;
-    final event = _allEvents.where(
-      (event) => event.uid == eventId
-    ).firstOrNull;
+    final event = _allEvents.where((event) => event.uid == eventId).firstOrNull;
     if (await _shouldSkipFetch() && event?.uid.isNotEmpty == true) {
       viewState.value = ViewState.loadFinished;
       return event;
@@ -198,7 +196,8 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   Future<bool> _shouldSkipFetch() async {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
-    final isCacheValid = _lastEventsFetchTime != null &&
+    final isCacheValid =
+        _lastEventsFetchTime != null &&
         DateTime.now().difference(_lastEventsFetchTime!) <
             const Duration(minutes: 5);
 
@@ -210,9 +209,13 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final isTokenNull = gitHubService.token == null;
 
     if (_allEvents.length == 1 && isTokenNull) {
-      await AppRouter.router.pushNamed(
-        AppRouter.eventDetailName,
-        pathParameters: {'eventId': _allEvents.first.uid},
+      await AppRouter.router.push(
+        AppRouter.eventDetailPath,
+        extra: {
+          'eventId': _allEvents.first.uid,
+          'location': _allEvents.first.location ?? "",
+          'onlyOneEvent': "true",
+        },
       );
     }
   }
