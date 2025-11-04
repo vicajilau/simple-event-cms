@@ -69,6 +69,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get venue => 'Lieu';
 
   @override
+  String get visibilityLabel => 'Lieu';
+
+  @override
+  String get eventIsVisible => 'L\'événement est visible';
+
+  @override
+  String get eventIsHidden => 'L\'événement est masqué';
+
+  @override
   String get description => 'Description';
 
   @override

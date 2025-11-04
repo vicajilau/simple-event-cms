@@ -82,6 +82,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       GlobalKey<FormFieldState>();
 
   bool _hasEndDate = true;
+  bool _isVisible = true;
   List<Track> _tracks = [];
   Timer? _debounce;
 
@@ -118,6 +119,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _timezoneController.text = event.eventDates.timezone;
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
+          _isVisible = event.isVisible;
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -447,6 +449,22 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                   ),
                 ),
+                SectionInputForm(
+                  label: localizations.visibilityLabel,
+                  childInput: SwitchListTile(
+                    title: Text(
+                      _isVisible
+                          ? localizations.eventIsVisible
+                          : localizations.eventIsHidden,
+                    ),
+                    value: _isVisible,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isVisible = value;
+                      });
+                    },
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 12,
@@ -556,6 +574,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
+      isVisible: _isVisible,
       eventDates: eventDates,
     );
     var result = await eventFormViewModel.onSubmit(eventModified);

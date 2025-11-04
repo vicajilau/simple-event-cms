@@ -230,6 +230,24 @@ abstract class AppLocalizations {
   /// **'Venue'**
   String get venue;
 
+  /// No description provided for @visibilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Location'**
+  String get visibilityLabel;
+
+  /// No description provided for @eventIsVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is visible'**
+  String get eventIsVisible;
+
+  /// No description provided for @eventIsHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is hidden'**
+  String get eventIsHidden;
+
   /// No description provided for @description.
   ///
   /// In en, this message translates to:

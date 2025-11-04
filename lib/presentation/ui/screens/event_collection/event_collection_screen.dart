@@ -157,6 +157,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   if (confirm == true) {
                     setState(() async {
                       await SecureInfo.removeGithubKey();
+                      await _loadConfiguration();
                     });
                   }
                 }
@@ -530,19 +531,29 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           if (isAdmin)
             Align(
               alignment: Alignment.topRight,
-              child: IconButton(
-                constraints: const BoxConstraints(),
-                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                icon: const Icon(Icons.edit, size: 20),
-                onPressed: () async {
-                  final Event? eventEdited = await AppRouter.router.push(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    item.isVisible ? Icons.visibility : Icons.visibility_off,
+                    size: 20,
+                    color: item.isVisible ? Colors.green : Colors.grey,
+                  ),
+                  IconButton(
+                    constraints: const BoxConstraints(),
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                    icon: const Icon(Icons.edit, size: 20),
+                    onPressed: () async {
+                      final Event? eventEdited = await AppRouter.router.push(
                     AppRouter.eventFormPath,
                     extra: item.uid,
                   );
-                  if (eventEdited != null) {
-                    await widget.viewmodel.editEvent(eventEdited);
-                  }
-                },
+                      if (eventEdited != null) {
+                        await widget.viewmodel.editEvent(eventEdited);
+                      }
+                    },
+                  ),
+                ],
               ),
             ),
           Expanded(

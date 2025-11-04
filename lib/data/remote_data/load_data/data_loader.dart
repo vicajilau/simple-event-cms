@@ -1,6 +1,7 @@
 import 'dart:async'; // Added for Future.wait
 
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 
 import '../../../core/models/models.dart';
@@ -37,11 +38,17 @@ class DataLoader {
     final List<Session> allSessions = await loadAllSessions();
 
     for (var track in allTracks) {
-      track.resolvedSessions = allSessions.where((session) => track.sessionUids.contains(session.uid)).toList();
+      track.resolvedSessions = allSessions
+          .where((session) => track.sessionUids.contains(session.uid))
+          .toList();
     }
-    var agendaDays = jsonList.map((jsonItem) => AgendaDay.fromJson(jsonItem)).toList();
+    var agendaDays = jsonList
+        .map((jsonItem) => AgendaDay.fromJson(jsonItem))
+        .toList();
     for (var day in agendaDays) {
-      day.resolvedTracks = allTracks.where((track) => day.trackUids?.contains(track.uid) == true).toList();
+      day.resolvedTracks = allTracks
+          .where((track) => day.trackUids?.contains(track.uid) == true)
+          .toList();
     }
     return agendaDays;
   }
@@ -66,13 +73,33 @@ class DataLoader {
 
   /// Loads event information from the events.json file
   Future<List<Event>> loadEvents() async {
+    var githubService = await SecureInfo.getGithubKey();
+
     List<dynamic> jsonList = await commonsServices.loadData(
       PathsGithub.eventPath,
     );
-    return jsonList
-        .map<Event>(
-          (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
-        )
-        .toList();
+    if (jsonList.isEmpty ||
+        jsonList.indexWhere(
+              (event) =>
+                  (Event.fromJson(event as Map<String, dynamic>)).isVisible,
+            ) ==
+            -1) {
+      return [];
+    }
+
+    if (githubService.token != null) {
+      return jsonList
+          .map<Event>(
+            (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
+          )
+          .toList();
+    } else {
+      return jsonList
+          .map<Event>(
+            (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
+          )
+          .where((event) => event.isVisible)
+          .toList();
+    }
   }
 }

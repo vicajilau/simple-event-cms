@@ -88,8 +88,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                               context: context,
                               builder: (context) => Dialog(
                                 child: AdminLoginScreen(() {
-                                  setState(() {
-                                    widget.viewmodel.setup(widget.eventId);
+                                  setState(() async{
+                                    await widget.viewmodel.loadEventData(widget.eventId);
                                   });
                                 }),
                               ),
@@ -119,6 +119,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             if (confirm == true) {
                               setState(() async {
                                 await SecureInfo.removeGithubKey();
+                                await widget.viewmodel.loadEventData(widget.eventId);
                               });
                             }
                           }
