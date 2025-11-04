@@ -255,16 +255,15 @@ class DataUpdateInfo {
       );
     }
 
-    if (eventToRemove != null) {
-      if (eventToRemove.tracks.isNotEmpty) {
-        await dataCommons.removeDataList(
-          tracksOriginal,
-          eventToRemove.tracks,
-          "events/${eventToRemove.tracks.first.pathUrl}",
-          eventToRemove.tracks.first.updateMessage,
-        );
-      }
 
+    if (tracksOriginal.indexWhere((track) => track.eventUid == eventId) != -1) {
+      await dataCommons.updateDataList(
+        tracksOriginal.where((track) => track.eventUid != eventId).toList(),
+        "events/${tracksOriginal.first.pathUrl}",
+        tracksOriginal.first.updateMessage,
+      );
+    }
+    if (eventToRemove != null) {
       await dataCommons.removeData(
         eventsOriginal,
         eventToRemove,
