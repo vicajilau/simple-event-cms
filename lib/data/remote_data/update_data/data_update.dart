@@ -75,18 +75,24 @@ class DataUpdateInfo {
   /// Parses the JSON structure and returns a list of AgendaDay objects
   /// with proper type conversion and validation
   /// Returns a Future containing a list of AgendaDay models
-  Future<void> updateAgendaDays(List<AgendaDay> agendaDays,{bool overrideData = false}) async {
+  Future<void> updateAgendaDays(
+    List<AgendaDay> agendaDays, {
+    bool overrideData = false,
+  }) async {
     var agendaDaysRepo = (await dataLoader.loadAllDays());
-    if(overrideData == false) {
+    if (overrideData == false) {
       agendaDaysRepo
           .toList()
-          .where((day) => !agendaDays.map((agendaDay) => agendaDay.uid).contains(day.uid))
+          .where(
+            (day) =>
+                !agendaDays.map((agendaDay) => agendaDay.uid).contains(day.uid),
+          )
           .toList();
       agendaDaysRepo.addAll(agendaDays);
-    }else{
-      agendaDaysRepo
-          .toList()
-          .removeWhere((day) => day.eventsUID.contains(agendaDays.first.eventsUID.first));
+    } else {
+      agendaDaysRepo.toList().removeWhere(
+        (day) => day.eventsUID.contains(agendaDays.first.eventsUID.first),
+      );
       agendaDaysRepo.addAll(agendaDays);
     }
     await dataCommons.updateDataList(
@@ -110,12 +116,11 @@ class DataUpdateInfo {
 
   /// Loads organization information from the organization.json file
   Future<void> updateOrganization(Organization organization) async {
-    await dataCommons
-        .updateSingleData(
-          organization,
-          "events/${organization.pathUrl}",
-          organization.updateMessage,
-        );
+    await dataCommons.updateSingleData(
+      organization,
+      "events/${organization.pathUrl}",
+      organization.updateMessage,
+    );
   }
 
   /// Loads sponsor information from the sponsors.json file
@@ -206,22 +211,48 @@ class DataUpdateInfo {
   /// Returns a Future containing a list of events data with logos and details
   Future<void> removeEvent(String eventId) async {
     var eventsOriginal = await dataLoader.loadEvents();
-    var tracksOriginal = await dataLoader.loadAllTracks();
-    var eventToRemove = eventsOriginal.firstWhere(
-      (event) => event.uid == eventId,
-    );
-    await dataCommons.removeDataList(
-      tracksOriginal,
-      eventToRemove.tracks,
-      "events/${eventToRemove.pathUrl}",
-      eventToRemove.updateMessage,
-    );
-    await dataCommons.removeData(
-      eventsOriginal,
-      eventToRemove,
-      "events/${eventToRemove.pathUrl}",
-      eventToRemove.updateMessage,
-    );
+    var tracksOriginal = (await dataLoader.loadAllTracks());
+    var sessionsOriginal = (await dataLoader.loadAllSessions());
+    var sessionsFromEvent = null;
+    var eventToRemove = null;
+    if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
+        -1) {
+      sessionsFromEvent = sessionsOriginal
+          .where((session) => session.eventUID == eventId)
+          .toList();
+    }
+    if (eventsOriginal.indexWhere((event) => event.uid == eventId) != -1) {
+      eventToRemove = eventsOriginal.firstWhere(
+        (event) => event.uid == eventId,
+      );
+    }
+
+    if (sessionsFromEvent != null) {
+      await dataCommons.removeDataList(
+        sessionsOriginal,
+        sessionsFromEvent,
+        "events/${sessionsFromEvent.first.pathUrl}",
+        sessionsFromEvent.first.updateMessage,
+      );
+    }
+
+    if (eventToRemove != null) {
+      if (eventToRemove.tracks != null) {
+        await dataCommons.removeDataList(
+          tracksOriginal,
+          eventToRemove.tracks,
+          "events/${eventToRemove.tracks.first.pathUrl}",
+          eventToRemove.tracks.first.updateMessage,
+        );
+      }
+
+      await dataCommons.removeData(
+        eventsOriginal,
+        eventToRemove,
+        "events/${eventToRemove.pathUrl}",
+        eventToRemove.updateMessage,
+      );
+    }
   }
 
   /// Removes an agenda day entry from the agenda.json file by its ID.
