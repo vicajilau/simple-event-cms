@@ -213,8 +213,26 @@ class DataUpdateInfo {
     var eventsOriginal = await dataLoader.loadEvents();
     var tracksOriginal = (await dataLoader.loadAllTracks());
     var sessionsOriginal = (await dataLoader.loadAllSessions());
-    var sessionsFromEvent = null;
-    var eventToRemove = null;
+    var daysOriginal = (await dataLoader.loadAllDays());
+    List<AgendaDay> eventDays = [];
+    List<Session> sessionsFromEvent = [];
+    Event? eventToRemove;
+    if (daysOriginal.indexWhere((day) => day.eventsUID.contains(eventId)) !=
+        -1) {
+      for (var value in daysOriginal) {
+        if (value.eventsUID.contains(eventId)) {
+          value.eventsUID.remove(eventId);
+        }
+        if(value.eventsUID.isNotEmpty) {
+          eventDays.add(value);
+        }
+      }
+      await dataCommons.updateDataList(
+        eventDays,
+        "events/${ eventDays.first.pathUrl}",
+        eventDays.first.updateMessage,
+      );
+    }
     if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
         -1) {
       sessionsFromEvent = sessionsOriginal
@@ -227,7 +245,14 @@ class DataUpdateInfo {
       );
     }
 
-    if (sessionsFromEvent != null) {
+    if(daysOriginal.isNotEmpty) {
+      await dataCommons.updateDataList(
+        daysOriginal,
+        "events/${daysOriginal.first.pathUrl}",
+        daysOriginal.first.updateMessage,
+      );
+    }
+    if (sessionsFromEvent.isNotEmpty) {
       await dataCommons.removeDataList(
         sessionsOriginal,
         sessionsFromEvent,
@@ -237,7 +262,7 @@ class DataUpdateInfo {
     }
 
     if (eventToRemove != null) {
-      if (eventToRemove.tracks != null) {
+      if (eventToRemove.tracks.isNotEmpty) {
         await dataCommons.removeDataList(
           tracksOriginal,
           eventToRemove.tracks,
