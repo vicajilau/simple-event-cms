@@ -23,6 +23,8 @@
   "close": "Fermer",
   "twitter": "Twitter/X",
   "linkedin": "LinkedIn",
+  "deleteEventTitle": "Supprimer l'événement",
+  "deleteEventMessage": "Êtes-vous sûr de vouloir supprimer cet événement ? \n Cela supprimera les sessions associées à l'événement.",
   "github": "GitHub",
   "website": "Site Web",
   "openUrl": "Ouvrir l'URL",

@@ -71,15 +71,16 @@ class CommonsServicesImp extends CommonsServices {
         ref: organization.branch,
       );
     } catch (e, st) {
-      if (e is RateLimitHit) {
+      debugPrint(st.toString());
+      if (e is GitHubError && e.message == "Not Found") {
+        return [].toList();
+      }else if (e is RateLimitHit) {
         throw NetworkException(
           "GitHub API rate limit exceeded. Please try again later.",
           cause: e,
           stackTrace: st,
           url: url,
         );
-      } else if (e is NotFound) {
-        return [].toList();
       } else if (e is InvalidJSON) {
         throw NetworkException(
           "Invalid JSON received from GitHub.",

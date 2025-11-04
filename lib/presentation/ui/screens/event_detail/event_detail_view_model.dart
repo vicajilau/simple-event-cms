@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
@@ -40,10 +41,11 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
+    var githubService = await SecureInfo.getGithubKey();
 
     switch (result) {
       case Ok<List<Event>>():
-        onlyOneEvent.value = result.value.length == 1;
+        onlyOneEvent.value = result.value.length == 1 && githubService.token == null;
         if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;

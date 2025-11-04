@@ -28,6 +28,8 @@
   "openUrl": "Abrir URL",
   "changeLanguage": "Cambiar Idioma",
   "speakerForm": "Formulario de Ponente",
+  "deleteEventTitle": "Eliminar evento",
+  "deleteEventMessage": "¿Estás seguro de que quieres eliminar este evento? \n Esto borrará las sesiones asociadas al evento.",
   "nameLabel": "Nombre*",
   "nameErrorHint": "Por favor ingresa tu nombre",
   "bioLabel": "Biografía*",

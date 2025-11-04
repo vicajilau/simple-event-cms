@@ -90,6 +90,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get changeLanguage => 'Cambiar Idioma';
 
   @override
+  String get deleteEventTitle => 'Eliminar evento';
+
+  @override
+  String get deleteEventMessage =>
+      '¿Estás seguro de que quieres eliminar este evento? \n Esto borrará las sesiones asociadas al evento.';
+
+  @override
   String get speakerForm => 'Formulario de Ponente';
 
   @override

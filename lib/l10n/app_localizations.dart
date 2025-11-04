@@ -272,6 +272,18 @@ abstract class AppLocalizations {
   /// **'Change Language'**
   String get changeLanguage;
 
+  /// No description provided for @deleteEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Event'**
+  String get deleteEventTitle;
+
+  /// No description provided for @deleteEventMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this event? \n This will delete the sessions associated with the event.'**
+  String get deleteEventMessage;
+
   /// No description provided for @speakerForm.
   ///
   /// In en, this message translates to:

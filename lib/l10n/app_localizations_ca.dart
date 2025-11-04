@@ -90,6 +90,13 @@ class AppLocalizationsCa extends AppLocalizations {
   String get changeLanguage => 'Canviar Idioma';
 
   @override
+  String get deleteEventTitle => 'Eliminar esdeveniment';
+
+  @override
+  String get deleteEventMessage =>
+      'Estàs segur que vols eliminar aquest esdeveniment? \n Això esborrarà les sessions associades a l\'esdeveniment.';
+
+  @override
   String get speakerForm => 'Formulari de Ponent';
 
   @override

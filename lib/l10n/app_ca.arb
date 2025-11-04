@@ -158,6 +158,8 @@
   "commonError": "Error en obtenir les dades, si us plau, torna a intentar-ho més tard",
   "deleteSponsorTitle": "Eliminar patrocinador",
   "deleteSponsorMessage": "N'estàs segur, que vols eliminar el patrocinador?",
+  "deleteEventTitle": "Eliminar esdeveniment",
+  "deleteEventMessage": "Estàs segur que vols eliminar aquest esdeveniment? \n Això esborrarà les sessions associades a l'esdeveniment.",
   "deleteSpeakerTitle": "Eliminar ponent",
   "deleteSpeakerMessage": "N'estàs segur, que vols eliminar el ponent?",
   "eventSelection": "Selecció d'esdeveniment",

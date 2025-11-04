@@ -90,6 +90,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get changeLanguage => 'Hizkuntza aldatu';
 
   @override
+  String get deleteEventTitle => 'Gertaera ezabatu';
+
+  @override
+  String get deleteEventMessage =>
+      'Ziur zaude gertaera hau ezabatu nahi duzula? \n Honek gertaerarekin lotutako saioak ezabatuko ditu.';
+
+  @override
   String get speakerForm => 'Hizlariaren Inprimakia';
 
   @override

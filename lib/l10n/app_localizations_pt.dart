@@ -90,6 +90,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get changeLanguage => 'Mudar Idioma';
 
   @override
+  String get deleteEventTitle => 'Excluir Evento';
+
+  @override
+  String get deleteEventMessage =>
+      'Tem certeza de que deseja excluir este evento? \n Isso excluirá as sessões associadas ao evento.';
+
+  @override
   String get speakerForm => 'Formulário de Palestrante';
 
   @override
@@ -436,11 +443,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de Acesso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventos Disponíveis';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Explore os próximos eventos e encontre algo que lhe interesse';
 
   @override
   String get organization => 'Organização';

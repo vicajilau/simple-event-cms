@@ -27,6 +27,8 @@
   "website": "Website",
   "openUrl": "Open URL",
   "changeLanguage": "Change Language",
+  "deleteEventTitle": "Delete Event",
+  "deleteEventMessage": "Are you sure you want to delete this event? \n This will delete the sessions associated with the event.",
   "speakerForm": "Speaker Form",
   "nameLabel": "Name*",
   "nameErrorHint": "Please enter your name",

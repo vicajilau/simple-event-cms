@@ -558,7 +558,29 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                   icon: const Icon(Icons.delete, size: 20),
                   onPressed: () async {
-                    await widget.viewmodel.deleteEvent(item);
+                    final bool? confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        final location = AppLocalizations.of(context)!;
+                        return AlertDialog(
+                          title: Text(location.deleteEventTitle),
+                          content: Text(location.deleteEventMessage),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text(location.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text(location.deleteEventTitle),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirm == true) {
+                      await widget.viewmodel.deleteEvent(item);
+                    }
                   },
                 ),
               ),

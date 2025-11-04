@@ -26,6 +26,8 @@
   "github": "GitHub",
   "website": "Webgunea",
   "openUrl": "URL ireki",
+  "deleteEventTitle": "Gertaera ezabatu",
+  "deleteEventMessage": "Ziur zaude gertaera hau ezabatu nahi duzula? \n Honek gertaerarekin lotutako saioak ezabatuko ditu.",
   "changeLanguage": "Hizkuntza aldatu",
   "speakerForm": "Hizlariaren Inprimakia",
   "nameLabel": "Izena*",
