@@ -69,7 +69,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get venue => 'Lugar';
 
   @override
-  String get visibilityLabel => 'Ubicación';
+  String get visibilityLabel => 'Visibilidad';
 
   @override
   String get eventIsVisible => 'El evento es visible';

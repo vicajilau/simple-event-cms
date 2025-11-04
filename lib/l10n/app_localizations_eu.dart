@@ -69,7 +69,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get venue => 'Lekua';
 
   @override
-  String get visibilityLabel => 'Ikusgarritasuna';
+  String get visibilityLabel => 'Ikusgaitasuna';
 
   @override
   String get eventIsVisible => 'Gertaera ikusgai dago';

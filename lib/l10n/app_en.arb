@@ -20,7 +20,7 @@
   "eventInfo": "Event Information",
   "eventDates": "Event Dates",
   "venue": "Venue",
-  "visibilityLabel": "Location",
+  "visibilityLabel": "Visibility",
   "eventIsVisible": "Event is visible",
   "eventIsHidden": "Event is hidden",
   "description": "Description",

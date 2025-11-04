@@ -35,7 +35,7 @@
   "eventIsHidden": "El evento está oculto",
   "nextEvent": "Próximo evento...",
   "nameErrorHint": "Por favor ingresa tu nombre",
-  "visibilityLabel": "Ubicación",
+  "visibilityLabel": "Visibilidad",
   "bioLabel": "Biografía*",
   "bioErrorHint": "Por favor ingresa tu biografía",
   "imageUrlLabel": "URL de la Imagen",
