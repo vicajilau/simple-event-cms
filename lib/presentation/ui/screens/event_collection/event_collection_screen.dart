@@ -306,6 +306,17 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 );
               }
 
+              // Find the closest upcoming event
+              Event? upcomingEvent;
+              final now = DateTime.now();
+              final futureEvents = eventsToShow
+                  .where((e) => DateTime.parse(e.eventDates.startDate).isAfter(now))
+                  .toList();
+              if (futureEvents.isNotEmpty) {
+                futureEvents.sort((a, b) =>
+                    a.eventDates.startDate.compareTo(b.eventDates.startDate));
+                upcomingEvent = futureEvents.first;
+              }
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -328,11 +339,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           ),
                       itemBuilder: (BuildContext context, int index) {
                         final item = eventsToShow[index];
+                        final bool isUpcoming = item.uid == upcomingEvent?.uid;
                         return FutureBuilder<bool>(
                           future: widget.viewmodel.checkToken(),
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
-                            return _buildEventCard(context, item, canDismiss);
+                            return _buildEventCard(
+                                context, item, canDismiss, isUpcoming);
                           },
                         );
                       },
@@ -468,125 +481,159 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     );
   }
 
-  Widget _buildEventCard(BuildContext context, Event item, bool isAdmin) {
-    return GestureDetector(
-      onTap: () {
-        AppRouter.router.pushNamed(
-          AppRouter.eventDetailName,
-          pathParameters: {'eventId': item.uid,'location': item.location ?? ""},
-        );
-      },
-      child: Card(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (isAdmin)
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                  icon: const Icon(Icons.edit, size: 20),
-                  onPressed: () async {
-                    final Event? eventEdited = await AppRouter.router.push(
-                      AppRouter.eventFormPath,
-                      extra: item.uid,
-                    );
-                    if (eventEdited != null) {
-                      await widget.viewmodel.editEvent(eventEdited);
-                    }
-                  },
-                ),
-              ),
-            Expanded(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: isAdmin ? 0.0 : 20.0,
-                      bottom: 8.0,
-                    ),
-                    child: Center(
-                      child: Text(
-                        organizationName.toString(),
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                  const Divider(height: 1, indent: 16, endIndent: 16),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        top: 16.0,
-                        left: 16.0,
-                        right: 16.0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item.eventName,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(
-                              "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
-                              style: Theme.of(context).textTheme.bodySmall,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+  Widget _buildEventCard(
+      BuildContext context, Event item, bool isAdmin, bool isUpcoming) {
+    final location = AppLocalizations.of(context)!;
+
+    final cardContent = Card(
+      shape: isUpcoming
+          ? RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.blueAccent, width: 2.5),
+              borderRadius: BorderRadius.circular(
+                  12.0), // The default radius for Card is 12.0
+            )
+          : null,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (isAdmin)
+            Align(
+              alignment: Alignment.topRight,
+              child: IconButton(
+                constraints: const BoxConstraints(),
+                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                icon: const Icon(Icons.edit, size: 20),
+                onPressed: () async {
+                  final Event? eventEdited = await AppRouter.router.push(
+                    AppRouter.eventFormPath,
+                    extra: item.uid,
+                  );
+                  if (eventEdited != null) {
+                    await widget.viewmodel.editEvent(eventEdited);
+                  }
+                },
               ),
             ),
-            if (isAdmin)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  icon: const Icon(Icons.delete, size: 20),
-                  onPressed: () async {
-                    final bool? confirm = await showDialog<bool>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        final location = AppLocalizations.of(context)!;
-                        return AlertDialog(
-                          title: Text(location.deleteEventTitle),
-                          content: Text(location.deleteEventMessage),
-                          actions: <Widget>[
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(false),
-                              child: Text(location.cancel),
-                            ),
-                            TextButton(
-                              onPressed: () => Navigator.of(context).pop(true),
-                              child: Text(location.deleteEventTitle),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    if (confirm == true) {
-                      await widget.viewmodel.deleteEvent(item);
-                    }
-                  },
+          Expanded(
+            child: Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: isAdmin ? 0.0 : 20.0,
+                    bottom: 8.0,
+                  ),
+                  child: Center(
+                    child: Text(
+                      organizationName.toString(),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
+                const Divider(height: 1, indent: 16, endIndent: 16),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      top: 16.0,
+                      left: 16.0,
+                      right: 16.0,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.eventName,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: Text(
+                            "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
+                            style: Theme.of(context).textTheme.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (isAdmin)
+            Align(
+              alignment: Alignment.bottomRight,
+              child: IconButton(
+                constraints: const BoxConstraints(),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                icon: const Icon(Icons.delete, size: 20),
+                onPressed: () async {
+                  final bool? confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      final location = AppLocalizations.of(context)!;
+                      return AlertDialog(
+                        title: Text(location.deleteEventTitle),
+                        content: Text(location.deleteEventMessage),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(false),
+                            child: Text(location.cancel),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(true),
+                            child: Text(location.deleteEventTitle),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (confirm == true) {
+                    await widget.viewmodel.deleteEvent(item);
+                  }
+                },
               ),
-          ],
-        ),
+            ),
+        ],
       ),
+    );
+
+    return Column(
+      children: [
+        if (isUpcoming)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              location.nextEvent,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold, color: Colors.blueAccent),
+            ),
+          ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () {
+              AppRouter.router.pushNamed(
+                AppRouter.eventDetailName,
+                pathParameters: {
+                  'eventId': item.uid,
+                  'location': item.location ?? ""
+                },
+              );
+            },
+            child: cardContent,
+          ),
+        ),
+      ],
     );
   }
 }

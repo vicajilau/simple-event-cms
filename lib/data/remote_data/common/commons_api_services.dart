@@ -71,7 +71,12 @@ class CommonsServicesImp extends CommonsServices {
         ref: organization.branch,
       );
     } catch (e, st) {
-      debugPrint(st.toString());
+      if(e is GitHubError){
+        debugPrint("error: ${e.toString()} strack: ${st.toString()}");
+      }else{
+        debugPrint("error that its not a githuberror, strack: ${st.toString()}");
+      }
+
       if (e is GitHubError && e.message == "Not Found") {
         return [].toList();
       }else if (e is RateLimitHit) {

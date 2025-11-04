@@ -15,6 +15,7 @@
   "sessionBreak": "PAUSE",
   "agenda": "Agenda",
   "speakers": "Intervenants",
+  "nextEvent": "Événement à venir...",
   "sponsors": "Sponsors",
   "eventInfo": "Informations sur l'Événement",
   "eventDates": "Dates de l'Événement",

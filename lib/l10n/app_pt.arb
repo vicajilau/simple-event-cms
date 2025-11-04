@@ -31,6 +31,7 @@
   "nameLabel": "Nome*",
   "nameErrorHint": "Por favor, insira seu nome",
   "bioLabel": "Biografia*",
+  "nextEvent": "Próximo evento...",
   "bioErrorHint": "Por favor, insira sua biografia",
   "imageUrlLabel": "URL da Imagem",
   "nameHint": "Insira o nome do palestrante",

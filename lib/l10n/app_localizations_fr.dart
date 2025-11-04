@@ -57,6 +57,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sponsors => 'Sponsors';
 
   @override
+  String get nextEvent => 'Événement à venir...';
+
+  @override
   String get eventInfo => 'Informations sur l\'Événement';
 
   @override

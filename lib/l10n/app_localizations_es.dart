@@ -57,6 +57,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sponsors => 'Patrocinadores';
 
   @override
+  String get nextEvent => 'Próximo evento...';
+
+  @override
   String get eventInfo => 'Información del Evento';
 
   @override
@@ -94,7 +97,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get deleteEventMessage =>
-      '¿Estás seguro de que quieres eliminar este evento? \n Esto borrará las sesiones asociadas al evento.';
+      '¿Estás seguro de que quieres eliminar este evento? \nEsto borrará las sesiones asociadas al evento.';
 
   @override
   String get speakerForm => 'Formulario de Ponente';

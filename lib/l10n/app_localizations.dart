@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Sponsors'**
   String get sponsors;
 
+  /// No description provided for @nextEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Next event...'**
+  String get nextEvent;
+
   /// No description provided for @eventInfo.
   ///
   /// In en, this message translates to:

@@ -140,13 +140,23 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
         eventsFiltered = eventsFiltered.where((event) {
           final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isBefore(now);
-        }).toList();
+        }).toList()
+          ..sort((a, b) {
+            final aDate = DateTime.parse(a.eventDates.startDate);
+            final bDate = DateTime.parse(b.eventDates.startDate);
+            return aDate.compareTo(bDate);
+          });
         break;
       case EventFilter.current:
         eventsFiltered = eventsFiltered.where((event) {
           final startDate = DateTime.parse(event.eventDates.startDate);
           return startDate.isAfter(now);
-        }).toList();
+        }).toList()
+          ..sort((a, b) {
+            final aDate = DateTime.parse(a.eventDates.startDate);
+            final bDate = DateTime.parse(b.eventDates.startDate);
+            return aDate.compareTo(bDate);
+          });
         break;
     }
     eventsToShow.value = eventsFiltered;

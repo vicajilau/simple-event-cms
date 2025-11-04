@@ -57,6 +57,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sponsors => 'Babesleak';
 
   @override
+  String get nextEvent => 'Hurrengo ekitaldia...';
+
+  @override
   String get eventInfo => 'Gertaeraren Informazioa';
 
   @override

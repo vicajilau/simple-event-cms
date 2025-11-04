@@ -15,6 +15,7 @@
   "sessionBreak": "DESCANSO",
   "agenda": "Axenda",
   "speakers": "Relatores",
+  "nextEvent": "Vindeiro evento...",
   "sponsors": "Patrocinadores",
   "eventInfo": "Información do Evento",
   "eventDates": "Datas do Evento",
