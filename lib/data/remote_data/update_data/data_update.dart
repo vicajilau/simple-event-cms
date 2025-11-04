@@ -223,15 +223,17 @@ class DataUpdateInfo {
         if (value.eventsUID.contains(eventId)) {
           value.eventsUID.remove(eventId);
         }
-        if(value.eventsUID.isNotEmpty) {
+        if (value.eventsUID.isNotEmpty) {
           eventDays.add(value);
         }
       }
-      await dataCommons.updateDataList(
-        eventDays,
-        "events/${ eventDays.first.pathUrl}",
-        eventDays.first.updateMessage,
-      );
+      if (eventDays.isNotEmpty) {
+        await dataCommons.updateDataList(
+          eventDays,
+          "events/${eventDays.first.pathUrl}",
+          eventDays.first.updateMessage,
+        );
+      }
     }
     if (sessionsOriginal.indexWhere((session) => session.eventUID == eventId) !=
         -1) {
@@ -242,14 +244,6 @@ class DataUpdateInfo {
     if (eventsOriginal.indexWhere((event) => event.uid == eventId) != -1) {
       eventToRemove = eventsOriginal.firstWhere(
         (event) => event.uid == eventId,
-      );
-    }
-
-    if(daysOriginal.isNotEmpty) {
-      await dataCommons.updateDataList(
-        daysOriginal,
-        "events/${daysOriginal.first.pathUrl}",
-        daysOriginal.first.updateMessage,
       );
     }
     if (sessionsFromEvent.isNotEmpty) {
