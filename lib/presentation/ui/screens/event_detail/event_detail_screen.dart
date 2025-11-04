@@ -6,9 +6,11 @@ import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart'
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
+import '../../../../core/config/secure_info.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../agenda/agenda_screen.dart';
+import '../login/admin_login_screen.dart';
 import '../speaker/speakers_screen.dart';
 import '../sponsor/sponsors_screen.dart';
 import 'event_detail_view_model.dart';
@@ -29,6 +31,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _selectedIndex = 0;
+  int _titleTapCount = 0;
   List<Widget> screens = [];
 
   @override
@@ -72,7 +75,65 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                   centerTitle: false,
                   iconTheme: const IconThemeData(color: Colors.blue),
                   elevation: 0,
-                  title: Row(
+                  title: GestureDetector(
+                    onTap: () async {
+                      _titleTapCount++;
+
+                      if (_titleTapCount >= 5) {
+                        _titleTapCount = 0;
+                        var githubService = await SecureInfo.getGithubKey();
+                        if (githubService.token == null) {
+                          if (context.mounted) {
+                            await showDialog<bool>(
+                              context: context,
+                              builder: (context) => Dialog(
+                                child: AdminLoginScreen(() {
+                                  setState(() {
+                                    widget.viewmodel.setup(widget.eventId);
+                                  });
+                                }),
+                              ),
+                            );
+                          }
+                        } else {
+                          if (context.mounted) {
+                            final bool? confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(location.confirmLogout),
+                                  content: Text(location.confirmLogoutMessage),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(false),
+                                      child: Text(location.cancel),
+                                    ),
+                                    TextButton(
+                                      onPressed: () => Navigator.of(context).pop(true),
+                                      child: Text(location.logout),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if (confirm == true) {
+                              setState(() async {
+                                await SecureInfo.removeGithubKey();
+                              });
+                            }
+                          }
+                        }
+                      }
+                      // Reset counter after 3 seconds
+                      Future.delayed(const Duration(seconds: 3), () {
+                        if (mounted) {
+                          setState(() {
+                            _titleTapCount = 0;
+                          });
+                        }
+                      });
+                    },
+                    child:Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Expanded(
@@ -118,6 +179,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                       ),
                       const Spacer(), // Pushes the TabBar to the center
                     ],
+                  ),
                   ),
                 ),
               ),
