@@ -63,14 +63,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     final location = AppLocalizations.of(context)!;
 
         return ValueListenableBuilder(
-          valueListenable: widget.viewmodel.eventTitle,
+          valueListenable: widget.viewmodel.onlyOneEvent,
           builder: (context, value, child) {
             return Scaffold(
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(100.0),
                 child: AppBar(
                   backgroundColor: Colors.white,
-                  automaticallyImplyLeading: widget.onlyOneEvent,
+                  automaticallyImplyLeading: widget.viewmodel.onlyOneEvent.value == false,
                   titleSpacing: 0.0,
                   centerTitle: false,
                   iconTheme: const IconThemeData(color: Colors.blue),
