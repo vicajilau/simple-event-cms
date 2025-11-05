@@ -343,7 +343,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get errorPrefix => 'Errorea: ';
 
   @override
-  String get errorLoadingConfig => 'Errorea konfigurazioa kargatzean: ';
+  String get errorLoadingConfig => 'Errorea konfigurazioa kargatzean';
 
   @override
   String get configNotAvailable => 'Errorea: Konfigurazioa ez dago erabilgarri';

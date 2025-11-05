@@ -55,8 +55,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     } catch (e) {
       if (mounted) {
         final location = AppLocalizations.of(context)!;
+        debugPrint('${location.errorLoadingConfig}$e');
         setState(() {
-          _errorMessage = '${location.errorLoadingConfig}$e';
+          _errorMessage = location.errorLoadingConfig;
           _isLoading = false;
         });
       }

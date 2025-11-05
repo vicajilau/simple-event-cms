@@ -344,7 +344,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get errorPrefix => 'Erro: ';
 
   @override
-  String get errorLoadingConfig => 'Erro ao carregar a configuração: ';
+  String get errorLoadingConfig => 'Erro ao carregar a configuração';
 
   @override
   String get configNotAvailable => 'Erro: Configuração não disponível';
