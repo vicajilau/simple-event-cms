@@ -71,74 +71,76 @@ class CommonsServicesImp extends CommonsServices {
         ref: organization.branch,
       );
     } catch (e, st) {
-      if(e is GitHubError){
-        debugPrint("error: ${e.toString()} strack: ${st.toString()}");
-      }else{
-        debugPrint("error that its not a githuberror, strack: ${st.toString()}");
-      }
 
       if (e is GitHubError && e.message == "Not Found") {
         return [].toList();
-      }else if (e is RateLimitHit) {
-        throw NetworkException(
-          "GitHub API rate limit exceeded. Please try again later.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is InvalidJSON) {
-        throw NetworkException(
-          "Invalid JSON received from GitHub.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is RepositoryNotFound) {
-        throw NetworkException(
-          "Repository not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is UserNotFound) {
-        throw NetworkException(
-          "User not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is OrganizationNotFound) {
-        throw NetworkException(
-          "Organization not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is TeamNotFound) {
-        throw NetworkException(
-          "Team not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is AccessForbidden) {
-        throw NetworkException(
-          "Access forbidden. Check your token and permissions.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is NotReady) {
-        throw NetworkException(
-          "The requested resource is not ready. Please try again later.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else {
-        throw NetworkException(
-          "An unknown GitHub error occurred, please retry later",
-        );
+      }else{
+        if(e is GitHubError){
+          debugPrint("error: ${e.toString()} strack: ${st.toString()}");
+        }else{
+          debugPrint("error that its not a githuberror, strack: ${st.toString()}");
+        }
+        if (e is RateLimitHit) {
+          throw NetworkException(
+            "GitHub API rate limit exceeded. Please try again later.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is InvalidJSON) {
+          throw NetworkException(
+            "Invalid JSON received from GitHub.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is RepositoryNotFound) {
+          throw NetworkException(
+            "Repository not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is UserNotFound) {
+          throw NetworkException(
+            "User not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is OrganizationNotFound) {
+          throw NetworkException(
+            "Organization not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is TeamNotFound) {
+          throw NetworkException(
+            "Team not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is AccessForbidden) {
+          throw NetworkException(
+            "Access forbidden. Check your token and permissions.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is NotReady) {
+          throw NetworkException(
+            "The requested resource is not ready. Please try again later.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else {
+          throw NetworkException(
+            "An unknown GitHub error occurred, please retry later",
+          );
+        }
       }
     }
     if (res.file == null || res.file!.content == null) {
