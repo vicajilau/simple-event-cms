@@ -75,13 +75,10 @@ Future<List<dynamic>> loadData(String path) async {
       ref: organization.branch,
     );
   } catch (e, st) {
-    // --- Agrupa primero los específicos de la lib ---
     if (e is GitHubError) {
-      // 404 de contenidos -> lista vacía
       if (e.message == "Not Found") {
         return <dynamic>[];
       }
-      // Casos específicos que quieres mapear
       if (e is RateLimitHit) {
         throw NetworkException(
           "GitHub API rate limit exceeded. Please try again later.",
@@ -94,14 +91,12 @@ Future<List<dynamic>> loadData(String path) async {
           cause: e, stackTrace: st, url: url,
         );
       }
-      // Cualquier otro GitHubError
       throw NetworkException(
         "An unknown GitHub error occurred, please retry later",
         cause: e, stackTrace: st, url: url,
       );
     }
 
-    // --- Excepciones del paquete github que no heredan de GitHubError ---
     if (e is RepositoryNotFound) {
       throw NetworkException("Repository not found.", cause: e, stackTrace: st, url: url);
     }
@@ -127,14 +122,12 @@ Future<List<dynamic>> loadData(String path) async {
       );
     }
 
-    // Fallback genérico
     throw NetworkException(
       "Error fetching data, Please retry later",
       cause: e, stackTrace: st, url: url,
     );
   }
 
-  // A partir de aquí, 'res' está definitivamente asignado
   if (res.file == null || res.file!.content == null) {
     throw NetworkException("Error fetching data, Please retry later");
   }
@@ -151,7 +144,6 @@ Future<List<dynamic>> loadData(String path) async {
     if (decodedContent is List) return decodedContent;
 
     if (decodedContent is Map && decodedContent.containsKey('UID')) {
-      // Caso de objeto único (lo envolvemos en lista)
       return <dynamic>[decodedContent];
     }
 
@@ -159,7 +151,6 @@ Future<List<dynamic>> loadData(String path) async {
       return decodedContent.values.first as List<dynamic>;
     }
 
-    // Estructura inesperada
     throw JsonDecodeException("Error fetching data, Please retry later");
   } catch (e, st) {
     if (e.toString().contains("No element")) {

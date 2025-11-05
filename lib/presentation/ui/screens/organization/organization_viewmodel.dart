@@ -18,7 +18,7 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
   final OrganizationUseCase organizationUseCase = getIt<OrganizationUseCase>();
 
   @override
-  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished); // ← no Loading por defecto
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished); 
 
   @override
   String errorMessage = '';
