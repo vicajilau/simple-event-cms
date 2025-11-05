@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
 import 'package:sec/core/config/secure_info.dart';
@@ -45,11 +43,6 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-
-      final directory = await getApplicationDocumentsDirectory();
-      final localFile = File('${directory.path}/events/organization/organization.json');
-      await localFile.create(recursive: true);
-      await localFile.writeAsString(json.encode(fileJsonData));
 
       var orgToUse = Organization.fromJson(fileJsonData);
       if(getIt.isRegistered<Organization>()){
