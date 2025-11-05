@@ -29,8 +29,7 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  late EventCollectionViewModel _viewmodel; // <- aquí
-
+  final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;
@@ -39,17 +38,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   @override
   void initState() {
     super.initState();
-    _viewmodel = getIt<EventCollectionViewModel>();
-
-    //call after first build to avoid using InheritedWidgets in initState
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadConfiguration();
-    });
+    _loadConfiguration();
   }
 
   Future<void> _loadConfiguration() async {
     try {
-      await _viewmodel.setup();
+      await viewmodel.setup();
       if (mounted) {
         final org = getIt<Organization>();
         final health = getIt<CheckOrg>();
@@ -72,7 +66,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   void dispose() {
-    _viewmodel.dispose();
+    viewmodel.dispose();
     super.dispose();
   }
 
@@ -150,11 +144,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           // after
                           getIt<CheckOrg>().setError(false);
 
-                          await _viewmodel.setup();
+                          await viewmodel.setup();
                           await _loadConfiguration();
 
                           // will do setup again to refresh organizationName
-                          await _viewmodel.setup();
+                          await viewmodel.setup();
                           await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
                         }
                       }),
@@ -168,10 +162,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     await showDialog<bool>(
                       context: context,
                       builder: (context) => Dialog(
-                        child: AdminLoginScreen(() {
-                          setState(() {
-                            _loadConfiguration();
-                          });
+                        child: AdminLoginScreen(() async {
+                          await _loadConfiguration();
                         }),
                       ),
                     );
@@ -198,14 +190,16 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       },
                     );
                     if (confirm == true) {
-                      setState(() async {
-                        await SecureInfo.removeGithubKey();
-                      });
+                      (viewmodel as EventCollectionViewModelImp)
+                          .lastEventsFetchTime =
+                      null;
+                      await SecureInfo.removeGithubKey();
+                      await viewmodel.loadEvents();
                     }
                   }
                 }
               }
-
+              // Reset counter after 3 seconds
               Future.delayed(const Duration(seconds: 3), () {
                 if (mounted) {
                   setState(() {
@@ -263,9 +257,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       .where((e) => e.label == newValue)
                       .firstOrNull;
                   if (filter == null) {
-                    _viewmodel.onEventFilterChanged(EventFilter.all);
+                    viewmodel.onEventFilterChanged(EventFilter.all);
                   } else {
-                    _viewmodel.onEventFilterChanged(filter);
+                    viewmodel.onEventFilterChanged(filter);
                   }
                 }
               },
@@ -292,10 +286,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data?.token != null) {
                 return IconButton(
                   onPressed: () async {
-                    _viewmodel.viewState.value = ViewState.isLoading;
+                    viewmodel.viewState.value = ViewState.isLoading;
                     await SecureInfo.removeGithubKey();
                     await _loadConfiguration();
-                    _viewmodel.viewState.value = ViewState.loadFinished;
+                    viewmodel.viewState.value = ViewState.loadFinished;
                     if (mounted) setState(() {}); // si hace falta redibujar
                   },
 
@@ -309,7 +303,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         ],
       ),
       body: ValueListenableBuilder<ViewState>(
-        valueListenable: _viewmodel.viewState,
+        valueListenable: viewmodel.viewState,
         builder: (context, viewState, child) {
           if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -322,10 +316,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   context: context,
                   barrierDismissible: false,
                   builder: (_) => CustomErrorDialog(
-                    errorMessage: _viewmodel.errorMessage,
+                    errorMessage: viewmodel.errorMessage,
                     onCancel: () => {
-                      _viewmodel.setErrorKey(null),
-                      _viewmodel.viewState.value = ViewState.loadFinished,
+                      viewmodel.setErrorKey(null),
+                      viewmodel.viewState.value = ViewState.loadFinished,
                       Navigator.of(context).pop(),
                     },
                     buttonText: location.closeButton,
@@ -340,7 +334,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             return Center(child: Text(location.configNotAvailable));
           }
           return ValueListenableBuilder<List<Event>>(
-            valueListenable: _viewmodel.eventsToShow,
+            valueListenable: viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {
               if (eventsToShow.isEmpty) {
                 return Column(
@@ -394,7 +388,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         final item = eventsToShow[index];
                         final bool isUpcoming = item.uid == upcomingEvent?.uid;
                         return FutureBuilder<bool>(
-                          future: _viewmodel.checkToken(),
+                          future: viewmodel.checkToken(),
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
                             return Column(
@@ -437,7 +431,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FutureBuilder<bool>(
-            future: _viewmodel.checkToken(),
+            future: viewmodel.checkToken(),
             builder: (context, snapshot) {
               if (snapshot.data == true) {
                 return FloatingActionButton(
@@ -473,7 +467,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildAddEventButton() {
     var location = AppLocalizations.of(context)!;
     return FutureBuilder<bool>(
-      future: _viewmodel.checkToken(),
+      future: viewmodel.checkToken(),
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return Padding(
@@ -522,11 +516,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           );
                           if (newEvent != null) {
                             setState(() {
-                              _viewmodel.eventsToShow.value.removeWhere(
+                              viewmodel.eventsToShow.value.removeWhere(
                                 (event) => event.uid == newEvent.uid,
                               );
-                              _viewmodel.eventsToShow.value.add(newEvent);
-                              _viewmodel.addEvent(newEvent);
+                              viewmodel.eventsToShow.value.add(newEvent);
+                              viewmodel.addEvent(newEvent);
                             });
                           }
                         },
@@ -614,7 +608,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           },
                         );
                         if (confirm == true) {
-                          await _viewmodel.editEvent(
+                          await viewmodel.editEvent(
                             item..isVisible = !item.isVisible,
                           );
                         }
@@ -706,7 +700,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         extra: item.uid,
                       );
                       if (eventEdited != null) {
-                        await _viewmodel.editEvent(eventEdited);
+                        await viewmodel.editEvent(eventEdited);
                       }
                     },
                   ),
@@ -739,25 +733,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           },
                         );
                         if (confirm == true) {
-                          await _viewmodel.deleteEvent(item);
+                          await viewmodel.deleteEvent(item);
                         }
                       },
                     ),
                 ],
               ),
             ),
-            if (isAdmin)
-              Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                  constraints: const BoxConstraints(),
-                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                  icon: const Icon(Icons.delete, size: 20),
-                  onPressed: () async {
-                    await _viewmodel.deleteEvent(item);
-                  },
-                ),
-              ),
           ],
         ),
       ),
