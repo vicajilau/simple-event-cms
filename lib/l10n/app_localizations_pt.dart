@@ -57,6 +57,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get sponsors => 'Patrocinadores';
 
   @override
+  String get nextEvent => 'Próximo evento...';
+
+  @override
   String get eventInfo => 'Informações do Evento';
 
   @override
@@ -64,6 +67,35 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get venue => 'Local';
+
+  @override
+  String get visibilityLabel => 'Visibility';
+
+  @override
+  String get eventIsOpenByDefault => 'O evento é aberto por padrão';
+
+  @override
+  String get eventIsNotOpenByDefault => 'O evento não é aberto por padrão';
+
+  @override
+  String get openByDefaultLabel => 'Aberto por padrão';
+
+  @override
+  String get eventIsVisible => 'Evento visível';
+
+  @override
+  String get changeVisibilityTitle => 'Alterar visibilidade';
+
+  @override
+  String get changeVisibilityToHidden =>
+      'Isso tornará o evento não visível para os usuários';
+
+  @override
+  String get changeVisibilityToVisible =>
+      'A partir de agora, o evento será visível para todos';
+
+  @override
+  String get eventIsHidden => 'Evento oculto';
 
   @override
   String get description => 'Descrição';
@@ -88,6 +120,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Mudar Idioma';
+
+  @override
+  String get deleteEventTitle => 'Excluir Evento';
+
+  @override
+  String get deleteEventMessage =>
+      'Tem certeza de que deseja excluir este evento? \n Isso excluirá as sessões associadas ao evento.';
 
   @override
   String get speakerForm => 'Formulário de Palestrante';
@@ -436,11 +475,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de Acesso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventos Disponíveis';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Explore os próximos eventos e encontre algo que lhe interesse';
 
   @override
   String get organization => 'Organização';

@@ -206,6 +206,12 @@ abstract class AppLocalizations {
   /// **'Sponsors'**
   String get sponsors;
 
+  /// No description provided for @nextEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Next event...'**
+  String get nextEvent;
+
   /// No description provided for @eventInfo.
   ///
   /// In en, this message translates to:
@@ -223,6 +229,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Venue'**
   String get venue;
+
+  /// No description provided for @visibilityLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Visibility'**
+  String get visibilityLabel;
+
+  /// No description provided for @eventIsOpenByDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is open by default'**
+  String get eventIsOpenByDefault;
+
+  /// No description provided for @eventIsNotOpenByDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is not open by default'**
+  String get eventIsNotOpenByDefault;
+
+  /// No description provided for @openByDefaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Open by default'**
+  String get openByDefaultLabel;
+
+  /// No description provided for @eventIsVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is visible'**
+  String get eventIsVisible;
+
+  /// No description provided for @changeVisibilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Visibility'**
+  String get changeVisibilityTitle;
+
+  /// No description provided for @changeVisibilityToHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'This will make the event not appear to users'**
+  String get changeVisibilityToHidden;
+
+  /// No description provided for @changeVisibilityToVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'From now on the event will be visible to everyone'**
+  String get changeVisibilityToVisible;
+
+  /// No description provided for @eventIsHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is hidden'**
+  String get eventIsHidden;
 
   /// No description provided for @description.
   ///
@@ -271,6 +331,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Change Language'**
   String get changeLanguage;
+
+  /// No description provided for @deleteEventTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Event'**
+  String get deleteEventTitle;
+
+  /// No description provided for @deleteEventMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this event? \n This will delete the sessions associated with the event.'**
+  String get deleteEventMessage;
 
   /// No description provided for @speakerForm.
   ///

@@ -57,6 +57,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sponsors => 'Sponsors';
 
   @override
+  String get nextEvent => 'Next event...';
+
+  @override
   String get eventInfo => 'Event Information';
 
   @override
@@ -64,6 +67,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get venue => 'Venue';
+
+  @override
+  String get visibilityLabel => 'Visibility';
+
+  @override
+  String get eventIsOpenByDefault => 'Event is open by default';
+
+  @override
+  String get eventIsNotOpenByDefault => 'Event is not open by default';
+
+  @override
+  String get openByDefaultLabel => 'Open by default';
+
+  @override
+  String get eventIsVisible => 'Event is visible';
+
+  @override
+  String get changeVisibilityTitle => 'Change Visibility';
+
+  @override
+  String get changeVisibilityToHidden =>
+      'This will make the event not appear to users';
+
+  @override
+  String get changeVisibilityToVisible =>
+      'From now on the event will be visible to everyone';
+
+  @override
+  String get eventIsHidden => 'Event is hidden';
 
   @override
   String get description => 'Description';
@@ -88,6 +120,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Change Language';
+
+  @override
+  String get deleteEventTitle => 'Delete Event';
+
+  @override
+  String get deleteEventMessage =>
+      'Are you sure you want to delete this event? \n This will delete the sessions associated with the event.';
 
   @override
   String get speakerForm => 'Speaker Form';

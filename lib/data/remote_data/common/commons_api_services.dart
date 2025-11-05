@@ -51,91 +51,127 @@ class CommonsServicesImp extends CommonsServices {
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
   @override
-  Future<List<dynamic>> loadData(String path) async {
-    String content = "";
-    final url = 'events/$path';
-    var githubService = await SecureInfo.getGithubKey();
-    var github = GitHub(
-      auth: githubService.token == null
-          ? Authentication.anonymous()
-          : Authentication.withToken(githubService.token),
+Future<List<dynamic>> loadData(String path) async {
+  String content = "";
+  final url = 'events/$path';
+
+  final githubService = await SecureInfo.getGithubKey();
+  final github = GitHub(
+    auth: githubService.token == null
+        ? Authentication.anonymous()
+        : Authentication.withToken(githubService.token),
+  );
+  final repositorySlug = RepositorySlug(
+    organization.githubUser,
+    (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+  );
+
+  late final RepositoryContents res; // <- late
+
+  try {
+    res = await github.repositories.getContents(
+      repositorySlug,
+      url,
+      ref: organization.branch,
     );
-    var repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-    );
-    RepositoryContents res;
-    try {
-      res = await github.repositories.getContents(
-        repositorySlug,
-        url,
-        ref: organization.branch,
-      );
-    } catch (e, st) {
-      if (e is GitHubError && e.message == "Not Found") {
-        return [].toList();
-      } else {
-        // Handle other potential network or API errors during fetch.
+  } catch (e, st) {
+    // --- Agrupa primero los específicos de la lib ---
+    if (e is GitHubError) {
+      // 404 de contenidos -> lista vacía
+      if (e.message == "Not Found") {
+        return <dynamic>[];
+      }
+      // Casos específicos que quieres mapear
+      if (e is RateLimitHit) {
         throw NetworkException(
-          "Error fetching data, Please retry later",
-          cause: e,
-          stackTrace: st,
-          url: url,
+          "GitHub API rate limit exceeded. Please try again later.",
+          cause: e, stackTrace: st, url: url,
         );
       }
+      if (e is InvalidJSON) {
+        throw NetworkException(
+          "Invalid JSON received from GitHub.",
+          cause: e, stackTrace: st, url: url,
+        );
+      }
+      // Cualquier otro GitHubError
+      throw NetworkException(
+        "An unknown GitHub error occurred, please retry later",
+        cause: e, stackTrace: st, url: url,
+      );
     }
-    if (res.file == null || res.file!.content == null) {
-      throw NetworkException("Error fetching data, Please retry later");
+
+    // --- Excepciones del paquete github que no heredan de GitHubError ---
+    if (e is RepositoryNotFound) {
+      throw NetworkException("Repository not found.", cause: e, stackTrace: st, url: url);
     }
-    final file = utf8.decode(
-      base64.decode(
-        res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
-      ),
+    if (e is UserNotFound) {
+      throw NetworkException("User not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is OrganizationNotFound) {
+      throw NetworkException("Organization not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is TeamNotFound) {
+      throw NetworkException("Team not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is AccessForbidden) {
+      throw NetworkException(
+        "Access forbidden. Check your token and permissions.",
+        cause: e, stackTrace: st, url: url,
+      );
+    }
+    if (e is NotReady) {
+      throw NetworkException(
+        "The requested resource is not ready. Please try again later.",
+        cause: e, stackTrace: st, url: url,
+      );
+    }
+
+    // Fallback genérico
+    throw NetworkException(
+      "Error fetching data, Please retry later",
+      cause: e, stackTrace: st, url: url,
     );
-    content = file;
-
-    try {
-      // Handle cases where content might be a list or a map containing a list
-      final decodedContent = json.decode(content);
-      if (decodedContent is List) {
-        return decodedContent;
-      } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
-        // If it's a single object (like a single agenda structure), wrap it in a list
-        return [decodedContent];
-      }
-      // Fallback or specific handling if the root is not a list
-      // For now, assuming most JSON roots will be lists of objects
-      // or the specific 'events' case handled above.
-      // If you have single objects at the root of other JSONs, adjust accordingly.
-      // For safety, if it's not a list at this point, treat as error or empty.
-      // This part might need adjustment based on actual structure of agenda_days.json, etc.
-      // if they are single objects at root instead of lists.
-      // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
-      if (decodedContent is Map && decodedContent.values.first is List) {
-        // If it's a map with a single key and the value is a list (another common pattern for root objects)
-        return decodedContent.values.first as List<dynamic>;
-      }
-
-      // If after all checks decodedContent is not a List, and not the special eventPath case,
-      // this indicates an unexpected JSON structure for the given path.
-      // For loadData, we expect a List<dynamic> to be returned for general processing.
-      // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
-      // are single JSON objects at the root rather than arrays, this will need adjustment
-      // or the parsing in the specific _loadAll methods will need to handle it.
-      // For now, this error helps identify such mismatches.
-      throw JsonDecodeException("Error fetching data, Please retry later");
-    } catch (e, st) {
-      if (e.toString().contains("No element")) {
-        return [].toList();
-      } else {
-        throw JsonDecodeException(
-          "Error fetching data, Please retry later",
-          cause: e,
-          stackTrace: st,
-        );
-      }
-    }
   }
+
+  // A partir de aquí, 'res' está definitivamente asignado
+  if (res.file == null || res.file!.content == null) {
+    throw NetworkException("Error fetching data, Please retry later");
+  }
+
+  final file = utf8.decode(
+    base64.decode(
+      res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+    ),
+  );
+  content = file;
+
+  try {
+    final decodedContent = json.decode(content);
+    if (decodedContent is List) return decodedContent;
+
+    if (decodedContent is Map && decodedContent.containsKey('UID')) {
+      // Caso de objeto único (lo envolvemos en lista)
+      return <dynamic>[decodedContent];
+    }
+
+    if (decodedContent is Map && decodedContent.values.first is List) {
+      return decodedContent.values.first as List<dynamic>;
+    }
+
+    // Estructura inesperada
+    throw JsonDecodeException("Error fetching data, Please retry later");
+  } catch (e, st) {
+    if (e.toString().contains("No element")) {
+      return <dynamic>[];
+    }
+    throw JsonDecodeException(
+      "Error fetching data, Please retry later",
+      cause: e, stackTrace: st,
+    );
+  }
+}
+  
 
   /// Generic function to update or create data on GitHub.
   /// Returns an http.Response for consistency.

@@ -57,6 +57,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get sponsors => 'Patrocinadors';
 
   @override
+  String get nextEvent => 'Proxim esdeveniment...';
+
+  @override
   String get eventInfo => 'Informació de l\'Esdeveniment';
 
   @override
@@ -64,6 +67,35 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get venue => 'Lloc';
+
+  @override
+  String get visibilityLabel => 'Visibilitat';
+
+  @override
+  String get eventIsOpenByDefault => 'Està obert per defecte';
+
+  @override
+  String get eventIsNotOpenByDefault => 'Està tancat per defecte';
+
+  @override
+  String get openByDefaultLabel => 'Obert per defecte';
+
+  @override
+  String get eventIsVisible => 'L\'esdeveniment és visible';
+
+  @override
+  String get changeVisibilityTitle => 'Canviar la visibilitat';
+
+  @override
+  String get changeVisibilityToHidden =>
+      'Això farà que l\'esdeveniment no aparegui als usuaris';
+
+  @override
+  String get changeVisibilityToVisible =>
+      'A partir d\'ara l\'esdeveniment serà visible per a tothom';
+
+  @override
+  String get eventIsHidden => 'L\'esdeveniment està ocult';
 
   @override
   String get description => 'Descripció';
@@ -88,6 +120,13 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Canviar Idioma';
+
+  @override
+  String get deleteEventTitle => 'Eliminar esdeveniment';
+
+  @override
+  String get deleteEventMessage =>
+      'Estàs segur que vols eliminar aquest esdeveniment? \n Això esborrarà les sessions associades a l\'esdeveniment.';
 
   @override
   String get speakerForm => 'Formulari de Ponent';

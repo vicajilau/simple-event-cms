@@ -57,6 +57,9 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sponsors => 'Babesleak';
 
   @override
+  String get nextEvent => 'Hurrengo ekitaldia...';
+
+  @override
   String get eventInfo => 'Gertaeraren Informazioa';
 
   @override
@@ -64,6 +67,33 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get venue => 'Lekua';
+
+  @override
+  String get visibilityLabel => 'Ikusgaitasuna';
+
+  @override
+  String get eventIsOpenByDefault => 'Gertaera lehenespenez irekita dago';
+
+  @override
+  String get eventIsNotOpenByDefault => 'Gertaera ez dago lehenespenez irekita';
+
+  @override
+  String get openByDefaultLabel => 'Lehenespenez irekita';
+
+  @override
+  String get eventIsVisible => 'Gertaera ikusgai dago';
+
+  @override
+  String get changeVisibilityTitle => 'Ikusgaitasuna Aldatu';
+
+  @override
+  String get changeVisibilityToHidden => 'Aldatu ezkutura';
+
+  @override
+  String get changeVisibilityToVisible => 'Aldatu ikusgaira';
+
+  @override
+  String get eventIsHidden => 'Gertaera ezkutatuta dago';
 
   @override
   String get description => 'Deskribapena';
@@ -88,6 +118,13 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Hizkuntza aldatu';
+
+  @override
+  String get deleteEventTitle => 'Gertaera ezabatu';
+
+  @override
+  String get deleteEventMessage =>
+      'Ziur zaude gertaera hau ezabatu nahi duzula? \n Honek gertaerarekin lotutako saioak ezabatuko ditu.';
 
   @override
   String get speakerForm => 'Hizlariaren Inprimakia';

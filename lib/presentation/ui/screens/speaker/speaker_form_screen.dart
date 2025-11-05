@@ -197,7 +197,7 @@ class _SpeakerFormScreenState extends State<SpeakerFormScreen> {
                               linkedin: _linkedinController.text,
                               website: _websiteController.text,
                             ),
-                            eventUID: widget.eventUID,
+                            eventUIDS: [widget.eventUID].toList(),
                           ),
                         );
                       }

@@ -41,7 +41,12 @@ class DataUpdate {
         );
         break;
       case "Speaker":
-        await _deleteSpeaker(itemId, dataLoader, dataUpdateInfo);
+        await _deleteSpeaker(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          eventUID.toString(),
+        );
         break;
       case "Sponsor":
         await _deleteSponsor(itemId, dataUpdateInfo, dataLoader);
@@ -55,47 +60,21 @@ class DataUpdate {
     dynamic item, // Can be Session, Track, AgendaDay, Speaker, Sponsor
     String? parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
   ) async {
-    if(item is Event){
+    if (item is Event) {
       await _addEvent(item, dataLoader, dataUpdateInfo);
-    }else if(item is Session){
-      await _addSession(
-        item,
-        dataLoader,
-        dataUpdateInfo,
-        parentId,
-      );
-    }else if(item is Track){
+    } else if (item is Session) {
+      await _addSession(item, dataLoader, dataUpdateInfo, parentId);
+    } else if (item is Track) {
       await _addTrack(item, dataLoader, dataUpdateInfo, parentId);
-
-    }else if(item is AgendaDay){
-      await _addAgendaDay(
-        item,
-        dataLoader,
-        dataUpdateInfo,
-        parentId,
-      );
-    }else if(item is Speaker){
-      await _addSpeaker(
-        item,
-        dataLoader,
-        dataUpdateInfo,
-        parentId,
-      );
-    }else if(item is Sponsor){
-      await _addSponsor(
-        item,
-        dataLoader,
-        dataUpdateInfo,
-        parentId,
-      );
-    }else if(item is Organization){
-      await _addOrganization(
-        item,
-        dataLoader,
-        dataUpdateInfo,
-        parentId,
-      );
-    }else{
+    } else if (item is AgendaDay) {
+      await _addAgendaDay(item, dataLoader, dataUpdateInfo, parentId);
+    } else if (item is Speaker) {
+      await _addSpeaker(item, dataLoader, dataUpdateInfo, parentId);
+    } else if (item is Sponsor) {
+      await _addSponsor(item, dataLoader, dataUpdateInfo, parentId);
+    } else if (item is Organization) {
+      await _addOrganization(item, dataLoader, dataUpdateInfo, parentId);
+    } else {
       throw Exception("Unsupported item type");
     }
   }
@@ -107,43 +86,42 @@ class DataUpdate {
   }) async {
     if (items.isEmpty) return;
 
-    if(items.first is Session){
+    if (items.first is Session) {
       await _addSessions(
         items.cast<Session>(),
         dataLoader,
         dataUpdateInfo,
         overrideData: overrideData,
       );
-    }else if(items.first is Track){
+    } else if (items.first is Track) {
       await _addTracks(
         items.cast<Track>(),
         dataLoader,
         dataUpdateInfo,
         overrideData: overrideData,
       );
-
-    }else if(items.first is AgendaDay){
+    } else if (items.first is AgendaDay) {
       await _addAgendaDays(
         items.cast<AgendaDay>(),
         dataLoader,
         dataUpdateInfo,
         overrideData: overrideData,
       );
-    }else if(items.first is Speaker){
+    } else if (items.first is Speaker) {
       await _addSpeakers(
         items.cast<Speaker>(),
         dataLoader,
         dataUpdateInfo,
         overrideData: overrideData,
       );
-    }else if(items.first is Sponsor){
+    } else if (items.first is Sponsor) {
       await _addSponsors(
         items.cast<Sponsor>(),
         dataLoader,
         dataUpdateInfo,
         overrideData: overrideData,
       );
-    }else{
+    } else {
       throw Exception("Unsupported item type list ");
     }
   }
@@ -383,7 +361,7 @@ class DataUpdate {
     String? parentId,
   ) async {
     if (parentId != null && parentId.isNotEmpty) {
-      speaker.eventUID = parentId;
+      speaker.eventUIDS.add(parentId);
     }
 
     // If speakers are associated with events, you might need to update the event.
@@ -397,7 +375,7 @@ class DataUpdate {
     DataUpdateInfo dataUpdateInfo, {
     bool overrideData = false,
   }) async {
-    List<Speaker> allSpeakers = await dataLoader.loadSpeakers();
+    List<Speaker> allSpeakers = await dataLoader.loadSpeakers() ?? [];
     final speakerMap = {for (var s in allSpeakers) s.uid: s};
     for (var speaker in speakers) {
       speakerMap[speaker.uid] = speaker;
@@ -409,9 +387,10 @@ class DataUpdate {
     String speakerId,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
+    String eventUID,
   ) async {
     // If speakers are linked to events similarly to sessions, that logic would be added here.
-    await dataUpdateInfo.removeSpeaker(speakerId);
+    await dataUpdateInfo.removeSpeaker(speakerId, eventUID);
     debugPrint("Speaker $speakerId and its associations removed.");
   }
 

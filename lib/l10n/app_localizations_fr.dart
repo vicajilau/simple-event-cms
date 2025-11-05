@@ -57,6 +57,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get sponsors => 'Sponsors';
 
   @override
+  String get nextEvent => 'Événement à venir...';
+
+  @override
   String get eventInfo => 'Informations sur l\'Événement';
 
   @override
@@ -64,6 +67,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get venue => 'Lieu';
+
+  @override
+  String get visibilityLabel => 'Visibilité';
+
+  @override
+  String get eventIsOpenByDefault => 'L\'événement est ouvert par défaut';
+
+  @override
+  String get eventIsNotOpenByDefault =>
+      'L\'événement n\'est pas ouvert par défaut';
+
+  @override
+  String get openByDefaultLabel => 'Ouvert par défaut';
+
+  @override
+  String get eventIsVisible => 'L\'événement est visible';
+
+  @override
+  String get changeVisibilityTitle => 'Changer la visibilité';
+
+  @override
+  String get changeVisibilityToHidden =>
+      'Cela rendra l\'événement non visible pour les utilisateurs';
+
+  @override
+  String get changeVisibilityToVisible =>
+      'À partir de maintenant, l\'événement sera visible pour tout le monde';
+
+  @override
+  String get eventIsHidden => 'L\'événement est masqué';
 
   @override
   String get description => 'Description';
@@ -88,6 +121,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Changer la Langue';
+
+  @override
+  String get deleteEventTitle => 'Supprimer l\'événement';
+
+  @override
+  String get deleteEventMessage =>
+      'Êtes-vous sûr de vouloir supprimer cet événement ? \n Cela supprimera les sessions associées à l\'événement.';
 
   @override
   String get speakerForm => 'Formulaire d\'intervenant';
