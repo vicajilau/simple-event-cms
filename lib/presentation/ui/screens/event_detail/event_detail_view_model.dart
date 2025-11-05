@@ -9,7 +9,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 abstract class EventDetailViewModel extends ViewModelCommon {
-  ValueNotifier<bool> onlyOneEvent = ValueNotifier(false);
+  ValueNotifier<bool> notShowReturnArrow = ValueNotifier(false);
   ValueNotifier<String> eventTitle = ValueNotifier('');
   Future<void> loadEventData(String eventId);
 }
@@ -19,7 +19,6 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
   Event? event;
-
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
@@ -45,7 +44,13 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
     switch (result) {
       case Ok<List<Event>>():
-        onlyOneEvent.value = result.value.length == 1 && githubService.token == null;
+        notShowReturnArrow.value =
+            (result.value.length == 1 ||
+                result.value.indexWhere(
+                      (eventItem) => eventItem.openAtTheBeggining == true,
+                    ) !=
+                    -1) &&
+            githubService.token == null;
         if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;
@@ -58,7 +63,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
           viewState.value = ViewState.loadFinished;
         }
       case Error():
-        onlyOneEvent.value = false;
+        notShowReturnArrow.value = false;
         setErrorKey(result.error);
         viewState.value = ViewState.error;
     }

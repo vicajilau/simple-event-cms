@@ -220,15 +220,15 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    var positionEventToView = _allEvents.indexWhere((event) => event.isVisible == true);
-    if ((_allEvents.length == 1 ||
+    var positionEventToView = eventsToShow.value.indexWhere((event) => event.isVisible == true);
+    if ((eventsToShow.value.length == 1 ||
         positionEventToView != -1) &&
         isTokenNull &&
-        _allEvents.indexWhere((event) => event.isVisible == true) != -1) {
+        eventsToShow.value.indexWhere((event) => event.openAtTheBeggining == true) != -1) {
 
-     var eventToGo =  _allEvents.first;
+     var eventToGo = eventsToShow.value.first;
      if(positionEventToView != -1){
-       eventToGo = _allEvents[positionEventToView];
+       eventToGo = eventsToShow.value[positionEventToView];
      }
 
       await AppRouter.router.push(
