@@ -125,10 +125,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   await showDialog<bool>(
                     context: context,
                     builder: (context) => Dialog(
-                      child: AdminLoginScreen(() {
-                        setState(() {
-                          _loadConfiguration();
-                        });
+                      child: AdminLoginScreen(() async {
+                          await _loadConfiguration();
                       }),
                     ),
                   );
@@ -155,10 +153,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     },
                   );
                   if (confirm == true) {
-                    setState(() async {
+                      (widget.viewmodel as EventCollectionViewModelImp).lastEventsFetchTime = null;
                       await SecureInfo.removeGithubKey();
-                      await _loadConfiguration();
-                    });
+                      await widget.viewmodel.loadEvents();
                   }
                 }
               }

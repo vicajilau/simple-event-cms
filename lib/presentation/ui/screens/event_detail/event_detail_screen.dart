@@ -87,10 +87,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             await showDialog<bool>(
                               context: context,
                               builder: (context) => Dialog(
-                                child: AdminLoginScreen(() {
-                                  setState(() async{
+                                child: AdminLoginScreen(() async {
                                     await widget.viewmodel.loadEventData(widget.eventId);
-                                  });
                                 }),
                               ),
                             );

@@ -16,6 +16,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Event>> eventsToShow;
   abstract EventFilter currentFilter;
   void onEventFilterChanged(EventFilter value);
+  Future<void> loadEvents();
   Future<void> addEvent(Event event);
   Future<Event?> getEventById(String eventId);
   Future<Result<void>> editEvent(Event event);
@@ -43,17 +44,18 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventFilter currentFilter = EventFilter.all;
 
   List<Event> _allEvents = [];
-  DateTime? _lastEventsFetchTime;
+  DateTime? lastEventsFetchTime;
 
   @override
   Future<void> setup([Object? argument]) async {
     await SecureInfo.saveGithubKey(
       GithubData(projectName: organization.projectName),
     );
-    loadEvents();
+    await loadEvents();
   }
 
-  void loadEvents() async {
+  @override
+  Future<void> loadEvents() async {
     viewState.value = ViewState.isLoading;
     if (await _shouldSkipFetch()) {
       viewState.value = ViewState.loadFinished;
@@ -64,7 +66,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final eventsResult = await useCase.getEvents();
     switch (eventsResult) {
       case Ok<List<Event>>():
-        _lastEventsFetchTime = DateTime.now();
+        lastEventsFetchTime = DateTime.now();
         _allEvents = eventsResult.value;
         _updateEventsToShow();
         viewState.value = ViewState.loadFinished;
@@ -207,8 +209,8 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
     final isCacheValid =
-        _lastEventsFetchTime != null &&
-        DateTime.now().difference(_lastEventsFetchTime!) <
+        lastEventsFetchTime != null &&
+        DateTime.now().difference(lastEventsFetchTime!) <
             const Duration(minutes: 5);
 
     return isCacheValid && _allEvents.isNotEmpty && isTokenNull;
@@ -218,7 +220,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    if (_allEvents.length == 1 && isTokenNull) {
+    if (_allEvents.length == 1 && isTokenNull && _allEvents.indexWhere((event) => event.isVisible == true) != -1) {
       await AppRouter.router.push(
         AppRouter.eventDetailPath,
         extra: {

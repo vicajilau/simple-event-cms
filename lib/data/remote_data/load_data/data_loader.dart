@@ -79,11 +79,12 @@ class DataLoader {
       PathsGithub.eventPath,
     );
     if (jsonList.isEmpty ||
-        jsonList.indexWhere(
-              (event) =>
-                  (Event.fromJson(event as Map<String, dynamic>)).isVisible,
-            ) ==
-            -1) {
+        (githubService.token == null &&
+            jsonList.indexWhere(
+                  (event) =>
+                      (Event.fromJson(event as Map<String, dynamic>)).isVisible,
+                ) ==
+                -1)) {
       return [];
     }
 
