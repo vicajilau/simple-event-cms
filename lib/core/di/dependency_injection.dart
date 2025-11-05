@@ -1,6 +1,5 @@
 import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
-import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
@@ -28,11 +27,11 @@ final GetIt getIt = GetIt.instance;
 
 /// Configures all application dependencies
 Future<void> setupDependencies() async {
-  // Registrar flag de salud ANTES de cargar organización
+  // Register helper
   getIt.registerSingleton<CheckOrg>(CheckOrg());
 
-  // Registrar configuración global (puede marcar error en OrgHealth)
-  getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
+  // only charges (ConfigLoader will do setOrganization)
+  await ConfigLoader.loadOrganization();
 
   // Core services
   getIt.registerLazySingleton<DataLoader>(() => DataLoader());
@@ -44,27 +43,34 @@ Future<void> setupDependencies() async {
     () => CheckTokenSavedUseCaseImpl(),
   );
 
-
   // Use Cases
   getIt.registerLazySingleton<EventUseCase>(() => EventUseCaseImp());
   getIt.registerLazySingleton<AgendaUseCase>(() => AgendaUseCaseImpl());
   getIt.registerLazySingleton<SpeakerUseCase>(() => SpeakerUseCaseImp());
   getIt.registerLazySingleton<SponsorUseCase>(() => SponsorUseCaseImp());
-  getIt.registerLazySingleton<OrganizationUseCase>(() => OrganizationUseCaseImp());
+  getIt.registerLazySingleton<OrganizationUseCase>(
+    () => OrganizationUseCaseImp(),
+  );
 
   // Event ViewModel
   getIt.registerLazySingleton<EventCollectionViewModel>(
     () => EventCollectionViewModelImp(),
   );
   getIt.registerLazySingleton<AgendaViewModel>(() => AgendaViewModelImp());
-  getIt.registerLazySingleton<OrganizationViewModel>(() => OrganizationViewModelImpl());
+  getIt.registerLazySingleton<OrganizationViewModel>(
+    () => OrganizationViewModelImpl(),
+  );
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());
   getIt.registerLazySingleton<EventDetailViewModel>(
     () => EventDetailViewModelImp(),
   );
-  getIt.registerLazySingleton<EventFormViewModel>(() => EventFormViewModelImpl());
-  getIt.registerLazySingleton<AgendaFormViewModel>(() => AgendaFormViewModelImpl());
+  getIt.registerLazySingleton<EventFormViewModel>(
+    () => EventFormViewModelImpl(),
+  );
+  getIt.registerLazySingleton<AgendaFormViewModel>(
+    () => AgendaFormViewModelImpl(),
+  );
 }
 
 /// Clears all registered dependencies

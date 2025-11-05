@@ -5,6 +5,7 @@ import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
@@ -44,7 +45,7 @@ abstract class CommonsServices {
 
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
-  Organization organization = getIt<Organization>();
+  Organization get organization => getIt<Organization>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -52,47 +53,46 @@ class CommonsServicesImp extends CommonsServices {
   @override
   Future<List<dynamic>> loadData(String path) async {
     String content = "";
-      final url = 'events/$path';
-      var githubService = await SecureInfo.getGithubKey();
-      var github = GitHub(
-        auth: githubService.token == null
-            ? Authentication.anonymous()
-            : Authentication.withToken(githubService.token),
+    final url = 'events/$path';
+    var githubService = await SecureInfo.getGithubKey();
+    var github = GitHub(
+      auth: githubService.token == null
+          ? Authentication.anonymous()
+          : Authentication.withToken(githubService.token),
+    );
+    var repositorySlug = RepositorySlug(
+      organization.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+    );
+    RepositoryContents res;
+    try {
+      res = await github.repositories.getContents(
+        repositorySlug,
+        url,
+        ref: organization.branch,
       );
-      var repositorySlug = RepositorySlug(
-        organization.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ??
-            organization.projectName,
-      );
-      RepositoryContents res;
-      try {
-        res = await github.repositories.getContents(
-          repositorySlug,
-          url,
-          ref: organization.branch,
+    } catch (e, st) {
+      if (e is GitHubError && e.message == "Not Found") {
+        return [].toList();
+      } else {
+        // Handle other potential network or API errors during fetch.
+        throw NetworkException(
+          "Error fetching data, Please retry later",
+          cause: e,
+          stackTrace: st,
+          url: url,
         );
-      } catch (e, st) {
-        if (e is GitHubError && e.message == "Not Found") {
-          return [].toList();
-        } else {
-          // Handle other potential network or API errors during fetch.
-          throw NetworkException(
-            "Error fetching data, Please retry later",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        }
       }
-      if (res.file == null || res.file!.content == null) {
-        throw NetworkException("Error fetching data, Please retry later");
-      }
-      final file = utf8.decode(
-        base64.decode(
-          res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
-        ),
-      );
-      content = file;
+    }
+    if (res.file == null || res.file!.content == null) {
+      throw NetworkException("Error fetching data, Please retry later");
+    }
+    final file = utf8.decode(
+      base64.decode(
+        res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+      ),
+    );
+    content = file;
 
     try {
       // Handle cases where content might be a list or a map containing a list
@@ -123,9 +123,7 @@ class CommonsServicesImp extends CommonsServices {
       // are single JSON objects at the root rather than arrays, this will need adjustment
       // or the parsing in the specific _loadAll methods will need to handle it.
       // For now, this error helps identify such mismatches.
-      throw JsonDecodeException(
-        "Error fetching data, Please retry later",
-      );
+      throw JsonDecodeException("Error fetching data, Please retry later");
     } catch (e, st) {
       if (e.toString().contains("No element")) {
         return [].toList();
@@ -285,7 +283,7 @@ class CommonsServicesImp extends CommonsServices {
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
-    getIt.resetLazySingleton<Organization>(instance: orgToUse);
+    setOrganization(orgToUse);
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");

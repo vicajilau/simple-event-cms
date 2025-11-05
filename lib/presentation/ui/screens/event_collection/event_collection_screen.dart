@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
@@ -18,10 +19,9 @@ import 'event_collection_view_model.dart';
 /// Features a bottom navigation bar with tabs for Agenda, Speakers, and Sponsors
 /// Now uses dependency injection for better testability and architecture
 class EventCollectionScreen extends StatefulWidget {
-  final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
   final int crossAxisCount;
 
-  EventCollectionScreen({super.key, this.crossAxisCount = 4});
+  const EventCollectionScreen({super.key, this.crossAxisCount = 4});
 
   @override
   State<EventCollectionScreen> createState() => _EventCollectionScreenState();
@@ -30,31 +30,32 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  final EventCollectionViewModel _viewmodel = getIt<EventCollectionViewModel>();
+  late EventCollectionViewModel _viewmodel; // <- aquí
+
   String? organizationName;
   bool _isLoading = true;
   String? _errorMessage;
-  final organization = getIt<Organization>();
   final health = getIt<CheckOrg>();
 
   @override
   void initState() {
     super.initState();
-    _loadConfiguration();
+    _viewmodel = getIt<EventCollectionViewModel>();
+
+    //call after first build to avoid using InheritedWidgets in initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadConfiguration();
+    });
   }
 
   Future<void> _loadConfiguration() async {
     try {
-      // Use dependency injection instead of creating instances manually
-
-      await widget.viewmodel.setup();
-
+      await _viewmodel.setup();
       if (mounted) {
+        final org = getIt<Organization>();
+        final health = getIt<CheckOrg>();
         setState(() {
-          final health = getIt<CheckOrg>();
-          organizationName = health.hasError
-              ? ''
-              : organization.organizationName;
+          organizationName = health.hasError ? '' : org.organizationName;
           _isLoading = false;
         });
       }
@@ -71,7 +72,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   void dispose() {
-    widget.viewmodel.dispose();
+    _viewmodel.dispose();
     super.dispose();
   }
 
@@ -110,10 +111,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       );
     }
 
-    // if (organizationName == null) {
-    //   return Scaffold(body: Center(child: Text(location.configNotAvailable)));
-    // }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -136,29 +133,35 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   (organizationName == null || organizationName!.isEmpty);
 
               if (hasOrgError) {
-                // ✅ EN MODO ERROR SIEMPRE PASA POR ADMINLOGINSCREEN
+                // in case of error, always go through AdminLoginScreen
                 if (context.mounted) {
                   await showDialog<void>(
                     context: context,
                     barrierDismissible: false,
                     builder: (context) => Dialog(
                       child: AdminLoginScreen(() async {
-                        // Se ejecuta solo si el login fue OK
+                        // will run only if login is successful
                         if (context.mounted) {
-                          // Abrimos OrganizationScreen en modo "fix" (sin cancelar)
                           await AppRouter.router.push(
                             AppRouter.organizationFormPath,
                             extra: {'forceFix': true},
                           );
-                          // tras volver, recargamos config
+
+                          // after
+                          getIt<CheckOrg>().setError(false);
+
+                          await _viewmodel.setup();
                           await _loadConfiguration();
+
+                          // will do setup again to refresh organizationName
+                          await _viewmodel.setup();
+                          await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
                         }
                       }),
                     ),
                   );
                 }
               } else {
-                // 🔓 Flujo normal (cuando NO hay error):
                 var githubService = await SecureInfo.getGithubKey();
                 if (githubService.token == null) {
                   if (context.mounted) {
@@ -203,7 +206,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 }
               }
 
-              // Reset del contador a los 3s (como ya tenías)
               Future.delayed(const Duration(seconds: 3), () {
                 if (mounted) {
                   setState(() {
@@ -261,9 +263,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       .where((e) => e.label == newValue)
                       .firstOrNull;
                   if (filter == null) {
-                    widget.viewmodel.onEventFilterChanged(EventFilter.all);
+                    _viewmodel.onEventFilterChanged(EventFilter.all);
                   } else {
-                    widget.viewmodel.onEventFilterChanged(filter);
+                    _viewmodel.onEventFilterChanged(filter);
                   }
                 }
               },
@@ -289,14 +291,14 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             builder: (context, snapshot) {
               if (snapshot.data?.token != null) {
                 return IconButton(
-                  onPressed: () => {
-                    setState(() async {
-                      widget.viewmodel.viewState.value = ViewState.isLoading;
-                      await SecureInfo.removeGithubKey();
-                      await _loadConfiguration();
-                      widget.viewmodel.viewState.value = ViewState.loadFinished;
-                    }),
+                  onPressed: () async {
+                    _viewmodel.viewState.value = ViewState.isLoading;
+                    await SecureInfo.removeGithubKey();
+                    await _loadConfiguration();
+                    _viewmodel.viewState.value = ViewState.loadFinished;
+                    if (mounted) setState(() {}); // si hace falta redibujar
                   },
+
                   icon: Icon(Icons.logout),
                   color: Colors.blue,
                 );
@@ -307,7 +309,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         ],
       ),
       body: ValueListenableBuilder<ViewState>(
-        valueListenable: widget.viewmodel.viewState,
+        valueListenable: _viewmodel.viewState,
         builder: (context, viewState, child) {
           if (viewState == ViewState.isLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -320,10 +322,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   context: context,
                   barrierDismissible: false,
                   builder: (_) => CustomErrorDialog(
-                    errorMessage: widget.viewmodel.errorMessage,
+                    errorMessage: _viewmodel.errorMessage,
                     onCancel: () => {
-                      widget.viewmodel.setErrorKey(null),
-                      widget.viewmodel.viewState.value = ViewState.loadFinished,
+                      _viewmodel.setErrorKey(null),
+                      _viewmodel.viewState.value = ViewState.loadFinished,
                       Navigator.of(context).pop(),
                     },
                     buttonText: location.closeButton,
@@ -333,8 +335,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
             });
           }
           if (hasOrgError) {
-            // Mostramos solo el mensaje en el BODY,
-            // pero mantenemos el AppBar y los 5 taps para entrar a OrganizationScreen
+            //we show only the message in the BODY,
+            //but we keep the AppBar and the 5 taps to enter OrganizationScreen
             return Center(child: Text(location.configNotAvailable));
           }
           return ValueListenableBuilder<List<Event>>(
@@ -376,7 +378,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       itemBuilder: (BuildContext context, int index) {
                         final item = eventsToShow[index];
                         return FutureBuilder<bool>(
-                          future: widget.viewmodel.checkToken(),
+                          future: _viewmodel.checkToken(),
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
                             return _buildEventCard(context, item, canDismiss);
@@ -395,7 +397,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FutureBuilder<bool>(
-            future: widget.viewmodel.checkToken(),
+            future: _viewmodel.checkToken(),
             builder: (context, snapshot) {
               if (snapshot.data == true) {
                 return FloatingActionButton(
@@ -408,9 +410,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             as Organization?;
 
                     if (organizationUpdated != null) {
-                      getIt.resetLazySingleton<Organization>(
-                        instance: organizationUpdated,
-                      );
+                      setOrganization(organizationUpdated);
+
                       setState(() {
                         organizationName = organizationUpdated.organizationName;
                       });
@@ -432,7 +433,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildAddEventButton() {
     var location = AppLocalizations.of(context)!;
     return FutureBuilder<bool>(
-      future: widget.viewmodel.checkToken(),
+      future: _viewmodel.checkToken(),
       builder: (context, snapshot) {
         if (snapshot.data == true) {
           return Padding(
@@ -540,7 +541,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       extra: item.uid,
                     );
                     if (eventEdited != null) {
-                      await widget.viewmodel.editEvent(eventEdited);
+                      await _viewmodel.editEvent(eventEdited);
                     }
                   },
                 ),
@@ -632,7 +633,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
                   icon: const Icon(Icons.delete, size: 20),
                   onPressed: () async {
-                    await widget.viewmodel.deleteEvent(item);
+                    await _viewmodel.deleteEvent(item);
                   },
                 ),
               ),

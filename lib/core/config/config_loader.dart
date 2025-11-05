@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/routing/check_org.dart';
 
 import '../models/models.dart';
@@ -21,23 +22,23 @@ class ConfigLoader {
     final data = await json.decode(response);
     return Organization.fromJson(data);
   }
+
   static Future<Organization> loadOrganization() async {
     final health = getIt<CheckOrg>();
     try {
       var localOrganization = await getLocalOrganization();
 
-      // Validaciones mínimas antes de tocar GitHub
-      final hasLocalFieldErrors = (localOrganization.githubUser.isEmpty ||
+      final hasLocalFieldErrors =
+          (localOrganization.githubUser.isEmpty ||
           localOrganization.branch.isEmpty);
 
       if (hasLocalFieldErrors) {
-        // Marca error y devuelve lo local (para que levante la UI sin nombre)
         health.setError(true);
         _updateOrgSingletonIfNeeded(localOrganization);
         return localOrganization;
       }
 
-      // Intento GitHub
+      //  try GitHub
       const configUrl = 'events/organization/organization.json';
       final githubService = await SecureInfo.getGithubKey();
       final github = GitHub(
@@ -57,7 +58,7 @@ class ConfigLoader {
       );
 
       if (res.file == null || res.file!.content == null) {
-        // Error de contenido remoto
+        // Error
         health.setError(true);
         _updateOrgSingletonIfNeeded(localOrganization);
         return localOrganization;
@@ -69,12 +70,12 @@ class ConfigLoader {
       final fileJsonData = json.decode(file);
       final orgFromRemote = Organization.fromJson(fileJsonData);
 
-      // Si todo OK, limpia error
+      // its ok
       health.setError(false);
       _updateOrgSingletonIfNeeded(orgFromRemote);
       return orgFromRemote;
     } catch (_) {
-      // Cualquier excepción (usuario/branch/repo incorrectos, red, etc.)
+      // error
       final localFallback = await getLocalOrganization();
       getIt<CheckOrg>().setError(true);
       _updateOrgSingletonIfNeeded(localFallback);
@@ -82,11 +83,8 @@ class ConfigLoader {
     }
   }
 
-  // NEW: utilita pequeña para actualizar getIt<Organization> si ya está registrado
+  // update getIt<Organization> if registered
   static void _updateOrgSingletonIfNeeded(Organization orgToUse) {
-    if (getIt.isRegistered<Organization>()) {
-      getIt.resetLazySingleton<Organization>(instance: orgToUse);
-    }
+    setOrganization(orgToUse);
   }
-
 }
