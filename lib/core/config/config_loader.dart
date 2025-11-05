@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
+import 'package:sec/core/routing/check_org.dart';
 
 import '../models/models.dart';
 
@@ -19,40 +21,70 @@ class ConfigLoader {
     final data = await json.decode(response);
     return Organization.fromJson(data);
   }
+
   static Future<Organization> loadOrganization() async {
-    try{
-    var localOrganization = await getLocalOrganization();
-    final configUrl = 'events/organization/organization.json';
-    var githubService = await SecureInfo.getGithubKey();
-    var github = GitHub(auth: githubService.token == null ? Authentication.anonymous() : Authentication.withToken(githubService.token));
-    final res = await github.repositories.getContents(
-      RepositorySlug(
-        localOrganization.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ??
-            localOrganization.projectName,
-      ),
-      configUrl,
-      ref: localOrganization.branch,
-    );
-    if (res.file == null || res.file!.content == null) {
-      throw Exception(
-        "Error cargando configuración de producción desde $configUrl",
+    final health = getIt<CheckOrg>();
+    try {
+      var localOrganization = await getLocalOrganization();
+
+      final hasLocalFieldErrors =
+          (localOrganization.githubUser.isEmpty ||
+          localOrganization.branch.isEmpty);
+
+      if (hasLocalFieldErrors) {
+        health.setError(true);
+        _updateOrgSingletonIfNeeded(localOrganization);
+        return localOrganization;
+      }
+
+      //  try GitHub
+      const configUrl = 'events/organization/organization.json';
+      final githubService = await SecureInfo.getGithubKey();
+      final github = GitHub(
+        auth: githubService.token == null
+            ? Authentication.anonymous()
+            : Authentication.withToken(githubService.token),
       );
-    } else {
+
+      final res = await github.repositories.getContents(
+        RepositorySlug(
+          localOrganization.githubUser,
+          (await SecureInfo.getGithubKey()).projectName ??
+              localOrganization.projectName,
+        ),
+        configUrl,
+        ref: localOrganization.branch,
+      );
+
+      if (res.file == null || res.file!.content == null) {
+        // Error
+        health.setError(true);
+        _updateOrgSingletonIfNeeded(localOrganization);
+        return localOrganization;
+      }
+
       final file = utf8.decode(
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
+      final orgFromRemote = Organization.fromJson(fileJsonData);
 
-      var orgToUse = Organization.fromJson(fileJsonData);
-      if(getIt.isRegistered<Organization>()){
-        getIt.resetLazySingleton<Organization>(instance: orgToUse);
-      }
-      return orgToUse;
+      // its ok
+      health.setError(false);
+      _updateOrgSingletonIfNeeded(orgFromRemote);
+      return orgFromRemote;
+    } catch (_) {
+      // error
+      final localFallback = await getLocalOrganization();
+      getIt<CheckOrg>().setError(true);
+      _updateOrgSingletonIfNeeded(localFallback);
+      return localFallback;
     }
-    } catch (e) {
-      // Return local organization if there is an error
-      return await getLocalOrganization();
-    }
+    
+  }
+
+  // update getIt<Organization> if registered
+  static void _updateOrgSingletonIfNeeded(Organization orgToUse) {
+    setOrganization(orgToUse);
   }
 }

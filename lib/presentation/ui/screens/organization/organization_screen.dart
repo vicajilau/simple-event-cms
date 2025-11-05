@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
 import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/presentation/ui/widgets/section_input_form.dart';
 
@@ -25,21 +26,27 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   late TextEditingController _projectNameController;
   late TextEditingController _branchController;
 
-  final _viewModel = getIt<OrganizationViewModel>();
   final organization = getIt<Organization>();
 
   @override
   void initState() {
     super.initState();
     // Initialize controllers with empty strings
-    _organizationNameController =
-        TextEditingController(text: organization.organizationName);
-    _primaryColorOrganizationController =
-        TextEditingController(text: organization.primaryColorOrganization);
-    _secondaryColorOrganizationController =
-        TextEditingController(text: organization.secondaryColorOrganization);
-    _githubUserController = TextEditingController(text: organization.githubUser);
-    _projectNameController = TextEditingController(text: organization.projectName);
+    _organizationNameController = TextEditingController(
+      text: organization.organizationName,
+    );
+    _primaryColorOrganizationController = TextEditingController(
+      text: organization.primaryColorOrganization,
+    );
+    _secondaryColorOrganizationController = TextEditingController(
+      text: organization.secondaryColorOrganization,
+    );
+    _githubUserController = TextEditingController(
+      text: organization.githubUser,
+    );
+    _projectNameController = TextEditingController(
+      text: organization.projectName,
+    );
     _branchController = TextEditingController(text: organization.branch);
   }
 
@@ -57,6 +64,9 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
+    final orgHealth = getIt<CheckOrg>();
+    final bool hideCancel = orgHealth.hasError;
+
     return FormScreenWrapper(
       pageTitle: location.organization,
       widgetFormChild: Form(
@@ -164,16 +174,15 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               spacing: 12,
               children: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(location.cancelButton),
-                ),
+                if (!hideCancel) // only when there is NO error
+                  OutlinedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(location.cancelButton),
+                  ),
                 FilledButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final organization = Organization(
+                      final updated = Organization(
                         organizationName: _organizationNameController.text,
                         primaryColorOrganization:
                             _primaryColorOrganizationController.text,
@@ -183,12 +192,16 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         projectName: _projectNameController.text,
                         branch: _branchController.text,
                       );
-                      _viewModel.updateOrganization(organization, context);
+
+                      // if OK:
+                      setOrganization(updated);
+                      getIt<CheckOrg>().setError(false);
+                      if (context.mounted) {
+                        Navigator.of(context).pop<Organization>(updated);
+                      }
                     }
                   },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
+                  style: FilledButton.styleFrom(backgroundColor: Colors.blue),
                   child: Text(location.saveButton),
                 ),
               ],

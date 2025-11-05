@@ -7,7 +7,7 @@ import '../../presentation/ui/screens/organization/organization_screen.dart';
 // ignore: avoid_classes_with_only_static_members
 class AppRouter {
   // Paths
-  static const String homePath = '/';
+  static const String homePath = '/'; 
   static const String eventFormPath = '/events/edit';
   static const String eventDetailPath = '/event/detail/:eventId/:location';
   static const String agendaFormPath = '/agenda/form';

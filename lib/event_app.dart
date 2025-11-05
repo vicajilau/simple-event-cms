@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/config/config_loader.dart';
-import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/organization.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
@@ -22,9 +20,7 @@ class _EventAppState extends State<EventApp> with WidgetsBindingObserver {
   }
 
   void _loadOrg() async {
-    final organization = await ConfigLoader.loadOrganization();
-    getIt.resetLazySingleton<Organization>(instance: organization);
-
+    ConfigLoader.loadOrganization();
   }
 
   @override

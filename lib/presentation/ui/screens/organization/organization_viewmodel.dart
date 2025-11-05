@@ -8,17 +8,17 @@ import '../../../../domain/use_cases/check_token_saved_use_case.dart';
 import '../../../view_model_common.dart';
 
 abstract class OrganizationViewModel extends ViewModelCommon {
-  Future<void> updateOrganization(Organization organization, BuildContext context);
+  /// return true if update was OK, false if there was an error.
+  Future<bool> updateOrganization(Organization organization);
 }
 
 class OrganizationViewModelImpl extends OrganizationViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
-
   final OrganizationUseCase organizationUseCase = getIt<OrganizationUseCase>();
 
   @override
-  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished); 
 
   @override
   String errorMessage = '';
@@ -29,18 +29,20 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
   }
 
   @override
-  Future<void> updateOrganization(Organization organization, BuildContext context) async {
+  Future<bool> updateOrganization(Organization organization) async {
     viewState.value = ViewState.isLoading;
-    var result = await organizationUseCase.updateOrganization(organization);
+
+    final result = await organizationUseCase.updateOrganization(organization);
+
     switch (result) {
       case Ok<void>():
         viewState.value = ViewState.loadFinished;
-        if(context.mounted){
-          Navigator.pop(context, organization);
-        }
+        return true;
+
       case Error():
         setErrorKey(result.error);
         viewState.value = ViewState.error;
+        return false;
     }
   }
 

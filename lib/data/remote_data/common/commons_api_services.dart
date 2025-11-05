@@ -5,6 +5,7 @@ import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/models.dart';
@@ -44,158 +45,124 @@ abstract class CommonsServices {
 
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
-  Organization organization = getIt<Organization>();
+  Organization get organization => getIt<Organization>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
   @override
-  Future<List<dynamic>> loadData(String path) async {
-    String content = "";
-    final url = 'events/$path';
-    var githubService = await SecureInfo.getGithubKey();
-    var github = GitHub(
-      auth: githubService.token == null
-          ? Authentication.anonymous()
-          : Authentication.withToken(githubService.token),
-    );
-    var repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-    );
-    RepositoryContents res;
-    try {
-      res = await github.repositories.getContents(
-        repositorySlug,
-        url,
-        ref: organization.branch,
-      );
-    } catch (e, st) {
-      if (e is GitHubError && e.message == "Not Found") {
-        return [].toList();
-      } else {
-        if (e is GitHubError) {
-          debugPrint("error: ${e.toString()} strack: ${st.toString()}");
-        } else {
-          debugPrint(
-            "error that its not a githuberror, strack: ${st.toString()}",
-          );
-        }
-        if (e is RateLimitHit) {
-          throw NetworkException(
-            "GitHub API rate limit exceeded. Please try again later.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is InvalidJSON) {
-          throw NetworkException(
-            "Invalid JSON received from GitHub.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is RepositoryNotFound) {
-          throw NetworkException(
-            "Repository not found.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is UserNotFound) {
-          throw NetworkException(
-            "User not found.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is OrganizationNotFound) {
-          throw NetworkException(
-            "Organization not found.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is TeamNotFound) {
-          throw NetworkException(
-            "Team not found.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is AccessForbidden) {
-          throw NetworkException(
-            "Access forbidden. Check your token and permissions.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else if (e is NotReady) {
-          throw NetworkException(
-            "The requested resource is not ready. Please try again later.",
-            cause: e,
-            stackTrace: st,
-            url: url,
-          );
-        } else {
-          throw NetworkException(
-            "An unknown GitHub error occurred, please retry later",
-          );
-        }
-      }
-    }
-    if (res.file == null || res.file!.content == null) {
-      throw NetworkException("Error fetching data, Please retry later");
-    }
-    final file = utf8.decode(
-      base64.decode(
-        res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
-      ),
-    );
-    content = file;
+Future<List<dynamic>> loadData(String path) async {
+  String content = "";
+  final url = 'events/$path';
 
-    try {
-      // Handle cases where content might be a list or a map containing a list
-      final decodedContent = json.decode(content);
-      if (decodedContent is List) {
-        return decodedContent;
-      } else if (decodedContent is Map && decodedContent.containsKey('UID')) {
-        // If it's a single object (like a single agenda structure), wrap it in a list
-        return [decodedContent];
-      }
-      // Fallback or specific handling if the root is not a list
-      // For now, assuming most JSON roots will be lists of objects
-      // or the specific 'events' case handled above.
-      // If you have single objects at the root of other JSONs, adjust accordingly.
-      // For safety, if it's not a list at this point, treat as error or empty.
-      // This part might need adjustment based on actual structure of agenda_days.json, etc.
-      // if they are single objects at root instead of lists.
-      // Assuming agenda_days.json, days.json, etc., are LISTS of objects.
-      if (decodedContent is Map && decodedContent.values.first is List) {
-        // If it's a map with a single key and the value is a list (another common pattern for root objects)
-        return decodedContent.values.first as List<dynamic>;
-      }
+  final githubService = await SecureInfo.getGithubKey();
+  final github = GitHub(
+    auth: githubService.token == null
+        ? Authentication.anonymous()
+        : Authentication.withToken(githubService.token),
+  );
+  final repositorySlug = RepositorySlug(
+    organization.githubUser,
+    (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+  );
 
-      // If after all checks decodedContent is not a List, and not the special eventPath case,
-      // this indicates an unexpected JSON structure for the given path.
-      // For loadData, we expect a List<dynamic> to be returned for general processing.
-      // If your individual JSON files (days.json, tracks.json, sessions.json, agenda_days.json)
-      // are single JSON objects at the root rather than arrays, this will need adjustment
-      // or the parsing in the specific _loadAll methods will need to handle it.
-      // For now, this error helps identify such mismatches.
-      throw JsonDecodeException("Error fetching data, Please retry later");
-    } catch (e, st) {
-      if (e.toString().contains("No element")) {
-        return [].toList();
-      } else {
-        throw JsonDecodeException(
-          "Error fetching data, Please retry later",
-          cause: e,
-          stackTrace: st,
+  late final RepositoryContents res; // <- late
+
+  try {
+    res = await github.repositories.getContents(
+      repositorySlug,
+      url,
+      ref: organization.branch,
+    );
+  } catch (e, st) {
+    if (e is GitHubError) {
+      if (e.message == "Not Found") {
+        return <dynamic>[];
+      }
+      if (e is RateLimitHit) {
+        throw NetworkException(
+          "GitHub API rate limit exceeded. Please try again later.",
+          cause: e, stackTrace: st, url: url,
         );
       }
+      if (e is InvalidJSON) {
+        throw NetworkException(
+          "Invalid JSON received from GitHub.",
+          cause: e, stackTrace: st, url: url,
+        );
+      }
+      throw NetworkException(
+        "An unknown GitHub error occurred, please retry later",
+        cause: e, stackTrace: st, url: url,
+      );
     }
+
+    if (e is RepositoryNotFound) {
+      throw NetworkException("Repository not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is UserNotFound) {
+      throw NetworkException("User not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is OrganizationNotFound) {
+      throw NetworkException("Organization not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is TeamNotFound) {
+      throw NetworkException("Team not found.", cause: e, stackTrace: st, url: url);
+    }
+    if (e is AccessForbidden) {
+      throw NetworkException(
+        "Access forbidden. Check your token and permissions.",
+        cause: e, stackTrace: st, url: url,
+      );
+    }
+    if (e is NotReady) {
+      throw NetworkException(
+        "The requested resource is not ready. Please try again later.",
+        cause: e, stackTrace: st, url: url,
+      );
+    }
+
+    throw NetworkException(
+      "Error fetching data, Please retry later",
+      cause: e, stackTrace: st, url: url,
+    );
   }
+
+  if (res.file == null || res.file!.content == null) {
+    throw NetworkException("Error fetching data, Please retry later");
+  }
+
+  final file = utf8.decode(
+    base64.decode(
+      res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+    ),
+  );
+  content = file;
+
+  try {
+    final decodedContent = json.decode(content);
+    if (decodedContent is List) return decodedContent;
+
+    if (decodedContent is Map && decodedContent.containsKey('UID')) {
+      return <dynamic>[decodedContent];
+    }
+
+    if (decodedContent is Map && decodedContent.values.first is List) {
+      return decodedContent.values.first as List<dynamic>;
+    }
+
+    throw JsonDecodeException("Error fetching data, Please retry later");
+  } catch (e, st) {
+    if (e.toString().contains("No element")) {
+      return <dynamic>[];
+    }
+    throw JsonDecodeException(
+      "Error fetching data, Please retry later",
+      cause: e, stackTrace: st,
+    );
+  }
+}
+  
 
   /// Generic function to update or create data on GitHub.
   /// Returns an http.Response for consistency.
@@ -343,13 +310,7 @@ class CommonsServicesImp extends CommonsServices {
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
-    // If the Organization instance is already registered, unregister it first.
-    if (getIt.isRegistered<Organization>()) {
-      getIt.unregister<Organization>();
-    }
-    // Register the new instance. This works whether it was previously registered or not.
-    getIt.registerSingleton<Organization>(orgToUse);
-
+    setOrganization(orgToUse);
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
