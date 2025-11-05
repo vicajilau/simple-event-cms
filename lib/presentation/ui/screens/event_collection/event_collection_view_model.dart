@@ -139,26 +139,26 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
         eventsFiltered = _allEvents;
         break;
       case EventFilter.past:
-        eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates.startDate);
-          return startDate.isBefore(now);
-        }).toList()
-          ..sort((a, b) {
-            final aDate = DateTime.parse(a.eventDates.startDate);
-            final bDate = DateTime.parse(b.eventDates.startDate);
-            return aDate.compareTo(bDate);
-          });
+        eventsFiltered =
+            eventsFiltered.where((event) {
+              final startDate = DateTime.parse(event.eventDates.startDate);
+              return startDate.isBefore(now);
+            }).toList()..sort((a, b) {
+              final aDate = DateTime.parse(a.eventDates.startDate);
+              final bDate = DateTime.parse(b.eventDates.startDate);
+              return aDate.compareTo(bDate);
+            });
         break;
       case EventFilter.current:
-        eventsFiltered = eventsFiltered.where((event) {
-          final startDate = DateTime.parse(event.eventDates.startDate);
-          return startDate.isAfter(now);
-        }).toList()
-          ..sort((a, b) {
-            final aDate = DateTime.parse(a.eventDates.startDate);
-            final bDate = DateTime.parse(b.eventDates.startDate);
-            return aDate.compareTo(bDate);
-          });
+        eventsFiltered =
+            eventsFiltered.where((event) {
+              final startDate = DateTime.parse(event.eventDates.startDate);
+              return startDate.isAfter(now);
+            }).toList()..sort((a, b) {
+              final aDate = DateTime.parse(a.eventDates.startDate);
+              final bDate = DateTime.parse(b.eventDates.startDate);
+              return aDate.compareTo(bDate);
+            });
         break;
     }
     eventsToShow.value = eventsFiltered;
@@ -220,12 +220,22 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    if (_allEvents.length == 1 && isTokenNull && _allEvents.indexWhere((event) => event.isVisible == true) != -1) {
+    var positionEventToView = _allEvents.indexWhere((event) => event.isVisible == true);
+    if ((_allEvents.length == 1 ||
+        positionEventToView != -1) &&
+        isTokenNull &&
+        _allEvents.indexWhere((event) => event.isVisible == true) != -1) {
+
+     var eventToGo =  _allEvents.first;
+     if(positionEventToView != -1){
+       eventToGo = _allEvents[positionEventToView];
+     }
+
       await AppRouter.router.push(
         AppRouter.eventDetailPath,
         extra: {
-          'eventId': _allEvents.first.uid,
-          'location': _allEvents.first.location ?? "",
+          'eventId': eventToGo.uid,
+          'location': eventToGo.location ?? "",
           'onlyOneEvent': "true",
         },
       );
