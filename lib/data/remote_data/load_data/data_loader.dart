@@ -56,7 +56,7 @@ class DataLoader {
   // --- End of New Data Loading Methods ---
 
   /// Loads speaker information from the speakers.json file
-  Future<List<Speaker>> loadSpeakers() async {
+  Future<List<Speaker>?> loadSpeakers() async {
     List<dynamic> jsonList = await commonsServices.loadData(
       PathsGithub.speakerPath,
     );

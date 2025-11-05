@@ -29,7 +29,7 @@ class SecRepositoryImp extends SecRepository {
   Future<Result<List<Speaker>>> loadESpeakers() async {
     try {
       final speakers = await dataLoader.loadSpeakers();
-      return Result.ok(speakers);
+      return Result.ok(speakers ?? []);
     } on Exception catch (e) {
       debugPrint('Error in loadESpeakers: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -453,9 +453,14 @@ class SecRepositoryImp extends SecRepository {
   Future<Result<List<Speaker>>> getSpeakersForEventId(String eventId) async {
     try {
       final speakers = await dataLoader.loadSpeakers();
-      return Result.ok(
-        speakers.where((speaker) => speaker.eventUIDS.contains(eventId)).toList(),
-      );
+      if(speakers != null && speakers.isNotEmpty == true){
+        return Result.ok(
+          speakers.where((speaker) => speaker.eventUIDS.contains(eventId)).toList(),
+        );
+      }else{
+        return Result.ok([]);
+      }
+
     } on Exception catch (e) {
       debugPrint('Error in getSpeakersForEventId: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));

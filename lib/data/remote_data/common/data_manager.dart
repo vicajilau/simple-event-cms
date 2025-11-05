@@ -375,7 +375,7 @@ class DataUpdate {
     DataUpdateInfo dataUpdateInfo, {
     bool overrideData = false,
   }) async {
-    List<Speaker> allSpeakers = await dataLoader.loadSpeakers();
+    List<Speaker> allSpeakers = await dataLoader.loadSpeakers() ?? [];
     final speakerMap = {for (var s in allSpeakers) s.uid: s};
     for (var speaker in speakers) {
       speakerMap[speaker.uid] = speaker;

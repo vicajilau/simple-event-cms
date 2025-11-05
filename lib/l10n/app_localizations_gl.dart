@@ -72,6 +72,15 @@ class AppLocalizationsGl extends AppLocalizations {
   String get visibilityLabel => 'Visibilidade';
 
   @override
+  String get eventIsOpenByDefault => 'O evento está aberto por defecto';
+
+  @override
+  String get eventIsNotOpenByDefault => 'O evento non está aberto por defecto';
+
+  @override
+  String get openByDefaultLabel => 'Abrir por defecto';
+
+  @override
   String get eventIsVisible => 'O evento é visible';
 
   @override

@@ -83,6 +83,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
   bool _hasEndDate = true;
   bool _isVisible = true;
+  bool _isOpenByDefault = false;
   List<Track> _tracks = [];
   Timer? _debounce;
 
@@ -120,6 +121,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
           _isVisible = event.isVisible;
+          _isOpenByDefault = event.openAtTheBeggining;
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -465,6 +467,20 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     },
                   ),
                 ),
+                SectionInputForm(
+                  label: localizations.openByDefaultLabel,
+                  childInput: SwitchListTile(
+                    title: Text(
+                      _isOpenByDefault
+                          ? localizations.eventIsOpenByDefault
+                          : localizations.eventIsNotOpenByDefault,
+                    ),
+                    value: _isOpenByDefault,
+                    onChanged: (bool value) {
+                      setState(() => _isOpenByDefault = value);
+                    },
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 12,
@@ -575,6 +591,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       isVisible: _isVisible,
+      openAtTheBeggining: _isOpenByDefault,
       eventDates: eventDates,
     );
     var result = await eventFormViewModel.onSubmit(eventModified);

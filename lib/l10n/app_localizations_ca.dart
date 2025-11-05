@@ -72,6 +72,15 @@ class AppLocalizationsCa extends AppLocalizations {
   String get visibilityLabel => 'Visibilitat';
 
   @override
+  String get eventIsOpenByDefault => 'Està obert per defecte';
+
+  @override
+  String get eventIsNotOpenByDefault => 'Està tancat per defecte';
+
+  @override
+  String get openByDefaultLabel => 'Obert per defecte';
+
+  @override
   String get eventIsVisible => 'L\'esdeveniment és visible';
 
   @override

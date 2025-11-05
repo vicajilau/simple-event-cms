@@ -236,6 +236,24 @@ abstract class AppLocalizations {
   /// **'Visibility'**
   String get visibilityLabel;
 
+  /// No description provided for @eventIsOpenByDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is open by default'**
+  String get eventIsOpenByDefault;
+
+  /// No description provided for @eventIsNotOpenByDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Event is not open by default'**
+  String get eventIsNotOpenByDefault;
+
+  /// No description provided for @openByDefaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Open by default'**
+  String get openByDefaultLabel;
+
   /// No description provided for @eventIsVisible.
   ///
   /// In en, this message translates to:

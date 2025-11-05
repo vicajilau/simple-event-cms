@@ -36,6 +36,9 @@ class Event extends GitHubModel {
   /// Indica si el evento está visible o no
   bool isVisible = true;
 
+  /// Indica si el evento debe abrirse por defecto
+  bool openAtTheBeggining = false;
+
   /// Creates a new event instance
   Event({
     required super.uid,
@@ -47,6 +50,7 @@ class Event extends GitHubModel {
     required this.eventDates,
     this.description,
     this.isVisible = true,
+    this.openAtTheBeggining = false,
     this.location,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
@@ -72,6 +76,7 @@ class Event extends GitHubModel {
       eventDates: EventDates.fromJson(json['eventDates']),
       description: json['description'],
       isVisible: json['isVisible'] ?? true,
+      openAtTheBeggining: json['openAtTheBeggining'] ?? false,
       location: json['location'],
       tracks: tracks,
     );
@@ -90,6 +95,7 @@ class Event extends GitHubModel {
       'description': description,
       'location': location,
       'isVisible': isVisible,
+      'openAtTheBeggining': openAtTheBeggining,
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }

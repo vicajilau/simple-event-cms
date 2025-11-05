@@ -72,6 +72,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get visibilityLabel => 'Ikusgaitasuna';
 
   @override
+  String get eventIsOpenByDefault => 'Gertaera lehenespenez irekita dago';
+
+  @override
+  String get eventIsNotOpenByDefault => 'Gertaera ez dago lehenespenez irekita';
+
+  @override
+  String get openByDefaultLabel => 'Lehenespenez irekita';
+
+  @override
   String get eventIsVisible => 'Gertaera ikusgai dago';
 
   @override
