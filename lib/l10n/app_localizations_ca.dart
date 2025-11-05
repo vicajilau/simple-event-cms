@@ -87,10 +87,12 @@ class AppLocalizationsCa extends AppLocalizations {
   String get changeVisibilityTitle => 'Canviar la visibilitat';
 
   @override
-  String get changeVisibilityToHidden => 'Vols ocultar l\'esdeveniment?';
+  String get changeVisibilityToHidden =>
+      'Això farà que l\'esdeveniment no aparegui als usuaris';
 
   @override
-  String get changeVisibilityToVisible => 'Vols fer visible l\'esdeveniment?';
+  String get changeVisibilityToVisible =>
+      'A partir d\'ara l\'esdeveniment serà visible per a tothom';
 
   @override
   String get eventIsHidden => 'L\'esdeveniment està ocult';

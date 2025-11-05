@@ -88,11 +88,11 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get changeVisibilityToHidden =>
-      'Estás seguro de que queres ocultar este evento?';
+      'Isto fará que o evento non sexa visible para os usuarios';
 
   @override
   String get changeVisibilityToVisible =>
-      'Estás seguro de que queres facer visible este evento?';
+      'A partir de agora, o evento será visible para todos';
 
   @override
   String get eventIsHidden => 'O evento está oculto';

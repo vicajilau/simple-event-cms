@@ -87,10 +87,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get changeVisibilityTitle => 'Alterar visibilidade';
 
   @override
-  String get changeVisibilityToHidden => 'Alterar para oculto';
+  String get changeVisibilityToHidden =>
+      'Isso tornará o evento não visível para os usuários';
 
   @override
-  String get changeVisibilityToVisible => 'Alterar para visível';
+  String get changeVisibilityToVisible =>
+      'A partir de agora, o evento será visível para todos';
 
   @override
   String get eventIsHidden => 'Evento oculto';

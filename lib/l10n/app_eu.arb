@@ -19,6 +19,8 @@
   "sponsors": "Babesleak",
   "eventInfo": "Gertaeraren Informazioa",
   "eventDates": "Gertaeraren Datak",
+  "changeVisibilityToVisible": "Hemendik aurrera, ekitaldia guztientzat ikusgai egongo da",
+  "changeVisibilityToHidden": "Honek ekitaldia erabiltzaileentzat ikusezin bihurtuko du",
   "venue": "Lekua",
   "description": "Deskribapena",
   "close": "Itxi",

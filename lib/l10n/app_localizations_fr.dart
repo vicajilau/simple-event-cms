@@ -88,11 +88,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get changeVisibilityTitle => 'Changer la visibilité';
 
   @override
-  String get changeVisibilityToHidden => 'Voulez-vous masquer cet événement ?';
+  String get changeVisibilityToHidden =>
+      'Cela rendra l\'événement non visible pour les utilisateurs';
 
   @override
   String get changeVisibilityToVisible =>
-      'Voulez-vous rendre cet événement visible ?';
+      'À partir de maintenant, l\'événement sera visible pour tout le monde';
 
   @override
   String get eventIsHidden => 'L\'événement est masqué';

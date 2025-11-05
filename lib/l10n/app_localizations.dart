@@ -269,13 +269,13 @@ abstract class AppLocalizations {
   /// No description provided for @changeVisibilityToHidden.
   ///
   /// In en, this message translates to:
-  /// **'Change to Hidden'**
+  /// **'This will make the event not appear to users'**
   String get changeVisibilityToHidden;
 
   /// No description provided for @changeVisibilityToVisible.
   ///
   /// In en, this message translates to:
-  /// **'Change to Visible'**
+  /// **'From now on the event will be visible to everyone'**
   String get changeVisibilityToVisible;
 
   /// No description provided for @eventIsHidden.
