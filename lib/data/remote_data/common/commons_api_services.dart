@@ -340,7 +340,13 @@ class CommonsServicesImp extends CommonsServices {
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
-    getIt.resetLazySingleton<Organization>(instance: orgToUse);
+    // If the Organization instance is already registered, unregister it first.
+    if (getIt.isRegistered<Organization>()) {
+      getIt.unregister<Organization>();
+    }
+    // Register the new instance. This works whether it was previously registered or not.
+    getIt.registerSingleton<Organization>(orgToUse);
+
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");

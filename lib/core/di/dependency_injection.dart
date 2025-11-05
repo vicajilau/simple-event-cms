@@ -27,6 +27,7 @@ final GetIt getIt = GetIt.instance;
 
 /// Configures all application dependencies
 Future<void> setupDependencies() async {
+  getIt.allowReassignment = true;
   // Registrar configuración global
   getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
 
