@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
+import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/no_events/no_events_screen.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
@@ -34,6 +35,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   bool _isLoading = true;
   String? _errorMessage;
   final organization = getIt<Organization>();
+  final health = getIt<CheckOrg>();
 
   @override
   void initState() {
@@ -49,7 +51,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
       if (mounted) {
         setState(() {
-          organizationName = organization.organizationName;
+          final health = getIt<CheckOrg>();
+          organizationName = health.hasError
+              ? ''
+              : organization.organizationName;
           _isLoading = false;
         });
       }
@@ -73,6 +78,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
+    final bool hasOrgError =
+        getIt<CheckOrg>().hasError ||
+        (organizationName == null || organizationName!.isEmpty);
+
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -101,9 +110,9 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
       );
     }
 
-    if (organizationName == null) {
-      return Scaffold(body: Center(child: Text(location.configNotAvailable)));
-    }
+    // if (organizationName == null) {
+    //   return Scaffold(body: Center(child: Text(location.configNotAvailable)));
+    // }
 
     return Scaffold(
       appBar: AppBar(
@@ -120,58 +129,91 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
             if (_titleTapCount >= 5) {
               _titleTapCount = 0;
-              var githubService = await SecureInfo.getGithubKey();
-              if (githubService.token == null) {
+
+              final location = AppLocalizations.of(context)!;
+              final bool hasOrgError =
+                  getIt<CheckOrg>().hasError ||
+                  (organizationName == null || organizationName!.isEmpty);
+
+              if (hasOrgError) {
+                // ✅ EN MODO ERROR SIEMPRE PASA POR ADMINLOGINSCREEN
                 if (context.mounted) {
-                  await showDialog<bool>(
+                  await showDialog<void>(
                     context: context,
+                    barrierDismissible: false,
                     builder: (context) => Dialog(
-                      child: AdminLoginScreen(() {
-                        setState(() {
-                          _loadConfiguration();
-                        });
+                      child: AdminLoginScreen(() async {
+                        // Se ejecuta solo si el login fue OK
+                        if (context.mounted) {
+                          // Abrimos OrganizationScreen en modo "fix" (sin cancelar)
+                          await AppRouter.router.push(
+                            AppRouter.organizationFormPath,
+                            extra: {'forceFix': true},
+                          );
+                          // tras volver, recargamos config
+                          await _loadConfiguration();
+                        }
                       }),
                     ),
                   );
                 }
               } else {
-                if (context.mounted) {
-                  final bool? confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Text(location.confirmLogout),
-                        content: Text(location.confirmLogoutMessage),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(location.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Text(location.logout),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  if (confirm == true) {
-                    setState(() async {
-                      await SecureInfo.removeGithubKey();
-                    });
+                // 🔓 Flujo normal (cuando NO hay error):
+                var githubService = await SecureInfo.getGithubKey();
+                if (githubService.token == null) {
+                  if (context.mounted) {
+                    await showDialog<bool>(
+                      context: context,
+                      builder: (context) => Dialog(
+                        child: AdminLoginScreen(() {
+                          setState(() {
+                            _loadConfiguration();
+                          });
+                        }),
+                      ),
+                    );
+                  }
+                } else {
+                  if (context.mounted) {
+                    final bool? confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(location.confirmLogout),
+                          content: Text(location.confirmLogoutMessage),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text(location.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text(location.logout),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirm == true) {
+                      setState(() async {
+                        await SecureInfo.removeGithubKey();
+                      });
+                    }
                   }
                 }
               }
+
+              // Reset del contador a los 3s (como ya tenías)
+              Future.delayed(const Duration(seconds: 3), () {
+                if (mounted) {
+                  setState(() {
+                    _titleTapCount = 0;
+                  });
+                }
+              });
             }
-            // Reset counter after 3 seconds
-            Future.delayed(const Duration(seconds: 3), () {
-              if (mounted) {
-                setState(() {
-                  _titleTapCount = 0;
-                });
-              }
-            });
           },
+
           child: Padding(
             padding: const EdgeInsets.only(left: 26.0),
             child: Row(
@@ -183,7 +225,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ), // Your desired icon
                 const SizedBox(width: 8), // Spacing between icon and title
                 Text(
-                  organizationName.toString(),
+                  hasOrgError ? '' : (organizationName ?? ''),
                   style: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
               ],
@@ -290,7 +332,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               }
             });
           }
-
+          if (hasOrgError) {
+            // Mostramos solo el mensaje en el BODY,
+            // pero mantenemos el AppBar y los 5 taps para entrar a OrganizationScreen
+            return Center(child: Text(location.configNotAvailable));
+          }
           return ValueListenableBuilder<List<Event>>(
             valueListenable: _viewmodel.eventsToShow,
             builder: (context, eventsToShow, child) {

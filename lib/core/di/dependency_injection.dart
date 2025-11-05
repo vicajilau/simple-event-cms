@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
@@ -27,7 +28,10 @@ final GetIt getIt = GetIt.instance;
 
 /// Configures all application dependencies
 Future<void> setupDependencies() async {
-  // Registrar configuración global
+  // Registrar flag de salud ANTES de cargar organización
+  getIt.registerSingleton<CheckOrg>(CheckOrg());
+
+  // Registrar configuración global (puede marcar error en OrgHealth)
   getIt.registerSingleton<Organization>(await ConfigLoader.loadOrganization());
 
   // Core services

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
 import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
@@ -32,14 +33,21 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   void initState() {
     super.initState();
     // Initialize controllers with empty strings
-    _organizationNameController =
-        TextEditingController(text: organization.organizationName);
-    _primaryColorOrganizationController =
-        TextEditingController(text: organization.primaryColorOrganization);
-    _secondaryColorOrganizationController =
-        TextEditingController(text: organization.secondaryColorOrganization);
-    _githubUserController = TextEditingController(text: organization.githubUser);
-    _projectNameController = TextEditingController(text: organization.projectName);
+    _organizationNameController = TextEditingController(
+      text: organization.organizationName,
+    );
+    _primaryColorOrganizationController = TextEditingController(
+      text: organization.primaryColorOrganization,
+    );
+    _secondaryColorOrganizationController = TextEditingController(
+      text: organization.secondaryColorOrganization,
+    );
+    _githubUserController = TextEditingController(
+      text: organization.githubUser,
+    );
+    _projectNameController = TextEditingController(
+      text: organization.projectName,
+    );
     _branchController = TextEditingController(text: organization.branch);
   }
 
@@ -57,6 +65,10 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   @override
   Widget build(BuildContext context) {
     final location = AppLocalizations.of(context)!;
+    final orgHealth = getIt<CheckOrg>();
+    final bool hideCancel =
+        orgHealth.hasError; // true => hay error => SIN cancelar
+
     return FormScreenWrapper(
       pageTitle: location.organization,
       widgetFormChild: Form(
@@ -164,33 +176,43 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               spacing: 12,
               children: [
-                OutlinedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: Text(location.cancelButton),
-                ),
-                FilledButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final organization = Organization(
-                        organizationName: _organizationNameController.text,
-                        primaryColorOrganization:
-                            _primaryColorOrganizationController.text,
-                        secondaryColorOrganization:
-                            _secondaryColorOrganizationController.text,
-                        githubUser: _githubUserController.text,
-                        projectName: _projectNameController.text,
-                        branch: _branchController.text,
-                      );
-                      _viewModel.updateOrganization(organization, context);
-                    }
-                  },
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                if (!hideCancel) // 👈 solo cuando NO hay error
+                  OutlinedButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text(location.cancelButton),
                   ),
-                  child: Text(location.saveButton),
-                ),
+                FilledButton(
+  onPressed: () async {
+    if (_formKey.currentState!.validate()) {
+      final updated = Organization(
+        organizationName: _organizationNameController.text,
+        primaryColorOrganization: _primaryColorOrganizationController.text,
+        secondaryColorOrganization: _secondaryColorOrganizationController.text,
+        githubUser: _githubUserController.text,
+        projectName: _projectNameController.text,
+        branch: _branchController.text,
+      );
+
+      // 1) persiste cambios (tu viewmodel)
+      await _viewModel.updateOrganization(updated, context);
+
+      // 2) refresca el singleton para que el resto de la app lo vea ya
+      getIt.resetLazySingleton<Organization>(instance: updated);
+
+      // 3) limpia el flag de error (idealmente tras validar que la rama existe;
+      // si lo validas en el viewmodel/configloader, mueve esto allí)
+      getIt<CheckOrg>().setError(false);
+
+      // 4) vuelve devolviendo la org nueva a quien abrió la pantalla
+      if (context.mounted) {
+        Navigator.of(context).pop<Organization>(updated);
+      }
+    }
+  },
+  style: FilledButton.styleFrom(backgroundColor: Colors.blue),
+  child: Text(location.saveButton),
+),
+
               ],
             ),
           ],
