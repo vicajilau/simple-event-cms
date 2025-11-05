@@ -75,6 +75,15 @@ class AppLocalizationsEu extends AppLocalizations {
   String get eventIsVisible => 'Gertaera ikusgai dago';
 
   @override
+  String get changeVisibilityTitle => 'Ikusgaitasuna Aldatu';
+
+  @override
+  String get changeVisibilityToHidden => 'Aldatu ezkutura';
+
+  @override
+  String get changeVisibilityToVisible => 'Aldatu ikusgaira';
+
+  @override
   String get eventIsHidden => 'Gertaera ezkutatuta dago';
 
   @override

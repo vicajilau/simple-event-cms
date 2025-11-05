@@ -242,6 +242,24 @@ abstract class AppLocalizations {
   /// **'Event is visible'**
   String get eventIsVisible;
 
+  /// No description provided for @changeVisibilityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Visibility'**
+  String get changeVisibilityTitle;
+
+  /// No description provided for @changeVisibilityToHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Change to Hidden'**
+  String get changeVisibilityToHidden;
+
+  /// No description provided for @changeVisibilityToVisible.
+  ///
+  /// In en, this message translates to:
+  /// **'Change to Visible'**
+  String get changeVisibilityToVisible;
+
   /// No description provided for @eventIsHidden.
   ///
   /// In en, this message translates to:

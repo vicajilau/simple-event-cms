@@ -126,7 +126,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     context: context,
                     builder: (context) => Dialog(
                       child: AdminLoginScreen(() async {
-                          await _loadConfiguration();
+                        await _loadConfiguration();
                       }),
                     ),
                   );
@@ -153,9 +153,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     },
                   );
                   if (confirm == true) {
-                      (widget.viewmodel as EventCollectionViewModelImp).lastEventsFetchTime = null;
-                      await SecureInfo.removeGithubKey();
-                      await widget.viewmodel.loadEvents();
+                    (widget.viewmodel as EventCollectionViewModelImp)
+                            .lastEventsFetchTime =
+                        null;
+                    await SecureInfo.removeGithubKey();
+                    await widget.viewmodel.loadEvents();
                   }
                 }
               }
@@ -512,7 +514,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     bool isAdmin,
     bool isUpcoming,
   ) {
-
     final cardContent = Card(
       shape: isUpcoming
           ? RoundedRectangleBorder(
@@ -522,124 +523,183 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               ), // The default radius for Card is 12.0
             )
           : null,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (isAdmin)
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            if (isAdmin)
+              Align(
+                alignment: Alignment.topLeft,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        // Show confirmation dialog
+                        final bool? confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            final location = AppLocalizations.of(context)!;
+                            return AlertDialog(
+                              title: Text(location.changeVisibilityTitle),
+                              content: Text(
+                                item.isVisible
+                                    ? location.changeVisibilityToHidden
+                                    : location.changeVisibilityToVisible,
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(location.cancel),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: Text(location.changeVisibilityTitle),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        if (confirm == true) {
+                          await widget.viewmodel.editEvent(
+                            item..isVisible = !item.isVisible,
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(
+                          8.0,
+                        ), // Add padding to increase tap area
+                        child: Icon(
+                          item.isVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 20,
+                          color: item.isVisible ? Colors.green : Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Expanded(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: isAdmin ? 0.0 : 20.0,
+                        bottom: 8.0,
+                      ),
+                      child: Center(
+                        child: Text(
+                          organizationName.toString(),
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          top: 16.0,
+                          left: 16.0,
+                          right: 16.0,
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              item.eventName,
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(fontWeight: FontWeight.bold),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
+                                style: Theme.of(context).textTheme.bodySmall,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             Align(
               alignment: Alignment.topRight,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Icon(
-                    item.isVisible ? Icons.visibility : Icons.visibility_off,
-                    size: 20,
-                    color: item.isVisible ? Colors.green : Colors.grey,
-                  ),
                   IconButton(
                     constraints: const BoxConstraints(),
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                     icon: const Icon(Icons.edit, size: 20),
                     onPressed: () async {
                       final Event? eventEdited = await AppRouter.router.push(
-                    AppRouter.eventFormPath,
-                    extra: item.uid,
-                  );
+                        AppRouter.eventFormPath,
+                        extra: item.uid,
+                      );
                       if (eventEdited != null) {
                         await widget.viewmodel.editEvent(eventEdited);
                       }
                     },
                   ),
+                  if (isAdmin)
+                    IconButton(
+                      constraints: const BoxConstraints(),
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                      icon: const Icon(Icons.delete, size: 20),
+                      onPressed: () async {
+                        final bool? confirm = await showDialog<bool>(
+                          context: context,
+                          builder: (BuildContext context) {
+                            final location = AppLocalizations.of(context)!;
+                            return AlertDialog(
+                              title: Text(location.deleteEventTitle),
+                              content: Text(location.deleteEventMessage),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(false),
+                                  child: Text(location.cancel),
+                                ),
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.of(context).pop(true),
+                                  child: Text(location.deleteEventTitle),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        if (confirm == true) {
+                          await widget.viewmodel.deleteEvent(item);
+                        }
+                      },
+                    ),
                 ],
               ),
             ),
-          Expanded(
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: isAdmin ? 0.0 : 20.0,
-                    bottom: 8.0,
-                  ),
-                  child: Center(
-                    child: Text(
-                      organizationName.toString(),
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ),
-                const Divider(height: 1, indent: 16, endIndent: 16),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      top: 16.0,
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.eventName,
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(fontWeight: FontWeight.bold),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            "${item.eventDates.startDate.toString()}/${item.eventDates.endDate}",
-                            style: Theme.of(context).textTheme.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (isAdmin)
-            Align(
-              alignment: Alignment.bottomRight,
-              child: IconButton(
-                constraints: const BoxConstraints(),
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                icon: const Icon(Icons.delete, size: 20),
-                onPressed: () async {
-                  final bool? confirm = await showDialog<bool>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      final location = AppLocalizations.of(context)!;
-                      return AlertDialog(
-                        title: Text(location.deleteEventTitle),
-                        content: Text(location.deleteEventMessage),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(false),
-                            child: Text(location.cancel),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(true),
-                            child: Text(location.deleteEventTitle),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  if (confirm == true) {
-                    await widget.viewmodel.deleteEvent(item);
-                  }
-                },
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
 
