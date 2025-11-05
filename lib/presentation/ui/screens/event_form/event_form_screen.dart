@@ -82,6 +82,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
       GlobalKey<FormFieldState>();
 
   bool _hasEndDate = true;
+  bool _isVisible = true;
+  bool _isOpenByDefault = false;
   List<Track> _tracks = [];
   Timer? _debounce;
 
@@ -118,6 +120,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _timezoneController.text = event.eventDates.timezone;
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
+          _isVisible = event.isVisible;
+          _isOpenByDefault = event.openAtTheBeggining;
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -447,6 +451,36 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                   ),
                 ),
+                SectionInputForm(
+                  label: localizations.visibilityLabel,
+                  childInput: SwitchListTile(
+                    title: Text(
+                      _isVisible
+                          ? localizations.eventIsVisible
+                          : localizations.eventIsHidden,
+                    ),
+                    value: _isVisible,
+                    onChanged: (bool value) {
+                      setState(() {
+                        _isVisible = value;
+                      });
+                    },
+                  ),
+                ),
+                SectionInputForm(
+                  label: localizations.openByDefaultLabel,
+                  childInput: SwitchListTile(
+                    title: Text(
+                      _isOpenByDefault
+                          ? localizations.eventIsOpenByDefault
+                          : localizations.eventIsNotOpenByDefault,
+                    ),
+                    value: _isOpenByDefault,
+                    onChanged: (bool value) {
+                      setState(() => _isOpenByDefault = value);
+                    },
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   spacing: 12,
@@ -556,6 +590,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
       year: eventDates.startDate.split('-').first,
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
+      isVisible: _isVisible,
+      openAtTheBeggining: _isOpenByDefault,
       eventDates: eventDates,
     );
     var result = await eventFormViewModel.onSubmit(eventModified);

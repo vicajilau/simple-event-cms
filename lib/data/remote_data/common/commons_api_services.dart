@@ -71,68 +71,77 @@ class CommonsServicesImp extends CommonsServices {
         ref: organization.branch,
       );
     } catch (e, st) {
-      if (e is RateLimitHit) {
-        throw NetworkException(
-          "GitHub API rate limit exceeded. Please try again later.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is NotFound) {
+      if (e is GitHubError && e.message == "Not Found") {
         return [].toList();
-      } else if (e is InvalidJSON) {
-        throw NetworkException(
-          "Invalid JSON received from GitHub.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is RepositoryNotFound) {
-        throw NetworkException(
-          "Repository not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is UserNotFound) {
-        throw NetworkException(
-          "User not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is OrganizationNotFound) {
-        throw NetworkException(
-          "Organization not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is TeamNotFound) {
-        throw NetworkException(
-          "Team not found.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is AccessForbidden) {
-        throw NetworkException(
-          "Access forbidden. Check your token and permissions.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      } else if (e is NotReady) {
-        throw NetworkException(
-          "The requested resource is not ready. Please try again later.",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
       } else {
-        throw NetworkException(
-          "An unknown GitHub error occurred, please retry later",
-        );
+        if (e is GitHubError) {
+          debugPrint("error: ${e.toString()} strack: ${st.toString()}");
+        } else {
+          debugPrint(
+            "error that its not a githuberror, strack: ${st.toString()}",
+          );
+        }
+        if (e is RateLimitHit) {
+          throw NetworkException(
+            "GitHub API rate limit exceeded. Please try again later.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is InvalidJSON) {
+          throw NetworkException(
+            "Invalid JSON received from GitHub.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is RepositoryNotFound) {
+          throw NetworkException(
+            "Repository not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is UserNotFound) {
+          throw NetworkException(
+            "User not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is OrganizationNotFound) {
+          throw NetworkException(
+            "Organization not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is TeamNotFound) {
+          throw NetworkException(
+            "Team not found.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is AccessForbidden) {
+          throw NetworkException(
+            "Access forbidden. Check your token and permissions.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else if (e is NotReady) {
+          throw NetworkException(
+            "The requested resource is not ready. Please try again later.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        } else {
+          throw NetworkException(
+            "An unknown GitHub error occurred, please retry later",
+          );
+        }
       }
     }
     if (res.file == null || res.file!.content == null) {
@@ -334,7 +343,13 @@ class CommonsServicesImp extends CommonsServices {
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
-    getIt.resetLazySingleton<Organization>(instance: orgToUse);
+    // If the Organization instance is already registered, unregister it first.
+    if (getIt.isRegistered<Organization>()) {
+      getIt.unregister<Organization>();
+    }
+    // Register the new instance. This works whether it was previously registered or not.
+    getIt.registerSingleton<Organization>(orgToUse);
+
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");

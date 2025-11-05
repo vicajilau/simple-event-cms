@@ -14,7 +14,7 @@ class DataUpdateInfo {
   /// Loads speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<void> updateSpeaker(Speaker speakers) async {
-    var speakersOriginal = await dataLoader.loadSpeakers();
+    var speakersOriginal = await dataLoader.loadSpeakers() ?? [];
 
     await dataCommons.updateData(
       speakersOriginal,
@@ -136,7 +136,14 @@ class DataUpdateInfo {
   /// Update events information from the events.json file
   /// Returns a Future containing a list of events data with logos and details
   Future<void> updateEvent(Event event) async {
+
     var eventsOriginal = await dataLoader.loadEvents();
+    if (event.openAtTheBeggining == true) {
+      eventsOriginal = eventsOriginal.map((eventItem) {
+        eventItem.openAtTheBeggining = false;
+        return eventItem;
+      }).toList();
+    }
     await dataCommons.updateData(
       eventsOriginal,
       event,
@@ -180,27 +187,28 @@ class DataUpdateInfo {
   /// Removes speaker information from the speakers.json file
   /// Returns a Future containing a list of speaker data
   Future<void> removeSpeaker(String speakerId, String eventUID) async {
-    var speakersOriginal = await dataLoader.loadSpeakers();
-    var speakerToRemove = speakersOriginal.firstWhere(
-      (agenda) => agenda.uid == speakerId,
-    );
-    if(speakerToRemove.eventUIDS.length == 1){
-      await dataCommons.removeData(
-        speakersOriginal,
-        speakerToRemove,
-        "events/${speakerToRemove.pathUrl}",
-        speakerToRemove.updateMessage,
+    var speakersOriginal = await dataLoader.loadSpeakers() ?? [];
+    if (speakersOriginal.isNotEmpty) {
+      var speakerToRemove = speakersOriginal.firstWhere(
+        (agenda) => agenda.uid == speakerId,
       );
-    }else{
-      speakerToRemove.eventUIDS.remove(eventUID);
-      await dataCommons.updateData(
-        speakersOriginal,
-        speakerToRemove,
-        "events/${speakerToRemove.pathUrl}",
-        speakerToRemove.updateMessage,
-      );
+      if (speakerToRemove.eventUIDS.length == 1) {
+        await dataCommons.removeData(
+          speakersOriginal,
+          speakerToRemove,
+          "events/${speakerToRemove.pathUrl}",
+          speakerToRemove.updateMessage,
+        );
+      } else {
+        speakerToRemove.eventUIDS.remove(eventUID);
+        await dataCommons.updateData(
+          speakersOriginal,
+          speakerToRemove,
+          "events/${speakerToRemove.pathUrl}",
+          speakerToRemove.updateMessage,
+        );
+      }
     }
-
   }
 
   /// Removes sponsor information from the sponsors.json file
@@ -224,7 +232,7 @@ class DataUpdateInfo {
     var eventsOriginal = await dataLoader.loadEvents();
     var tracksOriginal = (await dataLoader.loadAllTracks());
     var sessionsOriginal = (await dataLoader.loadAllSessions());
-    var speakersOriginal = (await dataLoader.loadSpeakers());
+    var speakersOriginal = (await dataLoader.loadSpeakers()) ?? [];
     var daysOriginal = (await dataLoader.loadAllDays());
     List<AgendaDay> eventDays = [];
     List<Session> sessionsFromEvent = [];
@@ -255,11 +263,15 @@ class DataUpdateInfo {
         );
       }
     }
-    if (speakersOriginal.indexWhere((speaker) => speaker.eventUIDS.contains(eventId)) !=
+    if (speakersOriginal.indexWhere(
+          (speaker) => speaker.eventUIDS.contains(eventId),
+        ) !=
         -1) {
       await dataCommons.removeDataList(
         speakersOriginal,
-        speakersOriginal.where((speaker) => speaker.eventUIDS.contains(eventId)).toList(),
+        speakersOriginal
+            .where((speaker) => speaker.eventUIDS.contains(eventId))
+            .toList(),
         "events/${speakersOriginal.first.pathUrl}",
         "events/${speakersOriginal.first.updateMessage}",
       );

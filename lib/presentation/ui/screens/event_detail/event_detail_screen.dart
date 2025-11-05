@@ -63,14 +63,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
     final location = AppLocalizations.of(context)!;
 
         return ValueListenableBuilder(
-          valueListenable: widget.viewmodel.eventTitle,
+          valueListenable: widget.viewmodel.notShowReturnArrow,
           builder: (context, value, child) {
             return Scaffold(
               appBar: PreferredSize(
                 preferredSize: const Size.fromHeight(100.0),
                 child: AppBar(
                   backgroundColor: Colors.white,
-                  automaticallyImplyLeading: widget.onlyOneEvent,
+                  automaticallyImplyLeading: widget.viewmodel.notShowReturnArrow.value == false,
                   titleSpacing: 0.0,
                   centerTitle: false,
                   iconTheme: const IconThemeData(color: Colors.blue),
@@ -87,10 +87,8 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             await showDialog<bool>(
                               context: context,
                               builder: (context) => Dialog(
-                                child: AdminLoginScreen(() {
-                                  setState(() {
-                                    widget.viewmodel.setup(widget.eventId);
-                                  });
+                                child: AdminLoginScreen(() async {
+                                    await widget.viewmodel.loadEventData(widget.eventId);
                                 }),
                               ),
                             );
@@ -119,6 +117,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                             if (confirm == true) {
                               setState(() async {
                                 await SecureInfo.removeGithubKey();
+                                await widget.viewmodel.loadEventData(widget.eventId);
                               });
                             }
                           }

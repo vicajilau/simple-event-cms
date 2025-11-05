@@ -57,6 +57,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sponsors => 'Patrocinadores';
 
   @override
+  String get nextEvent => 'Próximo evento...';
+
+  @override
   String get eventInfo => 'Información del Evento';
 
   @override
@@ -64,6 +67,35 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get venue => 'Lugar';
+
+  @override
+  String get visibilityLabel => 'Visibilidad';
+
+  @override
+  String get eventIsOpenByDefault => 'El evento está abierto por defecto';
+
+  @override
+  String get eventIsNotOpenByDefault => 'El evento no está abierto por defecto';
+
+  @override
+  String get openByDefaultLabel => 'Abierto por defecto';
+
+  @override
+  String get eventIsVisible => 'El evento es visible';
+
+  @override
+  String get changeVisibilityTitle => 'Cambiar visibilidad';
+
+  @override
+  String get changeVisibilityToHidden =>
+      'Esto hará que el evento no sea visible para los usuarios';
+
+  @override
+  String get changeVisibilityToVisible =>
+      'A partir de ahora, el evento será visible para todos';
+
+  @override
+  String get eventIsHidden => 'El evento está oculto';
 
   @override
   String get description => 'Descripción';
@@ -88,6 +120,13 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get changeLanguage => 'Cambiar Idioma';
+
+  @override
+  String get deleteEventTitle => 'Eliminar evento';
+
+  @override
+  String get deleteEventMessage =>
+      '¿Estás seguro de que quieres eliminar este evento? \nEsto borrará las sesiones asociadas al evento.';
 
   @override
   String get speakerForm => 'Formulario de Ponente';

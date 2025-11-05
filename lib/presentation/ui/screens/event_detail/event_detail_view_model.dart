@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
@@ -8,6 +9,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 abstract class EventDetailViewModel extends ViewModelCommon {
+  ValueNotifier<bool> notShowReturnArrow = ValueNotifier(false);
   ValueNotifier<String> eventTitle = ValueNotifier('');
   Future<void> loadEventData(String eventId);
 }
@@ -38,9 +40,17 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   Future<void> loadEventData(String eventId) async {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
+    var githubService = await SecureInfo.getGithubKey();
 
     switch (result) {
       case Ok<List<Event>>():
+        notShowReturnArrow.value =
+            (result.value.length == 1 ||
+                result.value.indexWhere(
+                      (eventItem) => eventItem.openAtTheBeggining == true,
+                    ) !=
+                    -1) &&
+            githubService.token == null;
         if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;
@@ -53,6 +63,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
           viewState.value = ViewState.loadFinished;
         }
       case Error():
+        notShowReturnArrow.value = false;
         setErrorKey(result.error);
         viewState.value = ViewState.error;
     }
