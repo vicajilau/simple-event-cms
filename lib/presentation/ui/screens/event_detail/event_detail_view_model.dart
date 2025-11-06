@@ -57,7 +57,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
         } else {
           event = result.value.firstWhere(
             (e) => e.uid == eventId,
-            orElse: () => result.value.first, // Fallback al primer evento
+            orElse: () => result.value.first, // Fallback at the first event
           );
           eventTitle.value = event!.eventName;
           viewState.value = ViewState.loadFinished;

@@ -78,7 +78,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                           itemBuilder: (context, index) {
                             final speaker = speakers[index];
                             // Dentro de itemBuilder(...)
-                            return Card(
+                            return Card( // Inside itemBuilder(...)
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                                 side: const BorderSide(
@@ -90,12 +90,12 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                 padding: const EdgeInsets.all(16),
                                 child: Column(
                                   children: [
-                                    // ⬇️ Esta parte cambia
+                                    // ⬇️ This part changes
                                     Expanded(
                                       child: Stack(
                                         clipBehavior: Clip.hardEdge,
                                         children: [
-                                          // Fondo: la foto
+                                          // Background: the photo
                                           ClipRRect(
                                             borderRadius: BorderRadius.circular(
                                               8,
@@ -109,7 +109,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                   ? Image.network(
                                                       speaker.image!,
                                                       fit: BoxFit
-                                                          .cover, // normalmente mejor que fill
+                                                          .cover, // usually better than fill
                                                       loadingBuilder:
                                                           (
                                                             context,
@@ -200,9 +200,9 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                             ),
                                           ),
 
-                                          // ⬇️ Overlay: tus acciones, ahora relativas a la imagen
+                                          // ⬇️ Overlay: your actions, now relative to the image
                                           Positioned(
-                                            // elige la esquina/posición que quieras
+                                            // choose the corner/position you want
                                             bottom: 8,
                                             left: 8,
                                             child: FutureBuilder<bool>(
@@ -261,7 +261,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                       ),
                                     ),
 
-                                    // ⬆️ Fin de la parte cambiada
+                                    // ⬆️ End of the changed part
                                     const SizedBox(height: 16),
                                     Text(
                                       speaker.name,

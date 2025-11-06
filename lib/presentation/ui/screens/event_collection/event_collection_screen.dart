@@ -29,7 +29,7 @@ class EventCollectionScreen extends StatefulWidget {
 /// State class for HomeScreen that manages navigation between tabs
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
-  late EventCollectionViewModel _viewmodel; // <- aquí
+  late EventCollectionViewModel _viewmodel; // <- here
 
   String? organizationName;
   bool _isLoading = true;
@@ -155,7 +155,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
                           // will do setup again to refresh organizationName
                           await _viewmodel.setup();
-                          await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
+                          await _loadConfiguration(); // this will read the fresh getIt<Organization>()
                         }
                       }),
                     ),

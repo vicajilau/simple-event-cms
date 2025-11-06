@@ -31,7 +31,7 @@ class MaintenanceScreen extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               const Text(
-                'Vuelve a intentarlo más tarde',
+                'Try again later',
                 style: TextStyle(fontSize: 16, color: Colors.blue),
                 textAlign: TextAlign.center,
               ),
