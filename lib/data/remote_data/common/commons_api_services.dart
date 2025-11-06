@@ -13,7 +13,7 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 
 abstract class CommonsServices {
-  Future<dynamic> loadData(String path);
+  Future<Map<String, dynamic>> loadData(String path);
   Future<http.Response> updateData<T extends GitHubModel>(
     List<T> dataOriginal,
     T data,
@@ -57,7 +57,7 @@ class CommonsServicesImp extends CommonsServices {
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
   @override
-  Future<dynamic> loadData(String path) async {
+  Future<Map<String, dynamic>> loadData(String path) async {
     String content = "";
     final url = 'events/$path';
 
@@ -83,7 +83,7 @@ class CommonsServicesImp extends CommonsServices {
     } catch (e, st) {
       if (e is GitHubError) {
         if (e.message == "Not Found") {
-          return <dynamic>[];
+          return <String, dynamic>{};
         }
         if (e is RateLimitHit) {
           throw NetworkException(
@@ -166,7 +166,7 @@ class CommonsServicesImp extends CommonsServices {
       return decodedContent;
     } catch (e, st) {
       if (e.toString().contains("No element")) {
-        return <dynamic>[];
+        return <String, dynamic>{};
       }
       throw JsonDecodeException(
         "Error fetching data, Please retry later",

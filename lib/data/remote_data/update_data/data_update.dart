@@ -143,7 +143,7 @@ class DataUpdateInfo {
     if (index != -1) {
       eventsOriginal[index] = event;
     } else {
-      eventsOriginal.add(event);
+      eventsOriginal.toList().add(event);
     }
     await _updateAllEventData(events: eventsOriginal);
   }

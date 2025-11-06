@@ -32,7 +32,7 @@ class DataLoader {
     }
 
     try {
-      final data = await commonsServices.loadData(PathsGithub.eventPath);
+      var data = await commonsServices.loadData(PathsGithub.eventPath);
       _allData = GithubJsonModel.fromJson(data);
       _lastFetchTime = DateTime.now();
       _dataCompleter.complete();
@@ -46,19 +46,19 @@ class DataLoader {
 
   Future<List<Session>> loadAllSessions() async {
     await _loadAllEventData();
-    List<Session> jsonList = _allData?.sessions  ?? [];
+    List<Session> jsonList = _allData?.sessions  ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<Track>> loadAllTracks() async {
     await _loadAllEventData();
-    List<Track> jsonList = _allData?.tracks  ?? [];
+    List<Track> jsonList = _allData?.tracks  ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<AgendaDay>> loadAllDays() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?.agendadays  ?? [];
+    List<dynamic> jsonList = _allData?.agendadays  ?? List.empty();
 
     final List<Track> allTracks = await loadAllTracks();
     final List<Session> allSessions = await loadAllSessions();
@@ -84,14 +84,14 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   Future<List<Speaker>?> loadSpeakers() async {
     await _loadAllEventData();
-    List<Speaker> jsonList = _allData?.speakers  ?? [];
+    List<Speaker> jsonList = _allData?.speakers  ?? List.empty();
     return jsonList.toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   Future<List<Sponsor>> loadSponsors() async {
     await _loadAllEventData();
-    List<Sponsor> jsonList = _allData?.sponsors ?? [];
+    List<Sponsor> jsonList = _allData?.sponsors ?? List.empty();
     return jsonList.toList();
   }
 
@@ -100,15 +100,15 @@ class DataLoader {
     await _loadAllEventData();
     var githubService = await SecureInfo.getGithubKey();
 
-    List<Event> jsonList = _allData?.events ?? [];
+    List<Event> jsonList = _allData?.events ?? List.empty();
     if (jsonList.isEmpty ||
         (githubService.token == null &&
             jsonList.indexWhere(
                   (event) =>
-                      (Event.fromJson(event as Map<String, dynamic>)).isVisible,
+                      event.isVisible,
                 ) ==
                 -1)) {
-      return [];
+      return List.empty();
     }
 
     if (githubService.token != null) {
