@@ -15,15 +15,10 @@ class DataLoader {
   static final CommonsServices commonsServices = CommonsServicesImp();
   static GithubJsonModel? _allData;
   static Completer<void> _dataCompleter = Completer<void>();
-  static DateTime? _lastFetchTime;
 
   Future<void> _loadAllEventData() async {
     if (_dataCompleter.isCompleted) {
-      if (_lastFetchTime != null &&
-          DateTime.now().difference(_lastFetchTime!).inMinutes < 5) {
-        return _dataCompleter.future;
-      }
-      _dataCompleter = Completer<void>(); // Reset for re-fetching
+      return _dataCompleter.future;
     }
 
     // If a fetch is already in progress, just wait for it to complete.
@@ -34,7 +29,6 @@ class DataLoader {
     try {
       var data = await commonsServices.loadData(PathsGithub.eventPath);
       _allData = GithubJsonModel.fromJson(data);
-      _lastFetchTime = DateTime.now();
       _dataCompleter.complete();
     } catch (e) {
       _dataCompleter.completeError(e);
@@ -46,19 +40,19 @@ class DataLoader {
 
   Future<List<Session>> loadAllSessions() async {
     await _loadAllEventData();
-    List<Session> jsonList = _allData?.sessions  ?? List.empty();
+    List<Session> jsonList = _allData?.sessions ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<Track>> loadAllTracks() async {
     await _loadAllEventData();
-    List<Track> jsonList = _allData?.tracks  ?? List.empty();
+    List<Track> jsonList = _allData?.tracks ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<AgendaDay>> loadAllDays() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?.agendadays  ?? List.empty();
+    List<dynamic> jsonList = _allData?.agendadays ?? List.empty();
 
     final List<Track> allTracks = await loadAllTracks();
     final List<Session> allSessions = await loadAllSessions();
@@ -84,7 +78,7 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   Future<List<Speaker>?> loadSpeakers() async {
     await _loadAllEventData();
-    List<Speaker> jsonList = _allData?.speakers  ?? List.empty();
+    List<Speaker> jsonList = _allData?.speakers ?? List.empty();
     return jsonList.toList();
   }
 
@@ -103,21 +97,14 @@ class DataLoader {
     List<Event> jsonList = _allData?.events ?? List.empty();
     if (jsonList.isEmpty ||
         (githubService.token == null &&
-            jsonList.indexWhere(
-                  (event) =>
-                      event.isVisible,
-                ) ==
-                -1)) {
+            jsonList.indexWhere((event) => event.isVisible) == -1)) {
       return List.empty();
     }
 
     if (githubService.token != null) {
-      return jsonList
-          .toList();
+      return jsonList.toList();
     } else {
-      return jsonList
-          .where((event) => event.isVisible)
-          .toList();
+      return jsonList.where((event) => event.isVisible).toList();
     }
   }
 }

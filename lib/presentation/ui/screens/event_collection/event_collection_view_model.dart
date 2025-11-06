@@ -67,7 +67,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     switch (eventsResult) {
       case Ok<List<Event>>():
         lastEventsFetchTime = DateTime.now();
-        _allEvents = eventsResult.value;
+        _allEvents = eventsResult.value.toList(growable: true);
         _updateEventsToShow();
         viewState.value = ViewState.loadFinished;
         await _handleSingleEventNavigation();

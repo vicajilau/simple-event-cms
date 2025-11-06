@@ -516,10 +516,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           );
                           if (newEvent != null) {
                             setState(() {
-                              viewmodel.eventsToShow.value.removeWhere(
-                                (event) => event.uid == newEvent.uid,
-                              );
-                              viewmodel.eventsToShow.value.add(newEvent);
+                              if(viewmodel.eventsToShow.value.indexWhere(
+                                    (event) => event.uid == newEvent.uid,
+                              ) != -1){
+                                viewmodel.eventsToShow.value.removeWhere(
+                                      (event) => event.uid == newEvent.uid,
+                                );
+                              }
+
+                              viewmodel.eventsToShow.value.toList().add(newEvent);
                               viewmodel.addEvent(newEvent);
                             });
                           }
