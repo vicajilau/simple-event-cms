@@ -36,9 +36,10 @@ class AppRouter {
             path: eventDetailPath,
             name: eventDetailName,
             builder: (context, state) {
-              final eventId = state.pathParameters['eventId'] ?? '';
-              final location = state.pathParameters['location'] ?? '';
-              bool onlyOneEvent = bool.tryParse(state.pathParameters['onlyOneEvent'].toString()) ?? false;
+              final mapExtra = state.extra as Map<String, String>;
+              final eventId = mapExtra['eventId'] ?? '';
+              final location = mapExtra['location'] ?? '';
+              bool onlyOneEvent = bool.tryParse(mapExtra['onlyOneEvent'].toString()) ?? false;
               return EventDetailScreen(eventId: eventId,location: location,onlyOneEvent: onlyOneEvent);
             },
           ),
