@@ -9,7 +9,7 @@ class AppRouter {
   // Paths
   static const String homePath = '/'; 
   static const String eventFormPath = '/events/edit';
-  static const String eventDetailPath = '/event/detail/:eventId/:location';
+  static const String eventDetailPath = '/event/detail/:eventId/:location/:onlyOneEvent';
   static const String agendaFormPath = '/agenda/form';
   static const String speakerFormPath = '/speaker/form';
   static const String sponsorFormPath = '/sponsor/form';
@@ -36,10 +36,9 @@ class AppRouter {
             path: eventDetailPath,
             name: eventDetailName,
             builder: (context, state) {
-              final mapExtra = state.extra as Map<String, String>;
-              final eventId = mapExtra['eventId'] ?? '';
-              final location = mapExtra['location'] ?? '';
-              bool onlyOneEvent = bool.tryParse(mapExtra['onlyOneEvent'].toString()) ?? false;
+              final eventId = state.pathParameters['eventId'] ?? '';
+              final location = state.pathParameters['location'] ?? '';
+              bool onlyOneEvent = bool.tryParse(state.pathParameters['onlyOneEvent'].toString()) ?? false;
               return EventDetailScreen(eventId: eventId,location: location,onlyOneEvent: onlyOneEvent);
             },
           ),

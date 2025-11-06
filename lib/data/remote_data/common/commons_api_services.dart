@@ -8,6 +8,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
+import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 
@@ -20,7 +21,7 @@ abstract class CommonsServices {
     String commitMessage,
   );
   Future<http.Response> updateAllData(
-    Map<String, dynamic> data,
+    GithubJsonModel data,
     String pathUrl,
     String commitMessage,
   );
@@ -852,7 +853,7 @@ class CommonsServicesImp extends CommonsServices {
 
   @override
   Future<http.Response> updateAllData(
-    Map<String, dynamic> data,
+    GithubJsonModel data,
     String pathUrl,
     String commitMessage, {
     int retries = 0,
@@ -873,7 +874,7 @@ class CommonsServicesImp extends CommonsServices {
     String branch = organization.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
-    final dataInJsonString = json.encode(data);
+    final dataInJsonString = json.encode(data.toJson());
     var base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     try {

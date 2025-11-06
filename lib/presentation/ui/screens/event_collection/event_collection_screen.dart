@@ -752,6 +752,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           pathParameters: {
             'eventId': item.uid,
             'location': item.location ?? "",
+            'onlyOneEvent': "false",
           },
         );
       },

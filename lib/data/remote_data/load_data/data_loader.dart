@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/github_json_model.dart';
 
 import '../../../core/models/models.dart';
 import '../common/commons_api_services.dart';
@@ -12,7 +13,7 @@ import '../common/commons_api_services.dart';
 class DataLoader {
   static final Organization organization = getIt<Organization>();
   static final CommonsServices commonsServices = CommonsServicesImp();
-  static Map<String, dynamic>? _allData;
+  static GithubJsonModel? _allData;
   static Completer<void> _dataCompleter = Completer<void>();
   static DateTime? _lastFetchTime;
 
@@ -31,8 +32,8 @@ class DataLoader {
     }
 
     try {
-      final data = await commonsServices.loadData(PathsGithub.eventPath) as Map<String, dynamic>;
-      _allData = data;
+      final data = await commonsServices.loadData(PathsGithub.eventPath);
+      _allData = GithubJsonModel.fromJson(data);
       _lastFetchTime = DateTime.now();
       _dataCompleter.complete();
     } catch (e) {
@@ -45,19 +46,19 @@ class DataLoader {
 
   Future<List<Session>> loadAllSessions() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?['sessions'] as List<dynamic>? ?? [];
-    return jsonList.map((jsonItem) => Session.fromJson(jsonItem)).toList();
+    List<Session> jsonList = _allData?.sessions  ?? [];
+    return jsonList.toList();
   }
 
   Future<List<Track>> loadAllTracks() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?['tracks'] as List<dynamic>? ?? [];
-    return jsonList.map((jsonItem) => Track.fromJson(jsonItem)).toList();
+    List<Track> jsonList = _allData?.tracks  ?? [];
+    return jsonList.toList();
   }
 
   Future<List<AgendaDay>> loadAllDays() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?['agendaDays'] as List<dynamic>? ?? [];
+    List<dynamic> jsonList = _allData?.agendadays  ?? [];
 
     final List<Track> allTracks = await loadAllTracks();
     final List<Session> allSessions = await loadAllSessions();
@@ -83,15 +84,15 @@ class DataLoader {
   /// Loads speaker information from the speakers.json file
   Future<List<Speaker>?> loadSpeakers() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?['speakers'] as List<dynamic>? ?? [];
-    return jsonList.map((jsonItem) => Speaker.fromJson(jsonItem)).toList();
+    List<Speaker> jsonList = _allData?.speakers  ?? [];
+    return jsonList.toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   Future<List<Sponsor>> loadSponsors() async {
     await _loadAllEventData();
-    List<dynamic> jsonList = _allData?['sponsors'] as List<dynamic>? ?? [];
-    return jsonList.map((jsonItem) => Sponsor.fromJson(jsonItem)).toList();
+    List<Sponsor> jsonList = _allData?.sponsors ?? [];
+    return jsonList.toList();
   }
 
   /// Loads event information from the events.json file
@@ -99,7 +100,7 @@ class DataLoader {
     await _loadAllEventData();
     var githubService = await SecureInfo.getGithubKey();
 
-    List<dynamic> jsonList = _allData?['events'] as List<dynamic>? ?? [];
+    List<Event> jsonList = _allData?.events ?? [];
     if (jsonList.isEmpty ||
         (githubService.token == null &&
             jsonList.indexWhere(
@@ -112,15 +113,9 @@ class DataLoader {
 
     if (githubService.token != null) {
       return jsonList
-          .map<Event>(
-            (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
-          )
           .toList();
     } else {
       return jsonList
-          .map<Event>(
-            (jsonItem) => Event.fromJson(jsonItem as Map<String, dynamic>),
-          )
           .where((event) => event.isVisible)
           .toList();
     }

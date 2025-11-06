@@ -1,6 +1,7 @@
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
@@ -26,14 +27,15 @@ class DataUpdateInfo {
     final currentSpeakers = await dataLoader.loadSpeakers() ?? [];
     final currentSponsors = await dataLoader.loadSponsors();
 
-    final allData = {
-      'events': (events ?? currentEvents).map((e) => e.toJson()).toList(),
-      'agendaDays': (agendaDays ?? currentAgendaDays).map((e) => e.toJson()).toList(),
-      'tracks': (tracks ?? currentTracks).map((e) => e.toJson()).toList(),
-      'sessions': (sessions ?? currentSessions).map((e) => e.toJson()).toList(),
-      'speakers': (speakers ?? currentSpeakers).map((e) => e.toJson()).toList(),
-      'sponsors': (sponsors ?? currentSponsors).map((e) => e.toJson()).toList(),
-    };
+
+    final allData = GithubJsonModel(
+      events: (events ?? currentEvents).toList(),
+      agendadays: (agendaDays ?? currentAgendaDays).toList(),
+      tracks: (tracks ?? currentTracks).toList(),
+      sessions: (sessions ?? currentSessions).toList(),
+      speakers: (speakers ?? currentSpeakers).toList(),
+      sponsors: (sponsors ?? currentSponsors).toList(),
+    );
 
     await dataCommons.updateAllData(
       allData,

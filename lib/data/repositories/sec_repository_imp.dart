@@ -126,7 +126,7 @@ class SecRepositoryImp extends SecRepository {
           )
           .toList()
           .isNotEmpty;
-      if (thereAreAgendaDaysNotIncluded) {
+      if (thereAreAgendaDaysNotIncluded && !overrideAgendaDays) {
         return Result.error(
           NetworkException(
             'There are sessions in days that are not included in the agenda days of the event, please delete them and try again',

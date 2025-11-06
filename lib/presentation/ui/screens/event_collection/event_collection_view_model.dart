@@ -233,9 +233,9 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
        eventToGo = eventsToShow.value.firstWhere((event) => event.isVisible == true);
      }
 
-      await AppRouter.router.push(
-        AppRouter.eventDetailPath,
-        extra: {
+      await AppRouter.router.pushNamed(
+        AppRouter.eventDetailName,
+        pathParameters: {
           'eventId': eventToGo.uid,
           'location': eventToGo.location ?? "",
           'onlyOneEvent': "true",
