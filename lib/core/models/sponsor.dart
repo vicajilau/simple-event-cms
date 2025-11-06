@@ -25,8 +25,8 @@ class Sponsor extends GitHubModel {
     required this.logo,
     required this.website,
     required this.eventUID,
-    super.pathUrl = PathsGithub.sponsorPath,
-    super.updateMessage = PathsGithub.sponsorUpdateMessage,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   factory Sponsor.fromJson(Map<String, dynamic> json) => Sponsor(

@@ -1,3 +1,6 @@
+import 'package:sec/core/models/speaker.dart';
+import 'package:sec/core/models/sponsor.dart';
+
 import '../config/paths_github.dart';
 import 'agenda.dart';
 import 'event_dates.dart';
@@ -36,6 +39,18 @@ class Event extends GitHubModel {
   /// Indica si el evento está visible o no
   bool isVisible = true;
 
+  /// Lista de sesiones del evento
+  final List<Session> sessions;
+
+  /// Lista de días de la agenda del evento
+  final List<AgendaDay> agendadays;
+
+  /// Lista de patrocinadores del evento
+  final List<Sponsor> sponsors;
+
+  /// Lista de ponentes del evento
+  final List<Speaker> speakers;
+
   /// Indica si el evento debe abrirse por defecto
   bool openAtTheBeggining = false;
 
@@ -49,6 +64,10 @@ class Event extends GitHubModel {
     required this.secondaryColor,
     required this.eventDates,
     this.description,
+    this.sessions = const [],
+    this.agendadays = const [],
+    this.sponsors = const [],
+    this.speakers = const [],
     this.isVisible = true,
     this.openAtTheBeggining = false,
     this.location,
@@ -67,6 +86,20 @@ class Event extends GitHubModel {
             ?.map((item) => Track.fromJson(item))
             .toList() ?? []
         : [];
+    List<Session> sessions = (json['sessions'] != null)
+        ? (json['sessions'] as List?)?.map((item) => Session.fromJson(item)).toList() ?? []
+        : [];
+    List<AgendaDay> agendadays = (json['agendadays'] != null)
+        ? (json['agendadays'] as List?)
+            ?.map((item) => AgendaDay.fromJson(item))
+            .toList() ?? []
+        : [];
+    List<Sponsor> sponsors = (json['sponsors'] != null)
+        ? (json['sponsors'] as List?)?.map((item) => Sponsor.fromJson(item)).toList() ?? []
+        : [];
+    List<Speaker> speakers = (json['speakers'] != null)
+        ? (json['speakers'] as List?)?.map((item) => Speaker.fromJson(item)).toList() ?? []
+        : [];
     return Event(
       uid: json["UID"].toString(),
       eventName: json['eventName'],
@@ -79,6 +112,10 @@ class Event extends GitHubModel {
       openAtTheBeggining: json['openAtTheBeggining'] ?? false,
       location: json['location'],
       tracks: tracks,
+      sessions: sessions,
+      agendadays: agendadays,
+      sponsors: sponsors,
+      speakers: speakers,
     );
   }
 
@@ -97,6 +134,10 @@ class Event extends GitHubModel {
       'isVisible': isVisible,
       'openAtTheBeggining': openAtTheBeggining,
       'tracks': tracks.map((track) => track.toJson()).toList(),
+      'sessions': sessions.map((session) => session.toJson()).toList(),
+      'agendadays': agendadays.map((day) => day.toJson()).toList(),
+      'sponsors': sponsors.map((sponsor) => sponsor.toJson()).toList(),
+      'speakers': speakers.map((speaker) => speaker.toJson()).toList(),
     };
   }
 }
