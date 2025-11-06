@@ -1,8 +1,1 @@
-{
-  "events": [],
-  "agendaDays": [],
-  "tracks": [],
-  "sessions": [],
-  "speakers": [],
-  "sponsors": []
-}
+{"events":[],"agendaDays":[{"UID":"2025-11-23","date":"2025-11-23","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-24","date":"2025-11-24","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-25","date":"2025-11-25","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-26","date":"2025-11-26","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-27","date":"2025-11-27","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-28","date":"2025-11-28","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null},{"UID":"2025-11-29","date":"2025-11-29","eventUID":[{"UID":"Event_20251106_110807"}],"trackUids":null}],"tracks":[],"sessions":[],"speakers":[],"sponsors":[]}
