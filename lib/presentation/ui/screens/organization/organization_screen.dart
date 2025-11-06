@@ -4,6 +4,8 @@ import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/presentation/ui/widgets/section_input_form.dart';
 
@@ -66,6 +68,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
     final location = AppLocalizations.of(context)!;
     final orgHealth = getIt<CheckOrg>();
     final bool hideCancel = orgHealth.hasError;
+    final viewModel = getIt<OrganizationViewModel>();
 
     return FormScreenWrapper(
       pageTitle: location.organization,
@@ -83,6 +86,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               label: location.organizationName,
               childInput: TextFormField(
                 controller: _organizationNameController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+
                 decoration: AppDecorations.textFieldDecoration.copyWith(
                   hintText: location.organizationNameHint,
                 ),
@@ -128,6 +133,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               label: location.githubUser,
               childInput: TextFormField(
                 controller: _githubUserController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+
                 decoration: AppDecorations.textFieldDecoration.copyWith(
                   hintText: location.githubUserHint,
                 ),
@@ -143,6 +150,8 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               label: location.projectNameLabel,
               childInput: TextFormField(
                 controller: _projectNameController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+
                 decoration: AppDecorations.textFieldDecoration.copyWith(
                   hintText: location.projectNameHint,
                 ),
@@ -158,6 +167,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
               label: location.branch,
               childInput: TextFormField(
                 controller: _branchController,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 decoration: AppDecorations.textFieldDecoration.copyWith(
                   hintText: location.branchHint,
                 ),
@@ -192,6 +202,21 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                         projectName: _projectNameController.text,
                         branch: _branchController.text,
                       );
+
+                      final ok = await viewModel.updateOrganization(updated);
+                      if (!ok) {
+                        if (!context.mounted) return;
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (_) => CustomErrorDialog(
+                            errorMessage: viewModel.errorMessage,
+                            onCancel: () => {Navigator.of(context).pop()},
+                            buttonText: location.closeButton,
+                          ),
+                        );
+                        return;
+                      }
 
                       // if OK:
                       setOrganization(updated);
