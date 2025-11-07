@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -12,6 +13,37 @@ class DataUpdateInfo {
 
   DataUpdateInfo({required this.dataCommons});
 
+  Future<void> _commitDataUpdate(
+    GithubJsonModel allData, {
+    List<Event>? events,
+    List<AgendaDay>? agendaDays,
+    List<Track>? tracks,
+    List<Session>? sessions,
+    List<Speaker>? speakers,
+    List<Sponsor>? sponsors,
+    bool overrideData = false,
+  }) async {
+    // Check if all attributes of allData are null or empty.
+    if ((events == null || events.isEmpty) &&
+        (agendaDays == null || agendaDays.isEmpty) &&
+        (tracks == null || tracks.isEmpty) &&
+        (sessions == null || sessions.isEmpty) &&
+        (speakers == null || speakers.isEmpty) &&
+        (sponsors == null || sponsors.isEmpty) &&
+        !overrideData) {
+      // If all lists are empty or null, there is nothing to update.
+      // You could log a message or just return.
+      debugPrint("No data to update. All lists are empty or null.");
+      return;
+    } else {
+      await dataCommons.updateAllData(
+        allData,
+        "events/${PathsGithub.eventPath}",
+        PathsGithub.eventUpdateMessage,
+      );
+    }
+  }
+
   Future<void> _updateAllEventData({
     List<Event>? events,
     List<AgendaDay>? agendaDays,
@@ -19,29 +51,96 @@ class DataUpdateInfo {
     List<Session>? sessions,
     List<Speaker>? speakers,
     List<Sponsor>? sponsors,
+    bool overrideData = false,
   }) async {
-    final currentEvents = await dataLoader.loadEvents();
-    final currentAgendaDays = await dataLoader.loadAllDays();
-    final currentTracks = await dataLoader.loadAllTracks();
-    final currentSessions = await dataLoader.loadAllSessions();
-    final currentSpeakers = await dataLoader.loadSpeakers() ?? [];
-    final currentSponsors = await dataLoader.loadSponsors();
 
+    if (overrideData) {
+      final allData = GithubJsonModel(
+        events: events?.toList() ?? [],
+        agendadays: agendaDays?.toList() ?? [],
+        tracks: tracks?.toList() ?? [],
+        sessions: sessions?.toList() ?? [],
+        speakers: speakers?.toList() ?? [],
+        sponsors: sponsors?.toList() ?? [],
+      );
 
-    final allData = GithubJsonModel(
-      events: (events ?? currentEvents).toList(),
-      agendadays: (agendaDays ?? currentAgendaDays).toList(),
-      tracks: (tracks ?? currentTracks).toList(),
-      sessions: (sessions ?? currentSessions).toList(),
-      speakers: (speakers ?? currentSpeakers).toList(),
-      sponsors: (sponsors ?? currentSponsors).toList(),
-    );
+      await _commitDataUpdate(
+        allData,
+        events: events,
+        agendaDays: agendaDays,
+        tracks: tracks,
+        sessions: sessions,
+        speakers: speakers,
+        sponsors: sponsors,
+        overrideData: true
+      );
+    } else {
+      final currentEvents = (await dataLoader.loadEvents())
+          .toList(growable: true)
+          .where(
+            (event) => events?.map((e) => e.uid).contains(event.uid) == false,
+      )
+          .toList(growable: true);
+      final currentAgendaDays = (await dataLoader.loadAllDays())
+          .toList(growable: true)
+          .where(
+            (day) => agendaDays?.map((d) => d.uid).contains(day.uid) == false,
+          )
+          .toList(growable: true);
+      final currentTracks = (await dataLoader.loadAllTracks())
+          .toList(growable: true)
+          .where(
+            (track) => tracks?.map((t) => t.uid).contains(track.uid) == false,
+          )
+          .toList(growable: true);
+      final currentSessions = (await dataLoader.loadAllSessions())
+          .toList(growable: true)
+          .where(
+            (session) =>
+                sessions?.map((s) => s.uid).contains(session.uid) == false,
+          )
+          .toList(growable: true);
+      final currentSpeakers = (await dataLoader.loadSpeakers() ?? [])
+          .toList(growable: true)
+          .where(
+            (speaker) =>
+                speakers?.map((s) => s.uid).contains(speaker.uid) == false,
+          )
+          .toList(growable: true);
+      final currentSponsors = (await dataLoader.loadSponsors())
+          .toList(growable: true)
+          .where(
+            (sponsor) =>
+                sponsors?.map((s) => s.uid).contains(sponsor.uid) == false,
+          )
+          .toList(growable: true);
 
-    await dataCommons.updateAllData(
-      allData,
-      "events/${PathsGithub.eventPath}",
-      PathsGithub.eventUpdateMessage,
-    );
+      currentEvents.addAll(events ?? []);
+      currentTracks.addAll(tracks ?? []);
+      currentAgendaDays.addAll(agendaDays ?? []);
+      currentSessions.addAll(sessions ?? []);
+      currentSpeakers.addAll(speakers ?? []);
+      currentSponsors.addAll(sponsors ?? []);
+
+      final allData = GithubJsonModel(
+        events: currentEvents.toList(),
+        agendadays: currentAgendaDays.toList(),
+        tracks: currentTracks.toList(),
+        sessions: currentSessions.toList(),
+        speakers: currentSpeakers.toList(),
+        sponsors: currentSponsors.toList(),
+      );
+
+      await _commitDataUpdate(
+        allData,
+        events: events,
+        agendaDays: agendaDays,
+        tracks: tracks,
+        sessions: sessions,
+        speakers: speakers,
+        sponsors: sponsors,
+      );
+    }
   }
 
   Future<void> updateSpeaker(Speaker speaker) async {
@@ -133,7 +232,7 @@ class DataUpdateInfo {
   }
 
   Future<void> updateEvent(Event event) async {
-    var eventsOriginal = await dataLoader.loadEvents();
+    var eventsOriginal = (await dataLoader.loadEvents()).toList(growable: true);
     if (event.openAtTheBeggining == true) {
       for (var e in eventsOriginal) {
         e.openAtTheBeggining = false;
@@ -143,7 +242,7 @@ class DataUpdateInfo {
     if (index != -1) {
       eventsOriginal[index] = event;
     } else {
-      eventsOriginal.toList().add(event);
+      eventsOriginal.add(event);
     }
     await _updateAllEventData(events: eventsOriginal);
   }
@@ -181,7 +280,7 @@ class DataUpdateInfo {
         } else {
           speakerToRemove.eventUIDS.remove(eventUID);
         }
-        await _updateAllEventData(speakers: speakersOriginal);
+        await overwriteItems(speakersOriginal);
       }
     }
   }
@@ -189,7 +288,7 @@ class DataUpdateInfo {
   Future<void> removeSponsors(String sponsorId) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
     sponsorOriginal.removeWhere((sponsor) => sponsor.uid == sponsorId);
-    await _updateAllEventData(sponsors: sponsorOriginal);
+    await overwriteItems(sponsorOriginal);
   }
 
   Future<void> removeEvent(String eventId) async {
@@ -225,24 +324,67 @@ class DataUpdateInfo {
       sessions: sessions,
       speakers: updatedSpeakers,
       agendaDays: updatedDays,
+      overrideData: true,
     );
   }
 
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
     agendaDaysListOriginal.removeWhere((day) => day.uid == agendaDayId);
-    await _updateAllEventData(agendaDays: agendaDaysListOriginal);
+    await overwriteItems(agendaDaysListOriginal);
   }
 
   Future<void> removeSession(String sessionId) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
     sessionListOriginal.removeWhere((session) => session.uid == sessionId);
-    await _updateAllEventData(sessions: sessionListOriginal);
+    await overwriteItems(sessionListOriginal);
   }
 
   Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
     tracksOriginal.removeWhere((track) => track.uid == trackId);
-    await _updateAllEventData(tracks: tracksOriginal);
+    await overwriteItems(tracksOriginal);
+  }
+
+  /// Overwrites a list of items in the remote data source.
+  ///
+  /// This function takes a list of items that should be present in the remote
+  /// data source. It automatically detects the type of items and overwrites
+  /// the corresponding list in the remote JSON data file with the provided list.
+  ///
+  /// [itemsToKeep] is a `List<dynamic>` containing the objects that will form
+  /// the new list. All items in the list must be of the same type.
+  Future<void> overwriteItems(List<dynamic> itemsToKeep) async {
+    if (itemsToKeep.isEmpty) {
+      debugPrint(
+        "Warning: Overwriting with an empty list. This will remove all items of this type.",
+      );
+      // If you want to prevent deleting all items, you can add a return here.
+      // For now, it's allowed.
+    }
+
+    final firstItem = itemsToKeep.isNotEmpty ? itemsToKeep.first : null;
+
+    if (firstItem is Event) {
+      await _updateAllEventData(events: itemsToKeep.cast<Event>().toList());
+    } else if (firstItem is AgendaDay) {
+      await _updateAllEventData(
+        agendaDays: itemsToKeep.cast<AgendaDay>().toList(),
+      );
+    } else if (firstItem is Track) {
+      await _updateAllEventData(tracks: itemsToKeep.cast<Track>().toList());
+    } else if (firstItem is Session) {
+      await _updateAllEventData(sessions: itemsToKeep.cast<Session>().toList());
+    } else if (firstItem is Speaker) {
+      await _updateAllEventData(speakers: itemsToKeep.cast<Speaker>().toList());
+    } else if (firstItem is Sponsor) {
+      await _updateAllEventData(sponsors: itemsToKeep.cast<Sponsor>().toList());
+    } else if (itemsToKeep.isEmpty) {
+      debugPrint(
+        "List to keep is empty, cannot determine type. No action taken.",
+      );
+    } else {
+      debugPrint("Unknown item type for overwrite: ${firstItem.runtimeType}");
+    }
   }
 }
