@@ -76,44 +76,30 @@ class DataUpdateInfo {
       );
     } else {
       final currentEvents = (await dataLoader.loadEvents())
-          .toList(growable: true)
-          .where(
-            (event) => events?.map((e) => e.uid).contains(event.uid) == false,
-      )
           .toList(growable: true);
+
       final currentAgendaDays = (await dataLoader.loadAllDays())
-          .toList(growable: true)
-          .where(
-            (day) => agendaDays?.map((d) => d.uid).contains(day.uid) == false,
-          )
           .toList(growable: true);
+
       final currentTracks = (await dataLoader.loadAllTracks())
-          .toList(growable: true)
-          .where(
-            (track) => tracks?.map((t) => t.uid).contains(track.uid) == false,
-          )
           .toList(growable: true);
+
       final currentSessions = (await dataLoader.loadAllSessions())
-          .toList(growable: true)
-          .where(
-            (session) =>
-                sessions?.map((s) => s.uid).contains(session.uid) == false,
-          )
           .toList(growable: true);
+
       final currentSpeakers = (await dataLoader.loadSpeakers() ?? [])
-          .toList(growable: true)
-          .where(
-            (speaker) =>
-                speakers?.map((s) => s.uid).contains(speaker.uid) == false,
-          )
           .toList(growable: true);
+
       final currentSponsors = (await dataLoader.loadSponsors())
-          .toList(growable: true)
-          .where(
-            (sponsor) =>
-                sponsors?.map((s) => s.uid).contains(sponsor.uid) == false,
-          )
           .toList(growable: true);
+
+
+      currentEvents.removeWhere((event) => events?.map((e) => e.uid).contains(event.uid) == true);
+      currentAgendaDays.removeWhere((day) => agendaDays?.map((d) => d.uid).contains(day.uid) == true);
+      currentTracks.removeWhere((track) => tracks?.map((t) => t.uid).contains(track.uid) == true);
+      currentSessions.removeWhere((session) => sessions?.map((s) => s.uid).contains(session.uid) == true);
+      currentSpeakers.removeWhere((speaker) => speakers?.map((s) => s.uid).contains(speaker.uid) == true);
+      currentSponsors.removeWhere((sponsor) => sponsors?.map((s) => s.uid).contains(sponsor.uid) == true);
 
       currentEvents.addAll(events ?? []);
       currentTracks.addAll(tracks ?? []);
