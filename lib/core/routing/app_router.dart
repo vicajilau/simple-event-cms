@@ -13,7 +13,7 @@ class AppRouter {
   static const String agendaFormPath = '/agenda/form';
   static const String speakerFormPath = '/speaker/form';
   static const String sponsorFormPath = '/sponsor/form';
-  static const String organizationFormPath = '/organization/form';
+  static const String organizationFormPath = '/config/form';
 
   // Names
   static const String homeName = 'home';

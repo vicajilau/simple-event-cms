@@ -16,7 +16,7 @@ class ConfigLoader {
   );
 
   static Future<Organization> getLocalOrganization() async {
-    final localConfigPath = 'events/organization/config.json';
+    final localConfigPath = 'events/config/config.json';
     final String response = await rootBundle.loadString(localConfigPath);
     final data = await json.decode(response);
     return Organization.fromJson(data);
@@ -38,7 +38,7 @@ class ConfigLoader {
       }
 
       //  try GitHub
-      const configUrl = 'events/organization/config.json';
+      const configUrl = 'events/config/config.json';
       final githubService = await SecureInfo.getGithubKey();
       final github = GitHub(
         auth: githubService.token == null

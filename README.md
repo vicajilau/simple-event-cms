@@ -251,7 +251,7 @@ For complete configuration instructions including JSON structure, examples, and 
 
 #### Quick Start
 
-1. **Edit event basic info** in `events/2025/organization/config.json`
+1. **Edit event basic info** in `events/2025/config/config.json`
 2. **Add your speakers** in `events/2025/speakers/speakers.json`
 3. **Configure agenda** in `events/2025/config/agenda.json`
 4. **Add sponsors** in `events/2025/sponsors/sponsors.json`

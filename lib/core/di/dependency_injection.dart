@@ -16,12 +16,12 @@ import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.d
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
-import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
 // Imports for new ViewModels
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
+import '../../presentation/ui/screens/organization/organization_viewmodel.dart';
 
 final GetIt getIt = GetIt.instance;
 
