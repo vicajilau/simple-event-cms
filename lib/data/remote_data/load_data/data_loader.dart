@@ -27,7 +27,9 @@ class DataLoader {
     }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
     _allData = GithubJsonModel.fromJson(data);
-    _lastFetchTime = DateTime.now();
+    if(githubDataSaving.token == null){
+      _lastFetchTime = DateTime.now();
+    }
   }
 
   // --- Start of New Data Loading Methods ---
