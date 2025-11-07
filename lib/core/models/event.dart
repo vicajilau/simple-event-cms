@@ -58,7 +58,7 @@ class Event extends GitHubModel {
 
   /// Creates a event from JSON data with additional parameters
   ///
-  /// The [json] parameter contains the configuration data from events.json
+  /// The [json] parameter contains the configuration data from githubItem.json
   ///
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory Event.fromJson(Map<String, dynamic> json) {

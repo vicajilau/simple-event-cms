@@ -73,7 +73,7 @@ class DataLoader {
     return jsonList.toList();
   }
 
-  /// Loads event information from the events.json file
+  /// Loads event information from the githubItem.json file
   Future<List<Event>> loadEvents() async {
     await _loadAllEventData();
     var githubService = await SecureInfo.getGithubKey();
