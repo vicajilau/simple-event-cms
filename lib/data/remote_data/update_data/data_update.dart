@@ -219,11 +219,7 @@ class DataUpdateInfo {
 
   Future<void> updateEvent(Event event) async {
     var eventsOriginal = (await dataLoader.loadEvents()).toList(growable: true);
-    if (event.openAtTheBeggining == true) {
-      for (var e in eventsOriginal) {
-        e.openAtTheBeggining = false;
-      }
-    }
+
     int index = eventsOriginal.indexWhere((e) => e.uid == event.uid);
     if (index != -1) {
       eventsOriginal[index] = event;
@@ -283,6 +279,10 @@ class DataUpdateInfo {
     var sessions = await dataLoader.loadAllSessions();
     var speakers = await dataLoader.loadSpeakers() ?? [];
     var days = await dataLoader.loadAllDays();
+    if(eventId == organization.eventForcedToViewUID){
+      organization.eventForcedToViewUID = null;
+      await updateOrganization(organization);
+    }
 
     events.removeWhere((event) => event.uid == eventId);
     tracks.removeWhere((track) => track.eventUid == eventId);

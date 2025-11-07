@@ -8,6 +8,7 @@ class Config extends GitHubModel {
   final String githubUser;
   final String projectName;
   final String branch;
+  String? eventForcedToViewUID;
 
   Config({
     super.uid = "0",
@@ -17,6 +18,7 @@ class Config extends GitHubModel {
     required this.githubUser,
     required this.projectName,
     required this.branch,
+    this.eventForcedToViewUID,
     super.pathUrl = PathsGithub.organizationPath,
     super.updateMessage = PathsGithub.organizationUpdateMessage,
   });
@@ -29,6 +31,7 @@ class Config extends GitHubModel {
       githubUser: json['github_user'],
       projectName: json['project_name'],
       branch: json['branch'],
+      eventForcedToViewUID: json['eventForcedToViewUID'],
     );
   }
 
@@ -41,6 +44,7 @@ class Config extends GitHubModel {
       'github_user': githubUser,
       'project_name': projectName,
       'branch': branch,
+      'eventForcedToViewUID': eventForcedToViewUID,
     };
   }
 }

@@ -79,6 +79,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final GlobalKey<FormFieldState> _locationFieldKey =
       GlobalKey<FormFieldState>();
 
+
+  var config = getIt<Config>();
   bool _hasEndDate = true;
   bool _isVisible = true;
   bool _isOpenByDefault = false;
@@ -94,6 +96,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     // Configure Nominatim with enhanced settings
 
     if (widget.eventId != null) {
+      _isOpenByDefault = config.eventForcedToViewUID == widget.eventId;
       eventFormViewModel.viewState.value = ViewState.isLoading;
       widget.eventCollectionViewModel.getEventById(widget.eventId!).then((
         event,
@@ -118,7 +121,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
           _isVisible = event.isVisible;
-          _isOpenByDefault = event.openAtTheBeggining;
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -602,9 +604,10 @@ class _EventFormScreenState extends State<EventFormScreen> {
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       isVisible: _isVisible,
-      openAtTheBeggining: _isOpenByDefault,
       eventDates: eventDates,
     );
+    config.eventForcedToViewUID = eventId;
+    await widget.eventCollectionViewModel.updateConfig(config);
     var result = await eventFormViewModel.onSubmit(eventModified);
     if (result) {
       if (mounted) {

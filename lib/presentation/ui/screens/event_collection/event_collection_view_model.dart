@@ -21,6 +21,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   Future<Event?> getEventById(String eventId);
   Future<Result<void>> editEvent(Event event);
   Future<void> deleteEvent(Event event);
+  Future<void> updateConfig(Config config);
 }
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
@@ -220,7 +221,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    var positionEventToView = eventsToShow.value.indexWhere((event) => event.openAtTheBeggining == true);
+    var positionEventToView = eventsToShow.value.indexWhere((event) => event.uid == organization.eventForcedToViewUID);
     if ((eventsToShow.value.length == 1 ||
         positionEventToView != -1) &&
         isTokenNull &&
@@ -241,6 +242,20 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
           'onlyOneEvent': "true",
         },
       );
+    }
+  }
+
+  @override
+  Future<void> updateConfig(Config config) async {
+    final result = await useCase.updateConfig(config);
+    switch (result) {
+      case Ok<void>():
+        viewState.value = ViewState.loadFinished;
+        return result.value;
+      case Error():
+        viewState.value = ViewState.error;
+        setErrorKey(result.error);
+        return;
     }
   }
 }
