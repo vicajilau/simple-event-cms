@@ -487,13 +487,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Esplora i prossimi eventi e \n trova qualcosa che ti interessa';
 
   @override
-  String get organization => 'Organizzazione';
+  String get config => 'Organizzazione';
 
   @override
-  String get organizationName => 'Nome dell\'Organizzazione';
+  String get configName => 'Nome dell\'Organizzazione';
 
   @override
-  String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
+  String get configNameHint => 'Inserisci il nome dell\'organizzazione';
 
   @override
   String get githubUser => 'Utente GitHub';

@@ -28,7 +28,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
-  final organization = getIt<Config>();
+  final config = getIt<Config>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -50,7 +50,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   @override
   Future<void> setup([Object? argument]) async {
     await SecureInfo.saveGithubKey(
-      GithubData(projectName: organization.projectName),
+      GithubData(projectName: config.projectName),
     );
     await loadEvents();
   }
@@ -221,7 +221,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    var positionEventToView = eventsToShow.value.indexWhere((event) => event.uid == organization.eventForcedToViewUID);
+    var positionEventToView = eventsToShow.value.indexWhere((event) => event.uid == config.eventForcedToViewUID);
     if ((eventsToShow.value.length == 1 ||
         positionEventToView != -1) &&
         isTokenNull &&

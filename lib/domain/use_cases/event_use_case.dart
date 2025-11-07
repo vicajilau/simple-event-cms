@@ -80,6 +80,6 @@ class EventUseCaseImp implements EventUseCase {
 
   @override
   Future<Result<void>> updateConfig(Config config) async {
-    return await repository.saveOrganization(config);
+    return await repository.saveConfig(config);
   }
 }

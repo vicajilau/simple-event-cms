@@ -479,13 +479,13 @@ class AppLocalizationsEu extends AppLocalizations {
       'Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait';
 
   @override
-  String get organization => 'Antolakuntza';
+  String get config => 'Antolakuntza';
 
   @override
-  String get organizationName => 'Antolakuntzaren izena';
+  String get configName => 'Antolakuntzaren izena';
 
   @override
-  String get organizationNameHint => 'Sartu antolakuntzaren izena';
+  String get configNameHint => 'Sartu antolakuntzaren izena';
 
   @override
   String get githubUser => 'GitHub erabiltzailea';

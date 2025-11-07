@@ -1034,23 +1034,23 @@ abstract class AppLocalizations {
   /// **'Explore upcoming events and\nfind something that interests you'**
   String get availablesEventsText;
 
-  /// No description provided for @organization.
+  /// No description provided for @config.
   ///
   /// In en, this message translates to:
   /// **'Organization'**
-  String get organization;
+  String get config;
 
-  /// No description provided for @organizationName.
+  /// No description provided for @configName.
   ///
   /// In en, this message translates to:
   /// **'Organization Name'**
-  String get organizationName;
+  String get configName;
 
-  /// No description provided for @organizationNameHint.
+  /// No description provided for @configNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the organization name'**
-  String get organizationNameHint;
+  /// **'Enter the config name'**
+  String get configNameHint;
 
   /// No description provided for @githubUser.
   ///

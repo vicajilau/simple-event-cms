@@ -486,13 +486,13 @@ class AppLocalizationsCa extends AppLocalizations {
       'Explora els pròxims esdeveniments i \n troba alguna cosa que t\'interessi';
 
   @override
-  String get organization => 'Organització';
+  String get config => 'Organització';
 
   @override
-  String get organizationName => 'Nom de l\'Organització';
+  String get configName => 'Nom de l\'Organització';
 
   @override
-  String get organizationNameHint => 'Introdueix el nom de l\'organització';
+  String get configNameHint => 'Introdueix el nom de l\'organització';
 
   @override
   String get githubUser => 'Usuari de GitHub';

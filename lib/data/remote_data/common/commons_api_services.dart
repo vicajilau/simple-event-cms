@@ -5,7 +5,7 @@ import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/di/organization_dependency_helper.dart';
+import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/github_json_model.dart';
@@ -51,7 +51,7 @@ abstract class CommonsServices {
 
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
-  Config get organization => getIt<Config>();
+  Config get config => getIt<Config>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -68,8 +68,8 @@ class CommonsServicesImp extends CommonsServices {
           : Authentication.withToken(githubService.token),
     );
     final repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
 
     late final RepositoryContents res; // <- late
@@ -78,7 +78,7 @@ class CommonsServicesImp extends CommonsServices {
       res = await github.repositories.getContents(
         repositorySlug,
         url,
-        ref: organization.branch,
+        ref: config.branch,
       );
     } catch (e, st) {
       if (e is GitHubError) {
@@ -186,8 +186,8 @@ class CommonsServicesImp extends CommonsServices {
     String commitMessage,
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -214,14 +214,14 @@ class CommonsServicesImp extends CommonsServices {
     );
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
-    String branch = organization.branch; // Default to 'main' if not specified
+    String branch = config.branch; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -316,7 +316,7 @@ class CommonsServicesImp extends CommonsServices {
     String commitMessage,
   ) async {
     final Config orgToUse =
-        (data is Config) ? data as Config : organization;
+        (data is Config) ? data as Config : config;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
@@ -489,14 +489,14 @@ class CommonsServicesImp extends CommonsServices {
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
-        organization.githubUser,
+        config.githubUser,
         (await SecureInfo.getGithubKey()).projectName ??
-            organization.projectName,
+            config.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -526,7 +526,7 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
-    String branch = organization.branch; // Default to 'main' if not specified
+    String branch = config.branch; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -535,8 +535,8 @@ class CommonsServicesImp extends CommonsServices {
       'branch': branch,
     };
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
@@ -594,8 +594,8 @@ class CommonsServicesImp extends CommonsServices {
     int retries = 0,
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -606,7 +606,7 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = organization.branch;
+    String branch = config.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -620,7 +620,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -726,8 +726,8 @@ class CommonsServicesImp extends CommonsServices {
     int retries = 0,
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -738,7 +738,7 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = organization.branch;
+    String branch = config.branch;
 
     var dataToMerge = dataOriginal.toList();
     dataToMerge.removeWhere((item) => dataToRemove.contains(item));
@@ -755,7 +755,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -859,8 +859,8 @@ class CommonsServicesImp extends CommonsServices {
     int retries = 0,
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -871,7 +871,7 @@ class CommonsServicesImp extends CommonsServices {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = organization.branch;
+    String branch = config.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(data.toJson());
@@ -883,7 +883,7 @@ class CommonsServicesImp extends CommonsServices {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 

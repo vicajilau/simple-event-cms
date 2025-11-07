@@ -503,9 +503,9 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveOrganization(Config organization) async {
+  Future<Result<void>> saveConfig(Config config) async {
     try {
-      await DataUpdate.addItemAndAssociations(organization, "");
+      await DataUpdate.addItemAndAssociations(config, "");
       return Result.ok(null);
     } on Exception catch (e) {
       debugPrint('Error in saveOrganization: $e');

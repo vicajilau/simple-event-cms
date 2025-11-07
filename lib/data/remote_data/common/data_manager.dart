@@ -409,13 +409,13 @@ class DataUpdate {
   }
 
   static Future<void> _addOrganization(
-    Config organization,
+    Config config,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfom,
     String? parentId,
   ) async {
-    await dataUpdateInfo.updateOrganization(organization);
-    debugPrint("Organization ${organization.organizationName} added.");
+    await dataUpdateInfo.updateOrganization(config);
+    debugPrint("Organization ${config.configName} added.");
   }
 
   static Future<void> _addSponsors(

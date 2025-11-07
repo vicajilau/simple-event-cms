@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
-import '../../presentation/ui/screens/organization/organization_screen.dart';
+import '../../presentation/ui/screens/config/config_screen.dart';
 
 // ignore: avoid_classes_with_only_static_members
 class AppRouter {
@@ -13,7 +13,7 @@ class AppRouter {
   static const String agendaFormPath = '/agenda/form';
   static const String speakerFormPath = '/speaker/form';
   static const String sponsorFormPath = '/sponsor/form';
-  static const String organizationFormPath = '/config/form';
+  static const String configFormPath = '/config/form';
 
   // Names
   static const String homeName = 'home';
@@ -22,7 +22,7 @@ class AppRouter {
   static const String agendaFormName = 'agenda_form';
   static const String speakerFormName = 'speaker_form';
   static const String sponsorFormName = 'sponsor_form';
-  static const String organizationFormName = 'organization_form';
+  static const String configFormName = 'config_form';
 
   static final GoRouter router = GoRouter(
     initialLocation: homePath,
@@ -52,9 +52,9 @@ class AppRouter {
             : EventFormScreen(eventId: state.extra.toString()),
       ),
       GoRoute(
-        path: organizationFormPath,
-        name: organizationFormName,
-        builder: (context, state) => OrganizationScreen(),
+        path: configFormPath,
+        name: configFormName,
+        builder: (context, state) => ConfigScreen(),
       ),
       GoRoute(
         path: agendaFormPath,

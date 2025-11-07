@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:github/github.dart' hide Organization, Event;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/di/organization_dependency_helper.dart';
+import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/routing/check_org.dart';
 
 import '../models/models.dart';

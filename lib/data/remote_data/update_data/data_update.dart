@@ -9,7 +9,7 @@ import 'package:sec/data/remote_data/common/commons_api_services.dart';
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
-  final Config organization = getIt<Config>();
+  final Config config = getIt<Config>();
 
   DataUpdateInfo({required this.dataCommons});
 
@@ -209,11 +209,11 @@ class DataUpdateInfo {
     await _updateAllEventData(sponsors: sponsors);
   }
 
-  Future<void> updateOrganization(Config organization) async {
+  Future<void> updateOrganization(Config config) async {
     await dataCommons.updateSingleData(
-      organization,
-      "events/${organization.pathUrl}",
-      organization.updateMessage,
+      config,
+      "events/${config.pathUrl}",
+      config.updateMessage,
     );
   }
 
@@ -279,9 +279,9 @@ class DataUpdateInfo {
     var sessions = await dataLoader.loadAllSessions();
     var speakers = await dataLoader.loadSpeakers() ?? [];
     var days = await dataLoader.loadAllDays();
-    if(eventId == organization.eventForcedToViewUID){
-      organization.eventForcedToViewUID = null;
-      await updateOrganization(organization);
+    if(eventId == config.eventForcedToViewUID){
+      config.eventForcedToViewUID = null;
+      await updateOrganization(config);
     }
 
     events.removeWhere((event) => event.uid == eventId);

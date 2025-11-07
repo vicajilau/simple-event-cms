@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/di/organization_dependency_helper.dart';
+import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
@@ -30,7 +30,7 @@ class EventCollectionScreen extends StatefulWidget {
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
   final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
-  String? organizationName;
+  String? configName;
   bool _isLoading = true;
   String? _errorMessage;
   final health = getIt<CheckOrg>();
@@ -48,7 +48,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         final org = getIt<Config>();
         final health = getIt<CheckOrg>();
         setState(() {
-          organizationName = health.hasError ? '' : org.organizationName;
+          configName = health.hasError ? '' : org.configName;
           _isLoading = false;
         });
       }
@@ -75,7 +75,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     final location = AppLocalizations.of(context)!;
     final bool hasOrgError =
         getIt<CheckOrg>().hasError ||
-        (organizationName == null || organizationName!.isEmpty);
+        (configName == null || configName!.isEmpty);
 
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -124,7 +124,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               final location = AppLocalizations.of(context)!;
               final bool hasOrgError =
                   getIt<CheckOrg>().hasError ||
-                  (organizationName == null || organizationName!.isEmpty);
+                  (configName == null || configName!.isEmpty);
 
               if (hasOrgError) {
                 // in case of error, always go through AdminLoginScreen
@@ -137,7 +137,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         // will run only if login is successful
                         if (context.mounted) {
                           await AppRouter.router.push(
-                            AppRouter.organizationFormPath,
+                            AppRouter.configFormPath,
                             extra: {'forceFix': true},
                           );
 
@@ -147,7 +147,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           await viewmodel.setup();
                           await _loadConfiguration();
 
-                          // will do setup again to refresh organizationName
+                          // will do setup again to refresh configName
                           await viewmodel.setup();
                           await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
                         }
@@ -221,7 +221,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ), // Your desired icon
                 const SizedBox(width: 8), // Spacing between icon and title
                 Text(
-                  hasOrgError ? '' : (organizationName ?? ''),
+                  hasOrgError ? '' : (configName ?? ''),
                   style: const TextStyle(color: Colors.black, fontSize: 15),
                 ),
               ],
@@ -437,17 +437,17 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
                   onPressed: () async {
-                    Config? organizationUpdated =
+                    Config? configUpdated =
                         await AppRouter.router.push(
-                              AppRouter.organizationFormPath,
+                              AppRouter.configFormPath,
                             )
                             as Config?;
 
-                    if (organizationUpdated != null) {
-                      setOrganization(organizationUpdated);
+                    if (configUpdated != null) {
+                      setOrganization(configUpdated);
 
                       setState(() {
-                        organizationName = organizationUpdated.organizationName;
+                        configName = configUpdated.configName;
                       });
                     }
                   },
@@ -650,7 +650,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          organizationName.toString(),
+                          configName.toString(),
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
