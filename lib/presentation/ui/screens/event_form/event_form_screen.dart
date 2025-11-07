@@ -19,9 +19,7 @@ class EventFormScreen extends StatefulWidget {
   final EventCollectionViewModel eventCollectionViewModel =
       getIt<EventCollectionViewModel>();
   final String? eventId;
-  final nominatim = Nominatim(
-    userAgent: 'Dart osm_nominatim',
-  );
+  final nominatim = Nominatim(userAgent: 'Dart osm_nominatim');
   EventFormScreen({super.key, this.eventId});
 
   @override
@@ -95,12 +93,11 @@ class _EventFormScreenState extends State<EventFormScreen> {
     // It's safe to call this on all platforms.
     // Configure Nominatim with enhanced settings
 
-
     if (widget.eventId != null) {
       eventFormViewModel.viewState.value = ViewState.isLoading;
-      widget.eventCollectionViewModel.getEventById(
-        widget.eventId!,
-      ).then((event) {
+      widget.eventCollectionViewModel.getEventById(widget.eventId!).then((
+        event,
+      ) {
         if (event == null) {
           eventFormViewModel.viewState.value = ViewState.error;
           eventFormViewModel.errorMessage = 'Failed to load event.';
@@ -191,7 +188,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
   /// Placeholder for your suggestions API.
   /// You should replace this with a real implementation using an API like Google Places.
   Future<Iterable<String>> _getSuggestions(
-      TextEditingValue textEditingValue) async {
+    TextEditingValue textEditingValue,
+  ) async {
     // Cancel any existing timer
     _debounce?.cancel();
 
@@ -203,27 +201,27 @@ class _EventFormScreenState extends State<EventFormScreen> {
     // Start a new timer
     final completer = Completer<Iterable<String>>();
     _debounce = Timer(const Duration(seconds: 1), () async {
-    try {
-      final searchResult = await widget.nominatim.searchByName(
-        query: textEditingValue.text,
-        limit: 3,
-        addressDetails: true,
-        extraTags: true,
-        nameDetails: true,
-      );
+      try {
+        final searchResult = await widget.nominatim.searchByName(
+          query: textEditingValue.text,
+          limit: 3,
+          addressDetails: true,
+          extraTags: true,
+          nameDetails: true,
+        );
 
-      // Before returning, check if the text has changed. If it has, this result is stale,
-      // and we should return an empty list to avoid showing outdated suggestions.
-      // This prevents race conditions when typing quickly.
-      if (textEditingValue.text != _locationController.text) {
-        completer.complete(Iterable<String>.empty());
-      }
+        // Before returning, check if the text has changed. If it has, this result is stale,
+        // and we should return an empty list to avoid showing outdated suggestions.
+        // This prevents race conditions when typing quickly.
+        if (textEditingValue.text != _locationController.text) {
+          completer.complete(Iterable<String>.empty());
+        }
 
         completer.complete(searchResult.map((s) => s.displayName.toString()));
-    } catch (e) {
-      // Handle potential network errors or exceptions from the library
+      } catch (e) {
+        // Handle potential network errors or exceptions from the library
         completer.complete(const Iterable<String>.empty());
-    }
+      }
     });
 
     return completer.future;
@@ -251,7 +249,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   onCancel: () => {
                     widget.eventCollectionViewModel.setErrorKey(null),
                     eventFormViewModel.viewState.value = ViewState.loadFinished,
-                    Navigator.of(context).pop()
+                    Navigator.of(context).pop(),
                   },
                   buttonText: localizations.closeButton,
                 ),
@@ -273,8 +271,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   widget.eventId != null
                       ? localizations.editingEvent
                       : localizations.creatingEvent,
-                  style: AppFonts.titleHeadingForm
-                      .copyWith(color: Colors.blue),
+                  style: AppFonts.titleHeadingForm.copyWith(color: Colors.blue),
                 ),
                 SectionInputForm(
                   label: localizations.eventNameLabel,
@@ -291,43 +288,49 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         : null,
                   ),
                 ),
-                 SectionInputForm(
-                  label: "Location", // Consider adding this to your AppLocalizations
+                SectionInputForm(
+                  label:
+                      "Location", // Consider adding this to your AppLocalizations
                   childInput: Autocomplete<String>(
                     optionsBuilder: _getSuggestions,
                     onSelected: (String selection) {
                       _locationController.text = selection;
                     },
-                    fieldViewBuilder: (
-                      BuildContext context,
-                      TextEditingController fieldTextEditingController,
-                      FocusNode fieldFocusNode,
-                      VoidCallback onFieldSubmitted,
-                    ) {
-                      // We need to use a separate controller for the field view
-                      // and sync it with our main controller.
-                      // This is a common pattern for Autocomplete.
-                      if (_locationController.text.isNotEmpty && fieldTextEditingController.text.isEmpty) {
-                         fieldTextEditingController.text = _locationController.text;
-                      }
-                      
-                      // The Autocomplete widget manages its own controller and focus node.
-                      // We must use the ones provided by the fieldViewBuilder.
-                      return TextFormField(
-                        controller: fieldTextEditingController,
-                        focusNode: fieldFocusNode,
-                        decoration: AppDecorations.textFieldDecoration.copyWith(
-                          hintText: "Enter event location", // Consider localizing
-                        ),
-                        onChanged: (text) {
-                           // Sync our controller with the field's controller
-                           _locationController.text = text;
+                    fieldViewBuilder:
+                        (
+                          BuildContext context,
+                          TextEditingController fieldTextEditingController,
+                          FocusNode fieldFocusNode,
+                          VoidCallback onFieldSubmitted,
+                        ) {
+                          // We need to use a separate controller for the field view
+                          // and sync it with our main controller.
+                          // This is a common pattern for Autocomplete.
+                          if (_locationController.text.isNotEmpty &&
+                              fieldTextEditingController.text.isEmpty) {
+                            fieldTextEditingController.text =
+                                _locationController.text;
+                          }
+
+                          // The Autocomplete widget manages its own controller and focus node.
+                          // We must use the ones provided by the fieldViewBuilder.
+                          return TextFormField(
+                            controller: fieldTextEditingController,
+                            focusNode: fieldFocusNode,
+                            decoration: AppDecorations.textFieldDecoration.copyWith(
+                              hintText:
+                                  "Enter event location", // Consider localizing
+                            ),
+                            onChanged: (text) {
+                              // Sync our controller with the field's controller
+                              _locationController.text = text;
+                            },
+                            validator: (value) =>
+                                (value == null || value.isEmpty)
+                                ? localizations.requiredField
+                                : null,
+                          );
                         },
-                        validator: (value) => (value == null || value.isEmpty)
-                            ? localizations.requiredField
-                            : null,
-                      );
-                    },
                   ),
                 ),
                 SectionInputForm(
@@ -463,6 +466,9 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     onChanged: (bool value) {
                       setState(() {
                         _isVisible = value;
+                        if (!_isVisible) {
+                          _isOpenByDefault = false;
+                        }
                       });
                     },
                   ),
@@ -477,7 +483,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     ),
                     value: _isOpenByDefault,
                     onChanged: (bool value) {
-                      setState(() => _isOpenByDefault = value);
+                      setState(() {
+                        _isOpenByDefault = value;
+                        if (value) {
+                          _isVisible = true;
+                        }
+                      });
                     },
                   ),
                 ),
@@ -539,7 +550,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
       if (invalidFields.isNotEmpty) {
         final firstInvalidField = invalidFields.first;
-        
+
         await showDialog(
           context: context,
           barrierDismissible: false,
@@ -595,7 +606,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       eventDates: eventDates,
     );
     var result = await eventFormViewModel.onSubmit(eventModified);
-    if(result){
+    if (result) {
       if (mounted) {
         Navigator.pop(context, eventModified);
       }
