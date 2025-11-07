@@ -14,10 +14,20 @@ class DataLoader {
   static final Organization organization = getIt<Organization>();
   static final CommonsServices commonsServices = CommonsServicesImp();
   static GithubJsonModel? _allData;
+  static DateTime? _lastFetchTime;
 
   Future<void> _loadAllEventData() async {
+    var githubDataSaving = await SecureInfo.getGithubKey();
+    // Check if data is already loaded and if it's been less than 5 minutes
+    if (_allData != null &&
+        _lastFetchTime != null &&
+        DateTime.now().difference(_lastFetchTime!) < const Duration(minutes: 5) &&
+    githubDataSaving.token == null) {
+      return; // Do not fetch new data
+    }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
     _allData = GithubJsonModel.fromJson(data);
+    _lastFetchTime = DateTime.now();
   }
 
   // --- Start of New Data Loading Methods ---
