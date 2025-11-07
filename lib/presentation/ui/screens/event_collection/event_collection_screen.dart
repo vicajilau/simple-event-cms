@@ -191,8 +191,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     );
                     if (confirm == true) {
                       (viewmodel as EventCollectionViewModelImp)
-                          .lastEventsFetchTime =
-                      null;
+                              .lastEventsFetchTime =
+                          null;
                       await SecureInfo.removeGithubKey();
                       await viewmodel.loadEvents();
                     }
@@ -516,15 +516,18 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           );
                           if (newEvent != null) {
                             setState(() {
-                              if(viewmodel.eventsToShow.value.indexWhere(
+                              if (viewmodel.eventsToShow.value.indexWhere(
                                     (event) => event.uid == newEvent.uid,
-                              ) != -1){
+                                  ) !=
+                                  -1) {
                                 viewmodel.eventsToShow.value.removeWhere(
-                                      (event) => event.uid == newEvent.uid,
+                                  (event) => event.uid == newEvent.uid,
                                 );
                               }
 
-                              viewmodel.eventsToShow.value.toList().add(newEvent);
+                              viewmodel.eventsToShow.value.toList().add(
+                                newEvent,
+                              );
                               viewmodel.addEvent(newEvent);
                             });
                           }
@@ -690,61 +693,62 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    constraints: const BoxConstraints(),
-                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                    icon: const Icon(Icons.edit, size: 20),
-                    onPressed: () async {
-                      final Event? eventEdited = await AppRouter.router.push(
-                        AppRouter.eventFormPath,
-                        extra: item.uid,
-                      );
-                      if (eventEdited != null) {
-                        await viewmodel.editEvent(eventEdited);
-                      }
-                    },
-                  ),
-                  if (isAdmin)
+            if (isAdmin)
+              Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     IconButton(
                       constraints: const BoxConstraints(),
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      icon: const Icon(Icons.delete, size: 20),
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      icon: const Icon(Icons.edit, size: 20),
                       onPressed: () async {
-                        final bool? confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            final location = AppLocalizations.of(context)!;
-                            return AlertDialog(
-                              title: Text(location.deleteEventTitle),
-                              content: Text(location.deleteEventMessage),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: Text(location.cancel),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: Text(location.deleteEventTitle),
-                                ),
-                              ],
-                            );
-                          },
+                        final Event? eventEdited = await AppRouter.router.push(
+                          AppRouter.eventFormPath,
+                          extra: item.uid,
                         );
-                        if (confirm == true) {
-                          await viewmodel.deleteEvent(item);
+                        if (eventEdited != null) {
+                          await viewmodel.editEvent(eventEdited);
                         }
                       },
                     ),
-                ],
+                    if (isAdmin)
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        icon: const Icon(Icons.delete, size: 20),
+                        onPressed: () async {
+                          final bool? confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              final location = AppLocalizations.of(context)!;
+                              return AlertDialog(
+                                title: Text(location.deleteEventTitle),
+                                content: Text(location.deleteEventMessage),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: Text(location.cancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: Text(location.deleteEventTitle),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          if (confirm == true) {
+                            await viewmodel.deleteEvent(item);
+                          }
+                        },
+                      ),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
