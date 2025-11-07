@@ -503,7 +503,7 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> saveOrganization(Organization organization) async {
+  Future<Result<void>> saveOrganization(Config organization) async {
     try {
       await DataUpdate.addItemAndAssociations(organization, "");
       return Result.ok(null);

@@ -15,14 +15,14 @@ class ConfigLoader {
     defaultValue: 'prod',
   );
 
-  static Future<Organization> getLocalOrganization() async {
+  static Future<Config> getLocalOrganization() async {
     final localConfigPath = 'events/config/config.json';
     final String response = await rootBundle.loadString(localConfigPath);
     final data = await json.decode(response);
-    return Organization.fromJson(data);
+    return Config.fromJson(data);
   }
 
-  static Future<Organization> loadOrganization() async {
+  static Future<Config> loadOrganization() async {
     final health = getIt<CheckOrg>();
     try {
       var localOrganization = await getLocalOrganization();
@@ -67,7 +67,7 @@ class ConfigLoader {
         base64.decode(res.file!.content!.replaceAll("\n", "")),
       );
       final fileJsonData = json.decode(file);
-      final orgFromRemote = Organization.fromJson(fileJsonData);
+      final orgFromRemote = Config.fromJson(fileJsonData);
 
       // its ok
       health.setError(false);
@@ -84,7 +84,7 @@ class ConfigLoader {
   }
 
   // update getIt<Organization> if registered
-  static void _updateOrgSingletonIfNeeded(Organization orgToUse) {
+  static void _updateOrgSingletonIfNeeded(Config orgToUse) {
     setOrganization(orgToUse);
   }
 }

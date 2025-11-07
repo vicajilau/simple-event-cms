@@ -51,7 +51,7 @@ abstract class CommonsServices {
 
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
-  Organization get organization => getIt<Organization>();
+  Config get organization => getIt<Config>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -315,8 +315,8 @@ class CommonsServicesImp extends CommonsServices {
     String pathUrl,
     String commitMessage,
   ) async {
-    final Organization orgToUse =
-        (data is Organization) ? data as Organization : organization;
+    final Config orgToUse =
+        (data is Config) ? data as Config : organization;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,

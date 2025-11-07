@@ -1,8 +1,7 @@
-
 import '../config/paths_github.dart';
 import 'github/github_model.dart';
 
-class Organization  extends GitHubModel {
+class Config extends GitHubModel {
   final String organizationName;
   final String primaryColorOrganization;
   final String secondaryColorOrganization;
@@ -10,7 +9,7 @@ class Organization  extends GitHubModel {
   final String projectName;
   final String branch;
 
-  Organization({
+  Config({
     super.uid = "0",
     required this.organizationName,
     required this.primaryColorOrganization,
@@ -22,8 +21,8 @@ class Organization  extends GitHubModel {
     super.updateMessage = PathsGithub.organizationUpdateMessage,
   });
 
-  factory Organization.fromJson(Map<String, dynamic> json) {
-    return Organization(
+  factory Config.fromJson(Map<String, dynamic> json) {
+    return Config(
       organizationName: json['organizationName'],
       primaryColorOrganization: json['primaryColorOrganization'],
       secondaryColorOrganization: json['secondaryColorOrganization'],

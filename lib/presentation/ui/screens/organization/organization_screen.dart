@@ -26,7 +26,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
   late TextEditingController _projectNameController;
   late TextEditingController _branchController;
 
-  final organization = getIt<Organization>();
+  final organization = getIt<Config>();
 
   @override
   void initState() {
@@ -182,7 +182,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                 FilledButton(
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      final updated = Organization(
+                      final updated = Config(
                         organizationName: _organizationNameController.text,
                         primaryColorOrganization:
                             _primaryColorOrganizationController.text,
@@ -197,7 +197,7 @@ class _OrganizationScreenState extends State<OrganizationScreen> {
                       setOrganization(updated);
                       getIt<CheckOrg>().setError(false);
                       if (context.mounted) {
-                        Navigator.of(context).pop<Organization>(updated);
+                        Navigator.of(context).pop<Config>(updated);
                       }
                     }
                   },

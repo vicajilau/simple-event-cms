@@ -9,7 +9,7 @@ import 'package:sec/data/remote_data/common/commons_api_services.dart';
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
-  final Organization organization = getIt<Organization>();
+  final Config organization = getIt<Config>();
 
   DataUpdateInfo({required this.dataCommons});
 
@@ -209,7 +209,7 @@ class DataUpdateInfo {
     await _updateAllEventData(sponsors: sponsors);
   }
 
-  Future<void> updateOrganization(Organization organization) async {
+  Future<void> updateOrganization(Config organization) async {
     await dataCommons.updateSingleData(
       organization,
       "events/${organization.pathUrl}",

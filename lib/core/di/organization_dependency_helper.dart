@@ -1,9 +1,9 @@
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/organization.dart';
+import 'package:sec/core/models/config.dart';
 
-void setOrganization(Organization org) {
-  if (getIt.isRegistered<Organization>()) {
-    getIt.unregister<Organization>();
+void setOrganization(Config org) {
+  if (getIt.isRegistered<Config>()) {
+    getIt.unregister<Config>();
   }
-  getIt.registerSingleton<Organization>(org);
+  getIt.registerSingleton<Config>(org);
 }

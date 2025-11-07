@@ -18,7 +18,7 @@ class AdminLoginScreen extends StatefulWidget {
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Organization organization = getIt<Organization>();
+  final Config organization = getIt<Config>();
   final ValueNotifier<String> _token = ValueNotifier('');
 
   final ValueNotifier<bool> _obscureText = ValueNotifier(true);

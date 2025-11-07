@@ -9,7 +9,7 @@ import '../../../view_model_common.dart';
 
 abstract class OrganizationViewModel extends ViewModelCommon {
   /// return true if update was OK, false if there was an error.
-  Future<bool> updateOrganization(Organization organization);
+  Future<bool> updateOrganization(Config organization);
 }
 
 class OrganizationViewModelImpl extends OrganizationViewModel {
@@ -29,7 +29,7 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
   }
 
   @override
-  Future<bool> updateOrganization(Organization organization) async {
+  Future<bool> updateOrganization(Config organization) async {
     viewState.value = ViewState.isLoading;
 
     final result = await organizationUseCase.updateOrganization(organization);

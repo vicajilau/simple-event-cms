@@ -45,7 +45,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     try {
       await viewmodel.setup();
       if (mounted) {
-        final org = getIt<Organization>();
+        final org = getIt<Config>();
         final health = getIt<CheckOrg>();
         setState(() {
           organizationName = health.hasError ? '' : org.organizationName;
@@ -437,11 +437,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
                   onPressed: () async {
-                    Organization? organizationUpdated =
+                    Config? organizationUpdated =
                         await AppRouter.router.push(
                               AppRouter.organizationFormPath,
                             )
-                            as Organization?;
+                            as Config?;
 
                     if (organizationUpdated != null) {
                       setOrganization(organizationUpdated);

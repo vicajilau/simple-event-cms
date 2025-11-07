@@ -11,7 +11,7 @@ import '../common/commons_api_services.dart';
 /// Service class responsible for loading event_collection data from various sources
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoader {
-  static final Organization organization = getIt<Organization>();
+  static final Config organization = getIt<Config>();
   static final CommonsServices commonsServices = CommonsServicesImp();
   static GithubJsonModel? _allData;
   static DateTime? _lastFetchTime;

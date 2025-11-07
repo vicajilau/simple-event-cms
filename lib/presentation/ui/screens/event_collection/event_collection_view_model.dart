@@ -27,7 +27,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
-  final organization = getIt<Organization>();
+  final organization = getIt<Config>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
