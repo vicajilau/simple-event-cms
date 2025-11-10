@@ -20,6 +20,7 @@
   "eventDates": "Date dell'Evento",
   "venue": "Luogo",
   "description": "Descrizione",
+  "addEvent": "Aggiungi evento",
   "close": "Chiudi",
   "twitter": "Twitter/X",
   "nextEvent": "Prossimo evento...",

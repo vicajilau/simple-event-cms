@@ -87,10 +87,12 @@ class AppLocalizationsEu extends AppLocalizations {
   String get changeVisibilityTitle => 'Ikusgaitasuna Aldatu';
 
   @override
-  String get changeVisibilityToHidden => 'Aldatu ezkutura';
+  String get changeVisibilityToHidden =>
+      'Honek ekitaldia erabiltzaileentzat ikusezin bihurtuko du';
 
   @override
-  String get changeVisibilityToVisible => 'Aldatu ikusgaira';
+  String get changeVisibilityToVisible =>
+      'Hemendik aurrera, ekitaldia guztientzat ikusgai egongo da';
 
   @override
   String get eventIsHidden => 'Gertaera ezkutatuta dago';
@@ -445,13 +447,13 @@ class AppLocalizationsEu extends AppLocalizations {
   String get updateButton => 'Eguneratu';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Gehitu';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Gela gehitu';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Gela izena';
 
   @override
   String get formError => 'Formularioan akatsak daude';
@@ -517,6 +519,9 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get commonError =>
       'Errorea datuak eskuratzean, saiatu berriro geroago mesedez';
+
+  @override
+  String get addEvent => 'Gertaera gehitu';
 
   @override
   String get createSpeaker => 'Hizlaria Sortu';

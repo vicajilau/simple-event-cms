@@ -534,7 +534,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                             children: [
                               const Icon(Icons.add, size: 20),
                               const SizedBox(width: 8),
-                              Text('Add Event'),
+                              Text(location.addEvent),
                             ],
                           ),
                         ),
@@ -597,7 +597,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     children: [
                       const Icon(Icons.add, size: 20),
                       const SizedBox(width: 8),
-                      Text('Add Event'),
+                      Text(location.addEvent),
                     ],
                   ),
                 ),

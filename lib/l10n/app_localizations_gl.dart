@@ -448,13 +448,13 @@ class AppLocalizationsGl extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Engadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Engadir sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nome da sala';
 
   @override
   String get formError => 'Hai erros no formulario';
@@ -476,7 +476,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de acceso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventos Dispoñibles';
 
   @override
   String get availablesEventsText =>
@@ -521,6 +521,9 @@ class AppLocalizationsGl extends AppLocalizations {
   @override
   String get commonError =>
       'Erro ao obter os datos, por favor, téntao de novo máis tarde';
+
+  @override
+  String get addEvent => 'Engadir Evento';
 
   @override
   String get createSpeaker => 'Crear Poñente';

@@ -521,5 +521,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get commonError => 'Erro ao buscar dados, tente novamente mais tarde';
 
   @override
+  String get addEvent => 'Add Event';
+
+  @override
   String get createSpeaker => 'Criar Palestrante';
 }

@@ -526,5 +526,8 @@ class AppLocalizationsCa extends AppLocalizations {
       'Error en obtenir les dades, si us plau, torna a intentar-ho més tard';
 
   @override
+  String get addEvent => 'Afegir Esdeveniment';
+
+  @override
   String get createSpeaker => 'Crear Ponent';
 }

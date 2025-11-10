@@ -174,5 +174,6 @@
   "deleteSpeakerMessage": "N'estàs segur, que vols eliminar el ponent?",
   "eventSelection": "Selecció d'esdeveniment",
   "selectEvent": "Selecciona un esdeveniment",
+  "addEvent": "Afegir Esdeveniment",
   "selectEventHint": "Selecciona un esdeveniment per començar"
 }

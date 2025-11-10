@@ -166,6 +166,7 @@
   "addSession": "Ajouter une Session",
   "addSpeaker": "Ajouter un Intervenant",
   "addSponsor": "Ajouter un Sponsor",
+  "addEvent": "Ajouter un événement",
   "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard",
   "createSpeaker": "Créer un Intervenant",
   "retryLater": "Try again later"

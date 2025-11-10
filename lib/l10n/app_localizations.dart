@@ -1112,6 +1112,12 @@ abstract class AppLocalizations {
   /// **'Error fetching data, Please retry later'**
   String get commonError;
 
+  /// No description provided for @addEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Event'**
+  String get addEvent;
+
   /// No description provided for @createSpeaker.
   ///
   /// In en, this message translates to:

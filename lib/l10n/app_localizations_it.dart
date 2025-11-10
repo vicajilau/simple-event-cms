@@ -526,5 +526,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
 
   @override
+  String get addEvent => 'Add Event';
+
+  @override
   String get createSpeaker => 'Crea Relatore';
 }

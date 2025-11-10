@@ -518,5 +518,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonError => 'Error fetching data, Please retry later';
 
   @override
+  String get addEvent => 'Add Event';
+
+  @override
   String get createSpeaker => 'Create Speaker';
 }

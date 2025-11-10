@@ -527,5 +527,8 @@ class AppLocalizationsFr extends AppLocalizations {
       'Erreur lors de la récupération des données, veuillez réessayer plus tard';
 
   @override
+  String get addEvent => 'Ajouter un événement';
+
+  @override
   String get createSpeaker => 'Créer un Intervenant';
 }

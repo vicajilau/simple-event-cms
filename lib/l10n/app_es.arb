@@ -165,6 +165,7 @@
   "addSession": "Añadir Sesión",
   "addSpeaker": "Añadir Ponente",
   "addSponsor": "Añadir Patrocinador",
+  "addEvent": "Añadir Evento",
   "retryLater": "Vuelve a intentarlo más tarde",
   "commonError": "Error fetching data, Please retry later",
   "createSpeaker": "Create Speaker"
