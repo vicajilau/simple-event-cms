@@ -220,9 +220,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   color: Colors.blue,
                 ), // Your desired icon
                 const SizedBox(width: 8), // Spacing between icon and title
-                Text(
-                  hasOrgError ? '' : (configName ?? ''),
-                  style: const TextStyle(color: Colors.black, fontSize: 15),
+                Flexible(
+                  child: Text(
+                    hasOrgError ? '' : (configName ?? ''),
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
@@ -367,6 +371,12 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
+                    if (MediaQuery.of(context).size.width >= 600)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20.0, vertical: 8.0),
+                        child: _buildAddEventButtonRow(),
+                      ),
                     _buildAddEventButton(),
                     GridView.builder(
                       shrinkWrap: true, // Important for nesting in a Column
@@ -374,21 +384,21 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           const NeverScrollableScrollPhysics(), // Important to avoid nested scrolling conflicts
                       padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
                       itemCount: eventsToShow.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent:
-                                460.0, // Adjust this value as needed
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
-                            childAspectRatio:
-                                3 /
-                                2, // Adjust aspect ratio for better appearance
-                          ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 460.0,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio:
+                            (MediaQuery.of(context).size.width < 600)
+                                ? (3 / 2.2)
+                                : (3 / 2),
+                      ),
                       itemBuilder: (BuildContext context, int index) {
                         final item = eventsToShow[index];
                         final bool isUpcoming = item.uid == upcomingEvent?.uid;
                         return FutureBuilder<bool>(
                           future: viewmodel.checkToken(),
+                          // Optimization: consider moving this FutureBuilder outside the GridView if checkToken doesn't depend on the item
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
                             return Column(
@@ -466,96 +476,170 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Widget _buildAddEventButton() {
     var location = AppLocalizations.of(context)!;
+    // This view is for mobile screens
+    if (MediaQuery.of(context).size.width < 600) {
+      return FutureBuilder<bool>(
+        future: viewmodel.checkToken(),
+        builder: (context, snapshot) {
+          if (snapshot.data == true) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    color: const Color(0xFFe5f5f9),
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: Padding(
+                        padding:
+                            const EdgeInsets.only(top: 20.0, bottom: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  location.availablesEventsTitle,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 8.0),
+                                Text(
+                                  location.availablesEventsText,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => _onAddEventPressed(),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.add, size: 20),
+                              const SizedBox(width: 8),
+                              Text('Add Event'),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return const SizedBox.shrink();
+          }
+        },
+      );
+    }
+    return const SizedBox.shrink(); // Hide for larger screens
+  }
+
+  Widget _buildAddEventButtonRow() {
+    var location = AppLocalizations.of(context)!;
     return FutureBuilder<bool>(
       future: viewmodel.checkToken(),
       builder: (context, snapshot) {
         if (snapshot.data == true) {
-          return Padding(
-            padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+          return Container(
+            color: const Color(0xFFe5f5f9),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  color: const Color(0xFFe5f5f9),
-                  padding: const EdgeInsets.all(16.0),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20.0, bottom: 20.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                location.availablesEventsTitle,
-                                style: Theme.of(context).textTheme.titleSmall
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 8.0),
-                              Text(
-                                location.availablesEventsText,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        location.availablesEventsTitle,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
-                    ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        location.availablesEventsText,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
+                const SizedBox(width: 24),
+                ElevatedButton(
+                  onPressed: () => _onAddEventPressed(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 16),
+                  ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      ElevatedButton(
-                        onPressed: () async {
-                          final Event? newEvent = await AppRouter.router.push(
-                            AppRouter.eventFormPath,
-                          );
-                          if (newEvent != null) {
-                            setState(() {
-                              if (viewmodel.eventsToShow.value.indexWhere(
-                                    (event) => event.uid == newEvent.uid,
-                                  ) !=
-                                  -1) {
-                                viewmodel.eventsToShow.value.removeWhere(
-                                  (event) => event.uid == newEvent.uid,
-                                );
-                              }
-
-                              viewmodel.eventsToShow.value.toList().add(
-                                newEvent,
-                              );
-                              viewmodel.addEvent(newEvent);
-                            });
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.add, size: 20),
-                            const SizedBox(width: 8),
-                            Text('Add Event'),
-                          ],
-                        ),
-                      ),
+                      const Icon(Icons.add, size: 20),
+                      const SizedBox(width: 8),
+                      Text('Add Event'),
                     ],
                   ),
                 ),
               ],
             ),
           );
-        } else {
-          return const SizedBox.shrink();
         }
+        return const SizedBox.shrink();
       },
     );
+  }
+
+  void _onAddEventPressed() async {
+    final Event? newEvent = await AppRouter.router.push(
+      AppRouter.eventFormPath,
+    );
+    if (newEvent != null) {
+      setState(() {
+        // This logic is to update an existing event if it was edited
+        // or add a new one if it's completely new.
+        final index = viewmodel.eventsToShow.value
+            .indexWhere((event) => event.uid == newEvent.uid);
+        if (index != -1) {
+          // Replace existing event
+          final updatedList =
+              List<Event>.from(viewmodel.eventsToShow.value);
+          updatedList[index] = newEvent;
+          viewmodel.eventsToShow.value = updatedList;
+        } else {
+          // Add new event
+          viewmodel.eventsToShow.value = [
+            ...viewmodel.eventsToShow.value,
+            newEvent
+          ];
+        }
+        // This should probably be handled inside the viewmodel
+        viewmodel.addEvent(newEvent);
+      });
+    }
   }
 
   Widget _buildEventCard(
