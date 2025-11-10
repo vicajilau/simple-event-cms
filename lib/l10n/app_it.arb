@@ -41,6 +41,17 @@
   "deleteEventTitle": "Elimina evento",
   "deleteEventMessage": "Sei sicuro di voler eliminare questo evento? \n Questo cancellerà le sessioni associate all'evento.",
   "changeLanguage": "Cambia Lingua",
+  "deleteSpeaker": "Elimina relatore",
+  "confirmDeleteSpeaker": "Sei sicuro di voler eliminare il relatore {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accettare",
   "speakerForm": "Modulo del Relatore",
   "nameLabel": "Nome*",
   "nameErrorHint": "Per favore inserisci il tuo nome",

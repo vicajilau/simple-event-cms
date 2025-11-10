@@ -168,5 +168,16 @@
   "addEvent": "Gertaera gehitu",
   "retryLater": "Saiatu berriro geroago",
   "commonError": "Errorea datuak eskuratzean, saiatu berriro geroago mesedez",
-  "createSpeaker": "Hizlaria Sortu"
+  "createSpeaker": "Hizlaria Sortu",
+  "deleteSpeaker": "Hizlaria ezabatu",
+  "confirmDeleteSpeaker": "Ziur zaude {speakerName} hizlaria ezabatu nahi duzula?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Onartu"
 }

@@ -526,8 +526,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
 
   @override
-  String get addEvent => 'Add Event';
+  String get addEvent => 'Aggiungi evento';
 
   @override
   String get createSpeaker => 'Crea Relatore';
+
+  @override
+  String get deleteSpeaker => 'Elimina relatore';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Sei sicuro di voler eliminare il relatore $speakerName?';
+  }
+
+  @override
+  String get accept => 'Accettare';
 }

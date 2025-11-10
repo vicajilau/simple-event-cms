@@ -527,4 +527,15 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get createSpeaker => 'Crear Poñente';
+
+  @override
+  String get deleteSpeaker => 'Eliminar relator';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Estás seguro de que queres eliminar o relator $speakerName?';
+  }
+
+  @override
+  String get accept => 'Aceptar';
 }

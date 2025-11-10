@@ -522,4 +522,15 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get createSpeaker => 'Create Speaker';
+
+  @override
+  String get deleteSpeaker => 'Delete speaker';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Are you sure you want to delete the speaker $speakerName?';
+  }
+
+  @override
+  String get accept => 'Accept';
 }

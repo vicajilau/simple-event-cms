@@ -169,5 +169,16 @@
   "addEvent": "Ajouter un événement",
   "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard",
   "createSpeaker": "Créer un Intervenant",
-  "retryLater": "Try again later"
+  "retryLater": "Try again later",
+  "deleteSpeaker": "Supprimer l'intervenant",
+  "confirmDeleteSpeaker": "Êtes-vous sûr de vouloir supprimer l'intervenant {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accepter"
 }

@@ -1123,6 +1123,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Create Speaker'**
   String get createSpeaker;
+
+  /// No description provided for @deleteSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete speaker'**
+  String get deleteSpeaker;
+
+  /// Confirm speaker deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the speaker {speakerName}?'**
+  String confirmDeleteSpeaker(String speakerName);
+
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
 }
 
 class _AppLocalizationsDelegate

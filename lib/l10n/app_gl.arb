@@ -168,5 +168,16 @@
   "addSponsor": "Engadir patrocinador",
   "addEvent": "Engadir Evento",
   "retryLater": "Téntao de novo máis tarde",
-  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde"
+  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde",
+  "deleteSpeaker": "Eliminar relator",
+  "confirmDeleteSpeaker": "Estás seguro de que queres eliminar o relator {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Aceptar"
 }

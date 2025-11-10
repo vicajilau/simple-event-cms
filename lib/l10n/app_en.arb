@@ -168,5 +168,16 @@
   "retryLater": "Please try again later",
   "commonError": "Error fetching data, Please retry later",
   "addEvent": "Add Event",
-  "createSpeaker": "Create Speaker"
+  "createSpeaker": "Create Speaker",
+  "deleteSpeaker": "Delete speaker",
+  "confirmDeleteSpeaker": "Are you sure you want to delete the speaker {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accept"
 }

@@ -243,12 +243,50 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                       IconWidget(
                                                         icon: Icons
                                                             .delete_outlined,
-                                                        onTap: () async => await widget
-                                                            .viewmodel
-                                                            .removeSpeaker(
+                                                        onTap: () async {
+                                                          final bool?
+                                                              shouldDelete =
+                                                              await showDialog<
+                                                                  bool>(
+                                                            context: context,
+                                                            builder: (context) =>
+                                                                AlertDialog(
+                                                              title: Text(location
+                                                                  .deleteSpeaker),
+                                                              content: Text(location
+                                                                  .confirmDeleteSpeaker(
+                                                                      speaker
+                                                                          .name)),
+                                                              actions: [
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(
+                                                                              false),
+                                                                  child: Text(
+                                                                      location
+                                                                          .cancel),
+                                                                ),
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(true),
+                                                                  child: Text(
+                                                                      location.accept),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                          if (shouldDelete == true) {
+                                                            await widget.viewmodel
+                                                                .removeSpeaker(
                                                               speaker.uid,
                                                               widget.eventId,
-                                                            ),
+                                                            );
+                                                          }
+                                                        },
                                                       ),
                                                     ],
                                                   );

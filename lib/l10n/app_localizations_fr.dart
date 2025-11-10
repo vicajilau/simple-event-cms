@@ -531,4 +531,15 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get createSpeaker => 'Créer un Intervenant';
+
+  @override
+  String get deleteSpeaker => 'Supprimer l\'intervenant';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Êtes-vous sûr de vouloir supprimer l\'intervenant $speakerName?';
+  }
+
+  @override
+  String get accept => 'Accepter';
 }

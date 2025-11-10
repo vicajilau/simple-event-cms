@@ -21,6 +21,16 @@
   "addEvent": "Adicionar Evento",
   "venue": "Local",
   "description": "Descrição",
+  "deleteSpeaker": "Eliminar Palestrante",
+  "confirmDeleteSpeaker": "Tem a certeza que quer eliminar o palestrante {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
   "close": "Fechar",
   "twitter": "Twitter/X",
   "linkedin": "LinkedIn",

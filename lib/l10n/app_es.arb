@@ -168,5 +168,16 @@
   "addEvent": "Añadir Evento",
   "retryLater": "Vuelve a intentarlo más tarde",
   "commonError": "Error fetching data, Please retry later",
-  "createSpeaker": "Create Speaker"
+  "createSpeaker": "Create Speaker",
+  "deleteSpeaker": "Eliminar ponente",
+  "confirmDeleteSpeaker": "¿Estás seguro de que quieres eliminar al ponente {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Aceptar"
 }

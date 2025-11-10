@@ -521,8 +521,19 @@ class AppLocalizationsPt extends AppLocalizations {
   String get commonError => 'Erro ao buscar dados, tente novamente mais tarde';
 
   @override
-  String get addEvent => 'Add Event';
+  String get addEvent => 'Adicionar Evento';
 
   @override
   String get createSpeaker => 'Criar Palestrante';
+
+  @override
+  String get deleteSpeaker => 'Eliminar Palestrante';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Tem a certeza que quer eliminar o palestrante $speakerName?';
+  }
+
+  @override
+  String get accept => 'Aceitar';
 }

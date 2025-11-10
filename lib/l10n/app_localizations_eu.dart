@@ -525,4 +525,15 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get createSpeaker => 'Hizlaria Sortu';
+
+  @override
+  String get deleteSpeaker => 'Hizlaria ezabatu';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Ziur zaude $speakerName hizlaria ezabatu nahi duzula?';
+  }
+
+  @override
+  String get accept => 'Onartu';
 }

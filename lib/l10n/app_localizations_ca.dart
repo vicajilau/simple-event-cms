@@ -530,4 +530,15 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get createSpeaker => 'Crear Ponent';
+
+  @override
+  String get deleteSpeaker => 'Eliminar ponent';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'N\'estàs segur que vols eliminar el ponent $speakerName?';
+  }
+
+  @override
+  String get accept => 'Acceptar';
 }
