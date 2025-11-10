@@ -477,7 +477,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
   Widget _buildAddEventButton() {
     var location = AppLocalizations.of(context)!;
     // This view is for mobile screens
-    if (MediaQuery.of(context).size.width < 600) {
       return FutureBuilder<bool>(
         future: viewmodel.checkToken(),
         builder: (context, snapshot) {
@@ -550,8 +549,6 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           }
         },
       );
-    }
-    return const SizedBox.shrink(); // Hide for larger screens
   }
 
   Widget _buildAddEventButtonRow() {
