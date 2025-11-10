@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:github/github.dart' hide Organization;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -124,10 +125,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                               prefixIcon: IconButton(
-                                icon: Icon(
+                                icon: FaIcon(
                                   isObscure
-                                      ? Icons.key_off_rounded
-                                      : Icons.key_rounded,
+                                      ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                                  color: Colors.blue,
                                 ),
                                 onPressed: () =>
                                     _obscureText.value = !isObscure,
@@ -148,8 +149,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(
-                            Icons.device_hub_rounded,
+                          const FaIcon(
+                            FontAwesomeIcons.github,
                             color: Colors.white,
                           ),
                           const SizedBox(width: 8),
