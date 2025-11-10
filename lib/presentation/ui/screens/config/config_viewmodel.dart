@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/domain/use_cases/organization_use_case.dart';
+import 'package:sec/domain/use_cases/config_use_case.dart';
 
 import '../../../../core/di/dependency_injection.dart';
 import '../../../../core/utils/result.dart';
 import '../../../../domain/use_cases/check_token_saved_use_case.dart';
 import '../../../view_model_common.dart';
 
-abstract class OrganizationViewModel extends ViewModelCommon {
+abstract class ConfigViewModel extends ViewModelCommon {
   /// return true if update was OK, false if there was an error.
-  Future<bool> updateOrganization(Organization organization);
+  Future<bool> updateConfig(Config config);
 }
 
-class OrganizationViewModelImpl extends OrganizationViewModel {
+class ConfigViewModelImpl extends ConfigViewModel {
   final CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
-  final OrganizationUseCase organizationUseCase = getIt<OrganizationUseCase>();
+  final ConfigUseCase configUseCase = getIt<ConfigUseCase>();
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished); 
@@ -29,10 +29,10 @@ class OrganizationViewModelImpl extends OrganizationViewModel {
   }
 
   @override
-  Future<bool> updateOrganization(Organization organization) async {
+  Future<bool> updateConfig(Config config) async {
     viewState.value = ViewState.isLoading;
 
-    final result = await organizationUseCase.updateOrganization(organization);
+    final result = await configUseCase.updateConfig(config);
 
     switch (result) {
       case Ok<void>():

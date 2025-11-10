@@ -12,6 +12,7 @@ abstract class EventUseCase {
   Future<Result<void>> removeEvent(Event event);
   Future<Result<void>> prepareAgendaDays(Event event);
   Future<Result<void>> removeTrack(String trackUID, String eventUID);
+  Future<Result<void>> updateConfig(Config config);
 }
 
 class EventUseCaseImp implements EventUseCase {
@@ -56,6 +57,12 @@ class EventUseCaseImp implements EventUseCase {
         );
       }
       return await repository.saveAgendaDays(days, event.uid,overrideAgendaDays: true);
+    }else if(startDate != null){
+      var date = DateFormat(
+        'yyyy-MM-dd',
+      ).format(startDate);
+      final agendaDayToAdd = AgendaDay(uid: date, date: date, eventsUID: [event.uid].toList());
+      return await repository.saveAgendaDays([agendaDayToAdd], event.uid,overrideAgendaDays: true);
     } else {
       return Result.error(GithubException("Invalid date format"));
     }
@@ -69,5 +76,10 @@ class EventUseCaseImp implements EventUseCase {
   @override
   Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
     return await repository.removeTrack(trackUID, eventUID);
+  }
+
+  @override
+  Future<Result<void>> updateConfig(Config config) async {
+    return await repository.saveConfig(config);
   }
 }

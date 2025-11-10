@@ -72,7 +72,7 @@ class DataUpdate {
       await _addSpeaker(item, dataLoader, dataUpdateInfo, parentId);
     } else if (item is Sponsor) {
       await _addSponsor(item, dataLoader, dataUpdateInfo, parentId);
-    } else if (item is Organization) {
+    } else if (item is Config) {
       await _addOrganization(item, dataLoader, dataUpdateInfo, parentId);
     } else {
       throw Exception("Unsupported item type");
@@ -409,13 +409,13 @@ class DataUpdate {
   }
 
   static Future<void> _addOrganization(
-    Organization organization,
+    Config config,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfom,
     String? parentId,
   ) async {
-    await dataUpdateInfo.updateOrganization(organization);
-    debugPrint("Organization ${organization.organizationName} added.");
+    await dataUpdateInfo.updateOrganization(config);
+    debugPrint("Organization ${config.configName} added.");
   }
 
   static Future<void> _addSponsors(

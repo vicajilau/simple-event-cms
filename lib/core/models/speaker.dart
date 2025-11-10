@@ -24,8 +24,8 @@ class Speaker extends GitHubModel {
     required this.image,
     required this.social,
     required this.eventUIDS,
-    super.pathUrl = PathsGithub.speakerPath,
-    super.updateMessage = PathsGithub.speakerUpdateMessage,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   factory Speaker.fromJson(Map<String, dynamic> json) => Speaker(
@@ -35,7 +35,8 @@ class Speaker extends GitHubModel {
     image: json["image"],
     eventUIDS: (json['eventUIDS'] as List<dynamic>)
         .map<String>((eventUID) => eventUID['UID'].toString())
-        .toSet().toList(),
+        .toSet()
+        .toList(),
     social: Social.fromJson(json["social"]),
   );
 

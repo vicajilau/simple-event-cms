@@ -152,9 +152,9 @@
   "enterGithubTokenTitle": "Token d'accés",
   "availablesEventsTitle": "Esdeveniments Disponibles",
   "availablesEventsText": "Explora els pròxims esdeveniments i \n troba alguna cosa que t'interessi",
-  "organization": "Organització",
-  "organizationName": "Nom de l'Organització",
-  "organizationNameHint": "Introdueix el nom de l'organització",
+  "config": "Organització",
+  "configName": "Nom de l'Organització",
+  "configNameHint": "Introdueix el nom de l'organització",
   "githubUser": "Usuari de GitHub",
   "githubUserHint": "Introdueix l'usuari de GitHub",
   "branch": "Branca",
@@ -170,9 +170,19 @@
   "deleteSponsorMessage": "N'estàs segur, que vols eliminar el patrocinador?",
   "deleteEventTitle": "Eliminar esdeveniment",
   "deleteEventMessage": "Estàs segur que vols eliminar aquest esdeveniment? \n Això esborrarà les sessions associades a l'esdeveniment.",
-  "deleteSpeakerTitle": "Eliminar ponent",
-  "deleteSpeakerMessage": "N'estàs segur, que vols eliminar el ponent?",
   "eventSelection": "Selecció d'esdeveniment",
   "selectEvent": "Selecciona un esdeveniment",
-  "selectEventHint": "Selecciona un esdeveniment per començar"
+  "addEvent": "Afegir Esdeveniment",
+  "selectEventHint": "Selecciona un esdeveniment per començar",
+  "deleteSpeaker": "Eliminar ponent",
+  "confirmDeleteSpeaker": "N'estàs segur que vols eliminar el ponent {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Acceptar"
 }

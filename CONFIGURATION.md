@@ -18,7 +18,7 @@ events/
 
 ## 🔧 Configuration Files
 
-### 1. Site Configuration (`events/2025/config/events.json`)
+### 1. Site Configuration (`events/githubItem/githubItem.json`)
 
 Main event configuration including basic information, dates, venue, and theming:
 
@@ -178,11 +178,11 @@ Common sponsor types:
 ### Step 1: Create Your Event Year
 
 1. Copy the `events/2025/` directory to `events/YYYY/` (your event year)
-2. Update the `year` field in `config/events.json`
+2. Update the `year` field in `githubItem/githubItem.json`
 
 ### Step 2: Configure Basic Information
 
-Edit `events/YYYY/config/events.json`:
+Edit `events/YYYY/githubItem/githubItem.json`:
 
 ```json
 {

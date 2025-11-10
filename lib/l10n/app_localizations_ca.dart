@@ -486,13 +486,13 @@ class AppLocalizationsCa extends AppLocalizations {
       'Explora els pròxims esdeveniments i \n troba alguna cosa que t\'interessi';
 
   @override
-  String get organization => 'Organització';
+  String get config => 'Organització';
 
   @override
-  String get organizationName => 'Nom de l\'Organització';
+  String get configName => 'Nom de l\'Organització';
 
   @override
-  String get organizationNameHint => 'Introdueix el nom de l\'organització';
+  String get configNameHint => 'Introdueix el nom de l\'organització';
 
   @override
   String get githubUser => 'Usuari de GitHub';
@@ -526,5 +526,19 @@ class AppLocalizationsCa extends AppLocalizations {
       'Error en obtenir les dades, si us plau, torna a intentar-ho més tard';
 
   @override
+  String get addEvent => 'Afegir Esdeveniment';
+
+  @override
   String get createSpeaker => 'Crear Ponent';
+
+  @override
+  String get deleteSpeaker => 'Eliminar ponent';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'N\'estàs segur que vols eliminar el ponent $speakerName?';
+  }
+
+  @override
+  String get accept => 'Acceptar';
 }

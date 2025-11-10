@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/di/organization_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
@@ -30,7 +30,7 @@ class EventCollectionScreen extends StatefulWidget {
 class _EventCollectionScreenState extends State<EventCollectionScreen> {
   int _titleTapCount = 0;
   final EventCollectionViewModel viewmodel = getIt<EventCollectionViewModel>();
-  String? organizationName;
+  String? configName;
   bool _isLoading = true;
   String? _errorMessage;
   final health = getIt<CheckOrg>();
@@ -45,10 +45,10 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     try {
       await viewmodel.setup();
       if (mounted) {
-        final org = getIt<Organization>();
+        final org = getIt<Config>();
         final health = getIt<CheckOrg>();
         setState(() {
-          organizationName = health.hasError ? '' : org.organizationName;
+          configName = health.hasError ? '' : org.configName;
           _isLoading = false;
         });
       }
@@ -75,7 +75,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
     final location = AppLocalizations.of(context)!;
     final bool hasOrgError =
         getIt<CheckOrg>().hasError ||
-        (organizationName == null || organizationName!.isEmpty);
+        (configName == null || configName!.isEmpty);
 
     if (_isLoading) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
@@ -124,7 +124,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               final location = AppLocalizations.of(context)!;
               final bool hasOrgError =
                   getIt<CheckOrg>().hasError ||
-                  (organizationName == null || organizationName!.isEmpty);
+                  (configName == null || configName!.isEmpty);
 
               if (hasOrgError) {
                 // in case of error, always go through AdminLoginScreen
@@ -137,7 +137,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         // will run only if login is successful
                         if (context.mounted) {
                           await AppRouter.router.push(
-                            AppRouter.organizationFormPath,
+                            AppRouter.configFormPath,
                             extra: {'forceFix': true},
                           );
 
@@ -147,7 +147,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           await viewmodel.setup();
                           await _loadConfiguration();
 
-                          // will do setup again to refresh organizationName
+                          // will do setup again to refresh configName
                           await viewmodel.setup();
                           await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
                         }
@@ -191,8 +191,8 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     );
                     if (confirm == true) {
                       (viewmodel as EventCollectionViewModelImp)
-                          .lastEventsFetchTime =
-                      null;
+                              .lastEventsFetchTime =
+                          null;
                       await SecureInfo.removeGithubKey();
                       await viewmodel.loadEvents();
                     }
@@ -220,9 +220,13 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   color: Colors.blue,
                 ), // Your desired icon
                 const SizedBox(width: 8), // Spacing between icon and title
-                Text(
-                  hasOrgError ? '' : (organizationName ?? ''),
-                  style: const TextStyle(color: Colors.black, fontSize: 15),
+                Flexible(
+                  child: Text(
+                    hasOrgError ? '' : (configName ?? ''),
+                    style: const TextStyle(color: Colors.black, fontSize: 15),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 ),
               ],
             ),
@@ -367,28 +371,34 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               return SingleChildScrollView(
                 child: Column(
                   children: [
-                    _buildAddEventButton(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 8.0,
+                      ),
+                      child: _buildAddEventButtonRow(),
+                    ),
                     GridView.builder(
                       shrinkWrap: true, // Important for nesting in a Column
                       physics:
                           const NeverScrollableScrollPhysics(), // Important to avoid nested scrolling conflicts
                       padding: const EdgeInsets.fromLTRB(8.0, 20.0, 8.0, 20.0),
                       itemCount: eventsToShow.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent:
-                                460.0, // Adjust this value as needed
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
-                            childAspectRatio:
-                                3 /
-                                2, // Adjust aspect ratio for better appearance
-                          ),
+                      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                        maxCrossAxisExtent: 460.0,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                        childAspectRatio:
+                            (MediaQuery.of(context).size.width < 600)
+                            ? (3 / 2.2)
+                            : (3 / 2),
+                      ),
                       itemBuilder: (BuildContext context, int index) {
                         final item = eventsToShow[index];
                         final bool isUpcoming = item.uid == upcomingEvent?.uid;
                         return FutureBuilder<bool>(
                           future: viewmodel.checkToken(),
+                          // Optimization: consider moving this FutureBuilder outside the GridView if checkToken doesn't depend on the item
                           builder: (context, snapshot) {
                             final bool canDismiss = snapshot.data ?? false;
                             return Column(
@@ -437,17 +447,15 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 return FloatingActionButton(
                   heroTag: 'editOrganizationBtn', // Unique heroTag
                   onPressed: () async {
-                    Organization? organizationUpdated =
-                        await AppRouter.router.push(
-                              AppRouter.organizationFormPath,
-                            )
-                            as Organization?;
+                    Config? configUpdated =
+                        await AppRouter.router.push(AppRouter.configFormPath)
+                            as Config?;
 
-                    if (organizationUpdated != null) {
-                      setOrganization(organizationUpdated);
+                    if (configUpdated != null) {
+                      setOrganization(configUpdated);
 
                       setState(() {
-                        organizationName = organizationUpdated.organizationName;
+                        configName = configUpdated.configName;
                       });
                     }
                   },
@@ -466,6 +474,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   Widget _buildAddEventButton() {
     var location = AppLocalizations.of(context)!;
+    // This view is for mobile screens
     return FutureBuilder<bool>(
       future: viewmodel.checkToken(),
       builder: (context, snapshot) {
@@ -510,20 +519,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () async {
-                          final Event? newEvent = await AppRouter.router.push(
-                            AppRouter.eventFormPath,
-                          );
-                          if (newEvent != null) {
-                            setState(() {
-                              viewmodel.eventsToShow.value.removeWhere(
-                                (event) => event.uid == newEvent.uid,
-                              );
-                              viewmodel.eventsToShow.value.add(newEvent);
-                              viewmodel.addEvent(newEvent);
-                            });
-                          }
-                        },
+                        onPressed: () => _onAddEventPressed(),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
@@ -533,7 +529,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           children: [
                             const Icon(Icons.add, size: 20),
                             const SizedBox(width: 8),
-                            Text('Add Event'),
+                            Text(location.addEvent),
                           ],
                         ),
                       ),
@@ -548,6 +544,96 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         }
       },
     );
+  }
+
+  Widget _buildAddEventButtonRow() {
+    var location = AppLocalizations.of(context)!;
+    return FutureBuilder<bool>(
+      future: viewmodel.checkToken(),
+      builder: (context, snapshot) {
+        if (snapshot.data == true) {
+          return Container(
+            color: const Color(0xFFe5f5f9),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        location.availablesEventsTitle,
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        location.availablesEventsText,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                ElevatedButton(
+                  onPressed: () => _onAddEventPressed(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.add, size: 20),
+                      const SizedBox(width: 8),
+                      Text(location.addEvent),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+
+  void _onAddEventPressed() async {
+    final Event? newEvent = await AppRouter.router.push(
+      AppRouter.eventFormPath,
+    );
+    if (newEvent != null) {
+      setState(() {
+        // This logic is to update an existing event if it was edited
+        // or add a new one if it's completely new.
+        final index = viewmodel.eventsToShow.value.indexWhere(
+          (event) => event.uid == newEvent.uid,
+        );
+        if (index != -1) {
+          // Replace existing event
+          final updatedList = List<Event>.from(viewmodel.eventsToShow.value);
+          updatedList[index] = newEvent;
+          viewmodel.eventsToShow.value = updatedList;
+        } else {
+          // Add new event
+          viewmodel.eventsToShow.value = [
+            ...viewmodel.eventsToShow.value,
+            newEvent,
+          ];
+        }
+        // This should probably be handled inside the viewmodel
+        viewmodel.addEvent(newEvent);
+      });
+    }
   }
 
   Widget _buildEventCard(
@@ -642,7 +728,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       ),
                       child: Center(
                         child: Text(
-                          organizationName.toString(),
+                          configName.toString(),
                           style: Theme.of(context).textTheme.headlineSmall
                               ?.copyWith(fontWeight: FontWeight.bold),
                           overflow: TextOverflow.ellipsis,
@@ -685,61 +771,62 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topRight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  IconButton(
-                    constraints: const BoxConstraints(),
-                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
-                    icon: const Icon(Icons.edit, size: 20),
-                    onPressed: () async {
-                      final Event? eventEdited = await AppRouter.router.push(
-                        AppRouter.eventFormPath,
-                        extra: item.uid,
-                      );
-                      if (eventEdited != null) {
-                        await viewmodel.editEvent(eventEdited);
-                      }
-                    },
-                  ),
-                  if (isAdmin)
+            if (isAdmin)
+              Align(
+                alignment: Alignment.topRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     IconButton(
                       constraints: const BoxConstraints(),
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-                      icon: const Icon(Icons.delete, size: 20),
+                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                      icon: const Icon(Icons.edit, size: 20),
                       onPressed: () async {
-                        final bool? confirm = await showDialog<bool>(
-                          context: context,
-                          builder: (BuildContext context) {
-                            final location = AppLocalizations.of(context)!;
-                            return AlertDialog(
-                              title: Text(location.deleteEventTitle),
-                              content: Text(location.deleteEventMessage),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(false),
-                                  child: Text(location.cancel),
-                                ),
-                                TextButton(
-                                  onPressed: () =>
-                                      Navigator.of(context).pop(true),
-                                  child: Text(location.deleteEventTitle),
-                                ),
-                              ],
-                            );
-                          },
+                        final Event? eventEdited = await AppRouter.router.push(
+                          AppRouter.eventFormPath,
+                          extra: item.uid,
                         );
-                        if (confirm == true) {
-                          await viewmodel.deleteEvent(item);
+                        if (eventEdited != null) {
+                          await viewmodel.editEvent(eventEdited);
                         }
                       },
                     ),
-                ],
+                    if (isAdmin)
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                        icon: const Icon(Icons.delete, size: 20),
+                        onPressed: () async {
+                          final bool? confirm = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext context) {
+                              final location = AppLocalizations.of(context)!;
+                              return AlertDialog(
+                                title: Text(location.deleteEventTitle),
+                                content: Text(location.deleteEventMessage),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: Text(location.cancel),
+                                  ),
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(true),
+                                    child: Text(location.deleteEventTitle),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                          if (confirm == true) {
+                            await viewmodel.deleteEvent(item);
+                          }
+                        },
+                      ),
+                  ],
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -752,6 +839,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           pathParameters: {
             'eventId': item.uid,
             'location': item.location ?? "",
+            'onlyOneEvent': "false",
           },
         );
       },

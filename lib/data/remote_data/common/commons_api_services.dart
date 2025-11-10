@@ -5,17 +5,23 @@ import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/di/organization_dependency_helper.dart';
+import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
+import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 
 abstract class CommonsServices {
-  Future<List<dynamic>> loadData(String path);
+  Future<Map<String, dynamic>> loadData(String path);
   Future<http.Response> updateData<T extends GitHubModel>(
     List<T> dataOriginal,
     T data,
+    String pathUrl,
+    String commitMessage,
+  );
+  Future<http.Response> updateAllData(
+    GithubJsonModel data,
     String pathUrl,
     String commitMessage,
   );
@@ -45,124 +51,130 @@ abstract class CommonsServices {
 
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
-  Organization get organization => getIt<Organization>();
+  Config get config => getIt<Config>();
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
   /// based on the configuration's base URL
   @override
-Future<List<dynamic>> loadData(String path) async {
-  String content = "";
-  final url = 'events/$path';
+  Future<Map<String, dynamic>> loadData(String path) async {
+    String content = "";
+    final url = 'events/$path';
 
-  final githubService = await SecureInfo.getGithubKey();
-  final github = GitHub(
-    auth: githubService.token == null
-        ? Authentication.anonymous()
-        : Authentication.withToken(githubService.token),
-  );
-  final repositorySlug = RepositorySlug(
-    organization.githubUser,
-    (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
-  );
-
-  late final RepositoryContents res; // <- late
-
-  try {
-    res = await github.repositories.getContents(
-      repositorySlug,
-      url,
-      ref: organization.branch,
+    final githubService = await SecureInfo.getGithubKey();
+    final github = GitHub(
+      auth: githubService.token == null
+          ? Authentication.anonymous()
+          : Authentication.withToken(githubService.token),
     );
-  } catch (e, st) {
-    if (e is GitHubError) {
-      if (e.message == "Not Found") {
-        return <dynamic>[];
-      }
-      if (e is RateLimitHit) {
+    final repositorySlug = RepositorySlug(
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+    );
+
+    late final RepositoryContents res; // <- late
+
+    try {
+      res = await github.repositories.getContents(
+        repositorySlug,
+        url,
+        ref: config.branch,
+      );
+    } catch (e, st) {
+      if (e is GitHubError) {
+        if (e.message == "Not Found") {
+          return <String, dynamic>{};
+        }
+        if (e is RateLimitHit) {
+          throw NetworkException(
+            "GitHub API rate limit exceeded. Please try again later.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        }
+        if (e is InvalidJSON) {
+          throw NetworkException(
+            "Invalid JSON received from GitHub.",
+            cause: e,
+            stackTrace: st,
+            url: url,
+          );
+        }
         throw NetworkException(
-          "GitHub API rate limit exceeded. Please try again later.",
-          cause: e, stackTrace: st, url: url,
+          "An unknown GitHub error occurred, please retry later",
+          cause: e,
+          stackTrace: st,
+          url: url,
         );
       }
-      if (e is InvalidJSON) {
+
+      if (e is RepositoryNotFound) {
+        throw NetworkException("Repository not found.",
+            cause: e, stackTrace: st, url: url);
+      }
+      if (e is UserNotFound) {
+        throw NetworkException("User not found.",
+            cause: e, stackTrace: st, url: url);
+      }
+      if (e is OrganizationNotFound) {
+        throw NetworkException("Organization not found.",
+            cause: e, stackTrace: st, url: url);
+      }
+      if (e is TeamNotFound) {
+        throw NetworkException("Team not found.",
+            cause: e, stackTrace: st, url: url);
+      }
+      if (e is AccessForbidden) {
         throw NetworkException(
-          "Invalid JSON received from GitHub.",
-          cause: e, stackTrace: st, url: url,
+          "Access forbidden. Check your token and permissions.",
+          cause: e,
+          stackTrace: st,
+          url: url,
         );
       }
+      if (e is NotReady) {
+        throw NetworkException(
+          "The requested resource is not ready. Please try again later.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
+      }
+
       throw NetworkException(
-        "An unknown GitHub error occurred, please retry later",
-        cause: e, stackTrace: st, url: url,
+        "Error fetching data, Please retry later",
+        cause: e,
+        stackTrace: st,
+        url: url,
       );
     }
 
-    if (e is RepositoryNotFound) {
-      throw NetworkException("Repository not found.", cause: e, stackTrace: st, url: url);
-    }
-    if (e is UserNotFound) {
-      throw NetworkException("User not found.", cause: e, stackTrace: st, url: url);
-    }
-    if (e is OrganizationNotFound) {
-      throw NetworkException("Organization not found.", cause: e, stackTrace: st, url: url);
-    }
-    if (e is TeamNotFound) {
-      throw NetworkException("Team not found.", cause: e, stackTrace: st, url: url);
-    }
-    if (e is AccessForbidden) {
-      throw NetworkException(
-        "Access forbidden. Check your token and permissions.",
-        cause: e, stackTrace: st, url: url,
-      );
-    }
-    if (e is NotReady) {
-      throw NetworkException(
-        "The requested resource is not ready. Please try again later.",
-        cause: e, stackTrace: st, url: url,
-      );
+    if (res.file == null || res.file!.content == null) {
+      throw NetworkException("Error fetching data, Please retry later");
     }
 
-    throw NetworkException(
-      "Error fetching data, Please retry later",
-      cause: e, stackTrace: st, url: url,
+    final file = utf8.decode(
+      base64.decode(
+        res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
+      ),
     );
-  }
+    content = file;
 
-  if (res.file == null || res.file!.content == null) {
-    throw NetworkException("Error fetching data, Please retry later");
-  }
-
-  final file = utf8.decode(
-    base64.decode(
-      res.file!.content!.replaceAll("\n", "").replaceAll("\\n", ""),
-    ),
-  );
-  content = file;
-
-  try {
-    final decodedContent = json.decode(content);
-    if (decodedContent is List) return decodedContent;
-
-    if (decodedContent is Map && decodedContent.containsKey('UID')) {
-      return <dynamic>[decodedContent];
+    try {
+      final decodedContent = json.decode(content);
+      return decodedContent;
+    } catch (e, st) {
+      if (e.toString().contains("No element")) {
+        return <String, dynamic>{};
+      }
+      throw JsonDecodeException(
+        "Error fetching data, Please retry later",
+        cause: e,
+        stackTrace: st,
+      );
     }
-
-    if (decodedContent is Map && decodedContent.values.first is List) {
-      return decodedContent.values.first as List<dynamic>;
-    }
-
-    throw JsonDecodeException("Error fetching data, Please retry later");
-  } catch (e, st) {
-    if (e.toString().contains("No element")) {
-      return <dynamic>[];
-    }
-    throw JsonDecodeException(
-      "Error fetching data, Please retry later",
-      cause: e, stackTrace: st,
-    );
   }
-}
-  
 
   /// Generic function to update or create data on GitHub.
   /// Returns an http.Response for consistency.
@@ -174,8 +186,8 @@ Future<List<dynamic>> loadData(String path) async {
     String commitMessage,
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -202,14 +214,14 @@ Future<List<dynamic>> loadData(String path) async {
     );
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
-    String branch = organization.branch; // Default to 'main' if not specified
+    String branch = config.branch; // Default to 'main' if not specified
     try {
       // 1. GET THE CURRENT FILE CONTENT TO GET ITS SHA
       // This is mandatory for updates.
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -303,9 +315,8 @@ Future<List<dynamic>> loadData(String path) async {
     String pathUrl,
     String commitMessage,
   ) async {
-    final Organization orgToUse = (data is Organization)
-        ? data as Organization
-        : organization;
+    final Config orgToUse =
+        (data is Config) ? data as Config : config;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
@@ -478,14 +489,14 @@ Future<List<dynamic>> loadData(String path) async {
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
-        organization.githubUser,
+        config.githubUser,
         (await SecureInfo.getGithubKey()).projectName ??
-            organization.projectName,
+            config.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
       if (currentSha == null) throw Exception("File exists but SHA is null.");
@@ -515,7 +526,7 @@ Future<List<dynamic>> loadData(String path) async {
     var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
-    String branch = organization.branch; // Default to 'main' if not specified
+    String branch = config.branch; // Default to 'main' if not specified
     // 4. PREPARE THE REQUEST BODY
     final requestBody = {
       'message': commitMessage,
@@ -524,8 +535,8 @@ Future<List<dynamic>> loadData(String path) async {
       'branch': branch,
     };
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
@@ -583,8 +594,8 @@ Future<List<dynamic>> loadData(String path) async {
     int retries = 0,
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -595,7 +606,7 @@ Future<List<dynamic>> loadData(String path) async {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = organization.branch;
+    String branch = config.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
     final dataInJsonString = json.encode(
@@ -609,7 +620,7 @@ Future<List<dynamic>> loadData(String path) async {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -715,8 +726,8 @@ Future<List<dynamic>> loadData(String path) async {
     int retries = 0,
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
-      organization.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? organization.projectName,
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     githubService = await SecureInfo.getGithubKey();
     if (githubService.token == null) {
@@ -727,7 +738,7 @@ Future<List<dynamic>> loadData(String path) async {
     var github = GitHub(auth: Authentication.withToken(githubService.token));
 
     String? currentSha;
-    String branch = organization.branch;
+    String branch = config.branch;
 
     var dataToMerge = dataOriginal.toList();
     dataToMerge.removeWhere((item) => dataToRemove.contains(item));
@@ -744,7 +755,7 @@ Future<List<dynamic>> loadData(String path) async {
       final contents = await github.repositories.getContents(
         repositorySlug,
         pathUrl,
-        ref: organization.branch,
+        ref: config.branch,
       );
       currentSha = contents.file?.sha;
 
@@ -814,6 +825,133 @@ Future<List<dynamic>> loadData(String path) async {
         return removeDataList(
           dataOriginal,
           dataToRemove,
+          pathUrl,
+          commitMessage,
+          retries: retries + 1,
+        );
+      }
+      throw NetworkException(
+        "Failed to update data at $pathUrl after multiple retries due to conflicts: ${response.body}",
+      );
+    } else if (response.statusCode != 200) {
+      throw NetworkException(
+        "Failed to update data at $pathUrl: ${response.body}",
+      );
+    }
+    // After a successful write operation to GitHub, there can be a small delay
+    // before the change is propagated and visible via the API for subsequent reads.
+    // This function polls the file content until it matches the content we just wrote.
+    await _waitForContentUpdate(
+      github,
+      repositorySlug,
+      pathUrl,
+      branch,
+      base64Content,
+    );
+    return response;
+  }
+
+  @override
+  Future<http.Response> updateAllData(
+    GithubJsonModel data,
+    String pathUrl,
+    String commitMessage, {
+    int retries = 0,
+  }) async {
+    RepositorySlug repositorySlug = RepositorySlug(
+      config.githubUser,
+      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+    );
+    githubService = await SecureInfo.getGithubKey();
+    if (githubService.token == null) {
+      throw Exception("GitHub token is not available.");
+    }
+
+    // Initialize GitHub client
+    var github = GitHub(auth: Authentication.withToken(githubService.token));
+
+    String? currentSha;
+    String branch = config.branch;
+
+    // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
+    final dataInJsonString = json.encode(data.toJson());
+    var base64Content = base64.encode(utf8.encode(dataInJsonString));
+
+    try {
+      // 2. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
+      // This is mandatory for updates.
+      final contents = await github.repositories.getContents(
+        repositorySlug,
+        pathUrl,
+        ref: config.branch,
+      );
+      currentSha = contents.file?.sha;
+
+      if (currentSha == null) {
+        // This case is unlikely if the file exists but helps prevent errors.
+        throw GithubException("Could not get the SHA of the existing file.");
+      }
+    } catch (e, st) {
+      if (e is GitHubError && e.message == "Not Found") {
+        // If the file is not found, create it with the provided list.
+        final response = await github.repositories.createFile(
+          repositorySlug,
+          CreateFile(
+            path: pathUrl,
+            content: base64Content,
+            message: 'feat: create file at $pathUrl',
+            branch: branch,
+          ),
+        );
+        if (response.content != null) {
+          return http.Response(
+            response.content?.content.toString() ?? "",
+            201, // 201 for created
+          );
+        } else {
+          throw GithubException(
+            "Failed to create file contents from $pathUrl: $e",
+            cause: e,
+            stackTrace: st,
+          );
+        }
+      } else {
+        // Any other error while getting the file.
+        throw GithubException(
+          "Failed to get file contents from $pathUrl: $e",
+          cause: e,
+          stackTrace: st,
+        );
+      }
+    }
+
+    // 3. PREPARE THE REQUEST BODY FOR THE GITHUB API
+    // The body requires the message, content, and the sha for updates.
+    final requestBody = <String, String>{
+      'message': commitMessage,
+      'content': base64Content,
+      'branch': branch,
+      'sha': currentSha,
+    };
+
+    // 4. BUILD THE API URL AND MAKE THE PUT REQUEST
+    final apiUrl =
+        'https://api.github.com/repos/${repositorySlug.owner}/${repositorySlug.name}/contents/$pathUrl?ref=$branch';
+
+    final response = await github.client.put(
+      Uri.parse(apiUrl),
+      headers: {
+        "Authorization": 'Bearer ${githubService.token}',
+        "Accept": "application/vnd.github.v3+json",
+      },
+      body: json.encode(requestBody),
+    );
+
+    if (response.statusCode == 409) {
+      if (retries < 5) {
+        // Retry logic for conflicts, up to 5 times.
+        return updateAllData(
+          data,
           pathUrl,
           commitMessage,
           retries: retries + 1,

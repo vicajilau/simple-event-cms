@@ -141,9 +141,9 @@
   "silverSponsor": "Patrocinador Prata",
   "bronzeSponsor": "Patrocinador Bronce",
   "updateButton": "Actualizar",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
-  "roomNameHint": "Room name",
+  "addButton": "Engadir",
+  "addRoomTitle": "Engadir sala",
+  "roomNameHint": "Nome da sala",
   "formError": "Hai erros no formulario",
   "cancelButton": "Cancelar",
   "cancel": "Cancelar",
@@ -152,11 +152,11 @@
   "logout": "Pechar sesión",
   "enterGithubTokenTitle": "Token de acceso",
   "tokenHintLabel": "Introduce o teu token de GitHub...",
-  "availablesEventsTitle": "Eventos Disponibles",
+  "availablesEventsTitle": "Eventos Dispoñibles",
   "availablesEventsText": "Explorar a los próximos eventos y \n encuentra algo que te interese",
-  "organization": "Organización",
-  "organizationName": "Nome da Organización",
-  "organizationNameHint": "Introduce o nome da organización",
+  "config": "Organización",
+  "configName": "Nome da Organización",
+  "configNameHint": "Introduce o nome da organización",
   "githubUser": "Usuario de GitHub",
   "githubUserHint": "Introduce o usuario de GitHub",
   "branch": "Rama",
@@ -166,6 +166,18 @@
   "addSession": "Engadir sesión",
   "addSpeaker": "Engadir relator",
   "addSponsor": "Engadir patrocinador",
+  "addEvent": "Engadir Evento",
   "retryLater": "Téntao de novo máis tarde",
-  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde"
+  "commonError": "Erro ao obter os datos, por favor, téntao de novo máis tarde",
+  "deleteSpeaker": "Eliminar relator",
+  "confirmDeleteSpeaker": "Estás seguro de que queres eliminar o relator {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Aceptar"
 }

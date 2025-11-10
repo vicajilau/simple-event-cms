@@ -479,13 +479,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Explore upcoming events and\nfind something that interests you';
 
   @override
-  String get organization => 'Organization';
+  String get config => 'Organization';
 
   @override
-  String get organizationName => 'Organization Name';
+  String get configName => 'Organization Name';
 
   @override
-  String get organizationNameHint => 'Enter the organization name';
+  String get configNameHint => 'Enter the config name';
 
   @override
   String get githubUser => 'GitHub User';
@@ -518,5 +518,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get commonError => 'Error fetching data, Please retry later';
 
   @override
+  String get addEvent => 'Add Event';
+
+  @override
   String get createSpeaker => 'Create Speaker';
+
+  @override
+  String get deleteSpeaker => 'Delete speaker';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Are you sure you want to delete the speaker $speakerName?';
+  }
+
+  @override
+  String get accept => 'Accept';
 }
