@@ -1,7 +1,4 @@
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/models/speaker.dart';
-import 'package:sec/core/models/sponsor.dart';
-import 'agenda.dart';
 
 /// Main configuration class for the event_collection site
 /// Contains all the essential information needed to configure and display an event_collection
