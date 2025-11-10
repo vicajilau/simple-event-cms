@@ -230,7 +230,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                                 extra: args,
                                                               );
                                                           if (updated != null) {
-                                                            widget.viewmodel
+                                                            await widget.viewmodel
                                                                 .editSpeaker(
                                                                   updated,
                                                                   widget
@@ -243,7 +243,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                       IconWidget(
                                                         icon: Icons
                                                             .delete_outlined,
-                                                        onTap: () => widget
+                                                        onTap: () async => await widget
                                                             .viewmodel
                                                             .removeSpeaker(
                                                               speaker.uid,

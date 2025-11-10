@@ -53,15 +53,37 @@ class DataUpdateInfo {
     List<Sponsor>? sponsors,
     bool overrideData = false,
   }) async {
+    final currentEvents = (await dataLoader.loadEvents()).toList(
+      growable: true,
+    );
 
+    final currentAgendaDays = (await dataLoader.loadAllDays()).toList(
+      growable: true,
+    );
+
+    final currentTracks = (await dataLoader.loadAllTracks()).toList(
+      growable: true,
+    );
+
+    final currentSessions = (await dataLoader.loadAllSessions()).toList(
+      growable: true,
+    );
+
+    final currentSpeakers = (await dataLoader.loadSpeakers() ?? []).toList(
+      growable: true,
+    );
+
+    final currentSponsors = (await dataLoader.loadSponsors()).toList(
+      growable: true,
+    );
     if (overrideData) {
       final allData = GithubJsonModel(
-        events: events?.toList() ?? [],
-        agendadays: agendaDays?.toList() ?? [],
-        tracks: tracks?.toList() ?? [],
-        sessions: sessions?.toList() ?? [],
-        speakers: speakers?.toList() ?? [],
-        sponsors: sponsors?.toList() ?? [],
+        events: events?.toList() ?? currentEvents,
+        agendadays: agendaDays?.toList() ?? currentAgendaDays,
+        tracks: tracks?.toList() ?? currentTracks,
+        sessions: sessions?.toList() ?? currentSessions,
+        speakers: speakers?.toList() ?? currentSpeakers,
+        sponsors: sponsors?.toList() ?? currentSponsors,
       );
 
       await _commitDataUpdate(
@@ -72,34 +94,27 @@ class DataUpdateInfo {
         sessions: sessions,
         speakers: speakers,
         sponsors: sponsors,
-        overrideData: true
+        overrideData: true,
       );
     } else {
-      final currentEvents = (await dataLoader.loadEvents())
-          .toList(growable: true);
-
-      final currentAgendaDays = (await dataLoader.loadAllDays())
-          .toList(growable: true);
-
-      final currentTracks = (await dataLoader.loadAllTracks())
-          .toList(growable: true);
-
-      final currentSessions = (await dataLoader.loadAllSessions())
-          .toList(growable: true);
-
-      final currentSpeakers = (await dataLoader.loadSpeakers() ?? [])
-          .toList(growable: true);
-
-      final currentSponsors = (await dataLoader.loadSponsors())
-          .toList(growable: true);
-
-
-      currentEvents.removeWhere((event) => events?.map((e) => e.uid).contains(event.uid) == true);
-      currentAgendaDays.removeWhere((day) => agendaDays?.map((d) => d.uid).contains(day.uid) == true);
-      currentTracks.removeWhere((track) => tracks?.map((t) => t.uid).contains(track.uid) == true);
-      currentSessions.removeWhere((session) => sessions?.map((s) => s.uid).contains(session.uid) == true);
-      currentSpeakers.removeWhere((speaker) => speakers?.map((s) => s.uid).contains(speaker.uid) == true);
-      currentSponsors.removeWhere((sponsor) => sponsors?.map((s) => s.uid).contains(sponsor.uid) == true);
+      currentEvents.removeWhere(
+        (event) => events?.map((e) => e.uid).contains(event.uid) == true,
+      );
+      currentAgendaDays.removeWhere(
+        (day) => agendaDays?.map((d) => d.uid).contains(day.uid) == true,
+      );
+      currentTracks.removeWhere(
+        (track) => tracks?.map((t) => t.uid).contains(track.uid) == true,
+      );
+      currentSessions.removeWhere(
+        (session) => sessions?.map((s) => s.uid).contains(session.uid) == true,
+      );
+      currentSpeakers.removeWhere(
+        (speaker) => speakers?.map((s) => s.uid).contains(speaker.uid) == true,
+      );
+      currentSponsors.removeWhere(
+        (sponsor) => sponsors?.map((s) => s.uid).contains(sponsor.uid) == true,
+      );
 
       currentEvents.addAll(events ?? []);
       currentTracks.addAll(tracks ?? []);
@@ -249,7 +264,9 @@ class DataUpdateInfo {
   }
 
   Future<void> removeSpeaker(String speakerId, String eventUID) async {
-    var speakersOriginal = await dataLoader.loadSpeakers() ?? [];
+    var speakersOriginal = (await dataLoader.loadSpeakers() ?? []).toList(
+      growable: true,
+    );
     if (speakersOriginal.isNotEmpty) {
       var speakerToRemoveIndex = speakersOriginal.indexWhere(
         (speaker) => speaker.uid == speakerId,
@@ -258,7 +275,7 @@ class DataUpdateInfo {
       if (speakerToRemoveIndex != -1) {
         var speakerToRemove = speakersOriginal[speakerToRemoveIndex];
         if (speakerToRemove.eventUIDS.length <= 1) {
-          speakersOriginal.removeAt(speakerToRemoveIndex);
+          speakersOriginal.remove(speakerToRemove);
         } else {
           speakerToRemove.eventUIDS.remove(eventUID);
         }
@@ -279,7 +296,7 @@ class DataUpdateInfo {
     var sessions = await dataLoader.loadAllSessions();
     var speakers = await dataLoader.loadSpeakers() ?? [];
     var days = await dataLoader.loadAllDays();
-    if(eventId == config.eventForcedToViewUID){
+    if (eventId == config.eventForcedToViewUID) {
       config.eventForcedToViewUID = null;
       await updateOrganization(config);
     }
@@ -352,19 +369,35 @@ class DataUpdateInfo {
     final firstItem = itemsToKeep.isNotEmpty ? itemsToKeep.first : null;
 
     if (firstItem is Event) {
-      await _updateAllEventData(events: itemsToKeep.cast<Event>().toList());
+      await _updateAllEventData(
+        events: itemsToKeep.cast<Event>().toList(),
+        overrideData: true,
+      );
     } else if (firstItem is AgendaDay) {
       await _updateAllEventData(
         agendaDays: itemsToKeep.cast<AgendaDay>().toList(),
+        overrideData: true,
       );
     } else if (firstItem is Track) {
-      await _updateAllEventData(tracks: itemsToKeep.cast<Track>().toList());
+      await _updateAllEventData(
+        tracks: itemsToKeep.cast<Track>().toList(),
+        overrideData: true,
+      );
     } else if (firstItem is Session) {
-      await _updateAllEventData(sessions: itemsToKeep.cast<Session>().toList());
+      await _updateAllEventData(
+        sessions: itemsToKeep.cast<Session>().toList(),
+        overrideData: true,
+      );
     } else if (firstItem is Speaker) {
-      await _updateAllEventData(speakers: itemsToKeep.cast<Speaker>().toList());
+      await _updateAllEventData(
+        speakers: itemsToKeep.cast<Speaker>().toList(),
+        overrideData: true,
+      );
     } else if (firstItem is Sponsor) {
-      await _updateAllEventData(sponsors: itemsToKeep.cast<Sponsor>().toList());
+      await _updateAllEventData(
+        sponsors: itemsToKeep.cast<Sponsor>().toList(),
+        overrideData: true,
+      );
     } else if (itemsToKeep.isEmpty) {
       debugPrint(
         "List to keep is empty, cannot determine type. No action taken.",
