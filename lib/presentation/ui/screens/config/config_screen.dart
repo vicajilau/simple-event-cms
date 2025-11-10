@@ -4,6 +4,8 @@ import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/config/config_viewmodel.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/presentation/ui/widgets/section_input_form.dart';
 
@@ -66,7 +68,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
     final location = AppLocalizations.of(context)!;
     final orgHealth = getIt<CheckOrg>();
     final bool hideCancel = orgHealth.hasError;
-    final viewModel = getIt<OrganizationViewModel>();
+    final viewModel = getIt<ConfigViewModel>();
 
     return FormScreenWrapper(
       pageTitle: location.config,
@@ -200,7 +202,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
                         branch: _branchController.text,
                       );
 
-                      final ok = await viewModel.updateOrganization(updated);
+                      final ok = await viewModel.updateConfig(updated);
                       if (!ok) {
                         if (!context.mounted) return;
                         showDialog(
