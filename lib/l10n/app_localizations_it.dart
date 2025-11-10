@@ -487,13 +487,13 @@ class AppLocalizationsIt extends AppLocalizations {
       'Esplora i prossimi eventi e \n trova qualcosa che ti interessa';
 
   @override
-  String get organization => 'Organizzazione';
+  String get config => 'Organizzazione';
 
   @override
-  String get organizationName => 'Nome dell\'Organizzazione';
+  String get configName => 'Nome dell\'Organizzazione';
 
   @override
-  String get organizationNameHint => 'Inserisci il nome dell\'organizzazione';
+  String get configNameHint => 'Inserisci il nome dell\'organizzazione';
 
   @override
   String get githubUser => 'Utente GitHub';
@@ -526,5 +526,19 @@ class AppLocalizationsIt extends AppLocalizations {
   String get commonError => 'Errore nel recupero dei dati, riprova più tardi';
 
   @override
+  String get addEvent => 'Aggiungi evento';
+
+  @override
   String get createSpeaker => 'Crea Relatore';
+
+  @override
+  String get deleteSpeaker => 'Elimina relatore';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Sei sicuro di voler eliminare il relatore $speakerName?';
+  }
+
+  @override
+  String get accept => 'Accettare';
 }

@@ -155,9 +155,9 @@
   "tokenHintLabel": "Entrez votre jeton GitHub...",
   "availablesEventsTitle": "Événements Disponibles",
   "availablesEventsText": "Explorez les événements à venir et \n trouvez quelque chose qui vous intéresse",
-  "organization": "Organisation",
-  "organizationName": "Nom de l'organisation",
-  "organizationNameHint": "Entrez le nom de l'organisation",
+  "config": "Organisation",
+  "configName": "Nom de l'organisation",
+  "configNameHint": "Entrez le nom de l'organisation",
   "githubUser": "Utilisateur GitHub",
   "githubUserHint": "Entrez l'utilisateur GitHub",
   "branch": "Branche",
@@ -166,7 +166,19 @@
   "addSession": "Ajouter une Session",
   "addSpeaker": "Ajouter un Intervenant",
   "addSponsor": "Ajouter un Sponsor",
+  "addEvent": "Ajouter un événement",
   "commonError": "Erreur lors de la récupération des données, veuillez réessayer plus tard",
   "createSpeaker": "Créer un Intervenant",
-  "retryLater": "Try again later"
+  "retryLater": "Try again later",
+  "deleteSpeaker": "Supprimer l'intervenant",
+  "confirmDeleteSpeaker": "Êtes-vous sûr de vouloir supprimer l'intervenant {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accepter"
 }

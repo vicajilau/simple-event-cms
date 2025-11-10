@@ -147,10 +147,7 @@ class Track {
 
    Edit the JSON files in the `2025/` directory:
 
-   - `config/events.json` - Event information
-   - `config/agenda.json` - Event schedule
-   - `speakers/speakers.json` - Speaker profiles
-   - `sponsors/sponsors.json` - Sponsor information
+   - `githubItem/githubItem.json` - github item information
 
 5. **Run the app**
 
@@ -254,7 +251,7 @@ For complete configuration instructions including JSON structure, examples, and 
 
 #### Quick Start
 
-1. **Edit event basic info** in `events/2025/config/events.json`
+1. **Edit event basic info** in `events/2025/config/config.json`
 2. **Add your speakers** in `events/2025/speakers/speakers.json`
 3. **Configure agenda** in `events/2025/config/agenda.json`
 4. **Add sponsors** in `events/2025/sponsors/sponsors.json`

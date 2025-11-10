@@ -20,6 +20,7 @@
   "eventDates": "Date dell'Evento",
   "venue": "Luogo",
   "description": "Descrizione",
+  "addEvent": "Aggiungi evento",
   "close": "Chiudi",
   "twitter": "Twitter/X",
   "nextEvent": "Prossimo evento...",
@@ -40,6 +41,17 @@
   "deleteEventTitle": "Elimina evento",
   "deleteEventMessage": "Sei sicuro di voler eliminare questo evento? \n Questo cancellerà le sessioni associate all'evento.",
   "changeLanguage": "Cambia Lingua",
+  "deleteSpeaker": "Elimina relatore",
+  "confirmDeleteSpeaker": "Sei sicuro di voler eliminare il relatore {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accettare",
   "speakerForm": "Modulo del Relatore",
   "nameLabel": "Nome*",
   "nameErrorHint": "Per favore inserisci il tuo nome",
@@ -155,9 +167,9 @@
   "enterGithubTokenTitle": "Token di accesso",
   "availablesEventsTitle": "Eventi disponibili",
   "availablesEventsText": "Esplora i prossimi eventi e \n trova qualcosa che ti interessa",
-  "organization": "Organizzazione",
-  "organizationName": "Nome dell'Organizzazione",
-  "organizationNameHint": "Inserisci il nome dell'organizzazione",
+  "config": "Organizzazione",
+  "configName": "Nome dell'Organizzazione",
+  "configNameHint": "Inserisci il nome dell'organizzazione",
   "githubUser": "Utente GitHub",
   "githubUserHint": "Inserisci l'utente GitHub",
   "branch": "Branch",

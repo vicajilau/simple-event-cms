@@ -21,13 +21,14 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
   Future<Event?> getEventById(String eventId);
   Future<Result<void>> editEvent(Event event);
   Future<void> deleteEvent(Event event);
+  Future<void> updateConfig(Config config);
 }
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
-  final organization = getIt<Organization>();
+  final config = getIt<Config>();
 
   @override
   final ValueNotifier<List<Event>> eventsToShow = ValueNotifier<List<Event>>(
@@ -49,7 +50,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   @override
   Future<void> setup([Object? argument]) async {
     await SecureInfo.saveGithubKey(
-      GithubData(projectName: organization.projectName),
+      GithubData(projectName: config.projectName),
     );
     await loadEvents();
   }
@@ -67,7 +68,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     switch (eventsResult) {
       case Ok<List<Event>>():
         lastEventsFetchTime = DateTime.now();
-        _allEvents = eventsResult.value;
+        _allEvents = eventsResult.value.toList(growable: true);
         _updateEventsToShow();
         viewState.value = ViewState.loadFinished;
         await _handleSingleEventNavigation();
@@ -220,7 +221,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    var positionEventToView = eventsToShow.value.indexWhere((event) => event.openAtTheBeggining == true);
+    var positionEventToView = eventsToShow.value.indexWhere((event) => event.uid == config.eventForcedToViewUID);
     if ((eventsToShow.value.length == 1 ||
         positionEventToView != -1) &&
         isTokenNull &&
@@ -233,14 +234,28 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
        eventToGo = eventsToShow.value.firstWhere((event) => event.isVisible == true);
      }
 
-      await AppRouter.router.push(
-        AppRouter.eventDetailPath,
-        extra: {
+      await AppRouter.router.pushNamed(
+        AppRouter.eventDetailName,
+        pathParameters: {
           'eventId': eventToGo.uid,
           'location': eventToGo.location ?? "",
           'onlyOneEvent': "true",
         },
       );
+    }
+  }
+
+  @override
+  Future<void> updateConfig(Config config) async {
+    final result = await useCase.updateConfig(config);
+    switch (result) {
+      case Ok<void>():
+        viewState.value = ViewState.loadFinished;
+        return result.value;
+      case Error():
+        viewState.value = ViewState.error;
+        setErrorKey(result.error);
+        return;
     }
   }
 }

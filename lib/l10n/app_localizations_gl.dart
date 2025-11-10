@@ -448,13 +448,13 @@ class AppLocalizationsGl extends AppLocalizations {
   String get updateButton => 'Actualizar';
 
   @override
-  String get addButton => 'add button';
+  String get addButton => 'Engadir';
 
   @override
-  String get addRoomTitle => 'add room';
+  String get addRoomTitle => 'Engadir sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nome da sala';
 
   @override
   String get formError => 'Hai erros no formulario';
@@ -476,20 +476,20 @@ class AppLocalizationsGl extends AppLocalizations {
   String get enterGithubTokenTitle => 'Token de acceso';
 
   @override
-  String get availablesEventsTitle => 'Eventos Disponibles';
+  String get availablesEventsTitle => 'Eventos Dispoñibles';
 
   @override
   String get availablesEventsText =>
       'Explorar a los próximos eventos y \n encuentra algo que te interese';
 
   @override
-  String get organization => 'Organización';
+  String get config => 'Organización';
 
   @override
-  String get organizationName => 'Nome da Organización';
+  String get configName => 'Nome da Organización';
 
   @override
-  String get organizationNameHint => 'Introduce o nome da organización';
+  String get configNameHint => 'Introduce o nome da organización';
 
   @override
   String get githubUser => 'Usuario de GitHub';
@@ -523,5 +523,19 @@ class AppLocalizationsGl extends AppLocalizations {
       'Erro ao obter os datos, por favor, téntao de novo máis tarde';
 
   @override
+  String get addEvent => 'Engadir Evento';
+
+  @override
   String get createSpeaker => 'Crear Poñente';
+
+  @override
+  String get deleteSpeaker => 'Eliminar relator';
+
+  @override
+  String confirmDeleteSpeaker(String speakerName) {
+    return 'Estás seguro de que queres eliminar o relator $speakerName?';
+  }
+
+  @override
+  String get accept => 'Aceptar';
 }

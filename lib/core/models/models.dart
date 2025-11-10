@@ -4,7 +4,7 @@
 export 'agenda.dart';
 export 'event.dart';
 export 'event_dates.dart';
-export 'organization.dart';
+export 'config.dart';
 export 'session_type.dart';
 export 'speaker.dart';
 export 'sponsor.dart';

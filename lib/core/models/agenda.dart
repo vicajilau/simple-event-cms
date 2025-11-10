@@ -14,8 +14,8 @@ class AgendaDay extends GitHubModel {
     this.trackUids,
     required this.eventsUID,
     this.resolvedTracks, // Allow initialization
-    super.pathUrl = PathsGithub.daysPath,
-    super.updateMessage = PathsGithub.daysUpdateMessage,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   factory AgendaDay.fromJson(Map<String, dynamic> json) {
@@ -56,8 +56,8 @@ class Track extends GitHubModel {
     required this.sessionUids,
     required this.eventUid,
     this.resolvedSessions = const [], // Allow initialization
-    super.pathUrl = PathsGithub.tracksPath,
-    super.updateMessage = PathsGithub.tracksUpdateMessage,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) {
@@ -101,8 +101,8 @@ class Session extends GitHubModel {
     required this.speakerUID,
     required this.eventUID,
     required this.agendaDayUID,
-    super.pathUrl = PathsGithub.sessionsPath,
-    super.updateMessage = PathsGithub.sessionsUpdateMessage,
+    super.pathUrl = PathsGithub.eventPath,
+    super.updateMessage = PathsGithub.eventUpdateMessage,
     this.description,
     required this.type,
   });

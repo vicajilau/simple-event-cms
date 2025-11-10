@@ -41,13 +41,14 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
     var githubService = await SecureInfo.getGithubKey();
+    var config = getIt<Config>();
 
     switch (result) {
       case Ok<List<Event>>():
         notShowReturnArrow.value =
             (result.value.length == 1 ||
                 result.value.indexWhere(
-                      (eventItem) => eventItem.openAtTheBeggining == true,
+                      (eventItem) => eventItem.uid == config.eventForcedToViewUID,
                     ) !=
                     -1) &&
             githubService.token == null;

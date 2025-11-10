@@ -32,8 +32,6 @@
   "github": "GitHub",
   "website": "Webgunea",
   "changeVisibilityTitle": "Ikusgaitasuna Aldatu",
-  "changeVisibilityToHidden": "Aldatu ezkutura",
-  "changeVisibilityToVisible": "Aldatu ikusgaira",
   "openUrl": "URL ireki",
   "deleteEventTitle": "Gertaera ezabatu",
   "deleteEventMessage": "Ziur zaude gertaera hau ezabatu nahi duzula? \n Honek gertaerarekin lotutako saioak ezabatuko ditu.",
@@ -145,9 +143,9 @@
   "silverSponsor": "Zilarrezko Babeslea",
   "bronzeSponsor": "Brontzezko Babeslea",
   "updateButton": "Eguneratu",
-  "addButton": "add button",
-  "addRoomTitle": "add room",
-  "roomNameHint": "Room name",
+  "addButton": "Gehitu",
+  "addRoomTitle": "Gela gehitu",
+  "roomNameHint": "Gela izena",
   "formError": "Formularioan akatsak daude",
   "confirmLogout": "Berretsi saioa ixtea",
   "confirmLogoutMessage": "Ziur zaude saioa itxi nahi duzula?",
@@ -156,9 +154,9 @@
   "enterGithubTokenTitle": "Sarbide-tokena",
   "availablesEventsTitle": "Ekitaldi Eskuragarriak",
   "availablesEventsText": "Arakatu hurrengo ekitaldiak eta \n aurkitu interesatzen zaizun zerbait",
-  "organization": "Antolakuntza",
-  "organizationName": "Antolakuntzaren izena",
-  "organizationNameHint": "Sartu antolakuntzaren izena",
+  "config": "Antolakuntza",
+  "configName": "Antolakuntzaren izena",
+  "configNameHint": "Sartu antolakuntzaren izena",
   "githubUser": "GitHub erabiltzailea",
   "githubUserHint": "Sartu GitHub erabiltzailea",
   "branch": "Adarra",
@@ -167,7 +165,19 @@
   "addSession": "Saioa gehitu",
   "addSpeaker": "Hizlaria gehitu",
   "addSponsor": "Babeslea gehitu",
+  "addEvent": "Gertaera gehitu",
   "retryLater": "Saiatu berriro geroago",
   "commonError": "Errorea datuak eskuratzean, saiatu berriro geroago mesedez",
-  "createSpeaker": "Hizlaria Sortu"
+  "createSpeaker": "Hizlaria Sortu",
+  "deleteSpeaker": "Hizlaria ezabatu",
+  "confirmDeleteSpeaker": "Ziur zaude {speakerName} hizlaria ezabatu nahi duzula?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Onartu"
 }

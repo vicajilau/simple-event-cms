@@ -9,19 +9,19 @@ import 'package:sec/domain/repositories/token_repository.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/event_use_case.dart';
-import 'package:sec/domain/use_cases/organization_use_case.dart';
+import 'package:sec/domain/use_cases/config_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/domain/use_cases/sponsor_use_case.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
-import 'package:sec/presentation/ui/screens/organization/organization_viewmodel.dart';
 // Imports for new ViewModels
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
+import '../../presentation/ui/screens/config/config_viewmodel.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -48,8 +48,8 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<AgendaUseCase>(() => AgendaUseCaseImpl());
   getIt.registerLazySingleton<SpeakerUseCase>(() => SpeakerUseCaseImp());
   getIt.registerLazySingleton<SponsorUseCase>(() => SponsorUseCaseImp());
-  getIt.registerLazySingleton<OrganizationUseCase>(
-    () => OrganizationUseCaseImp(),
+  getIt.registerLazySingleton<ConfigUseCase>(
+    () => ConfigUseCaseImp(),
   );
 
   // Event ViewModel
@@ -57,8 +57,8 @@ Future<void> setupDependencies() async {
     () => EventCollectionViewModelImp(),
   );
   getIt.registerLazySingleton<AgendaViewModel>(() => AgendaViewModelImp());
-  getIt.registerLazySingleton<OrganizationViewModel>(
-    () => OrganizationViewModelImpl(),
+  getIt.registerLazySingleton<ConfigViewModel>(
+    () => ConfigViewModelImpl(),
   );
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());

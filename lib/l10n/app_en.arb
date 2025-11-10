@@ -154,9 +154,9 @@
   "enterGithubTokenTitle": "Access Token",
   "availablesEventsTitle": "Available Events",
   "availablesEventsText": "Explore upcoming events and\nfind something that interests you",
-  "organization": "Organization",
-  "organizationName": "Organization Name",
-  "organizationNameHint": "Enter the organization name",
+  "config": "Organization",
+  "configName": "Organization Name",
+  "configNameHint": "Enter the config name",
   "githubUser": "GitHub User",
   "githubUserHint": "Enter the GitHub user",
   "branch": "Branch",
@@ -167,5 +167,17 @@
   "addSponsor": "Add Sponsor",
   "retryLater": "Please try again later",
   "commonError": "Error fetching data, Please retry later",
-  "createSpeaker": "Create Speaker"
+  "addEvent": "Add Event",
+  "createSpeaker": "Create Speaker",
+  "deleteSpeaker": "Delete speaker",
+  "confirmDeleteSpeaker": "Are you sure you want to delete the speaker {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "accept": "Accept"
 }

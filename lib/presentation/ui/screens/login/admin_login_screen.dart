@@ -18,7 +18,7 @@ class AdminLoginScreen extends StatefulWidget {
 
 class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final Organization organization = getIt<Organization>();
+  final Config config = getIt<Config>();
   final ValueNotifier<String> _token = ValueNotifier('');
 
   final ValueNotifier<bool> _obscureText = ValueNotifier(true);
@@ -37,7 +37,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           await SecureInfo.saveGithubKey(
             GithubData(
               token: github.auth.token.toString(),
-              projectName: organization.projectName,
+              projectName: config.projectName,
             ),
           );
           // Check if there is basic authentication or token

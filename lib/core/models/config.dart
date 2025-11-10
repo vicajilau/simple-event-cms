@@ -1,47 +1,50 @@
-
 import '../config/paths_github.dart';
 import 'github/github_model.dart';
 
-class Organization  extends GitHubModel {
-  final String organizationName;
+class Config extends GitHubModel {
+  final String configName;
   final String primaryColorOrganization;
   final String secondaryColorOrganization;
   final String githubUser;
   final String projectName;
   final String branch;
+  String? eventForcedToViewUID;
 
-  Organization({
+  Config({
     super.uid = "0",
-    required this.organizationName,
+    required this.configName,
     required this.primaryColorOrganization,
     required this.secondaryColorOrganization,
     required this.githubUser,
     required this.projectName,
     required this.branch,
-    super.pathUrl = PathsGithub.organizationPath,
-    super.updateMessage = PathsGithub.organizationUpdateMessage,
+    this.eventForcedToViewUID,
+    super.pathUrl = PathsGithub.configPath,
+    super.updateMessage = PathsGithub.configUpdateMessage,
   });
 
-  factory Organization.fromJson(Map<String, dynamic> json) {
-    return Organization(
-      organizationName: json['organizationName'],
+  factory Config.fromJson(Map<String, dynamic> json) {
+    return Config(
+      configName: json['configName'],
       primaryColorOrganization: json['primaryColorOrganization'],
       secondaryColorOrganization: json['secondaryColorOrganization'],
       githubUser: json['github_user'],
       projectName: json['project_name'],
       branch: json['branch'],
+      eventForcedToViewUID: json['eventForcedToViewUID'],
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'organizationName': organizationName,
+      'configName': configName,
       'primaryColorOrganization': primaryColorOrganization,
       'secondaryColorOrganization': secondaryColorOrganization,
       'github_user': githubUser,
       'project_name': projectName,
       'branch': branch,
+      'eventForcedToViewUID': eventForcedToViewUID,
     };
   }
 }

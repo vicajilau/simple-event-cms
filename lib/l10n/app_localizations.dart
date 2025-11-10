@@ -1034,23 +1034,23 @@ abstract class AppLocalizations {
   /// **'Explore upcoming events and\nfind something that interests you'**
   String get availablesEventsText;
 
-  /// No description provided for @organization.
+  /// No description provided for @config.
   ///
   /// In en, this message translates to:
   /// **'Organization'**
-  String get organization;
+  String get config;
 
-  /// No description provided for @organizationName.
+  /// No description provided for @configName.
   ///
   /// In en, this message translates to:
   /// **'Organization Name'**
-  String get organizationName;
+  String get configName;
 
-  /// No description provided for @organizationNameHint.
+  /// No description provided for @configNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter the organization name'**
-  String get organizationNameHint;
+  /// **'Enter the config name'**
+  String get configNameHint;
 
   /// No description provided for @githubUser.
   ///
@@ -1112,11 +1112,35 @@ abstract class AppLocalizations {
   /// **'Error fetching data, Please retry later'**
   String get commonError;
 
+  /// No description provided for @addEvent.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Event'**
+  String get addEvent;
+
   /// No description provided for @createSpeaker.
   ///
   /// In en, this message translates to:
   /// **'Create Speaker'**
   String get createSpeaker;
+
+  /// No description provided for @deleteSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete speaker'**
+  String get deleteSpeaker;
+
+  /// Confirm speaker deletion
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete the speaker {speakerName}?'**
+  String confirmDeleteSpeaker(String speakerName);
+
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
 }
 
 class _AppLocalizationsDelegate
