@@ -17,6 +17,16 @@
   "speakers": "Intervenants",
   "nextEvent": "Événement à venir...",
   "sponsors": "Sponsors",
+  "deleteSponsorTitle": "Supprimer le sponsor",
+  "confirmDeleteSponsor": "Êtes-vous sûr de vouloir supprimer le sponsor {sponsorName} ?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  },
   "eventInfo": "Informations sur l'Événement",
   "eventDates": "Dates de l'Événement",
   "venue": "Lieu",

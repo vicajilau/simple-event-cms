@@ -136,7 +136,6 @@
   "logoHint": "Insira a URL do logo",
   "logoValidation": "Logo",
   "websiteLabel": "Web*",
-  "websiteHint": "Insira a URL do site",
   "websiteValidation": "Web",
   "mainSponsor": "Patrocinador Principal",
   "goldSponsor": "Patrocinador Ouro",
@@ -151,10 +150,10 @@
   "openByDefaultLabel": "Aberto por padrão",
   "changeVisibilityToVisible": "A partir de agora, o evento será visível para todos",
   "updateButton": "Atualizar",
-  "addButton": "Add Button",
-  "visibilityLabel": "Visibility",
-  "addRoomTitle": "Add Room",
-  "roomNameHint": "Room name",
+  "addButton": "Adicionar",
+  "visibilityLabel": "Visibilidade",
+  "addRoomTitle": "Adicionar Sala",
+  "roomNameHint": "Nome da sala",
   "formError": "Há erros no formulário",
   "cancelButton": "Cancelar",
   "cancel": "Cancelar",
@@ -197,5 +196,15 @@
   "failedToUpdateData": "Falha ao atualizar dados em {pathUrl}: {responseBody}",
   "deleteEventTitle": "Excluir Evento",
   "deleteEventMessage": "Tem certeza de que deseja excluir este evento? \n Isso excluirá as sessões associadas ao evento.",
-  "accept": "Aceitar"
+  "accept": "Aceitar",
+  "deleteSponsorTitle": "Excluir Patrocinador",
+  "confirmDeleteSponsor": "Tem certeza de que deseja excluir o patrocinador {sponsorName}?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -18,6 +18,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get noEventsScheduled => 'Nessun evento programmato';
 
   @override
+  String get accept => 'Accetto';
+
+  @override
   String get loadingSpeakers => 'Caricamento relatori...';
 
   @override
@@ -452,10 +455,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get updateButton => 'Aggiorna';
 
   @override
-  String get addButton => 'Aggiungi pulsante';
+  String get addButton => 'Aggiungi';
 
   @override
-  String get addRoomTitle => 'Aggiungi stanza';
+  String get addRoomTitle => 'Aggiungi sala';
 
   @override
   String get roomNameHint => 'Nome della stanza';
@@ -540,5 +543,10 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get accept => 'Accettare';
+  String get deleteSponsorTitle => 'Elimina Sponsor';
+
+  @override
+  String confirmDeleteSponsor(String sponsorName) {
+    return 'Sei sicuro di voler eliminare lo sponsor $sponsorName?';
+  }
 }

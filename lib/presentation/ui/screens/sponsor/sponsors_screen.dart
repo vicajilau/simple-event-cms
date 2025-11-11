@@ -219,14 +219,48 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                             IconWidget(
                                                               icon: Icons
                                                                   .delete_outlined,
-                                                              onTap: () async {
-                                                                await widget
-                                                                    .viewmodel
-                                                                    .removeSponsor(
-                                                                      sponsor
-                                                                          .uid,
-                                                                    );
-                                                              },
+                                                                    onTap:
+                                                                        () async {
+                                                                      final bool?
+                                                                          shouldDelete =
+                                                                          await showDialog<
+                                                                              bool>(
+                                                                        context:
+                                                                            context,
+                                                                        builder:
+                                                                            (context) {
+                                                                          return AlertDialog(
+                                                                            title: Text(location
+                                                                                .deleteSponsorTitle),
+                                                                            content: Text(location
+                                                                                .confirmDeleteSponsor(sponsor.name)),
+                                                                            actions: [
+                                                                              TextButton(
+                                                                                onPressed:
+                                                                                    () =>
+                                                                                        Navigator.of(context).pop(false),
+                                                                                child: Text(location.cancel),
+                                                                              ),
+                                                                              TextButton(
+                                                                                onPressed:
+                                                                                    () =>
+                                                                                        Navigator.of(context).pop(true),
+                                                                                child: Text(location.accept),
+                                                                              ),
+                                                                            ],
+                                                                          );
+                                                                        },
+                                                                      );
+                                                                      if (shouldDelete ==
+                                                                          true) {
+                                                                        await widget
+                                                                            .viewmodel
+                                                                            .removeSponsor(
+                                                                          sponsor
+                                                                              .uid,
+                                                                        );
+                                                                      }
+                                                                    },
                                                             ),
                                                           ],
                                                         );

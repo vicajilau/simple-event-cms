@@ -15,6 +15,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get retry => 'Tornar a intentar';
 
   @override
+  String get accept => 'Acceptar';
+
+  @override
   String get noEventsScheduled => 'No hi ha esdeveniments programats';
 
   @override
@@ -540,5 +543,10 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
-  String get accept => 'Acceptar';
+  String get deleteSponsorTitle => 'Elimina Sponsor';
+
+  @override
+  String confirmDeleteSponsor(String sponsorName) {
+    return 'Sei sicuro di voler eliminare lo sponsor $sponsorName?';
+  }
 }
