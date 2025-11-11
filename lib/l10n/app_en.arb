@@ -179,7 +179,7 @@
       }
     }
   },
-  "accept": "Accept"
+  "accept": "Accept",
   "deleteSponsorTitle": "Delete Sponsor",
   "confirmDeleteSponsor": "Are you sure you want to delete the sponsor {sponsorName}?",
   "@confirmDeleteSponsor": {
