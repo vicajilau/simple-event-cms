@@ -189,5 +189,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro."
 }

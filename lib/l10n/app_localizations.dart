@@ -1010,12 +1010,6 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancel;
 
-  /// No description provided for @accept.
-  ///
-  /// In en, this message translates to:
-  /// **'Accept'**
-  String get accept;
-
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:
@@ -1142,6 +1136,12 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to delete the speaker {speakerName}?'**
   String confirmDeleteSpeaker(String speakerName);
 
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
+
   /// No description provided for @deleteSponsorTitle.
   ///
   /// In en, this message translates to:
@@ -1153,6 +1153,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you sure you want to delete the sponsor {sponsorName}?'**
   String confirmDeleteSponsor(String sponsorName);
+
+  /// No description provided for @wrongBranch.
+  ///
+  /// In en, this message translates to:
+  /// **'The entered branch does not exist in the repository. Check the branch name and try again.'**
+  String get wrongBranch;
 }
 
 class _AppLocalizationsDelegate
