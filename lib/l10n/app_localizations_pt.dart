@@ -18,6 +18,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noEventsScheduled => 'Nenhum evento programado';
 
   @override
+  String get accept => 'Aceitar';
+
+  @override
   String get loadingSpeakers => 'Carregando palestrantes...';
 
   @override
@@ -69,7 +72,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get venue => 'Local';
 
   @override
-  String get visibilityLabel => 'Visibility';
+  String get visibilityLabel => 'Visibilidade';
 
   @override
   String get eventIsOpenByDefault => 'O evento é aberto por padrão';
@@ -448,13 +451,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get updateButton => 'Atualizar';
 
   @override
-  String get addButton => 'Add Button';
+  String get addButton => 'Adicionar';
 
   @override
-  String get addRoomTitle => 'Add Room';
+  String get addRoomTitle => 'Adicionar Sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nome da sala';
 
   @override
   String get formError => 'Há erros no formulário';
@@ -535,5 +538,10 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get accept => 'Aceitar';
+  String get deleteSponsorTitle => 'Excluir Patrocinador';
+
+  @override
+  String confirmDeleteSponsor(String sponsorName) {
+    return 'Tem certeza de que deseja excluir o patrocinador $sponsorName?';
+  }
 }

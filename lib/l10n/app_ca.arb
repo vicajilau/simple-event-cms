@@ -166,8 +166,17 @@
   "addSponsor": "Afegir Patrocinador",
   "retryLater": "Torna a intentar-ho més tard",
   "commonError": "Error en obtenir les dades, si us plau, torna a intentar-ho més tard",
-  "deleteSponsorTitle": "Eliminar patrocinador",
   "deleteSponsorMessage": "N'estàs segur, que vols eliminar el patrocinador?",
+  "deleteSponsorTitle": "Elimina Sponsor",
+  "confirmDeleteSponsor": "Sei sicuro di voler eliminare lo sponsor {sponsorName}?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  },
   "deleteEventTitle": "Eliminar esdeveniment",
   "deleteEventMessage": "Estàs segur que vols eliminar aquest esdeveniment? \n Això esborrarà les sessions associades a l'esdeveniment.",
   "eventSelection": "Selecció d'esdeveniment",

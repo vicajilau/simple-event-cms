@@ -16,6 +16,16 @@
   "agenda": "Agenda",
   "speakers": "Ponentes",
   "sponsors": "Patrocinadores",
+  "deleteSponsorTitle": "Eliminar Sponsor",
+  "confirmDeleteSponsor": "¿Estás seguro de que quieres eliminar el sponsor {sponsorName}?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  },
   "eventInfo": "Información del Evento",
   "eventDates": "Fechas del Evento",
   "venue": "Lugar",

@@ -155,8 +155,8 @@
   "silverSponsor": "Sponsor Argento",
   "bronzeSponsor": "Sponsor Bronzo",
   "updateButton": "Aggiorna",
-  "addButton": "Aggiungi pulsante",
-  "addRoomTitle": "Aggiungi stanza",
+  "addButton": "Aggiungi",
+  "addRoomTitle": "Aggiungi sala",
   "roomNameHint": "Nome della stanza",
   "formError": "Ci sono errori nel modulo",
   "confirmLogout": "Conferma disconnessione",
@@ -180,5 +180,25 @@
   "addSponsor": "Aggiungi Sponsor",
   "retryLater": "Riprova più tardi",
   "commonError": "Errore nel recupero dei dati, riprova più tardi",
-  "createSpeaker": "Crea Relatore"
+  "createSpeaker": "Crea Relatore",
+  "deleteSpeaker": "Elimina relatore",
+  "confirmDeleteSpeaker": "Sei sicuro di voler eliminare il relatore {speakerName}?",
+  "@confirmDeleteSpeaker": {
+    "description": "Confirm speaker deletion",
+    "placeholders": {
+      "speakerName": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteSponsorTitle": "Elimina Sponsor",
+  "confirmDeleteSponsor": "Sei sicuro di voler eliminare lo sponsor {sponsorName}?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  }
 }
