@@ -179,5 +179,15 @@
       }
     }
   },
-  "accept": "Onartu"
+  "accept": "Onartu",
+  "deleteSponsorTitle": "Babeslea Ezabatu",
+  "confirmDeleteSponsor": "Ziur zaude {sponsorName} babeslea ezabatu nahi duzula?",
+  "@confirmDeleteSponsor": {
+    "description": "Confirm sponsor deletion",
+    "placeholders": {
+      "sponsorName": {
+        "type": "String"
+      }
+    }
+  }
 }
