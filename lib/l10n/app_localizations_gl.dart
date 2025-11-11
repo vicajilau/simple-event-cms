@@ -18,6 +18,9 @@ class AppLocalizationsGl extends AppLocalizations {
   String get noEventsScheduled => 'Non hai eventos programados';
 
   @override
+  String get accept => 'Aceptar';
+
+  @override
   String get loadingSpeakers => 'Cargando relatores...';
 
   @override
@@ -537,5 +540,10 @@ class AppLocalizationsGl extends AppLocalizations {
   }
 
   @override
-  String get accept => 'Aceptar';
+  String get deleteSponsorTitle => 'Eliminar patrocinador';
+
+  @override
+  String confirmDeleteSponsor(String sponsorName) {
+    return 'Estás seguro de que queres eliminar o patrocinador $sponsorName?';
+  }
 }

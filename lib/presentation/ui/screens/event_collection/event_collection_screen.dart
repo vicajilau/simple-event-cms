@@ -290,11 +290,34 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
               if (snapshot.data?.token != null) {
                 return IconButton(
                   onPressed: () async {
-                    viewmodel.viewState.value = ViewState.isLoading;
-                    await SecureInfo.removeGithubKey();
-                    await _loadConfiguration();
-                    viewmodel.viewState.value = ViewState.loadFinished;
-                    if (mounted) setState(() {}); // si hace falta redibujar
+                    final bool? confirm = await showDialog<bool>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text(location.confirmLogout),
+                          content: Text(location.confirmLogoutMessage),
+                          actions: <Widget>[
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.of(context).pop(false),
+                              child: Text(location.cancel),
+                            ),
+                            TextButton(
+                              onPressed: () =>
+                                  Navigator.of(context).pop(true),
+                              child: Text(location.logout),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                    if (confirm == true) {
+                      viewmodel.viewState.value = ViewState.isLoading;
+                      await SecureInfo.removeGithubKey();
+                      await _loadConfiguration();
+                      viewmodel.viewState.value = ViewState.loadFinished;
+                      if (mounted) setState(() {}); // si hace falta redibujar
+                    }
                   },
 
                   icon: Icon(Icons.logout),
