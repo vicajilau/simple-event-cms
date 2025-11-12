@@ -41,6 +41,7 @@ class DataUpdateInfo {
         "events/${PathsGithub.eventPath}",
         PathsGithub.eventUpdateMessage,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     }
   }
 
@@ -96,6 +97,7 @@ class DataUpdateInfo {
         sponsors: sponsors,
         overrideData: true,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     } else {
       currentEvents.removeWhere(
         (event) => events?.map((e) => e.uid).contains(event.uid) == true,
@@ -141,6 +143,7 @@ class DataUpdateInfo {
         speakers: speakers,
         sponsors: sponsors,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     }
   }
 
@@ -339,8 +342,20 @@ class DataUpdateInfo {
 
   Future<void> removeSession(String sessionId) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
+    var tracksOriginal = await dataLoader.loadAllTracks();
+
     sessionListOriginal.removeWhere((session) => session.uid == sessionId);
-    await overwriteItems(sessionListOriginal);
+
+    // Elimina el UID de la sesión de la lista `sessionUids` en los tracks correspondientes.
+    for (var track in tracksOriginal) {
+      track.sessionUids.remove(sessionId);
+    }
+
+    await _updateAllEventData(
+      sessions: sessionListOriginal,
+      tracks: tracksOriginal,
+      overrideData: true,
+    );
   }
 
   Future<void> removeTrack(String trackId) async {

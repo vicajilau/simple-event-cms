@@ -6,8 +6,6 @@ import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../../../../core/config/secure_info.dart';
-
 abstract class AgendaViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<AgendaDay>> agendaDays;
   abstract final ValueNotifier<List<Speaker>> speakers;
@@ -31,7 +29,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   ValueNotifier<List<AgendaDay>> agendaDays = ValueNotifier([]);
 
-  DateTime? _lastAgendaLoadTime;
 
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
@@ -56,49 +53,29 @@ class AgendaViewModelImp extends AgendaViewModel {
     }
   }
 
-  bool _isCacheValid(String eventId) {
-    if (_lastAgendaLoadTime == null ||
-        agendaDays.value.isEmpty ||
-        agendaDays.value
-            .where(
-              (agendaDay) =>
-                  agendaDay.eventsUID.contains(eventId) &&
-                  agendaDay.resolvedTracks != null &&
-                  agendaDay.resolvedTracks!.isNotEmpty &&
-                  agendaDay.resolvedTracks!
-                      .expand((track) => track.resolvedSessions)
-                      .isNotEmpty &&
-                  agendaDay.resolvedTracks!
-                      .expand((track) => track.resolvedSessions)
-                      .toList()
-                      .where((session) => session.agendaDayUID == agendaDay.uid && session.eventUID == eventId)
-                      .toList()
-                      .isNotEmpty,
-            )
-            .toList()
-            .isEmpty) {
-      return false;
-    }
-    final timeSinceLastLoad = DateTime.now().difference(_lastAgendaLoadTime!);
-    return timeSinceLastLoad.inMinutes < 5;
-  }
-
   @override
   Future<Result<void>> loadAgendaDays(String eventId) async {
     viewState.value = ViewState.isLoading;
-    var githubService = await SecureInfo.getGithubKey();
-
-    // If cache is recent and we are not in admin mode (github token is null), return cached data.
-    if (_isCacheValid(eventId) && githubService.token == null) {
-      viewState.value = ViewState.loadFinished;
-      return const Result.ok(null);
-    }
 
     final result = await agendaUseCase.getAgendaDayByEventIdFiltered(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
-        _lastAgendaLoadTime = DateTime.now();
-        agendaDays.value = result.value;
+        agendaDays.value = result.value
+            .where(
+              (agendaDay) =>
+          agendaDay.eventsUID.contains(eventId) &&
+              agendaDay.resolvedTracks != null &&
+              agendaDay.resolvedTracks!.isNotEmpty &&
+              agendaDay.resolvedTracks!
+                  .expand((track) => track.resolvedSessions)
+                  .isNotEmpty &&
+              agendaDay.resolvedTracks!
+                  .expand((track) => track.resolvedSessions)
+                  .toList()
+                  .where((session) => session.agendaDayUID == agendaDay.uid && session.eventUID == eventId)
+                  .toList()
+                  .isNotEmpty,
+        ).toList(growable: true);
         final resultSpeakers = await agendaUseCase.getSpeakersForEventId(
           eventId,
         );

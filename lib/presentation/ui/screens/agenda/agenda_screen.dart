@@ -29,7 +29,12 @@ class AgendaScreen extends StatefulWidget {
   final TabController? tabController;
   final String? location;
 
-  AgendaScreen({super.key, required this.eventId, required this.location, this.tabController});
+  AgendaScreen({
+    super.key,
+    required this.eventId,
+    required this.location,
+    this.tabController,
+  });
 
   @override
   State<AgendaScreen> createState() => _AgendaScreenState();
@@ -146,7 +151,11 @@ class _AgendaScreenState extends State<AgendaScreen>
                                   .viewmodel
                                   .agendaDays
                                   .value[index]
-                                  .resolvedTracks ??
+                                  .resolvedTracks
+                                  ?.where(
+                                    (track) => track.sessionUids.isNotEmpty,
+                                  )
+                                  .toList() ??
                               [],
                           tabBarIndex,
                           agendaDayId,
@@ -251,7 +260,7 @@ class CustomTabBarView extends StatefulWidget {
   final List<Track> tracks;
   int currentIndex;
   final ValueChanged<int> onIndexChanged;
-  final String agendaDayId, eventId,location;
+  final String agendaDayId, eventId, location;
   final TabController? tabController;
 
   CustomTabBarView({
@@ -381,9 +390,12 @@ class _SessionCardsState extends State<SessionCards> {
                       agendaDayUID: session.agendaDayUID,
                     ),
                     widget.viewModel.speakers.value
-                        .where((element) => element.uid == session.speakerUID)
-                        .firstOrNull
-                        ?.name ?? "",
+                            .where(
+                              (element) => element.uid == session.speakerUID,
+                            )
+                            .firstOrNull
+                            ?.name ??
+                        "",
                     onDeleteTap: () {
                       showDialog(
                         context: context,
