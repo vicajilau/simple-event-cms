@@ -142,7 +142,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           );
 
                           // after
-                          getIt<CheckOrg>().setError(false);
+                          getIt<CheckOrg>().setError(false); 
 
                           await viewmodel.setup();
                           await _loadConfiguration();

@@ -18,9 +18,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noEventsScheduled => 'No events scheduled';
 
   @override
-  String get accept => 'Accept';
-
-  @override
   String get loadingSpeakers => 'Loading speakers...';
 
   @override
@@ -535,10 +532,17 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get accept => 'Accept';
+
+  @override
   String get deleteSponsorTitle => 'Delete Sponsor';
 
   @override
   String confirmDeleteSponsor(String sponsorName) {
     return 'Are you sure you want to delete the sponsor $sponsorName?';
   }
+
+  @override
+  String get wrongBranch =>
+      'The entered branch does not exist in the repository. Check the branch name and try again.';
 }

@@ -18,9 +18,6 @@ class AppLocalizationsEu extends AppLocalizations {
   String get noEventsScheduled => 'Ez dago gertaera programaturik';
 
   @override
-  String get accept => 'Onartu';
-
-  @override
   String get loadingSpeakers => 'Hizlariak kargatzen...';
 
   @override
@@ -538,10 +535,17 @@ class AppLocalizationsEu extends AppLocalizations {
   }
 
   @override
+  String get accept => 'Onartu';
+
+  @override
   String get deleteSponsorTitle => 'Babeslea Ezabatu';
 
   @override
   String confirmDeleteSponsor(String sponsorName) {
     return 'Ziur zaude $sponsorName babeslea ezabatu nahi duzula?';
   }
+
+  @override
+  String get wrongBranch =>
+      'Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.';
 }

@@ -189,5 +189,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "wrongBranch": "The entered branch does not exist in the repository. Check the branch name and try again."
 }

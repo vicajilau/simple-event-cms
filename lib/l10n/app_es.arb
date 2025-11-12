@@ -189,5 +189,6 @@
       }
     }
   },
-  "accept": "Aceptar"
+  "accept": "Aceptar",
+  "wrongBranch": "La rama ingresada no existe en el repositorio. Verifica el nombre de la rama y vuelve a intentarlo."
 }

@@ -190,5 +190,6 @@
       }
     }
   },
-  "accept": "Accepter"
+  "accept": "Accepter",
+  "wrongBranch": "La branche saisie n'existe pas dans le dépôt. Vérifiez le nom de la branche et réessayez."
 }

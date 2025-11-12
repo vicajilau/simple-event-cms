@@ -200,5 +200,6 @@
         "type": "String"
       }
     }
-  }
+  },
+  "wrongBranch": "Il ramo inserito non esiste nel repository. Verifica il nome del ramo e riprova."
 }
