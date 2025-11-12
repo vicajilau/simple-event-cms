@@ -16,13 +16,13 @@ class DataLoader {
   static GithubJsonModel? _allData;
   static DateTime? _lastFetchTime;
 
-  Future<void> _loadAllEventData() async {
+  Future<void> loadAllEventData({bool forceUpdate = false}) async {
     var githubDataSaving = await SecureInfo.getGithubKey();
     // Check if data is already loaded and if it's been less than 5 minutes
     if (_allData != null &&
         _lastFetchTime != null &&
         DateTime.now().difference(_lastFetchTime!) < const Duration(minutes: 5) &&
-    githubDataSaving.token == null) {
+    githubDataSaving.token == null && !forceUpdate) {
       return; // Do not fetch new data
     }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
@@ -35,19 +35,19 @@ class DataLoader {
   // --- Start of New Data Loading Methods ---
 
   Future<List<Session>> loadAllSessions() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     List<Session> jsonList = _allData?.sessions ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<Track>> loadAllTracks() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     List<Track> jsonList = _allData?.tracks ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<AgendaDay>> loadAllDays() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     List<AgendaDay> jsonList = _allData?.agendadays ?? List.empty();
 
     final List<Track> allTracks = _allData?.tracks ?? List.empty();
@@ -73,21 +73,21 @@ class DataLoader {
 
   /// Loads speaker information from the speakers.json file
   Future<List<Speaker>?> loadSpeakers() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     List<Speaker> jsonList = _allData?.speakers ?? List.empty();
     return jsonList.toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   Future<List<Sponsor>> loadSponsors() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     List<Sponsor> jsonList = _allData?.sponsors ?? List.empty();
     return jsonList.toList();
   }
 
   /// Loads event information from the githubItem.json file
   Future<List<Event>> loadEvents() async {
-    await _loadAllEventData();
+    await loadAllEventData();
     var githubService = await SecureInfo.getGithubKey();
 
     List<Event> jsonList = _allData?.events ?? List.empty();
