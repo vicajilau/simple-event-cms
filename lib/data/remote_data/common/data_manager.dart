@@ -218,7 +218,7 @@ class DataUpdate {
       }
     }
 
-    await dataUpdateInfo.updateTracks(updatedTracks);
+    await dataUpdateInfo.updateTracks(updatedTracks, overrideData: true);
     await dataUpdateInfo.removeSession(sessionId);
     debugPrint("Session $sessionId and its associations removed.");
   }

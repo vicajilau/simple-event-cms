@@ -173,8 +173,8 @@ class DataUpdateInfo {
     await _updateAllEventData(tracks: tracksOriginal);
   }
 
-  Future<void> updateTracks(List<Track> tracks) async {
-    await _updateAllEventData(tracks: tracks);
+  Future<void> updateTracks(List<Track> tracks,{bool overrideData = false}) async {
+    await _updateAllEventData(tracks: tracks, overrideData: overrideData);
   }
 
   Future<void> updateAgendaDay(AgendaDay agendaDay) async {
