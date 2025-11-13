@@ -46,3 +46,14 @@ class NetworkException extends CustomException {
     super.stackTrace,
   });
 }
+
+class CertainException extends CustomException {
+  final int? statusCode;
+  const CertainException(
+    super.message, {
+    this.statusCode,
+    super.url,
+    super.cause,
+    super.stackTrace,
+  });
+}

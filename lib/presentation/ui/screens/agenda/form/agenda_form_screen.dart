@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:sec/core/utils/app_decorations.dart';
-import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/app_decorations.dart';
+import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/utils/time_utils.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -77,7 +77,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     var fetchedSpeakers = await widget.viewmodel.getSpeakersForEventId(
       data.eventId!,
     );
-    var fechedTracks = await widget.viewmodel.getTracksByEventId(widget.data!.eventId.toString()) ?? [];
+    var fechedTracks =
+        await widget.viewmodel.getTracksByEventId(
+          widget.data!.eventId.toString(),
+        ) ??
+        [];
     var fetchedAgendaDays =
         await widget.viewmodel.getAgendaDayByEventId(data.eventId!) ?? [];
     event = await widget.viewmodel.getEventById(data.eventId!);
@@ -121,8 +125,12 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         final parts = session.time.split(' - ');
         if (parts.length == 2) {
           // Convert AM/PM format to 24-hour format before parsing
-          final startTimeString = parts.first.replaceAll(' AM', '').replaceAll(' PM', '');
-          final endTimeString = parts.last.replaceAll(' AM', '').replaceAll(' PM', '');
+          final startTimeString = parts.first
+              .replaceAll(' AM', '')
+              .replaceAll(' PM', '');
+          final endTimeString = parts.last
+              .replaceAll(' AM', '')
+              .replaceAll(' PM', '');
           var startTime = TimeUtils.parseTime(startTimeString);
           var endTime = TimeUtils.parseTime(endTimeString);
           if (parts.first.contains('PM') && startTime?.hour != 12) {
@@ -178,7 +186,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   onCancel: () => {
                     widget.viewmodel.setErrorKey(null),
                     widget.viewmodel.viewState.value = ViewState.loadFinished,
-                    Navigator.of(context).pop()
+                    Navigator.of(context).pop(),
                   },
                   buttonText: location.closeButton,
                 ),
@@ -362,8 +370,9 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                         ),
                                         items: speakers
                                             .map(
-                                              (speaker) =>
-                                                  DropdownMenuItem<Speaker>(
+                                              (
+                                                speaker,
+                                              ) => DropdownMenuItem<Speaker>(
                                                 value:
                                                     speaker, // The value is the Speaker object
                                                 child: Text(speaker.name),
@@ -391,14 +400,15 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                   // Allow adding a new speaker
                                   final newSpeaker =
                                       await Navigator.push<Speaker>(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => SpeakerFormScreen(
-                                        eventUID:
-                                            widget.data!.eventId.toString(),
-                                      ),
-                                    ),
-                                  );
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              SpeakerFormScreen(
+                                                eventUID: widget.data!.eventId
+                                                    .toString(),
+                                              ),
+                                        ),
+                                      );
                                   if (newSpeaker != null) {
                                     await widget.viewmodel.addSpeaker(
                                       widget.data!.eventId.toString(),
@@ -491,23 +501,27 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
             );
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
-              setState(
-                () {
-                  agendaFormViewModel.setErrorKey(NetworkException(_timeErrorMessage??location.timeSelectionError));
-                  agendaFormViewModel.viewState.value = ViewState.error;
-                },
-              );
+              setState(() {
+                agendaFormViewModel.setErrorKey(
+                  NetworkException(
+                    _timeErrorMessage ?? location.timeSelectionError,
+                  ),
+                );
+                agendaFormViewModel.viewState.value = ViewState.error;
+              });
               setState(() {
                 _timeErrorMessage = location.timeSelectionError;
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-              setState(
-                () {
-                  agendaFormViewModel.setErrorKey(NetworkException(_timeErrorMessage??location.timeValidationError));
-                  agendaFormViewModel.viewState.value = ViewState.error;
-                },
-              );
+              setState(() {
+                agendaFormViewModel.setErrorKey(
+                  NetworkException(
+                    _timeErrorMessage ?? location.timeValidationError,
+                  ),
+                );
+                agendaFormViewModel.viewState.value = ViewState.error;
+              });
               isTimeValid =
                   false; // Error message is already set by the time picker logic
             }
@@ -545,7 +559,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               agendaDay.eventsUID.add(event.uid.toString());
               agendaDay.trackUids?.add(selectedTrack.uid);
               agendaDay.resolvedTracks?.toList().add(selectedTrack);
-              if(agendaDays.indexWhere((day) => day.uid == _selectedDay) != -1) {
+              if (agendaDays.indexWhere((day) => day.uid == _selectedDay) !=
+                  -1) {
                 agendaDays.removeWhere((day) => day.uid == _selectedDay);
               }
               agendaDays.add(agendaDay);
@@ -559,6 +574,11 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               debugPrint('Selected track uid: ${selectedTrack.uid}');
               debugPrint('sessions track: ${selectedTrack.sessionUids}');
 
+              if (widget.data?.trackId != null &&
+                  widget.data?.trackId?.isNotEmpty == true) {
+                await widget.viewmodel.removeTrack(widget.data?.trackId ?? "",overrideTrack: true);
+              }
+
               await widget.viewmodel.updateTrack(selectedTrack, agendaDay.uid);
               await widget.viewmodel.updateEvent(event);
               await widget.viewmodel.updateAgendaDay(
@@ -570,8 +590,8 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 () => agendaFormViewModel.viewState.value =
                     ViewState.loadFinished,
               );
-              var containsAgendaDays = agendaDays.indexWhere((day) =>
-              day.trackUids != null && day.trackUids!.isNotEmpty,
+              var containsAgendaDays = agendaDays.indexWhere(
+                (day) => day.trackUids != null && day.trackUids!.isNotEmpty,
               );
               if (mounted && containsAgendaDays != -1) {
                 Navigator.pop(
@@ -583,11 +603,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       )
                       .toList(),
                 ); // Return true to indicate success
-              }else if(containsAgendaDays == -1){
+              } else if (containsAgendaDays == -1) {
                 if (mounted) {
                   Navigator.pop(context);
                 }
-
               }
             }
           },
@@ -680,9 +699,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
           content: TextFormField(
             controller: trackNameController,
             autofocus: true,
-            decoration: InputDecoration(
-              hintText: location.roomNameHint,
-            ),
+            decoration: InputDecoration(hintText: location.roomNameHint),
           ),
           actions: [
             TextButton(
@@ -705,7 +722,10 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     color: '',
                   );
 
-                  var trackAdded = await widget.viewmodel.addTrack(newTrack, _selectedDay);
+                  var trackAdded = await widget.viewmodel.addTrack(
+                    newTrack,
+                    _selectedDay,
+                  );
                   if (context.mounted && trackAdded) {
                     setState(() {
                       tracks.add(newTrack);

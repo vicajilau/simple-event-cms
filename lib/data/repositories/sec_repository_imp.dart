@@ -16,6 +16,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       final events = await dataLoader.loadEvents();
       return Result.ok(events);
+    } on CertainException catch (e) {
+      debugPrint('Error in loadEvents: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadEvents: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -30,6 +33,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       final speakers = await dataLoader.loadSpeakers();
       return Result.ok(speakers ?? []);
+    } on CertainException catch (e) {
+      debugPrint('Error in loadESpeakers: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadESpeakers: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -44,6 +50,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       final sponsors = await dataLoader.loadSponsors();
       return Result.ok(sponsors);
+    } on CertainException catch (e) {
+      debugPrint('Error in loadSponsors: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadSponsors: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -59,6 +68,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(event, event.uid);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveEvent: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveEvent: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -89,6 +101,11 @@ class SecRepositoryImp extends SecRepository {
       }
       await DataUpdate.addItemListAndAssociations(tracks);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveTracks: $e');
+      return Result.error(
+        NetworkException(e.message),
+      );
     } on Exception catch (e) {
       debugPrint('Error in saveTracks: $e');
       return Result.error(
@@ -140,6 +157,9 @@ class SecRepositoryImp extends SecRepository {
         overrideData: overrideAgendaDays,
       );
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveAgendaDays: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDays: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -154,6 +174,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(speaker, parentId);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveSpeaker: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveSpeaker: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -168,6 +191,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(sponsor, parentId);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveSponsor: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveSponsor: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -182,6 +208,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(session, trackUID);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in addSession: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in addSession: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -196,6 +225,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(speaker, eventId);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in addSpeaker: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in addSpeaker: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -225,6 +257,9 @@ class SecRepositoryImp extends SecRepository {
 
       await DataUpdate.addItemAndAssociations(track, agendaDayId);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveTrack: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveTrack: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -240,6 +275,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.deleteItemAndAssociations(eventId, "Event");
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in removeEvent: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in removeEvent: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -261,6 +299,9 @@ class SecRepositoryImp extends SecRepository {
         eventUID: eventUID,
       );
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in removeAgendaDay: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in removeAgendaDay: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -275,6 +316,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.deleteItemAndAssociations(speakerId, "Speaker",eventUID: eventUID);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in removeSpeaker: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in removeSpeaker: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -289,6 +333,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.deleteItemAndAssociations(sponsorId, "Sponsor");
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in removeSponsor: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in removeSponsor: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -303,11 +350,14 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.deleteItemAndAssociations(sessionId, "Session",agendaDayUidSelected: agendaDayUID ?? "");
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in deleteSession: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
-      debugPrint('Error in deleteSessionFromAgendaDay: $e');
+      debugPrint('Error in deleteSession: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
     } catch (e) {
-      debugPrint('Error in deleteSessionFromAgendaDay: $e');
+      debugPrint('Error in deleteSession: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
     }
   }
@@ -319,6 +369,9 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(
         agendaDays.firstWhere((agendaDay) => agendaDay.uid == agendaDayById),
       );
+    } on CertainException catch (e) {
+      debugPrint('Error in loadAgendaDayById: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayById: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -333,6 +386,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       var tracks = await dataLoader.loadAllTracks();
       return Result.ok(tracks.firstWhere((track) => track.uid == trackId));
+    } on CertainException catch (e) {
+      debugPrint('Error in loadTrackById: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadTrackById: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -351,6 +407,9 @@ class SecRepositoryImp extends SecRepository {
             .where((agendaDay) => agendaDay.eventsUID.contains(eventId))
             .toList(),
       );
+    } on CertainException catch (e) {
+      debugPrint('Error in loadAgendaDayByEventId: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventId: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -395,6 +454,9 @@ class SecRepositoryImp extends SecRepository {
             )
             .toList(),
       );
+    } on CertainException catch (e) {
+      debugPrint('Error in loadAgendaDayByEventIdFiltered: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadAgendaDayByEventIdFiltered: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -412,6 +474,9 @@ class SecRepositoryImp extends SecRepository {
       return Result.ok(
         tracks.where((track) => eventId == track.eventUid).toList(),
       );
+    } on CertainException catch (e) {
+      debugPrint('Error in loadTracksByEventId: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadTracksByEventId: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -427,6 +492,9 @@ class SecRepositoryImp extends SecRepository {
       var tracks = await dataLoader.loadAllTracks();
 
       return Result.ok(tracks);
+    } on CertainException catch (e) {
+      debugPrint('Error in loadTracks: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadTracks: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -441,6 +509,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       final events = await dataLoader.loadEvents();
       return Result.ok(events.firstWhere((event) => event.uid == eventId));
+    } on CertainException catch (e) {
+      debugPrint('Error in loadEventById: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in loadEventById: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -462,6 +533,9 @@ class SecRepositoryImp extends SecRepository {
         return Result.ok([]);
       }
 
+    } on CertainException catch (e) {
+      debugPrint('Error in getSpeakersForEventId: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in getSpeakersForEventId: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -479,6 +553,9 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(agendaDay, eventUID);
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveAgendaDay: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -489,10 +566,13 @@ class SecRepositoryImp extends SecRepository {
   }
 
   @override
-  Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
+  Future<Result<void>> removeTrack(String trackUID) async {
     try {
       await DataUpdate.deleteItemAndAssociations(trackUID, "Track");
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in removeTrack: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
       debugPrint('Error in removeTrack: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
@@ -507,11 +587,14 @@ class SecRepositoryImp extends SecRepository {
     try {
       await DataUpdate.addItemAndAssociations(config, "");
       return Result.ok(null);
+    } on CertainException catch (e) {
+      debugPrint('Error in saveConfig: $e');
+      return Result.error(NetworkException(e.message));
     } on Exception catch (e) {
-      debugPrint('Error in saveOrganization: $e');
+      debugPrint('Error in saveConfig: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
     } catch (e) {
-      debugPrint('Error in saveOrganization: $e');
+      debugPrint('Error in saveConfig: $e');
       return Result.error(NetworkException('An unexpected error occurred. Please try again later.'));
     }
   }

@@ -11,7 +11,7 @@ abstract class EventUseCase {
   Future<Result<void>> saveEvent(Event event);
   Future<Result<void>> removeEvent(Event event);
   Future<Result<void>> prepareAgendaDays(Event event);
-  Future<Result<void>> removeTrack(String trackUID, String eventUID);
+  Future<Result<void>> removeTrack(String trackUID);
   Future<Result<void>> updateConfig(Config config);
 }
 
@@ -74,8 +74,8 @@ class EventUseCaseImp implements EventUseCase {
   }
 
   @override
-  Future<Result<void>> removeTrack(String trackUID, String eventUID) async {
-    return await repository.removeTrack(trackUID, eventUID);
+  Future<Result<void>> removeTrack(String trackUID) async {
+    return await repository.removeTrack(trackUID);
   }
 
   @override

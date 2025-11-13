@@ -170,7 +170,7 @@ class DataUpdateInfo {
     } else {
       tracksOriginal.add(track);
     }
-    await _updateAllEventData(tracks: tracksOriginal);
+    await _updateAllEventData(tracks: tracksOriginal,overrideData: true);
   }
 
   Future<void> updateTracks(List<Track> tracks,{bool overrideData = false}) async {
@@ -259,7 +259,7 @@ class DataUpdateInfo {
     } else {
       sessionListOriginal.add(session);
     }
-    await _updateAllEventData(sessions: sessionListOriginal);
+    await _updateAllEventData(sessions: sessionListOriginal,overrideData: true);
   }
 
   Future<void> updateSessions(List<Session> sessions) async {
