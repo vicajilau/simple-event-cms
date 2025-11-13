@@ -6,6 +6,8 @@ import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
+import '../../exceptions/exceptions.dart';
+
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
@@ -270,6 +272,12 @@ class DataUpdateInfo {
     var speakersOriginal = (await dataLoader.loadSpeakers() ?? []).toList(
       growable: true,
     );
+    var allsessions = await dataLoader.loadAllSessions();
+
+    if(allsessions.indexWhere((session)=> session.speakerUID == speakerId) != -1){
+      throw CertainException("Exists sessions with this speaker, please remove them first");
+    }
+
     if (speakersOriginal.isNotEmpty) {
       var speakerToRemoveIndex = speakersOriginal.indexWhere(
         (speaker) => speaker.uid == speakerId,
