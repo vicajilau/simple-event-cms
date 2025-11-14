@@ -605,7 +605,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
       isVisible: _isVisible,
       eventDates: eventDates,
     );
-    config.eventForcedToViewUID = eventId;
+    if(_isOpenByDefault){
+      config.eventForcedToViewUID = eventId;
+    }else if(config.eventForcedToViewUID == eventId){
+      config.eventForcedToViewUID = null;
+    }
+
     await widget.eventCollectionViewModel.updateConfig(config);
     var result = await eventFormViewModel.onSubmit(eventModified);
     if (result) {
