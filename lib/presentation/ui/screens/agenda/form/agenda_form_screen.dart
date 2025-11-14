@@ -543,9 +543,16 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               var selectedTrack = tracks.firstWhere(
                 (track) => track.uid == _selectedTrackUid,
               );
+              var oldSelectedTrack = tracks.where(
+                (track) => widget.data?.trackId == track.uid,
+              ).toList().firstOrNull;
+
+              if(oldSelectedTrack != null) {
+                oldSelectedTrack.sessionUids.remove(widget.data?.session?.uid);
+                await widget.viewmodel.updateTrack(oldSelectedTrack,widget.data?.agendaDayId ?? "");
+              }
 
               await widget.viewmodel.addSession(session, _selectedTrackUid);
-
               var event = await widget.viewmodel.getEventById(
                 widget.data!.eventId!,
               );
