@@ -48,7 +48,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
               context: context,
               barrierDismissible: false,
               builder: (_) => CustomErrorDialog(
-                errorMessage: location.wrongBranch,
+                errorMessage: widget.viewmodel.errorMessage,
                 onCancel: () => {Navigator.of(context).pop()},
                 buttonText: location.closeButton,
               ),
