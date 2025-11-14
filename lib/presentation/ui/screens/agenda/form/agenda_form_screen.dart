@@ -496,124 +496,52 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         FilledButton(
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
-            setState(
-              () => agendaFormViewModel.viewState.value = ViewState.isLoading,
-            );
+            agendaFormViewModel.viewState.value = ViewState.isLoading;
+
             bool isTimeValid = true;
             if (_initSessionTime == null || _endSessionTime == null) {
-              setState(() {
-                agendaFormViewModel.setErrorKey(
-                  NetworkException(
-                    _timeErrorMessage ?? location.timeSelectionError,
-                  ),
-                );
-                agendaFormViewModel.viewState.value = ViewState.error;
-              });
+              agendaFormViewModel.setErrorKey(
+                NetworkException(
+                  _timeErrorMessage ?? location.timeSelectionError,
+                ),
+              );
+              agendaFormViewModel.viewState.value = ViewState.error;
               setState(() {
                 _timeErrorMessage = location.timeSelectionError;
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-              setState(() {
-                agendaFormViewModel.setErrorKey(
-                  NetworkException(
-                    _timeErrorMessage ?? location.timeValidationError,
-                  ),
-                );
-                agendaFormViewModel.viewState.value = ViewState.error;
-              });
+              agendaFormViewModel.setErrorKey(
+                NetworkException(
+                  _timeErrorMessage ?? location.timeValidationError,
+                ),
+              );
+              agendaFormViewModel.viewState.value = ViewState.error;
               isTimeValid =
                   false; // Error message is already set by the time picker logic
             }
 
             if (_formKey.currentState!.validate() && isTimeValid) {
-              Session session = Session(
-                uid:
-                    widget.data?.session?.uid ??
-                    'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
-                title: _titleController.text,
-                time:
-                    '${_initSessionTime!.format(context)} - ${_endSessionTime!.format(context)}',
-                speakerUID: _selectedSpeaker!.uid.toString(),
-                description: _descriptionController.text,
-                type: _selectedTalkType,
-                eventUID: widget.data!.eventId.toString(),
-                agendaDayUID: _selectedDay,
+              final result = await widget.viewmodel.saveSession(
+                context,
+                widget.data?.session?.uid,
+                _titleController.text,
+                _initSessionTime,
+                _endSessionTime,
+                _selectedSpeaker!,
+                _descriptionController.text,
+                _selectedTalkType,
+                widget.data!.eventId.toString(),
+                _selectedDay,
+                tracks,
+                _selectedTrackUid,
+                widget.data?.trackId,
+                agendaDays,
               );
-              var selectedTrack = tracks.firstWhere(
-                (track) => track.uid == _selectedTrackUid,
-              );
-              var oldSelectedTrack = tracks.where(
-                (track) => widget.data?.trackId == track.uid,
-              ).toList().firstOrNull;
-
-              if(oldSelectedTrack != null) {
-                oldSelectedTrack.sessionUids.remove(widget.data?.session?.uid);
-                await widget.viewmodel.updateTrack(oldSelectedTrack,widget.data?.agendaDayId ?? "");
-              }
-
-              await widget.viewmodel.addSession(session, _selectedTrackUid);
-              var event = await widget.viewmodel.getEventById(
-                widget.data!.eventId!,
-              );
-
-              selectedTrack.eventUid = event!.uid.toString();
-              selectedTrack.sessionUids.add(session.uid);
-              selectedTrack.resolvedSessions.toList().add(session);
-              AgendaDay agendaDay = agendaDays.firstWhere(
-                (day) => day.uid == _selectedDay,
-              );
-              agendaDay.eventsUID.add(event.uid.toString());
-              agendaDay.trackUids?.add(selectedTrack.uid);
-              agendaDay.resolvedTracks?.toList().add(selectedTrack);
-              if (agendaDays.indexWhere((day) => day.uid == _selectedDay) !=
-                  -1) {
-                agendaDays.removeWhere((day) => day.uid == _selectedDay);
-              }
-              agendaDays.add(agendaDay);
-              event.tracks.removeWhere(
-                (track) => track.uid == _selectedTrackUid,
-              );
-              event.tracks.add(selectedTrack);
-
-              debugPrint('Selected track: ${selectedTrack.name}');
-              debugPrint('Event uid: ${event.uid}');
-              debugPrint('Selected track uid: ${selectedTrack.uid}');
-              debugPrint('sessions track: ${selectedTrack.sessionUids}');
-
-              if (widget.data?.trackId != null &&
-                  widget.data?.trackId?.isNotEmpty == true) {
-                await widget.viewmodel.removeTrack(widget.data?.trackId ?? "",overrideTrack: true);
-              }
-
-              await widget.viewmodel.updateTrack(selectedTrack, agendaDay.uid);
-              await widget.viewmodel.updateEvent(event);
-              await widget.viewmodel.updateAgendaDay(
-                agendaDay,
-                event.uid.toString(),
-              );
-
-              setState(
-                () => agendaFormViewModel.viewState.value =
-                    ViewState.loadFinished,
-              );
-              var containsAgendaDays = agendaDays.indexWhere(
-                (day) => day.trackUids != null && day.trackUids!.isNotEmpty,
-              );
-              if (mounted && containsAgendaDays != -1) {
-                Navigator.pop(
-                  context,
-                  agendaDays
-                      .where(
-                        (day) =>
-                            day.trackUids != null && day.trackUids!.isNotEmpty,
-                      )
-                      .toList(),
-                ); // Return true to indicate success
-              } else if (containsAgendaDays == -1) {
-                if (mounted) {
-                  Navigator.pop(context);
-                }
+              if (mounted && result != null) {
+                Navigator.pop(context, result);
+              } else if (mounted) {
+                Navigator.pop(context);
               }
             }
           },
