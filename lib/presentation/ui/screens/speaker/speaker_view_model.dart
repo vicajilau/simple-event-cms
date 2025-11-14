@@ -52,12 +52,12 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
 
   @override
   Future<void> removeSpeaker(String id,String eventUID) async {
-    List<Speaker> currentSpeakers = [...speakers.value];
-    currentSpeakers.removeWhere((s) => s.uid == id);
-    speakers.value = currentSpeakers;
     final result = await _speakerUseCase.removeSpeaker(id,eventUID);
     switch (result) {
       case Ok<void>():
+        List<Speaker> currentSpeakers = [...speakers.value];
+        currentSpeakers.removeWhere((s) => s.uid == id);
+        speakers.value = currentSpeakers;
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);

@@ -6,6 +6,8 @@ import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
+import '../../exceptions/exceptions.dart';
+
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
@@ -170,7 +172,7 @@ class DataUpdateInfo {
     } else {
       tracksOriginal.add(track);
     }
-    await _updateAllEventData(tracks: tracksOriginal);
+    await _updateAllEventData(tracks: tracksOriginal,overrideData: true);
   }
 
   Future<void> updateTracks(List<Track> tracks,{bool overrideData = false}) async {
@@ -259,7 +261,7 @@ class DataUpdateInfo {
     } else {
       sessionListOriginal.add(session);
     }
-    await _updateAllEventData(sessions: sessionListOriginal);
+    await _updateAllEventData(sessions: sessionListOriginal,overrideData: true);
   }
 
   Future<void> updateSessions(List<Session> sessions) async {
@@ -270,6 +272,12 @@ class DataUpdateInfo {
     var speakersOriginal = (await dataLoader.loadSpeakers() ?? []).toList(
       growable: true,
     );
+    var allsessions = await dataLoader.loadAllSessions();
+
+    if(allsessions.indexWhere((session)=> session.speakerUID == speakerId) != -1){
+      throw CertainException("Exists sessions with this speaker, please remove them first");
+    }
+
     if (speakersOriginal.isNotEmpty) {
       var speakerToRemoveIndex = speakersOriginal.indexWhere(
         (speaker) => speaker.uid == speakerId,

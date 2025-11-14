@@ -9,7 +9,7 @@ import '../../../../core/utils/result.dart';
 
 abstract class EventFormViewModel extends ViewModelCommon {
   Future<bool> onSubmit(Event event);
-  Future<void> removeTrack(String trackUID,String eventUID);
+  Future<void> removeTrack(String trackUID);
 }
 
 class EventFormViewModelImpl extends EventFormViewModel {
@@ -60,9 +60,9 @@ class EventFormViewModelImpl extends EventFormViewModel {
   }
 
   @override
-  Future<void> removeTrack(String trackUID,String eventUID) async {
+  Future<void> removeTrack(String trackUID) async {
     viewState.value = ViewState.isLoading;
-    var result = await eventFormUseCase.removeTrack(trackUID,eventUID);
+    var result = await eventFormUseCase.removeTrack(trackUID);
     switch (result) {
       case Ok<void>():
         viewState.value = ViewState.loadFinished;

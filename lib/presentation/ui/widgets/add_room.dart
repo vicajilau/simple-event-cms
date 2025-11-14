@@ -73,12 +73,14 @@ class _AddRoomState extends State<AddRoom> {
             TextButton(
               onPressed: () async {
                 widget.removeRoom(_tracks[index]);
-                setState(() {
-                  _controllers[index].dispose();
-                  _controllers.removeAt(index);
-                  _tracks.removeAt(index);
-                });
-                widget.editedRooms(_tracks.where((track) => track.name.isNotEmpty).toList());
+                if(_tracks[index].sessionUids.isEmpty){
+                  setState(() {
+                    _controllers[index].dispose();
+                    _controllers.removeAt(index);
+                    _tracks.removeAt(index);
+                  });
+                  widget.editedRooms(_tracks.where((track) => track.name.isNotEmpty).toList());
+                }
                 Navigator.pop(context);
               },
               child: const Text(

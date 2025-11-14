@@ -214,7 +214,9 @@ class _AgendaScreenState extends State<AgendaScreen>
   ) {
     if(tabBarIndex >= tracks.length) {
       tabBarIndex = 0;
-      return const SizedBox.shrink();
+      if(tracks.isEmpty){
+        return const SizedBox.shrink();
+      }
     }
     return DefaultTabController(
       initialIndex: tabBarIndex,

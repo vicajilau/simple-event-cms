@@ -9,6 +9,8 @@ import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
+import '../../widgets/custom_error_dialog.dart';
+
 /// Screen that displays a grid of speakers with their information and social links
 /// Fetches speaker data from the configured data source and displays it in cards
 class SpeakersScreen extends StatefulWidget {
@@ -40,7 +42,18 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          ErrorView(errorMessage: widget.viewmodel.errorMessage);
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (!mounted) return;
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => CustomErrorDialog(
+                  errorMessage: location.wrongBranch,
+                  onCancel: () => {Navigator.of(context).pop()},
+                  buttonText: location.closeButton,
+                ),
+              );
+            });
         }
 
         return ValueListenableBuilder<List<Speaker>>(
