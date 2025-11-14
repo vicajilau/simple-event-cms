@@ -670,7 +670,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   }
                 }
               },
-              child: Text(location.addButton),
+              child: Text(location.saveButton),
             ),
           ],
         );
