@@ -50,7 +50,7 @@ abstract class AgendaFormViewModel extends ViewModelCommon {
     String selectedDay,
     List<Track> tracks,
     String selectedTrackUid,
-    String? trackId,
+    String? oldTrackId,
     List<AgendaDay> agendaDays,
   );
 }
@@ -304,7 +304,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     String selectedDay,
     List<Track> tracks,
     String selectedTrackUid,
-    String? trackId,
+    String? oldTrackId,
     List<AgendaDay> agendaDays,
   ) async {
     Session session = Session(
@@ -324,7 +324,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
       (track) => track.uid == selectedTrackUid,
     );
     var oldSelectedTrack = tracks
-        .where((track) => trackId == track.uid)
+        .where((track) => oldTrackId == track.uid)
         .toList()
         .firstOrNull;
 
