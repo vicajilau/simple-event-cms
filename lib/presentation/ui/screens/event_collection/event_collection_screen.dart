@@ -142,7 +142,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           );
 
                           // after
-                          getIt<CheckOrg>().setError(false); 
+                          getIt<CheckOrg>().setError(false);
 
                           await viewmodel.setup();
                           await _loadConfiguration();
@@ -298,13 +298,11 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                           content: Text(location.confirmLogoutMessage),
                           actions: <Widget>[
                             TextButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(false),
+                              onPressed: () => Navigator.of(context).pop(false),
                               child: Text(location.cancel),
                             ),
                             TextButton(
-                              onPressed: () =>
-                                  Navigator.of(context).pop(true),
+                              onPressed: () => Navigator.of(context).pop(true),
                               child: Text(location.logout),
                             ),
                           ],

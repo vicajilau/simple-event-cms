@@ -7,13 +7,12 @@ import '../repositories/sec_repository.dart';
 abstract class ConfigUseCase {
   Future<Result<void>> updateConfig(Config config);
 }
-class ConfigUseCaseImp implements ConfigUseCase {
 
+class ConfigUseCaseImp implements ConfigUseCase {
   SecRepository repository = getIt<SecRepository>();
 
   @override
   Future<Result<void>> updateConfig(Config config) async {
     return await repository.saveConfig(config);
   }
-
 }

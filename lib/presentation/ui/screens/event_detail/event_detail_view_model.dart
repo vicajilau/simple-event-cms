@@ -48,7 +48,8 @@ class EventDetailViewModelImp extends EventDetailViewModel {
         notShowReturnArrow.value =
             (result.value.length == 1 ||
                 result.value.indexWhere(
-                      (eventItem) => eventItem.uid == config.eventForcedToViewUID,
+                      (eventItem) =>
+                          eventItem.uid == config.eventForcedToViewUID,
                     ) !=
                     -1) &&
             githubService.token == null;

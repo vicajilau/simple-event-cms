@@ -18,7 +18,7 @@ class ConfigViewModelImpl extends ConfigViewModel {
   final ConfigUseCase configUseCase = getIt<ConfigUseCase>();
 
   @override
-  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished); 
+  ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.loadFinished);
 
   @override
   String errorMessage = '';

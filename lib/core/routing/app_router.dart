@@ -7,9 +7,10 @@ import '../../presentation/ui/screens/config/config_screen.dart';
 // ignore: avoid_classes_with_only_static_members
 class AppRouter {
   // Paths
-  static const String homePath = '/'; 
+  static const String homePath = '/';
   static const String eventFormPath = '/events/edit';
-  static const String eventDetailPath = '/event/detail/:eventId/:location/:onlyOneEvent';
+  static const String eventDetailPath =
+      '/event/detail/:eventId/:location/:onlyOneEvent';
   static const String agendaFormPath = '/agenda/form';
   static const String speakerFormPath = '/speaker/form';
   static const String sponsorFormPath = '/sponsor/form';
@@ -38,8 +39,16 @@ class AppRouter {
             builder: (context, state) {
               final eventId = state.pathParameters['eventId'] ?? '';
               final location = state.pathParameters['location'] ?? '';
-              bool onlyOneEvent = bool.tryParse(state.pathParameters['onlyOneEvent'].toString()) ?? false;
-              return EventDetailScreen(eventId: eventId,location: location,onlyOneEvent: onlyOneEvent);
+              bool onlyOneEvent =
+                  bool.tryParse(
+                    state.pathParameters['onlyOneEvent'].toString(),
+                  ) ??
+                  false;
+              return EventDetailScreen(
+                eventId: eventId,
+                location: location,
+                onlyOneEvent: onlyOneEvent,
+              );
             },
           ),
         ],

@@ -75,7 +75,7 @@ class _ConfigScreenState extends State<ConfigScreen> {
               context: context,
               barrierDismissible: false,
               builder: (_) => CustomErrorDialog(
-                errorMessage: location.wrongBranch,
+                errorMessage: viewModel.errorMessage,
                 onCancel: () => {Navigator.of(context).pop()},
                 buttonText: location.closeButton,
               ),

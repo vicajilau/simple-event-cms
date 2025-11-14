@@ -3,8 +3,8 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
-import 'package:sec/presentation/ui/screens/speaker/speakers_screen.dart';
 import 'package:sec/presentation/ui/screens/no_data/no_data_screen.dart';
+import 'package:sec/presentation/ui/screens/speaker/speakers_screen.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/ui/widgets/widgets.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -58,8 +58,9 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
           valueListenable: widget.viewmodel.sponsors,
           builder: (context, sponsors, child) {
             if (sponsors.isEmpty) {
-              return NoDataScreen(message: location.noSponsorsRegistered,icon:
-              Icons.people_outline,
+              return NoDataScreen(
+                message: location.noSponsorsRegistered,
+                icon: Icons.people_outline,
               );
             }
 
@@ -219,48 +220,60 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                             IconWidget(
                                                               icon: Icons
                                                                   .delete_outlined,
-                                                                    onTap:
-                                                                        () async {
-                                                                      final bool?
-                                                                          shouldDelete =
-                                                                          await showDialog<
-                                                                              bool>(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (context) {
-                                                                          return AlertDialog(
-                                                                            title: Text(location
-                                                                                .deleteSponsorTitle),
-                                                                            content: Text(location
-                                                                                .confirmDeleteSponsor(sponsor.name)),
-                                                                            actions: [
-                                                                              TextButton(
-                                                                                onPressed:
-                                                                                    () =>
-                                                                                        Navigator.of(context).pop(false),
-                                                                                child: Text(location.cancel),
-                                                                              ),
-                                                                              TextButton(
-                                                                                onPressed:
-                                                                                    () =>
-                                                                                        Navigator.of(context).pop(true),
-                                                                                child: Text(location.accept),
-                                                                              ),
-                                                                            ],
-                                                                          );
-                                                                        },
-                                                                      );
-                                                                      if (shouldDelete ==
-                                                                          true) {
-                                                                        await widget
-                                                                            .viewmodel
-                                                                            .removeSponsor(
+                                                              onTap: () async {
+                                                                final bool?
+                                                                shouldDelete = await showDialog<bool>(
+                                                                  context:
+                                                                      context,
+                                                                  builder: (context) {
+                                                                    return AlertDialog(
+                                                                      title: Text(
+                                                                        location
+                                                                            .deleteSponsorTitle,
+                                                                      ),
+                                                                      content: Text(
+                                                                        location.confirmDeleteSponsor(
                                                                           sponsor
-                                                                              .uid,
-                                                                        );
-                                                                      }
-                                                                    },
+                                                                              .name,
+                                                                        ),
+                                                                      ),
+                                                                      actions: [
+                                                                        TextButton(
+                                                                          onPressed: () =>
+                                                                              Navigator.of(
+                                                                                context,
+                                                                              ).pop(
+                                                                                false,
+                                                                              ),
+                                                                          child: Text(
+                                                                            location.cancel,
+                                                                          ),
+                                                                        ),
+                                                                        TextButton(
+                                                                          onPressed: () =>
+                                                                              Navigator.of(
+                                                                                context,
+                                                                              ).pop(
+                                                                                true,
+                                                                              ),
+                                                                          child: Text(
+                                                                            location.accept,
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    );
+                                                                  },
+                                                                );
+                                                                if (shouldDelete ==
+                                                                    true) {
+                                                                  await widget
+                                                                      .viewmodel
+                                                                      .removeSponsor(
+                                                                        sponsor
+                                                                            .uid,
+                                                                      );
+                                                                }
+                                                              },
                                                             ),
                                                           ],
                                                         );

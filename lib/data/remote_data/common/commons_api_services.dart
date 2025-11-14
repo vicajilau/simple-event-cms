@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:github/github.dart' hide Organization;
 import 'package:http/http.dart' as http;
 import 'package:sec/core/config/secure_info.dart';
-import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/di/config_dependency_helper.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
 import 'package:sec/core/models/github_json_model.dart';
@@ -110,20 +110,36 @@ class CommonsServicesImp extends CommonsServices {
       }
 
       if (e is RepositoryNotFound) {
-        throw NetworkException("Repository not found.",
-            cause: e, stackTrace: st, url: url);
+        throw NetworkException(
+          "Repository not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
       }
       if (e is UserNotFound) {
-        throw NetworkException("User not found.",
-            cause: e, stackTrace: st, url: url);
+        throw NetworkException(
+          "User not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
       }
       if (e is OrganizationNotFound) {
-        throw NetworkException("Organization not found.",
-            cause: e, stackTrace: st, url: url);
+        throw NetworkException(
+          "Organization not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
       }
       if (e is TeamNotFound) {
-        throw NetworkException("Team not found.",
-            cause: e, stackTrace: st, url: url);
+        throw NetworkException(
+          "Team not found.",
+          cause: e,
+          stackTrace: st,
+          url: url,
+        );
       }
       if (e is AccessForbidden) {
         throw NetworkException(
@@ -315,8 +331,7 @@ class CommonsServicesImp extends CommonsServices {
     String pathUrl,
     String commitMessage,
   ) async {
-    final Config orgToUse =
-        (data is Config) ? data as Config : config;
+    final Config orgToUse = (data is Config) ? data as Config : config;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
       (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
@@ -490,8 +505,7 @@ class CommonsServicesImp extends CommonsServices {
     try {
       RepositorySlug repositorySlug = RepositorySlug(
         config.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ??
-            config.projectName,
+        (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,

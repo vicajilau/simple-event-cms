@@ -49,9 +49,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
 
   @override
   Future<void> setup([Object? argument]) async {
-    await SecureInfo.saveGithubKey(
-      GithubData(projectName: config.projectName),
-    );
+    await SecureInfo.saveGithubKey(GithubData(projectName: config.projectName));
     await loadEvents();
   }
 
@@ -221,18 +219,21 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
     final gitHubService = await SecureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
-    var positionEventToView = eventsToShow.value.indexWhere((event) => event.uid == config.eventForcedToViewUID);
-    if ((eventsToShow.value.length == 1 ||
-        positionEventToView != -1) &&
+    var positionEventToView = eventsToShow.value.indexWhere(
+      (event) => event.uid == config.eventForcedToViewUID,
+    );
+    if ((eventsToShow.value.length == 1 || positionEventToView != -1) &&
         isTokenNull &&
-        eventsToShow.value.indexWhere((event) => event.isVisible == true) != -1) {
-
-     Event eventToGo;
-     if(positionEventToView != -1){
-       eventToGo = eventsToShow.value[positionEventToView];
-     }else{
-       eventToGo = eventsToShow.value.firstWhere((event) => event.isVisible == true);
-     }
+        eventsToShow.value.indexWhere((event) => event.isVisible == true) !=
+            -1) {
+      Event eventToGo;
+      if (positionEventToView != -1) {
+        eventToGo = eventsToShow.value[positionEventToView];
+      } else {
+        eventToGo = eventsToShow.value.firstWhere(
+          (event) => event.isVisible == true,
+        );
+      }
 
       await AppRouter.router.pushNamed(
         AppRouter.eventDetailName,

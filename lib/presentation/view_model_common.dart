@@ -13,11 +13,10 @@ abstract class ViewModelCommon {
   void dispose();
   Future<bool> checkToken();
   void setErrorKey(CustomException? exception) {
-    if(exception !=null ){
+    if (exception != null) {
       errorMessage = exception.message;
-    }else{
+    } else {
       errorMessage = "";
     }
-
   }
 }

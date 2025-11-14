@@ -212,9 +212,11 @@ class _AgendaScreenState extends State<AgendaScreen>
     String agendaDayId,
     String eventId,
   ) {
-    if(tabBarIndex >= tracks.length) {
+    if (tabBarIndex >= tracks.length) {
       tabBarIndex = 0;
-      return const SizedBox.shrink();
+      if (tracks.isEmpty) {
+        return const SizedBox.shrink();
+      }
     }
     return DefaultTabController(
       initialIndex: tabBarIndex,

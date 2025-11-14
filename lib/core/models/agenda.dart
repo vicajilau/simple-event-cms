@@ -1,4 +1,5 @@
 import 'package:sec/core/config/paths_github.dart';
+
 import 'github/github_model.dart';
 
 /// Represents a single day in the event agenda, linking to tracks by their UIDs.
@@ -22,12 +23,18 @@ class AgendaDay extends GitHubModel {
     return AgendaDay(
       uid: json['UID'],
       date: json['date'],
-      eventsUID: (json['eventUID'] as List<dynamic>?)
-          ?.map<String>((trackUid) => trackUid['UID'].toString())
-          .toSet().toList() ?? [],
-      trackUids: (json['trackUids'] as List?)
-          ?.map<String>((trackUid) => trackUid['UID'].toString())
-          .toSet().toList() ?? [],
+      eventsUID:
+          (json['eventUID'] as List<dynamic>?)
+              ?.map<String>((trackUid) => trackUid['UID'].toString())
+              .toSet()
+              .toList() ??
+          [],
+      trackUids:
+          (json['trackUids'] as List?)
+              ?.map<String>((trackUid) => trackUid['UID'].toString())
+              .toSet()
+              .toList() ??
+          [],
       // resolvedTracks will be populated by DataLoader
     );
   }
@@ -37,7 +44,9 @@ class AgendaDay extends GitHubModel {
     "UID": uid,
     "date": date,
     "eventUID": eventsUID.toSet().map((uid) => {'UID': uid}).toList(),
-    "trackUids": trackUids?.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
+    "trackUids": trackUids
+        ?.map((uid) => {'UID': uid})
+        .toList(), // Only UIDs are serialized
   };
 }
 
@@ -47,7 +56,8 @@ class Track extends GitHubModel {
   String eventUid;
   final String color;
   List<String> sessionUids = [];
-  List<Session> resolvedSessions = []; // Field for in-memory resolved objects, order might matter for display.
+  List<Session> resolvedSessions =
+      []; // Field for in-memory resolved objects, order might matter for display.
 
   Track({
     required super.uid,
@@ -68,7 +78,8 @@ class Track extends GitHubModel {
       eventUid: json['eventUid'],
       sessionUids: (json['sessionUids'] as List<dynamic>)
           .map<String>((sessionUid) => sessionUid['UID'].toString())
-          .toSet().toList(),
+          .toSet()
+          .toList(),
       // resolvedSessions will be populated by DataLoader
     );
   }
@@ -78,8 +89,10 @@ class Track extends GitHubModel {
     "UID": uid,
     "name": name,
     "color": color,
-    "sessionUids": sessionUids.map((uid) => {'UID': uid}).toList(), // Only UIDs are serialized
-    "eventUid": eventUid
+    "sessionUids": sessionUids
+        .map((uid) => {'UID': uid})
+        .toList(), // Only UIDs are serialized
+    "eventUid": eventUid,
   };
 }
 

@@ -34,6 +34,6 @@ class SponsorUseCaseImp implements SponsorUseCase {
 
   @override
   Future<Result<void>> removeSponsor(String sponsorId) async {
-    return  await repository.removeSponsor(sponsorId);
+    return await repository.removeSponsor(sponsorId);
   }
 }

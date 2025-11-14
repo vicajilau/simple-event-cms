@@ -21,13 +21,15 @@ class DataLoader {
     // Check if data is already loaded and if it's been less than 5 minutes
     if (_allData != null &&
         _lastFetchTime != null &&
-        DateTime.now().difference(_lastFetchTime!) < const Duration(minutes: 5) &&
-    githubDataSaving.token == null && !forceUpdate) {
+        DateTime.now().difference(_lastFetchTime!) <
+            const Duration(minutes: 5) &&
+        githubDataSaving.token == null &&
+        !forceUpdate) {
       return; // Do not fetch new data
     }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
     _allData = GithubJsonModel.fromJson(data);
-    if(githubDataSaving.token == null){
+    if (githubDataSaving.token == null) {
       _lastFetchTime = DateTime.now();
     }
   }
@@ -52,7 +54,6 @@ class DataLoader {
 
     final List<Track> allTracks = _allData?.tracks ?? List.empty();
     final List<Session> allSessions = _allData?.sessions ?? List.empty();
-
 
     for (var track in allTracks) {
       track.resolvedSessions = allSessions

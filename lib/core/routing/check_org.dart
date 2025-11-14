@@ -8,8 +8,8 @@ class CheckOrg {
   final ValueNotifier<bool> _hasError;
 
   CheckOrg({bool initial = false})
-      : _hasError = ValueNotifier(initial),
-        hasErrorListenable = ValueNotifier(initial);
+    : _hasError = ValueNotifier(initial),
+      hasErrorListenable = ValueNotifier(initial);
 
   void setError(bool v) {
     _hasError.value = v;
