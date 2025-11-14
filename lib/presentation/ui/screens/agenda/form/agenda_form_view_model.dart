@@ -156,8 +156,10 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
     final result = await agendaUseCase.getAgendaDayByEventId(eventId);
     switch (result) {
       case Ok<List<AgendaDay>>():
+        final days = List<AgendaDay>.from(result.value)
+          ..sort((a, b) => a.date.compareTo(b.date)); 
         viewState.value = ViewState.loadFinished;
-        return result.value;
+        return days;
       case Error():
         setErrorKey(result.error);
         viewState.value = ViewState.error;
