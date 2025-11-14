@@ -151,28 +151,9 @@ class DataUpdate {
     Session session,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
-    String? parentId,
+    String? trackUID,
   ) async {
-    if (parentId != null && parentId.isNotEmpty) {
-      List<Track> allTracks = await dataLoader.loadAllTracks();
-      for (var track in allTracks) {
-        if (track.uid == parentId) {
-          await _removeSessionFromTrack(track, session.uid);
-          track.sessionUids.toList().add(session.uid);
-          track.resolvedSessions.toList().add(session);
-          await dataUpdateInfo.updateTrack(track);
-        } else if (track.sessionUids.contains(session.uid)) {
-          track.sessionUids.remove(session.uid);
-          if(track.sessionUids.isEmpty){
-            await dataUpdateInfo.removeTrack(track.uid);
-          }else{
-            await dataUpdateInfo.updateTrack(track);
-          }
-
-        }
-      }
-    }
-    await dataUpdateInfo.updateSession(session);
+    await dataUpdateInfo.updateSession(session,trackUID);
     debugPrint("Session ${session.uid} added.");
   }
 
@@ -459,21 +440,6 @@ class DataUpdate {
     await dataUpdateInfo.removeSponsors(sponsorId);
     debugPrint("Sponsor $sponsorId and its associations removed.");
   }
-}
-
-Future<Track> _removeSessionFromTrack(Track track, String sessionId) async {
-  final sessionUidIndex = track.sessionUids.indexOf(sessionId);
-  if (sessionUidIndex != -1) {
-    track.sessionUids.removeAt(sessionUidIndex);
-  }
-
-  final resolvedSessionIndex = track.resolvedSessions.indexWhere(
-    (session) => session.uid == sessionId,
-  );
-  if (resolvedSessionIndex != -1) {
-    track.resolvedSessions.removeAt(resolvedSessionIndex);
-  }
-  return track;
 }
 
 Future<void> _updateAgendaDaysRemovingTrack(

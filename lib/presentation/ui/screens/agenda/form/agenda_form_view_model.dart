@@ -320,47 +320,8 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
       eventUID: eventId,
       agendaDayUID: selectedDay,
     );
-    var selectedTrack = tracks.firstWhere(
-      (track) => track.uid == selectedTrackUid,
-    );
-    var oldSelectedTrack = tracks
-        .where((track) => oldTrackId == track.uid)
-        .toList()
-        .firstOrNull;
-
-    if (oldSelectedTrack != null) {
-      oldSelectedTrack.sessionUids.remove(sessionUid);
-      await updateTrack(oldSelectedTrack, selectedDay);
-    }
 
     await addSession(session, selectedTrackUid);
-    var event = await getEventById(eventId);
-
-    selectedTrack.eventUid = event!.uid.toString();
-    selectedTrack.sessionUids.add(session.uid);
-    selectedTrack.resolvedSessions.toList().add(session);
-    AgendaDay agendaDay = agendaDays.firstWhere(
-      (day) => day.uid == selectedDay,
-    );
-    agendaDay.eventsUID.add(event.uid.toString());
-    agendaDay.trackUids?.add(selectedTrack.uid);
-    agendaDay.resolvedTracks?.toList().add(selectedTrack);
-    if (agendaDays.indexWhere((day) => day.uid == selectedDay) != -1) {
-      agendaDays.removeWhere((day) => day.uid == selectedDay);
-    }
-    agendaDays.add(agendaDay);
-
-    event.tracks.removeWhere((track) => track.uid == selectedTrackUid);
-    event.tracks.add(selectedTrack);
-
-    debugPrint('Selected track: ${selectedTrack.name}');
-    debugPrint('Event uid: ${event.uid}');
-    debugPrint('Selected track uid: ${selectedTrack.uid}');
-    debugPrint('sessions track: ${selectedTrack.sessionUids}');
-
-    await updateTrack(selectedTrack, agendaDay.uid);
-    await updateEvent(event);
-    await updateAgendaDay(agendaDay, event.uid.toString());
 
     viewState.value = ViewState.loadFinished;
     var containsAgendaDays = agendaDays.indexWhere(
