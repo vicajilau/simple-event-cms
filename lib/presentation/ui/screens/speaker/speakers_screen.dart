@@ -42,14 +42,16 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (!mounted) return;
-            showDialog(
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            await showDialog(
               context: context,
               barrierDismissible: false,
               builder: (_) => CustomErrorDialog(
                 errorMessage: widget.viewmodel.errorMessage,
-                onCancel: () => {Navigator.of(context).pop()},
+                onCancel: () => {
+                  widget.viewmodel.viewState.value = ViewState.loadFinished,
+                  Navigator.of(context).pop()
+                },
                 buttonText: location.closeButton,
               ),
             );
