@@ -10,8 +10,6 @@ class Event extends GitHubModel {
   /// The name of the event_collection (e.g., "DevFest Spain 2025")
   final String eventName;
 
-
-
   /// The year of the event_collection, used for organizing multi-year events
   final String year;
 
@@ -26,7 +24,7 @@ class Event extends GitHubModel {
 
   /// Optional description of the event_collection
   final String? description;
-  
+
   /// The location of the event
   final String? location;
 
@@ -35,7 +33,6 @@ class Event extends GitHubModel {
 
   /// Indica si el evento está visible o no
   bool isVisible = true;
-
 
   /// Creates a new event instance
   Event({
@@ -61,8 +58,9 @@ class Event extends GitHubModel {
   factory Event.fromJson(Map<String, dynamic> json) {
     List<Track> tracks = (json['tracks'] != null)
         ? (json['tracks'] as List?)
-            ?.map((item) => Track.fromJson(item))
-            .toList() ?? []
+                  ?.map((item) => Track.fromJson(item))
+                  .toList() ??
+              []
         : [];
     return Event(
       uid: json["UID"].toString(),

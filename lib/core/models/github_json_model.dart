@@ -4,7 +4,6 @@ import 'package:sec/core/models/models.dart';
 /// Contains all the essential information needed to configure and display an event_collection
 /// including branding, dates, venue, and deployment settings
 class GithubJsonModel {
-
   final List<Event> events;
 
   /// the name of the room where the event_collection will take place
@@ -40,27 +39,39 @@ class GithubJsonModel {
   factory GithubJsonModel.fromJson(Map<String, dynamic> json) {
     List<Event> events = (json['events'] != null)
         ? (json['events'] as List?)
-        ?.map((item) => Event.fromJson(item))
-        .toList() ?? []
+                  ?.map((item) => Event.fromJson(item))
+                  .toList() ??
+              []
         : [];
     List<Track> tracks = (json['tracks'] != null)
         ? (json['tracks'] as List?)
-        ?.map((item) => Track.fromJson(item))
-        .toList() ?? []
+                  ?.map((item) => Track.fromJson(item))
+                  .toList() ??
+              []
         : [];
     List<Session> sessions = (json['sessions'] != null)
-        ? (json['sessions'] as List?)?.map((item) => Session.fromJson(item)).toList() ?? []
+        ? (json['sessions'] as List?)
+                  ?.map((item) => Session.fromJson(item))
+                  .toList() ??
+              []
         : [];
     List<AgendaDay> agendadays = (json['agendadays'] != null)
         ? (json['agendadays'] as List?)
-        ?.map((item) => AgendaDay.fromJson(item))
-        .toList() ?? []
+                  ?.map((item) => AgendaDay.fromJson(item))
+                  .toList() ??
+              []
         : [];
     List<Sponsor> sponsors = (json['sponsors'] != null)
-        ? (json['sponsors'] as List?)?.map((item) => Sponsor.fromJson(item)).toList() ?? []
+        ? (json['sponsors'] as List?)
+                  ?.map((item) => Sponsor.fromJson(item))
+                  .toList() ??
+              []
         : [];
     List<Speaker> speakers = (json['speakers'] != null)
-        ? (json['speakers'] as List?)?.map((item) => Speaker.fromJson(item)).toList() ?? []
+        ? (json['speakers'] as List?)
+                  ?.map((item) => Speaker.fromJson(item))
+                  .toList() ??
+              []
         : [];
     return GithubJsonModel(
       events: events,
@@ -71,7 +82,6 @@ class GithubJsonModel {
       speakers: speakers,
     );
   }
-
 
   Map<String, dynamic> toJson() {
     return {

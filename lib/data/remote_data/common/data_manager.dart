@@ -32,7 +32,12 @@ class DataUpdate {
         );
         break;
       case "Track":
-        await _deleteTrack(itemId, dataLoader, dataUpdateInfo,overrideData = overrideData);
+        await _deleteTrack(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          overrideData = overrideData,
+        );
         break;
       case "AgendaDay":
         await _deleteAgendaDay(
@@ -153,7 +158,7 @@ class DataUpdate {
     DataUpdateInfo dataUpdateInfo,
     String? trackUID,
   ) async {
-    await dataUpdateInfo.updateSession(session,trackUID);
+    await dataUpdateInfo.updateSession(session, trackUID);
     debugPrint("Session ${session.uid} added.");
   }
 
@@ -250,13 +255,14 @@ class DataUpdate {
   static Future<void> _deleteTrack(
     String trackId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, [bool override = false]
-  ) async {
+    DataUpdateInfo dataUpdateInfo, [
+    bool override = false,
+  ]) async {
     var allTracks = await dataLoader.loadAllTracks();
     var track = allTracks.firstWhere((t) => t.uid == trackId);
-    if(track.sessionUids.isEmpty || override){
+    if (track.sessionUids.isEmpty || override) {
       Event event = (await dataLoader.loadEvents()).toList().firstWhere(
-            (event) => event.tracks.any((track) => track.uid == trackId),
+        (event) => event.tracks.any((track) => track.uid == trackId),
       );
       event.tracks.removeWhere((track) => track.uid == trackId);
       await dataUpdateInfo.updateEvent(event);
@@ -268,11 +274,14 @@ class DataUpdate {
       }
       await dataUpdateInfo.removeTrack(trackId);
       debugPrint("Track $trackId and its associations removed.");
-    }else{
-      debugPrint("Track $trackId not removed because has another sessions associated.");
-      throw CertainException("Track ${track.name} not removed because has another sessions associated.");
+    } else {
+      debugPrint(
+        "Track $trackId not removed because has another sessions associated.",
+      );
+      throw CertainException(
+        "Track ${track.name} not removed because has another sessions associated.",
+      );
     }
-
   }
 
   static Future<void> _addAgendaDay(

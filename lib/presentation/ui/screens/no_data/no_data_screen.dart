@@ -4,11 +4,7 @@ class NoDataScreen extends StatelessWidget {
   final String message;
   final IconData? icon;
 
-  const NoDataScreen({
-    super.key,
-    required this.message,
-    this.icon,
-  });
+  const NoDataScreen({super.key, required this.message, this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +22,8 @@ class NoDataScreen extends StatelessWidget {
             message,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

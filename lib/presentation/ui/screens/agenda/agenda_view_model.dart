@@ -29,7 +29,6 @@ class AgendaViewModelImp extends AgendaViewModel {
   @override
   ValueNotifier<List<AgendaDay>> agendaDays = ValueNotifier([]);
 
-
   final AgendaUseCase agendaUseCase = getIt<AgendaUseCase>();
 
   @override
@@ -63,19 +62,24 @@ class AgendaViewModelImp extends AgendaViewModel {
         agendaDays.value = result.value
             .where(
               (agendaDay) =>
-          agendaDay.eventsUID.contains(eventId) &&
-              agendaDay.resolvedTracks != null &&
-              agendaDay.resolvedTracks!.isNotEmpty &&
-              agendaDay.resolvedTracks!
-                  .expand((track) => track.resolvedSessions)
-                  .isNotEmpty &&
-              agendaDay.resolvedTracks!
-                  .expand((track) => track.resolvedSessions)
-                  .toList()
-                  .where((session) => session.agendaDayUID == agendaDay.uid && session.eventUID == eventId)
-                  .toList()
-                  .isNotEmpty,
-        ).toList(growable: true);
+                  agendaDay.eventsUID.contains(eventId) &&
+                  agendaDay.resolvedTracks != null &&
+                  agendaDay.resolvedTracks!.isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .isNotEmpty &&
+                  agendaDay.resolvedTracks!
+                      .expand((track) => track.resolvedSessions)
+                      .toList()
+                      .where(
+                        (session) =>
+                            session.agendaDayUID == agendaDay.uid &&
+                            session.eventUID == eventId,
+                      )
+                      .toList()
+                      .isNotEmpty,
+            )
+            .toList(growable: true);
         final resultSpeakers = await agendaUseCase.getSpeakersForEventId(
           eventId,
         );

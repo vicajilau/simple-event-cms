@@ -56,13 +56,23 @@ class EventUseCaseImp implements EventUseCase {
           AgendaDay(uid: date, date: date, eventsUID: [event.uid].toList()),
         );
       }
-      return await repository.saveAgendaDays(days, event.uid,overrideAgendaDays: true);
-    }else if(startDate != null){
-      var date = DateFormat(
-        'yyyy-MM-dd',
-      ).format(startDate);
-      final agendaDayToAdd = AgendaDay(uid: date, date: date, eventsUID: [event.uid].toList());
-      return await repository.saveAgendaDays([agendaDayToAdd], event.uid,overrideAgendaDays: true);
+      return await repository.saveAgendaDays(
+        days,
+        event.uid,
+        overrideAgendaDays: true,
+      );
+    } else if (startDate != null) {
+      var date = DateFormat('yyyy-MM-dd').format(startDate);
+      final agendaDayToAdd = AgendaDay(
+        uid: date,
+        date: date,
+        eventsUID: [event.uid].toList(),
+      );
+      return await repository.saveAgendaDays(
+        [agendaDayToAdd],
+        event.uid,
+        overrideAgendaDays: true,
+      );
     } else {
       return Result.error(GithubException("Invalid date format"));
     }

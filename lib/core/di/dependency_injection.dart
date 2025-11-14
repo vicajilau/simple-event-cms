@@ -8,8 +8,8 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 import 'package:sec/domain/repositories/token_repository.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
-import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/domain/use_cases/config_use_case.dart';
+import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/domain/use_cases/sponsor_use_case.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
@@ -48,18 +48,14 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<AgendaUseCase>(() => AgendaUseCaseImpl());
   getIt.registerLazySingleton<SpeakerUseCase>(() => SpeakerUseCaseImp());
   getIt.registerLazySingleton<SponsorUseCase>(() => SponsorUseCaseImp());
-  getIt.registerLazySingleton<ConfigUseCase>(
-    () => ConfigUseCaseImp(),
-  );
+  getIt.registerLazySingleton<ConfigUseCase>(() => ConfigUseCaseImp());
 
   // Event ViewModel
   getIt.registerLazySingleton<EventCollectionViewModel>(
     () => EventCollectionViewModelImp(),
   );
   getIt.registerLazySingleton<AgendaViewModel>(() => AgendaViewModelImp());
-  getIt.registerLazySingleton<ConfigViewModel>(
-    () => ConfigViewModelImpl(),
-  );
+  getIt.registerLazySingleton<ConfigViewModel>(() => ConfigViewModelImpl());
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());
   getIt.registerLazySingleton<EventDetailViewModel>(

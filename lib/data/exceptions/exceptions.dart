@@ -29,11 +29,11 @@ class JsonDecodeException extends CustomException {
 
 class GithubException extends CustomException {
   const GithubException(
-      super.message, {
-        super.url,
-        super.cause,
-        super.stackTrace,
-      });
+    super.message, {
+    super.url,
+    super.cause,
+    super.stackTrace,
+  });
 }
 
 class NetworkException extends CustomException {

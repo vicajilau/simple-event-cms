@@ -82,13 +82,16 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                 backgroundColor: Colors.white,
                 titleSpacing: 0.0,
                 centerTitle: false,
-                iconTheme: const IconThemeData(color: Colors.blue), // Applied to leading icon if any
-                automaticallyImplyLeading: false, // We handle the back button manually
+                iconTheme: const IconThemeData(
+                  color: Colors.blue,
+                ), // Applied to leading icon if any
+                automaticallyImplyLeading:
+                    false, // We handle the back button manually
                 elevation: 0,
                 title: GestureDetector(
                   onTap: () async {
                     _titleTapCount++;
-        
+
                     if (_titleTapCount >= 5) {
                       _titleTapCount = 0;
                       var githubService = await SecureInfo.getGithubKey();
@@ -131,7 +134,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           if (confirm == true) {
                             setState(() async {
                               await SecureInfo.removeGithubKey();
-                              await widget.viewmodel.loadEventData(widget.eventId);
+                              await widget.viewmodel.loadEventData(
+                                widget.eventId,
+                              );
                             });
                           }
                         }
@@ -155,9 +160,13 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           if (!value)
                             const BackButton()
                           else
-                            const SizedBox(width: 16), // Maintain alignment when no back button
+                            const SizedBox(
+                              width: 16,
+                            ), // Maintain alignment when no back button
                           const Padding(
-                            padding: EdgeInsets.only(left: 0), // Adjusted from 8.0
+                            padding: EdgeInsets.only(
+                              left: 0,
+                            ), // Adjusted from 8.0
                             child: Icon(
                               Icons.calendar_today,
                               color: Colors.blue,
@@ -176,12 +185,18 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                       final tabBarWidget = TabBar(
                         controller: _tabController,
                         isScrollable: isWideScreen,
-                        tabAlignment: isWideScreen ? TabAlignment.center : TabAlignment.fill,
+                        tabAlignment: isWideScreen
+                            ? TabAlignment.center
+                            : TabAlignment.fill,
                         labelColor: Colors.blue,
-                        padding: isWideScreen ? const EdgeInsets.symmetric(horizontal: 16.0) : EdgeInsets.zero,
+                        padding: isWideScreen
+                            ? const EdgeInsets.symmetric(horizontal: 16.0)
+                            : EdgeInsets.zero,
                         unselectedLabelColor: Colors.grey,
                         dividerHeight: 0,
-                        labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                        labelStyle: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                         indicatorColor: Colors.transparent,
                         unselectedLabelStyle: const TextStyle(
                           fontWeight: FontWeight.bold,
@@ -192,7 +207,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           Tab(child: Text(location.sponsors)),
                         ],
                       );
-        
+
                       if (isWideScreen) {
                         return SizedBox(
                           width: double.infinity,
@@ -214,7 +229,9 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                              ),
                               child: titleWidget,
                             ),
                             tabBarWidget,
@@ -264,24 +281,26 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                                                   eventId: widget.eventId,
                                                 ),
                                               );
-        
+
                                           if (agendaDays != null) {
                                             final AgendaScreen agendaScreen =
                                                 (screens[0] as AgendaScreen);
-                                            agendaScreen.viewmodel.loadAgendaDays(
-                                              widget.eventId,
-                                            );
+                                            agendaScreen.viewmodel
+                                                .loadAgendaDays(widget.eventId);
                                           }
                                           break;
                                         case 1:
                                           final Speaker? newSpeaker =
                                               await AppRouter.router.push(
                                                 AppRouter.speakerFormPath,
-                                                extra: {'eventId': widget.eventId},
+                                                extra: {
+                                                  'eventId': widget.eventId,
+                                                },
                                               );
-        
+
                                           if (newSpeaker != null) {
-                                            final SpeakersScreen speakersScreen =
+                                            final SpeakersScreen
+                                            speakersScreen =
                                                 (screens[1] as SpeakersScreen);
                                             speakersScreen.viewmodel.addSpeaker(
                                               newSpeaker,
@@ -293,11 +312,14 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                                           final Sponsor? newSponsor =
                                               await AppRouter.router.push(
                                                 AppRouter.sponsorFormPath,
-                                                extra: {'eventId': widget.eventId},
+                                                extra: {
+                                                  'eventId': widget.eventId,
+                                                },
                                               );
-        
+
                                           if (newSponsor != null) {
-                                            final SponsorsScreen sponsorsScreen =
+                                            final SponsorsScreen
+                                            sponsorsScreen =
                                                 (screens[2] as SponsorsScreen);
                                             await sponsorsScreen.viewmodel
                                                 .addSponsor(
@@ -373,7 +395,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
             );
           },
         );
-      }
+      },
     );
   }
 }
