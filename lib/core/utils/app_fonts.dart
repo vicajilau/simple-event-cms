@@ -4,7 +4,7 @@ abstract class AppFonts {
   static const TextStyle titleHeadingForm = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 22,
-    color: Colors.blue
+    color: Colors.blue,
   );
 
   static const TextStyle labelMediumForm = TextStyle(

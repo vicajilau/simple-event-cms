@@ -47,13 +47,17 @@ class EventFormViewModelImpl extends EventFormViewModel {
             return true;
           case Error():
             setErrorKey(resultEvent.error);
-            debugPrint('error located into onSubmit()  in saveevent: ${resultEvent.error.message}');
+            debugPrint(
+              'error located into onSubmit()  in saveevent: ${resultEvent.error.message}',
+            );
             viewState.value = ViewState.error;
             return false;
         }
       case Error():
         setErrorKey(result.error);
-        debugPrint('error located into onSubmit()  in prepareAgendaDays: ${result.error.message}');
+        debugPrint(
+          'error located into onSubmit()  in prepareAgendaDays: ${result.error.message}',
+        );
         viewState.value = ViewState.error;
         return false;
     }

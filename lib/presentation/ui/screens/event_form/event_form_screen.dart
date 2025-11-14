@@ -79,7 +79,6 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final GlobalKey<FormFieldState> _locationFieldKey =
       GlobalKey<FormFieldState>();
 
-
   var config = getIt<Config>();
   bool _hasEndDate = true;
   bool _isVisible = true;
@@ -414,9 +413,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                         _tracks = currentRooms;
                       },
                       removeRoom: (Track track) async {
-                        await eventFormViewModel.removeTrack(
-                          track.uid
-                        );
+                        await eventFormViewModel.removeTrack(track.uid);
                       },
                       eventUid: widget.eventId.toString(),
                     ),
@@ -605,7 +602,12 @@ class _EventFormScreenState extends State<EventFormScreen> {
       isVisible: _isVisible,
       eventDates: eventDates,
     );
-    config.eventForcedToViewUID = eventId;
+    if (_isOpenByDefault) {
+      config.eventForcedToViewUID = eventId;
+    } else if (config.eventForcedToViewUID == eventId) {
+      config.eventForcedToViewUID = null;
+    }
+
     await widget.eventCollectionViewModel.updateConfig(config);
     var result = await eventFormViewModel.onSubmit(eventModified);
     if (result) {

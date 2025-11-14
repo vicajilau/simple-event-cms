@@ -32,7 +32,12 @@ class DataUpdate {
         );
         break;
       case "Track":
-        await _deleteTrack(itemId, dataLoader, dataUpdateInfo,overrideData = overrideData);
+        await _deleteTrack(
+          itemId,
+          dataLoader,
+          dataUpdateInfo,
+          overrideData = overrideData,
+        );
         break;
       case "AgendaDay":
         await _deleteAgendaDay(
@@ -151,28 +156,9 @@ class DataUpdate {
     Session session,
     DataLoader dataLoader,
     DataUpdateInfo dataUpdateInfo,
-    String? parentId,
+    String? trackUID,
   ) async {
-    if (parentId != null && parentId.isNotEmpty) {
-      List<Track> allTracks = await dataLoader.loadAllTracks();
-      for (var track in allTracks) {
-        if (track.uid == parentId) {
-          await _removeSessionFromTrack(track, session.uid);
-          track.sessionUids.toList().add(session.uid);
-          track.resolvedSessions.toList().add(session);
-          await dataUpdateInfo.updateTrack(track);
-        } else if (track.sessionUids.contains(session.uid)) {
-          track.sessionUids.remove(session.uid);
-          if(track.sessionUids.isEmpty){
-            await dataUpdateInfo.removeTrack(track.uid);
-          }else{
-            await dataUpdateInfo.updateTrack(track);
-          }
-
-        }
-      }
-    }
-    await dataUpdateInfo.updateSession(session);
+    await dataUpdateInfo.updateSession(session, trackUID);
     debugPrint("Session ${session.uid} added.");
   }
 
@@ -269,13 +255,14 @@ class DataUpdate {
   static Future<void> _deleteTrack(
     String trackId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, [bool override = false]
-  ) async {
+    DataUpdateInfo dataUpdateInfo, [
+    bool override = false,
+  ]) async {
     var allTracks = await dataLoader.loadAllTracks();
     var track = allTracks.firstWhere((t) => t.uid == trackId);
-    if(track.sessionUids.isEmpty || override){
+    if (track.sessionUids.isEmpty || override) {
       Event event = (await dataLoader.loadEvents()).toList().firstWhere(
-            (event) => event.tracks.any((track) => track.uid == trackId),
+        (event) => event.tracks.any((track) => track.uid == trackId),
       );
       event.tracks.removeWhere((track) => track.uid == trackId);
       await dataUpdateInfo.updateEvent(event);
@@ -287,11 +274,14 @@ class DataUpdate {
       }
       await dataUpdateInfo.removeTrack(trackId);
       debugPrint("Track $trackId and its associations removed.");
-    }else{
-      debugPrint("Track $trackId not removed because has another sessions associated.");
-      throw CertainException("Track ${track.name} not removed because has another sessions associated.");
+    } else {
+      debugPrint(
+        "Track $trackId not removed because has another sessions associated.",
+      );
+      throw CertainException(
+        "Track ${track.name} not removed because has another sessions associated.",
+      );
     }
-
   }
 
   static Future<void> _addAgendaDay(
@@ -459,21 +449,6 @@ class DataUpdate {
     await dataUpdateInfo.removeSponsors(sponsorId);
     debugPrint("Sponsor $sponsorId and its associations removed.");
   }
-}
-
-Future<Track> _removeSessionFromTrack(Track track, String sessionId) async {
-  final sessionUidIndex = track.sessionUids.indexOf(sessionId);
-  if (sessionUidIndex != -1) {
-    track.sessionUids.removeAt(sessionUidIndex);
-  }
-
-  final resolvedSessionIndex = track.resolvedSessions.indexWhere(
-    (session) => session.uid == sessionId,
-  );
-  if (resolvedSessionIndex != -1) {
-    track.resolvedSessions.removeAt(resolvedSessionIndex);
-  }
-  return track;
 }
 
 Future<void> _updateAgendaDaysRemovingTrack(

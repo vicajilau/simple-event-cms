@@ -172,10 +172,13 @@ class DataUpdateInfo {
     } else {
       tracksOriginal.add(track);
     }
-    await _updateAllEventData(tracks: tracksOriginal,overrideData: true);
+    await _updateAllEventData(tracks: tracksOriginal, overrideData: true);
   }
 
-  Future<void> updateTracks(List<Track> tracks,{bool overrideData = false}) async {
+  Future<void> updateTracks(
+    List<Track> tracks, {
+    bool overrideData = false,
+  }) async {
     await _updateAllEventData(tracks: tracks, overrideData: overrideData);
   }
 
@@ -253,15 +256,59 @@ class DataUpdateInfo {
     await _updateAllEventData(events: events);
   }
 
-  Future<void> updateSession(Session session) async {
+  Future<void> updateSession(Session session, String? trackUID) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
+    Track? track = (await dataLoader.loadAllTracks())
+        .where((selectedTrack) => selectedTrack.uid == trackUID)
+        .toList()
+        .firstOrNull;
+
+    List<Event> events = (await dataLoader.loadEvents()).map((event) {
+      var trackSelectedIndez = event.tracks.indexWhere(
+        (track) => track.uid == trackUID,
+      );
+      if (trackSelectedIndez != -1) {
+        event.tracks.removeAt(trackSelectedIndez);
+      }
+
+      if (track != null && track.eventUid == event.uid) {
+        event.tracks.add(track);
+      }
+      return event;
+    }).toList();
+
+    List<Track> tracks = (await dataLoader.loadAllTracks()).map((track) {
+      if (track.uid != trackUID) {
+        track.sessionUids.remove(session.uid);
+      } else {
+        track.sessionUids.add(session.uid);
+      }
+      return track;
+    }).toList();
+
+    List<AgendaDay> agendaDays = (await dataLoader.loadAllDays()).map((day) {
+      if (day.trackUids?.contains(trackUID) == true) {
+        day.trackUids?.remove(trackUID);
+      }
+      if (day.uid == session.agendaDayUID && trackUID != null) {
+        day.trackUids?.add(trackUID);
+      }
+      return day;
+    }).toList();
+
     int index = sessionListOriginal.indexWhere((s) => s.uid == session.uid);
     if (index != -1) {
       sessionListOriginal[index] = session;
     } else {
       sessionListOriginal.add(session);
     }
-    await _updateAllEventData(sessions: sessionListOriginal,overrideData: true);
+    await _updateAllEventData(
+      events: events,
+      tracks: tracks,
+      agendaDays: agendaDays,
+      sessions: sessionListOriginal,
+      overrideData: true,
+    );
   }
 
   Future<void> updateSessions(List<Session> sessions) async {
@@ -274,8 +321,11 @@ class DataUpdateInfo {
     );
     var allsessions = await dataLoader.loadAllSessions();
 
-    if(allsessions.indexWhere((session)=> session.speakerUID == speakerId) != -1){
-      throw CertainException("Exists sessions with this speaker, please remove them first");
+    if (allsessions.indexWhere((session) => session.speakerUID == speakerId) !=
+        -1) {
+      throw CertainException(
+        "Exists sessions with this speaker, please remove them first",
+      );
     }
 
     if (speakersOriginal.isNotEmpty) {

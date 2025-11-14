@@ -42,27 +42,28 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
         if (value == ViewState.isLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (value == ViewState.error) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (!mounted) return;
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (_) => CustomErrorDialog(
-                  errorMessage: location.wrongBranch,
-                  onCancel: () => {Navigator.of(context).pop()},
-                  buttonText: location.closeButton,
-                ),
-              );
-            });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (!mounted) return;
+            showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (_) => CustomErrorDialog(
+                errorMessage: location.wrongBranch,
+                onCancel: () => {Navigator.of(context).pop()},
+                buttonText: location.closeButton,
+              ),
+            );
+          });
         }
 
         return ValueListenableBuilder<List<Speaker>>(
           valueListenable: widget.viewmodel.speakers,
           builder: (context, speakers, child) {
             if (speakers.isEmpty) {
-              return NoDataScreen(message: location.noSpeakersRegistered,icon:
-                Icons.people_outline,
-             );
+              return NoDataScreen(
+                message: location.noSpeakersRegistered,
+                icon: Icons.people_outline,
+              );
             }
 
             return LayoutBuilder(
@@ -91,7 +92,8 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                           itemBuilder: (context, index) {
                             final speaker = speakers[index];
                             // Dentro de itemBuilder(...)
-                            return Card( // Inside itemBuilder(...)
+                            return Card(
+                              // Inside itemBuilder(...)
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(24),
                                 side: const BorderSide(
@@ -243,7 +245,8 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                                 extra: args,
                                                               );
                                                           if (updated != null) {
-                                                            await widget.viewmodel
+                                                            await widget
+                                                                .viewmodel
                                                                 .editSpeaker(
                                                                   updated,
                                                                   widget
@@ -258,46 +261,57 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                                                             .delete_outlined,
                                                         onTap: () async {
                                                           final bool?
-                                                              shouldDelete =
-                                                              await showDialog<
-                                                                  bool>(
+                                                          shouldDelete = await showDialog<bool>(
                                                             context: context,
-                                                            builder: (context) =>
-                                                                AlertDialog(
-                                                              title: Text(location
-                                                                  .deleteSpeaker),
-                                                              content: Text(location
-                                                                  .confirmDeleteSpeaker(
+                                                            builder: (context) => AlertDialog(
+                                                              title: Text(
+                                                                location
+                                                                    .deleteSpeaker,
+                                                              ),
+                                                              content: Text(
+                                                                location
+                                                                    .confirmDeleteSpeaker(
                                                                       speaker
-                                                                          .name)),
+                                                                          .name,
+                                                                    ),
+                                                              ),
                                                               actions: [
                                                                 TextButton(
                                                                   onPressed: () =>
                                                                       Navigator.of(
-                                                                              context)
-                                                                          .pop(
-                                                                              false),
+                                                                        context,
+                                                                      ).pop(
+                                                                        false,
+                                                                      ),
                                                                   child: Text(
-                                                                      location
-                                                                          .cancel),
+                                                                    location
+                                                                        .cancel,
+                                                                  ),
                                                                 ),
                                                                 TextButton(
                                                                   onPressed: () =>
                                                                       Navigator.of(
-                                                                              context)
-                                                                          .pop(true),
+                                                                        context,
+                                                                      ).pop(
+                                                                        true,
+                                                                      ),
                                                                   child: Text(
-                                                                      location.accept),
+                                                                    location
+                                                                        .accept,
+                                                                  ),
                                                                 ),
                                                               ],
                                                             ),
                                                           );
-                                                          if (shouldDelete == true) {
-                                                            await widget.viewmodel
+                                                          if (shouldDelete ==
+                                                              true) {
+                                                            await widget
+                                                                .viewmodel
                                                                 .removeSpeaker(
-                                                              speaker.uid,
-                                                              widget.eventId,
-                                                            );
+                                                                  speaker.uid,
+                                                                  widget
+                                                                      .eventId,
+                                                                );
                                                           }
                                                         },
                                                       ),

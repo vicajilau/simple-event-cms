@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:github/github.dart' hide Organization;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:github/github.dart' hide Organization;
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -127,7 +127,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               prefixIcon: IconButton(
                                 icon: FaIcon(
                                   isObscure
-                                      ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                                      ? FontAwesomeIcons.eye
+                                      : FontAwesomeIcons.eyeSlash,
                                   color: Colors.blue,
                                 ),
                                 onPressed: () =>

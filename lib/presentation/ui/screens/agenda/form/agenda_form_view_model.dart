@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
@@ -9,19 +10,49 @@ import '../../../../../core/utils/result.dart';
 
 abstract class AgendaFormViewModel extends ViewModelCommon {
   Future<Event?> loadEvent(String eventId);
+
   Future<Event?> getEventById(String eventId);
+
   Future<Track?> getTrackById(String trackId);
+
   Future<AgendaDay?> getAgendaDayById(String agendaDayId);
+
   Future<List<AgendaDay>?> getAgendaDayByEventId(String eventId);
+
   Future<List<Track>?> getTracksByEventId(String eventId);
+
   Future<void> updateTrack(Track track, String agendaDayId);
-  Future<void> removeTrack(String trackID,{var overrideTrack = false});
+
+  Future<void> removeTrack(String trackID, {var overrideTrack = false});
+
   Future<void> updateAgendaDay(AgendaDay agendaDay, String eventUID);
+
   Future<List<Speaker>> getSpeakersForEventId(String eventId);
+
   Future<void> addSession(Session session, String trackUID);
+
   Future<void> addSpeaker(String eventId, Speaker speaker);
-  Future<bool> addTrack(Track track,String agendaDayId);
+
+  Future<bool> addTrack(Track track, String agendaDayId);
+
   Future<void> updateEvent(Event event);
+
+  Future<List<AgendaDay>?> saveSession(
+    BuildContext context,
+    String? sessionUid,
+    String title,
+    TimeOfDay? initSessionTime,
+    TimeOfDay? endSessionTime,
+    Speaker selectedSpeaker,
+    String description,
+    String selectedTalkType,
+    String eventId,
+    String selectedDay,
+    List<Track> tracks,
+    String selectedTrackUid,
+    String? oldTrackId,
+    List<AgendaDay> agendaDays,
+  );
 }
 
 class AgendaFormViewModelImpl extends AgendaFormViewModel {
@@ -34,7 +65,6 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
-
 
   @override
   Future<bool> checkToken() async {
@@ -226,7 +256,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<bool> addTrack(Track track,String agendaDayId) async {
+  Future<bool> addTrack(Track track, String agendaDayId) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.updateTrack(track, agendaDayId);
     switch (result) {
@@ -246,7 +276,7 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
   }
 
   @override
-  Future<void> removeTrack(String trackID,{var overrideTrack = false}) async {
+  Future<void> removeTrack(String trackID, {var overrideTrack = false}) async {
     viewState.value = ViewState.isLoading;
     final result = await agendaUseCase.removeTrack(trackID);
     switch (result) {
@@ -257,6 +287,52 @@ class AgendaFormViewModelImpl extends AgendaFormViewModel {
         setErrorKey(result.error);
         viewState.value = ViewState.error;
         return;
+    }
+  }
+
+  @override
+  Future<List<AgendaDay>?> saveSession(
+    BuildContext context,
+    String? sessionUid,
+    String title,
+    TimeOfDay? initSessionTime,
+    TimeOfDay? endSessionTime,
+    Speaker selectedSpeaker,
+    String description,
+    String selectedTalkType,
+    String eventId,
+    String selectedDay,
+    List<Track> tracks,
+    String selectedTrackUid,
+    String? oldTrackId,
+    List<AgendaDay> agendaDays,
+  ) async {
+    Session session = Session(
+      uid:
+          sessionUid ??
+          'Session_${DateFormat('yyyyMMdd_HHmmss').format(DateTime.now())}',
+      title: title,
+      time:
+          '${initSessionTime!.format(context)} - ${endSessionTime!.format(context)}',
+      speakerUID: selectedSpeaker.uid.toString(),
+      description: description,
+      type: selectedTalkType,
+      eventUID: eventId,
+      agendaDayUID: selectedDay,
+    );
+
+    await addSession(session, selectedTrackUid);
+
+    viewState.value = ViewState.loadFinished;
+    var containsAgendaDays = agendaDays.indexWhere(
+      (day) => day.trackUids != null && day.trackUids!.isNotEmpty,
+    );
+    if (containsAgendaDays != -1) {
+      return agendaDays
+          .where((day) => day.trackUids != null && day.trackUids!.isNotEmpty)
+          .toList();
+    } else {
+      return null;
     }
   }
 }
