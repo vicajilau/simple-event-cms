@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/presentation/ui/screens/on_live/on_live_screen.dart';
 import 'package:sec/presentation/ui/screens/screens.dart';
 
 import '../../presentation/ui/screens/config/config_screen.dart';
@@ -61,6 +62,13 @@ class AppRouter {
             : EventFormScreen(eventId: state.extra.toString()),
       ),
       GoRoute(
+        path: eventFormPath,
+        name: eventFormName,
+        builder: (context, state) => state.extra == null
+            ? OnLiveScreen(data: state.extra as OnLiveData)
+            : OnLiveScreen(),
+      ),
+      GoRoute(
         path: configFormPath,
         name: configFormName,
         builder: (context, state) => ConfigScreen(),
@@ -69,6 +77,9 @@ class AppRouter {
         path: agendaFormPath,
         name: agendaFormName,
         builder: (context, state) {
+          if(state.extra == null){
+            return AgendaFormScreen();
+          }
           final agendaFormData = state.extra as AgendaFormData;
           return AgendaFormScreen(data: agendaFormData);
         },

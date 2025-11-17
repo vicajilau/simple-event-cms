@@ -207,5 +207,6 @@
       }
     }
   },
-  "wrongBranch": "O ramo inserido não existe no repositório. Verifique o nome do ramo e tente novamente."
+  "wrongBranch": "O ramo inserido não existe no repositório. Verifique o nome do ramo e tente novamente.",
+  "onLive": "On Live"
 }

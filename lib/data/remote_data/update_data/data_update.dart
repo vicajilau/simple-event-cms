@@ -340,7 +340,7 @@ class DataUpdateInfo {
         } else {
           speakerToRemove.eventUIDS.remove(eventUID);
         }
-        await overwriteItems(speakersOriginal);
+        await overwriteItems(speakersOriginal,Speaker);
       }
     }
   }
@@ -348,7 +348,7 @@ class DataUpdateInfo {
   Future<void> removeSponsors(String sponsorId) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
     sponsorOriginal.removeWhere((sponsor) => sponsor.uid == sponsorId);
-    await overwriteItems(sponsorOriginal);
+    await overwriteItems(sponsorOriginal,Sponsor);
   }
 
   Future<void> removeEvent(String eventId) async {
@@ -395,7 +395,7 @@ class DataUpdateInfo {
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
     agendaDaysListOriginal.removeWhere((day) => day.uid == agendaDayId);
-    await overwriteItems(agendaDaysListOriginal);
+    await overwriteItems(agendaDaysListOriginal,AgendaDay);
   }
 
   Future<void> removeSession(String sessionId) async {
@@ -419,7 +419,7 @@ class DataUpdateInfo {
   Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
     tracksOriginal.removeWhere((track) => track.uid == trackId);
-    await overwriteItems(tracksOriginal);
+    await overwriteItems(tracksOriginal,Track);
   }
 
   /// Overwrites a list of items in the remote data source.
@@ -430,7 +430,7 @@ class DataUpdateInfo {
   ///
   /// [itemsToKeep] is a `List<dynamic>` containing the objects that will form
   /// the new list. All items in the list must be of the same type.
-  Future<void> overwriteItems(List<dynamic> itemsToKeep) async {
+  Future<void> overwriteItems(List<dynamic> itemsToKeep, Type typeItem) async {
     if (itemsToKeep.isEmpty) {
       debugPrint(
         "Warning: Overwriting with an empty list. This will remove all items of this type.",
@@ -439,44 +439,38 @@ class DataUpdateInfo {
       // For now, it's allowed.
     }
 
-    final firstItem = itemsToKeep.isNotEmpty ? itemsToKeep.first : null;
-
-    if (firstItem is Event) {
+    if (typeItem is Event) {
       await _updateAllEventData(
         events: itemsToKeep.cast<Event>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is AgendaDay) {
+    } else if (typeItem is AgendaDay) {
       await _updateAllEventData(
         agendaDays: itemsToKeep.cast<AgendaDay>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Track) {
+    } else if (typeItem is Track) {
       await _updateAllEventData(
         tracks: itemsToKeep.cast<Track>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Session) {
+    } else if (typeItem is Session) {
       await _updateAllEventData(
         sessions: itemsToKeep.cast<Session>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Speaker) {
+    } else if (typeItem is Speaker) {
       await _updateAllEventData(
         speakers: itemsToKeep.cast<Speaker>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Sponsor) {
+    } else if (typeItem is Sponsor) {
       await _updateAllEventData(
         sponsors: itemsToKeep.cast<Sponsor>().toList(),
         overrideData: true,
       );
-    } else if (itemsToKeep.isEmpty) {
-      debugPrint(
-        "List to keep is empty, cannot determine type. No action taken.",
-      );
     } else {
-      debugPrint("Unknown item type for overwrite: ${firstItem.runtimeType}");
+      debugPrint("Unknown item type for overwrite: ${typeItem.runtimeType}");
     }
   }
 }
