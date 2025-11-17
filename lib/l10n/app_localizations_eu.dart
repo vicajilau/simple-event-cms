@@ -550,5 +550,5 @@ class AppLocalizationsEu extends AppLocalizations {
       'Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.';
 
   @override
-  String get selectSpeaker => 'Hautatu hizlaria';
+  String get onLive => 'On Live';
 }

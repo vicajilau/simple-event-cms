@@ -202,5 +202,7 @@
     }
   },
   "wrongBranch": "Il ramo inserito non esiste nel repository. Verifica il nome del ramo e riprova.",
-  "onLive": "On Live"
+  "onLive": "On Live",
+  "selectSpeaker": "Seleziona un relatore"
+
 }

@@ -191,5 +191,7 @@
     }
   },
   "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.",
-  "onLive": "On Live"
+  "onLive": "On Live",
+  "selectSpeaker": "Hautatu hizlaria"
+
 }

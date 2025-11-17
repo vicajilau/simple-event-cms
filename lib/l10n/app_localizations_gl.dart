@@ -552,5 +552,5 @@ class AppLocalizationsGl extends AppLocalizations {
       'A rama introducida non existe no repositorio. Verifica o nome da rama e téntao de novo.';
 
   @override
-  String get selectSpeaker => 'Selecciona un poñente';
+  String get onLive => 'On Live';
 }

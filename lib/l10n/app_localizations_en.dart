@@ -547,5 +547,5 @@ class AppLocalizationsEn extends AppLocalizations {
       'The entered branch does not exist in the repository. Check the branch name and try again.';
 
   @override
-  String get selectSpeaker => 'Select a speaker';
+  String get onLive => 'On Live';
 }

@@ -551,5 +551,5 @@ class AppLocalizationsEs extends AppLocalizations {
       'La rama ingresada no existe en el repositorio. Verifica el nombre de la rama y vuelve a intentarlo.';
 
   @override
-  String get selectSpeaker => 'Selecciona un speaker';
+  String get onLive => 'En Directo';
 }
