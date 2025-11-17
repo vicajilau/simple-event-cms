@@ -1165,6 +1165,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On Live'**
   String get onLive;
+
+  /// No description provided for @selectSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a speaker'**
+  String get selectSpeaker;
 }
 
 class _AppLocalizationsDelegate

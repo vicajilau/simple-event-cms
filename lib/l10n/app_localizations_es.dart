@@ -552,4 +552,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get onLive => 'En Directo';
+
+  @override
+  String get selectSpeaker => 'Selecciona un speaker';
 }

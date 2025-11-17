@@ -556,4 +556,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onLive => 'On Live';
+
+  @override
+  String get selectSpeaker => 'Seleziona un relatore';
 }

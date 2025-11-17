@@ -551,4 +551,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get onLive => 'On Live';
+
+  @override
+  String get selectSpeaker => 'Hautatu hizlaria';
 }

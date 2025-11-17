@@ -10,6 +10,7 @@ class AppRouter {
   // Paths
   static const String homePath = '/';
   static const String eventFormPath = '/events/edit';
+  static const String onLivePath = '/events/onLive';
   static const String eventDetailPath =
       '/event/detail/:eventId/:location/:onlyOneEvent';
   static const String agendaFormPath = '/agenda/form';
@@ -20,6 +21,7 @@ class AppRouter {
   // Names
   static const String homeName = 'home';
   static const String eventFormName = 'admin_edit_event';
+  static const String onLiveName = 'on_live_event';
   static const String eventDetailName = 'event_detail';
   static const String agendaFormName = 'agenda_form';
   static const String speakerFormName = 'speaker_form';
@@ -62,8 +64,8 @@ class AppRouter {
             : EventFormScreen(eventId: state.extra.toString()),
       ),
       GoRoute(
-        path: eventFormPath,
-        name: eventFormName,
+        path: onLivePath,
+        name: onLiveName,
         builder: (context, state) => state.extra == null
             ? OnLiveScreen(data: state.extra as OnLiveData)
             : OnLiveScreen(),

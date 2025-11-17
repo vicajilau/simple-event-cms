@@ -551,4 +551,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onLive => 'On Live';
+
+  @override
+  String get selectSpeaker => 'Selecione um palestrante';
 }
