@@ -1159,6 +1159,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The entered branch does not exist in the repository. Check the branch name and try again.'**
   String get wrongBranch;
+
+  /// No description provided for @selectSpeaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a speaker'**
+  String get selectSpeaker;
 }
 
 class _AppLocalizationsDelegate

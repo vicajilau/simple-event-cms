@@ -553,4 +553,7 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get wrongBranch =>
       'Il ramo inserito non esiste nel repository. Verifica il nome del ramo e riprova.';
+
+  @override
+  String get selectSpeaker => 'Seleziona un relatore';
 }

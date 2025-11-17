@@ -190,5 +190,6 @@
       }
     }
   },
-  "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro."
+  "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.",
+  "selectSpeaker": "Hautatu hizlaria"
 }
