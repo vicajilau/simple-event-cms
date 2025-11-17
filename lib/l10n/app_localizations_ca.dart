@@ -553,4 +553,7 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get wrongBranch =>
       'La branca introduïda no existeix al repositori. Verifica el nom de la branca i torna-ho a intentar.';
+
+  @override
+  String get selectSpeaker => 'Selecciona un ponent';
 }

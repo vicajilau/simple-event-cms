@@ -5,7 +5,6 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/app_decorations.dart';
 import 'package:sec/core/utils/app_fonts.dart';
 import 'package:sec/core/utils/time_utils.dart';
-import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
@@ -358,42 +357,46 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(
-                                child: speakers.isEmpty
-                                    ? Text(location.noSpeakersMessage)
-                                    : DropdownButtonFormField<Speaker>(
-                                        autovalidateMode:
-                                            AutovalidateMode.onUserInteraction,
-                                        initialValue: _selectedSpeaker,
-                                        decoration: InputDecoration(
-                                          hintText: location
-                                              .selectSpeakerHint, // Now shows Speaker's name
+                                child: DropdownButtonFormField<Speaker>(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  initialValue: _selectedSpeaker,
+                                  decoration: InputDecoration(
+                                    hintText: speakers.isEmpty
+                                        ? location
+                                              .selectSpeaker
+                                        : location.selectSpeakerHint,
+                                  ),
+                                  items: speakers
+                                      .map(
+                                        (speaker) => DropdownMenuItem<Speaker>(
+                                          value: speaker,
+                                          child: Text(speaker.name),
                                         ),
-                                        items: speakers
-                                            .map(
-                                              (
-                                                speaker,
-                                              ) => DropdownMenuItem<Speaker>(
-                                                value:
-                                                    speaker, // The value is the Speaker object
-                                                child: Text(speaker.name),
-                                              ),
-                                            )
-                                            .toList(),
-                                        onChanged: (speaker) => setState(() {
-                                          _selectedSpeaker = speaker;
-                                        }),
-                                        validator: (value) {
-                                          if (value == null) {
-                                            // value is a Speaker object or null
-                                            return location.selectSpeakerError;
-                                          }
-                                          return null;
+                                      )
+                                      .toList(),
+                                  onChanged: speakers.isEmpty
+                                      ? null 
+                                      : (speaker) {
+                                          setState(() {
+                                            _selectedSpeaker = speaker;
+                                          });
                                         },
-                                      ),
+                                  validator: (value) {
+                                    if (speakers.isEmpty) {
+                                      return location.noSpeakersMessage;
+                                    }
+                                    if (value == null) {
+                                      return location.selectSpeakerError;
+                                    }
+                                    return null;
+                                  },
+                                ),
                               ),
+
                               IconButton(
                                 icon: Icon(
-                                  Icons.add_circle,
+                                  Icons.add,
                                   color: Theme.of(context).primaryColor,
                                 ),
                                 onPressed: () async {
@@ -496,53 +499,61 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         FilledButton(
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
-            agendaFormViewModel.viewState.value = ViewState.isLoading;
+
+            //to validate values that are not in form fields
+            final isFormValid = _formKey.currentState?.validate() ?? false;
+
+            final bool areStateFieldsValid =
+                _selectedDay.isNotEmpty &&
+                _selectedTrackUid.isNotEmpty &&
+                _selectedSpeaker != null &&
+                _selectedTalkType.isNotEmpty;
+
+            if (!isFormValid || !areStateFieldsValid) {
+             return;
+            }
 
             bool isTimeValid = true;
+
             if (_initSessionTime == null || _endSessionTime == null) {
-              agendaFormViewModel.setErrorKey(
-                NetworkException(
-                  _timeErrorMessage ?? location.timeSelectionError,
-                ),
-              );
-              agendaFormViewModel.viewState.value = ViewState.error;
               setState(() {
                 _timeErrorMessage = location.timeSelectionError;
               });
               isTimeValid = false;
             } else if (!isTimeRangeValid(_initSessionTime, _endSessionTime)) {
-              agendaFormViewModel.setErrorKey(
-                NetworkException(
-                  _timeErrorMessage ?? location.timeValidationError,
-                ),
-              );
-              agendaFormViewModel.viewState.value = ViewState.error;
-              isTimeValid =
-                  false; // Error message is already set by the time picker logic
+              setState(() {
+                _timeErrorMessage = location.timeValidationError;
+              });
+              isTimeValid = false;
             }
 
-            if (_formKey.currentState!.validate() && isTimeValid) {
-              final result = await widget.viewmodel.saveSession(
-                context,
-                widget.data?.session?.uid,
-                _titleController.text,
-                _initSessionTime,
-                _endSessionTime,
-                _selectedSpeaker!,
-                _descriptionController.text,
-                _selectedTalkType,
-                widget.data!.eventId.toString(),
-                _selectedDay,
-                tracks,
-                _selectedTrackUid,
-                widget.data?.trackId,
-                agendaDays,
-              );
-              if (mounted && result != null) {
-                Navigator.pop(context, result);
-              } else if (mounted) {
-                Navigator.pop(context);
-              }
+            if (!isTimeValid) {
+              return;
+            }
+
+            agendaFormViewModel.viewState.value = ViewState.isLoading;
+
+            final result = await widget.viewmodel.saveSession(
+              context,
+              widget.data?.session?.uid,
+              _titleController.text,
+              _initSessionTime,
+              _endSessionTime,
+              _selectedSpeaker!, 
+              _descriptionController.text,
+              _selectedTalkType,
+              widget.data!.eventId.toString(),
+              _selectedDay,
+              tracks,
+              _selectedTrackUid,
+              widget.data?.trackId,
+              agendaDays,
+            );
+
+            if (mounted && result != null) {
+              Navigator.pop(context, result);
+            } else if (mounted) {
+              Navigator.pop(context);
             }
           },
           child: Text(location.saveButton),
