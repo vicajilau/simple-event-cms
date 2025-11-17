@@ -548,4 +548,7 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get wrongBranch =>
       'Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.';
+
+  @override
+  String get selectSpeaker => 'Hautatu hizlaria';
 }
