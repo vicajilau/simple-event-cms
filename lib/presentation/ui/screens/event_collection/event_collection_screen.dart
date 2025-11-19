@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sec/core/di/config_dependency_helper.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
@@ -12,6 +13,7 @@ import 'package:sec/presentation/ui/widgets/widgets.dart';
 import '../../../../core/config/secure_info.dart';
 import '../../../view_model_common.dart';
 import '../login/admin_login_screen.dart';
+import '../on_live/on_live_screen.dart';
 import 'event_collection_view_model.dart';
 
 /// Main home screen widget that displays the event_collection information and navigation
@@ -788,6 +790,31 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         ),
                       ),
                     ),
+                    if (item.youtubeUrl != null &&
+                        item.youtubeUrl?.isNotEmpty == true)
+                      Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 4.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              AppRouter.router.pushNamed(AppRouter.onLiveName,extra: OnLiveData(youtubeUrl: item.youtubeUrl.toString()));
+                            },
+                            child: const Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                FaIcon(
+                                  FontAwesomeIcons.squareYoutube,
+                                  size: 16,
+                                ),
+                                SizedBox(width: 8),
+                                Text('Online Now'),
+                                SizedBox(width: 8),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

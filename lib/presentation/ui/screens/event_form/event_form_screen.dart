@@ -39,6 +39,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final TextEditingController _secondaryColorController =
       TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _youtubeUrlController = TextEditingController();
 
   // Focus nodes
   final FocusNode _nameFocus = FocusNode();
@@ -53,6 +54,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final FocusNode _venueCityFocus = FocusNode();
   final FocusNode _descriptionFocus = FocusNode();
   final FocusNode _locationFocus = FocusNode();
+  final FocusNode _youtubeUrlFocus = FocusNode();
 
   // Form field keys
   final GlobalKey<FormFieldState> _nameFieldKey = GlobalKey<FormFieldState>();
@@ -77,6 +79,8 @@ class _EventFormScreenState extends State<EventFormScreen> {
   final GlobalKey<FormFieldState> _descriptionFieldKey =
       GlobalKey<FormFieldState>();
   final GlobalKey<FormFieldState> _locationFieldKey =
+      GlobalKey<FormFieldState>();
+  final GlobalKey<FormFieldState> _youtubeUrlFieldKey =
       GlobalKey<FormFieldState>();
 
   var config = getIt<Config>();
@@ -120,6 +124,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
           _primaryColorController.text = event.primaryColor;
           _secondaryColorController.text = event.secondaryColor;
           _isVisible = event.isVisible;
+          _youtubeUrlController.text = event.youtubeUrl ?? '';
           eventFormViewModel.viewState.value = ViewState.loadFinished;
         }
       });
@@ -139,6 +144,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     _primaryColorController.dispose();
     _secondaryColorController.dispose();
     _locationController.dispose();
+    _youtubeUrlController.dispose();
 
     // dispose focus nodes
     _nameFocus.dispose();
@@ -153,6 +159,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
     _venueCityFocus.dispose();
     _descriptionFocus.dispose();
     _locationFocus.dispose();
+    _youtubeUrlFocus.dispose();
     _debounce?.cancel();
 
     super.dispose();
@@ -453,6 +460,19 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  label: "YouTube URL", // Consider localizing
+                  childInput: TextFormField(
+                    key: _youtubeUrlFieldKey,
+                    focusNode: _youtubeUrlFocus,
+                    controller: _youtubeUrlController,
+                    decoration: AppDecorations.textFieldDecoration.copyWith(
+                      hintText:
+                      "https://www.youtube.com/watch?v=...", // Consider localizing
+                    ),
+                    // Optional: Add a validator for the URL format
+                  ),
+                ),
+                SectionInputForm(
                   label: localizations.visibilityLabel,
                   childInput: SwitchListTile(
                     title: Text(
@@ -538,6 +558,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         MapEntry(_venueAddressFieldKey, _venueAddressFocus),
         MapEntry(_venueCityFieldKey, _venueCityFocus),
         MapEntry(_descriptionFieldKey, _descriptionFocus),
+        MapEntry(_youtubeUrlFieldKey, _youtubeUrlFocus),
       ];
 
       // Find the ones with errors
@@ -600,6 +621,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
       primaryColor: _primaryColorController.text,
       secondaryColor: _secondaryColorController.text,
       isVisible: _isVisible,
+      youtubeUrl: _youtubeUrlController.text,
       eventDates: eventDates,
     );
     if (_isOpenByDefault) {

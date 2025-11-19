@@ -550,5 +550,11 @@ class AppLocalizationsPt extends AppLocalizations {
       'O ramo inserido não existe no repositório. Verifique o nome do ramo e tente novamente.';
 
   @override
+  String get onLive => 'On Live';
+
+  @override
   String get selectSpeaker => 'Selecione um palestrante';
+
+  @override
+  String get onlineNow => 'Online Agora';
 }

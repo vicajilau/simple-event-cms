@@ -31,6 +31,9 @@ class Event extends GitHubModel {
   /// the name of the room where the event_collection will take place
   final List<Track> tracks;
 
+  /// The URL of the YouTube live stream
+  final String? youtubeUrl;
+
   /// Indica si el evento está visible o no
   bool isVisible = true;
 
@@ -45,6 +48,7 @@ class Event extends GitHubModel {
     required this.eventDates,
     this.description,
     this.isVisible = true,
+    this.youtubeUrl,
     this.location,
     super.pathUrl = PathsGithub.eventPath,
     super.updateMessage = PathsGithub.eventUpdateMessage,
@@ -70,6 +74,7 @@ class Event extends GitHubModel {
       secondaryColor: json['secondaryColor'],
       eventDates: EventDates.fromJson(json['eventDates']),
       description: json['description'],
+      youtubeUrl: json['youtubeUrl'],
       isVisible: json['isVisible'] ?? true,
       location: json['location'],
       tracks: tracks,
@@ -88,6 +93,7 @@ class Event extends GitHubModel {
       'eventDates': eventDates.toJson(),
       'description': description,
       'location': location,
+      'youtubeUrl': youtubeUrl,
       'isVisible': isVisible,
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
