@@ -790,7 +790,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                         ),
                       ),
                     ),
-                    if (item.youtubeUrl != null ||
+                    if (item.youtubeUrl != null &&
                         item.youtubeUrl?.isNotEmpty == true)
                       Align(
                         alignment: Alignment.bottomCenter,
