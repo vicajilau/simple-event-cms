@@ -63,6 +63,9 @@ class _OnLiveScreenState extends State<OnLiveScreen> {
             player: YoutubePlayer(
               controller: _controller,
               showVideoProgressIndicator: true,
+              bottomActions: [
+                FullScreenButton(),
+              ],
             ),
             builder: (context, player) {
               return Column(
