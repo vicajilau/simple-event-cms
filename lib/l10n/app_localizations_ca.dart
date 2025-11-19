@@ -559,4 +559,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Selecciona un ponent';
+
+  @override
+  String get onlineNow => 'En línia ara';
 }

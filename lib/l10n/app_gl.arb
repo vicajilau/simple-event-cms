@@ -192,6 +192,7 @@
   "accept": "Aceptar",
   "wrongBranch": "A rama introducida non existe no repositorio. Verifica o nome da rama e téntao de novo.",
   "onLive": "On Live",
-  "selectSpeaker": "Selecciona un poñente"
+  "selectSpeaker": "Selecciona un poñente",
+  "onlineNow": "En liña agora"
 
 }

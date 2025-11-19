@@ -554,4 +554,7 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Hautatu hizlaria';
+
+  @override
+  String get onlineNow => 'Online Now';
 }

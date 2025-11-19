@@ -554,4 +554,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Selecione um palestrante';
+
+  @override
+  String get onlineNow => 'Online Agora';
 }

@@ -66,9 +66,8 @@ class AppRouter {
       GoRoute(
         path: onLivePath,
         name: onLiveName,
-        builder: (context, state) => state.extra == null
-            ? OnLiveScreen(data: state.extra as OnLiveData)
-            : OnLiveScreen(),
+        builder: (context, state) =>
+            OnLiveScreen(data: state.extra as OnLiveData),
       ),
       GoRoute(
         path: configFormPath,
@@ -79,7 +78,7 @@ class AppRouter {
         path: agendaFormPath,
         name: agendaFormName,
         builder: (context, state) {
-          if(state.extra == null){
+          if (state.extra == null) {
             return AgendaFormScreen();
           }
           final agendaFormData = state.extra as AgendaFormData;

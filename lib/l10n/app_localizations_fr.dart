@@ -560,4 +560,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Sélectionnez un intervenant';
+
+  @override
+  String get onlineNow => 'En ligne maintenant';
 }

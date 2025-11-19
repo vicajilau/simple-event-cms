@@ -192,6 +192,7 @@
   "accept": "Aceptar",
   "wrongBranch": "La rama ingresada no existe en el repositorio. Verifica el nombre de la rama y vuelve a intentarlo.",
   "onLive": "En Directo",
-  "selectSpeaker": "Selecciona un speaker"
+  "selectSpeaker": "Selecciona un speaker",
+  "onlineNow": "En línea ahora"
 
 }

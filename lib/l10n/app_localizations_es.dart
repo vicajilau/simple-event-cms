@@ -555,4 +555,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Selecciona un speaker';
+
+  @override
+  String get onlineNow => 'En línea ahora';
 }

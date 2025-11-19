@@ -556,4 +556,7 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get selectSpeaker => 'Selecciona un poñente';
+
+  @override
+  String get onlineNow => 'En liña agora';
 }

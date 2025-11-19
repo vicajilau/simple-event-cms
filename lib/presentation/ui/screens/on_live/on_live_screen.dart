@@ -14,7 +14,7 @@ class OnLiveData {
 }
 
 class OnLiveScreen extends StatefulWidget {
-  OnLiveData? data;
+  final OnLiveData? data;
   final OnLiveViewModel viewmodel = getIt<OnLiveViewModel>();
 
   OnLiveScreen({super.key, this.data});

@@ -16,6 +16,7 @@ import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.d
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_detail/event_detail_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
+import 'package:sec/presentation/ui/screens/on_live/on_live_view_model.dart';
 // Imports for new ViewModels
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
@@ -58,6 +59,7 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton<ConfigViewModel>(() => ConfigViewModelImpl());
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());
+  getIt.registerLazySingleton<OnLiveViewModel>(() => OnLiveViewModelImpl());
   getIt.registerLazySingleton<EventDetailViewModel>(
     () => EventDetailViewModelImp(),
   );

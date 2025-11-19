@@ -1171,6 +1171,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select a speaker'**
   String get selectSpeaker;
+
+  /// No description provided for @onlineNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Online Now'**
+  String get onlineNow;
 }
 
 class _AppLocalizationsDelegate
