@@ -43,7 +43,11 @@ void main() {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         if (methodCall.method == 'read') {
-          return '{\"token\":\"token_mocked\",\"projectName\":\"simple-event-cms\"}';
+          if (methodCall.arguments['key'] == 'read') {
+            return '{\"token\":\"token_mocked\",\"projectName\":\"simple-event-cms\"}';
+          } else if (methodCall.arguments['key'] == 'github_key') {
+            return 'some_github_key';
+          }
         }
         return null;
       });
@@ -57,8 +61,8 @@ void main() {
     secondaryColor: "#00000",
     eventDates: EventDates(
       uid: "eventDates_UID",
-      startDate: "01-01-2027",
-      endDate: "01-01-2028",
+      startDate: DateTime.now().add(const Duration(days: 365)).toIso8601String(),
+      endDate: DateTime.now().add(const Duration(days: 370)).toIso8601String(),
       timezone: "Europe/Madrid",
     ),
   );
@@ -67,10 +71,13 @@ void main() {
     test('loadEvents success', () async {
       when(
         mockEventUseCase.getEvents(),
-      ).thenAnswer((_) async => Result.ok([testEvent]));
+      ).thenAnswer((_) async => Result.ok([testEvent,testEvent.copyWith(uid: 'TESTEVENT_UID_2')]));
+
+      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => true);
+
       await viewModel.loadEvents();
       expect(viewModel.viewState.value, ViewState.loadFinished);
-      expect(viewModel.eventsToShow.value, [testEvent]);
+      expect(viewModel.eventsToShow.value, [testEvent,testEvent.copyWith(uid: 'TESTEVENT_UID_2')].toList());
     });
 
     test('loadEvents failure', () async {

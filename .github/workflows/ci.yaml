@@ -1,0 +1,62 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test-and-coverage:
+    name: Run Tests and Check Coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Revisa el código del repositorio
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Configura el entorno de Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.x' # O la versión que estés usando
+          channel: 'stable'
+          cache: true
+
+      # 3. Instala las dependencias del proyecto
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 4. Ejecuta los tests y genera el reporte de cobertura
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      # 5. Instala lcov para procesar el reporte de cobertura
+      - name: Install lcov
+        run: sudo apt-get update && sudo apt-get install -y lcov
+
+      # 6. Verifica que la cobertura sea del 100%
+      - name: Check coverage percentage
+        run: |
+          # Extrae el porcentaje de cobertura de líneas del reporte
+          COVERAGE=$(lcov --summary coverage/lcov.info | grep "lines......:" | grep -o '[0-9.]*%' | tr -d '%')
+          echo "Current coverage is $COVERAGE%"
+          
+          # Compara el valor actual con el 100% usando awk para manejar decimales
+          IS_BELOW_THRESHOLD=$(awk -v coverage="$COVERAGE" -v threshold="100" 'BEGIN { print (coverage < threshold) }')
+          
+          # Si la cobertura es menor a 100, hace que el pipeline falle
+          if [ "$IS_BELOW_THRESHOLD" -eq 1 ]; then
+            echo "Error: La cobertura de código es $COVERAGE%, que es menor al 100% requerido."
+            exit 1
+          else
+            echo "Éxito: La cobertura de código es del 100%."
+          fi
+
+      # 7. (Opcional) Sube el reporte de cobertura como un artefacto
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
