@@ -14,14 +14,15 @@ import 'package:sec/core/core.dart' as _i4;
 import 'package:sec/core/models/github/github_model.dart' as _i9;
 import 'package:sec/core/models/github_json_model.dart' as _i10;
 import 'package:sec/core/models/models.dart' as _i5;
-import 'package:sec/core/routing/check_org.dart' as _i20;
+import 'package:sec/core/routing/check_org.dart' as _i21;
 import 'package:sec/core/utils/result.dart' as _i15;
 import 'package:sec/data/exceptions/exceptions.dart' as _i16;
 import 'package:sec/data/remote_data/common/commons_api_services.dart' as _i3;
 import 'package:sec/data/remote_data/update_data/data_update.dart' as _i11;
 import 'package:sec/domain/use_cases/agenda_use_case.dart' as _i17;
-import 'package:sec/domain/use_cases/check_token_saved_use_case.dart' as _i21;
+import 'package:sec/domain/use_cases/check_token_saved_use_case.dart' as _i22;
 import 'package:sec/domain/use_cases/config_use_case.dart' as _i19;
+import 'package:sec/domain/use_cases/event_use_case.dart' as _i20;
 import 'package:sec/presentation/ui/screens/agenda/agenda_view_model.dart'
     as _i12;
 import 'package:sec/presentation/ui/screens/config/config_viewmodel.dart'
@@ -1028,10 +1029,113 @@ class MockConfigUseCase extends _i1.Mock implements _i19.ConfigUseCase {
           as _i8.Future<_i15.Result<void>>);
 }
 
+/// A class which mocks [EventUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEventUseCase extends _i1.Mock implements _i20.EventUseCase {
+  MockEventUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.Future<_i15.Result<List<_i5.Event>>> getEvents() =>
+      (super.noSuchMethod(
+            Invocation.method(#getEvents, []),
+            returnValue: _i8.Future<_i15.Result<List<_i5.Event>>>.value(
+              _i14.dummyValue<_i15.Result<List<_i5.Event>>>(
+                this,
+                Invocation.method(#getEvents, []),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<List<_i5.Event>>>);
+
+  @override
+  _i8.Future<_i15.Result<_i5.Event?>> getEventById(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#getEventById, [id]),
+            returnValue: _i8.Future<_i15.Result<_i5.Event?>>.value(
+              _i14.dummyValue<_i15.Result<_i5.Event?>>(
+                this,
+                Invocation.method(#getEventById, [id]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<_i5.Event?>>);
+
+  @override
+  _i8.Future<_i15.Result<void>> saveEvent(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveEvent, [event]),
+            returnValue: _i8.Future<_i15.Result<void>>.value(
+              _i14.dummyValue<_i15.Result<void>>(
+                this,
+                Invocation.method(#saveEvent, [event]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<void>>);
+
+  @override
+  _i8.Future<_i15.Result<void>> removeEvent(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeEvent, [event]),
+            returnValue: _i8.Future<_i15.Result<void>>.value(
+              _i14.dummyValue<_i15.Result<void>>(
+                this,
+                Invocation.method(#removeEvent, [event]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<void>>);
+
+  @override
+  _i8.Future<_i15.Result<void>> prepareAgendaDays(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#prepareAgendaDays, [event]),
+            returnValue: _i8.Future<_i15.Result<void>>.value(
+              _i14.dummyValue<_i15.Result<void>>(
+                this,
+                Invocation.method(#prepareAgendaDays, [event]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<void>>);
+
+  @override
+  _i8.Future<_i15.Result<void>> removeTrack(
+    String? trackUID,
+    String? eventUID,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeTrack, [trackUID, eventUID]),
+            returnValue: _i8.Future<_i15.Result<void>>.value(
+              _i14.dummyValue<_i15.Result<void>>(
+                this,
+                Invocation.method(#removeTrack, [trackUID, eventUID]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<void>>);
+
+  @override
+  _i8.Future<_i15.Result<void>> updateConfig(_i5.Config? config) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateConfig, [config]),
+            returnValue: _i8.Future<_i15.Result<void>>.value(
+              _i14.dummyValue<_i15.Result<void>>(
+                this,
+                Invocation.method(#updateConfig, [config]),
+              ),
+            ),
+          )
+          as _i8.Future<_i15.Result<void>>);
+}
+
 /// A class which mocks [CheckOrg].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCheckOrg extends _i1.Mock implements _i20.CheckOrg {
+class MockCheckOrg extends _i1.Mock implements _i21.CheckOrg {
   MockCheckOrg() {
     _i1.throwOnMissingStub(this);
   }
@@ -1063,7 +1167,7 @@ class MockCheckOrg extends _i1.Mock implements _i20.CheckOrg {
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCheckTokenSavedUseCase extends _i1.Mock
-    implements _i21.CheckTokenSavedUseCase {
+    implements _i22.CheckTokenSavedUseCase {
   MockCheckTokenSavedUseCase() {
     _i1.throwOnMissingStub(this);
   }
