@@ -61,7 +61,9 @@ void main() {
     secondaryColor: "#00000",
     eventDates: EventDates(
       uid: "eventDates_UID",
-      startDate: DateTime.now().add(const Duration(days: 365)).toIso8601String(),
+      startDate: DateTime.now()
+          .add(const Duration(days: 365))
+          .toIso8601String(),
       endDate: DateTime.now().add(const Duration(days: 370)).toIso8601String(),
       timezone: "Europe/Madrid",
     ),
@@ -69,15 +71,24 @@ void main() {
 
   group('EventCollectionViewModel', () {
     test('loadEvents success', () async {
-      when(
-        mockEventUseCase.getEvents(),
-      ).thenAnswer((_) async => Result.ok([testEvent,testEvent.copyWith(uid: 'TESTEVENT_UID_2')]));
+      when(mockEventUseCase.getEvents()).thenAnswer(
+        (_) async =>
+            Result.ok([testEvent, testEvent.copyWith(uid: 'TESTEVENT_UID_2')]),
+      );
 
-      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => true);
+      when(
+        mockCheckTokenSavedUseCase.checkToken(),
+      ).thenAnswer((_) async => true);
 
       await viewModel.loadEvents();
       expect(viewModel.viewState.value, ViewState.loadFinished);
-      expect(viewModel.eventsToShow.value, [testEvent,testEvent.copyWith(uid: 'TESTEVENT_UID_2')].toList());
+      expect(
+        viewModel.eventsToShow.value,
+        [
+          testEvent,
+          testEvent.copyWith(uid: 'TESTEVENT_UID_2')
+        ].toList(),
+      );
     });
 
     test('loadEvents failure', () async {
