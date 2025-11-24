@@ -43,7 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/test/mocks.mocks.dart
 
 # Generated localization files
 untranslated_messages.json
