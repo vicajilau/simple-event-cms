@@ -109,8 +109,10 @@ void main() {
           timezone: "Europe/Madrid",
         ),
       );
-
-      viewModel.eventsToShow.value = [pastEvent, futureEvent];
+      when(
+        mockEventUseCase.getEvents(),
+      ).thenAnswer((_) async => Result.ok([pastEvent, futureEvent]));
+      await viewModel.loadEvents();
       viewModel.onEventFilterChanged(EventFilter.past);
       await Future.delayed(Duration.zero);
       expect(viewModel.eventsToShow.value, [pastEvent]);
