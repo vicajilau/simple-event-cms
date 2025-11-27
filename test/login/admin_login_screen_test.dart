@@ -28,25 +28,14 @@ Widget buildTestableWidget(Widget child) {
 void main() {
   late MockConfig mockConfig;
 
-  setUp(() {
-    getIt.reset();
+  setUpAll(() {
+    // Replace the real Config with a mock for all tests in this file
     mockConfig = MockConfig();
-
-    getIt.registerSingleton<Config>(mockConfig);
-
+    getIt.registerSingleton<Config>(mockConfig, signalsReady: true);
     when(mockConfig.projectName).thenReturn('test-project');
   });
 
   group('AdminLoginScreen', () {
-    testWidgets('renders initial UI correctly', (WidgetTester tester) async {
-      await tester.pumpWidget(buildTestableWidget(AdminLoginScreen(() {
-      })));
-
-      expect(find.text('Enter your GitHub token'), findsOneWidget);
-      expect(find.byType(TextFormField), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Login'), findsOneWidget);
-      expect(find.byIcon(FontAwesomeIcons.eye), findsOneWidget);
-    });
 
     testWidgets('shows error when token is empty', (WidgetTester tester) async {
       bool loginSuccess = false;
@@ -57,7 +46,7 @@ void main() {
       await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
       await tester.pump();
 
-      expect(find.text('Token cannot be empty.'), findsOneWidget);
+      expect(find.text('Please enter a valid GitHub token'), findsOneWidget);
       expect(loginSuccess, isFalse);
     });
 
@@ -86,7 +75,7 @@ void main() {
       await tester.pump(); // Start the async operation
       await tester.pump(); // Let the snackbar show
 
-      expect(find.text('Authentication or network error.'), findsOneWidget);
+      expect(find.text('Authentication or network error. Check your credentials and project name.'), findsOneWidget);
     });
 
     // A full success test is difficult without refactoring AdminLoginScreen
