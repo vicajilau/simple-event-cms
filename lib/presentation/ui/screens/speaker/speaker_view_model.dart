@@ -11,7 +11,7 @@ abstract class SpeakerViewModel extends ViewModelCommon {
   abstract final ValueNotifier<List<Speaker>> speakers;
   Future<void> addSpeaker(Speaker speaker, String parentId);
   Future<void> editSpeaker(Speaker speaker, String parentId);
-  Future<void> removeSpeaker(String id,String eventUID);
+  Future<void> removeSpeaker(String id, String eventUID);
 }
 
 class SpeakerViewModelImpl extends SpeakerViewModel {
@@ -51,13 +51,13 @@ class SpeakerViewModelImpl extends SpeakerViewModel {
   }
 
   @override
-  Future<void> removeSpeaker(String id,String eventUID) async {
-    List<Speaker> currentSpeakers = [...speakers.value];
-    currentSpeakers.removeWhere((s) => s.uid == id);
-    speakers.value = currentSpeakers;
-    final result = await _speakerUseCase.removeSpeaker(id,eventUID);
+  Future<void> removeSpeaker(String id, String eventUID) async {
+    final result = await _speakerUseCase.removeSpeaker(id, eventUID);
     switch (result) {
       case Ok<void>():
+        List<Speaker> currentSpeakers = [...speakers.value];
+        currentSpeakers.removeWhere((s) => s.uid == id);
+        speakers.value = currentSpeakers;
         viewState.value = ViewState.loadFinished;
       case Error():
         setErrorKey(result.error);

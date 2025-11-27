@@ -8,7 +8,13 @@ class AddRoom extends StatefulWidget {
   final void Function(Track) removeRoom;
   final String eventUid;
 
-  const AddRoom({super.key, required this.rooms, required this.editedRooms, required this.eventUid, required this.removeRoom});
+  const AddRoom({
+    super.key,
+    required this.rooms,
+    required this.editedRooms,
+    required this.eventUid,
+    required this.removeRoom,
+  });
 
   @override
   State<AddRoom> createState() => _AddRoomState();
@@ -34,7 +40,9 @@ class _AddRoomState extends State<AddRoom> {
   }
 
   void _notifyCurrentRooms() {
-    widget.editedRooms(_tracks.where((track) => track.name.isNotEmpty).toList());
+    widget.editedRooms(
+      _tracks.where((track) => track.name.isNotEmpty).toList(),
+    );
   }
 
   void _addOption() {
@@ -73,12 +81,16 @@ class _AddRoomState extends State<AddRoom> {
             TextButton(
               onPressed: () async {
                 widget.removeRoom(_tracks[index]);
-                setState(() {
-                  _controllers[index].dispose();
-                  _controllers.removeAt(index);
-                  _tracks.removeAt(index);
-                });
-                widget.editedRooms(_tracks.where((track) => track.name.isNotEmpty).toList());
+                if (_tracks[index].sessionUids.isEmpty) {
+                  setState(() {
+                    _controllers[index].dispose();
+                    _controllers.removeAt(index);
+                    _tracks.removeAt(index);
+                  });
+                  widget.editedRooms(
+                    _tracks.where((track) => track.name.isNotEmpty).toList(),
+                  );
+                }
                 Navigator.pop(context);
               },
               child: const Text(

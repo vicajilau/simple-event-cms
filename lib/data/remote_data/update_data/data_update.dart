@@ -6,6 +6,8 @@ import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
+import '../../exceptions/exceptions.dart';
+
 class DataUpdateInfo {
   final CommonsServices dataCommons;
   final DataLoader dataLoader = getIt<DataLoader>();
@@ -41,6 +43,7 @@ class DataUpdateInfo {
         "events/${PathsGithub.eventPath}",
         PathsGithub.eventUpdateMessage,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     }
   }
 
@@ -96,6 +99,7 @@ class DataUpdateInfo {
         sponsors: sponsors,
         overrideData: true,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     } else {
       currentEvents.removeWhere(
         (event) => events?.map((e) => e.uid).contains(event.uid) == true,
@@ -141,6 +145,7 @@ class DataUpdateInfo {
         speakers: speakers,
         sponsors: sponsors,
       );
+      await dataLoader.loadAllEventData(forceUpdate: true);
     }
   }
 
@@ -167,11 +172,14 @@ class DataUpdateInfo {
     } else {
       tracksOriginal.add(track);
     }
-    await _updateAllEventData(tracks: tracksOriginal);
+    await _updateAllEventData(tracks: tracksOriginal, overrideData: true);
   }
 
-  Future<void> updateTracks(List<Track> tracks) async {
-    await _updateAllEventData(tracks: tracks);
+  Future<void> updateTracks(
+    List<Track> tracks, {
+    bool overrideData = false,
+  }) async {
+    await _updateAllEventData(tracks: tracks, overrideData: overrideData);
   }
 
   Future<void> updateAgendaDay(AgendaDay agendaDay) async {
@@ -248,15 +256,59 @@ class DataUpdateInfo {
     await _updateAllEventData(events: events);
   }
 
-  Future<void> updateSession(Session session) async {
+  Future<void> updateSession(Session session, String? trackUID) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
+    Track? track = (await dataLoader.loadAllTracks())
+        .where((selectedTrack) => selectedTrack.uid == trackUID)
+        .toList()
+        .firstOrNull;
+
+    List<Event> events = (await dataLoader.loadEvents()).map((event) {
+      var trackSelectedIndez = event.tracks.indexWhere(
+        (track) => track.uid == trackUID,
+      );
+      if (trackSelectedIndez != -1) {
+        event.tracks.removeAt(trackSelectedIndez);
+      }
+
+      if (track != null && track.eventUid == event.uid) {
+        event.tracks.add(track);
+      }
+      return event;
+    }).toList();
+
+    List<Track> tracks = (await dataLoader.loadAllTracks()).map((track) {
+      if (track.uid != trackUID) {
+        track.sessionUids.remove(session.uid);
+      } else {
+        track.sessionUids.add(session.uid);
+      }
+      return track;
+    }).toList();
+
+    List<AgendaDay> agendaDays = (await dataLoader.loadAllDays()).map((day) {
+      if (day.trackUids?.contains(trackUID) == true) {
+        day.trackUids?.remove(trackUID);
+      }
+      if (day.uid == session.agendaDayUID && trackUID != null) {
+        day.trackUids?.add(trackUID);
+      }
+      return day;
+    }).toList();
+
     int index = sessionListOriginal.indexWhere((s) => s.uid == session.uid);
     if (index != -1) {
       sessionListOriginal[index] = session;
     } else {
       sessionListOriginal.add(session);
     }
-    await _updateAllEventData(sessions: sessionListOriginal);
+    await _updateAllEventData(
+      events: events,
+      tracks: tracks,
+      agendaDays: agendaDays,
+      sessions: sessionListOriginal,
+      overrideData: true,
+    );
   }
 
   Future<void> updateSessions(List<Session> sessions) async {
@@ -267,6 +319,15 @@ class DataUpdateInfo {
     var speakersOriginal = (await dataLoader.loadSpeakers() ?? []).toList(
       growable: true,
     );
+    var allsessions = await dataLoader.loadAllSessions();
+
+    if (allsessions.indexWhere((session) => session.speakerUID == speakerId) !=
+        -1) {
+      throw CertainException(
+        "Exists sessions with this speaker, please remove them first",
+      );
+    }
+
     if (speakersOriginal.isNotEmpty) {
       var speakerToRemoveIndex = speakersOriginal.indexWhere(
         (speaker) => speaker.uid == speakerId,
@@ -279,7 +340,7 @@ class DataUpdateInfo {
         } else {
           speakerToRemove.eventUIDS.remove(eventUID);
         }
-        await overwriteItems(speakersOriginal);
+        await overwriteItems(speakersOriginal,Speaker);
       }
     }
   }
@@ -287,7 +348,7 @@ class DataUpdateInfo {
   Future<void> removeSponsors(String sponsorId) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
     sponsorOriginal.removeWhere((sponsor) => sponsor.uid == sponsorId);
-    await overwriteItems(sponsorOriginal);
+    await overwriteItems(sponsorOriginal,Sponsor);
   }
 
   Future<void> removeEvent(String eventId) async {
@@ -334,19 +395,31 @@ class DataUpdateInfo {
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
     agendaDaysListOriginal.removeWhere((day) => day.uid == agendaDayId);
-    await overwriteItems(agendaDaysListOriginal);
+    await overwriteItems(agendaDaysListOriginal,AgendaDay);
   }
 
   Future<void> removeSession(String sessionId) async {
     var sessionListOriginal = await dataLoader.loadAllSessions();
+    var tracksOriginal = await dataLoader.loadAllTracks();
+
     sessionListOriginal.removeWhere((session) => session.uid == sessionId);
-    await overwriteItems(sessionListOriginal);
+
+    // Elimina el UID de la sesión de la lista `sessionUids` en los tracks correspondientes.
+    for (var track in tracksOriginal) {
+      track.sessionUids.remove(sessionId);
+    }
+
+    await _updateAllEventData(
+      sessions: sessionListOriginal,
+      tracks: tracksOriginal,
+      overrideData: true,
+    );
   }
 
   Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
     tracksOriginal.removeWhere((track) => track.uid == trackId);
-    await overwriteItems(tracksOriginal);
+    await overwriteItems(tracksOriginal,Track);
   }
 
   /// Overwrites a list of items in the remote data source.
@@ -357,7 +430,7 @@ class DataUpdateInfo {
   ///
   /// [itemsToKeep] is a `List<dynamic>` containing the objects that will form
   /// the new list. All items in the list must be of the same type.
-  Future<void> overwriteItems(List<dynamic> itemsToKeep) async {
+  Future<void> overwriteItems(List<dynamic> itemsToKeep, Type typeItem) async {
     if (itemsToKeep.isEmpty) {
       debugPrint(
         "Warning: Overwriting with an empty list. This will remove all items of this type.",
@@ -366,44 +439,38 @@ class DataUpdateInfo {
       // For now, it's allowed.
     }
 
-    final firstItem = itemsToKeep.isNotEmpty ? itemsToKeep.first : null;
-
-    if (firstItem is Event) {
+    if (typeItem is Event) {
       await _updateAllEventData(
         events: itemsToKeep.cast<Event>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is AgendaDay) {
+    } else if (typeItem is AgendaDay) {
       await _updateAllEventData(
         agendaDays: itemsToKeep.cast<AgendaDay>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Track) {
+    } else if (typeItem is Track) {
       await _updateAllEventData(
         tracks: itemsToKeep.cast<Track>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Session) {
+    } else if (typeItem is Session) {
       await _updateAllEventData(
         sessions: itemsToKeep.cast<Session>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Speaker) {
+    } else if (typeItem is Speaker) {
       await _updateAllEventData(
         speakers: itemsToKeep.cast<Speaker>().toList(),
         overrideData: true,
       );
-    } else if (firstItem is Sponsor) {
+    } else if (typeItem is Sponsor) {
       await _updateAllEventData(
         sponsors: itemsToKeep.cast<Sponsor>().toList(),
         overrideData: true,
       );
-    } else if (itemsToKeep.isEmpty) {
-      debugPrint(
-        "List to keep is empty, cannot determine type. No action taken.",
-      );
     } else {
-      debugPrint("Unknown item type for overwrite: ${firstItem.runtimeType}");
+      debugPrint("Unknown item type for overwrite: ${typeItem.runtimeType}");
     }
   }
 }

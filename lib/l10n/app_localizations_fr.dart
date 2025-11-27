@@ -554,4 +554,13 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get wrongBranch =>
       'La branche saisie n\'existe pas dans le dépôt. Vérifiez le nom de la branche et réessayez.';
+
+  @override
+  String get onLive => 'On Live';
+
+  @override
+  String get selectSpeaker => 'Sélectionnez un intervenant';
+
+  @override
+  String get onlineNow => 'En ligne maintenant';
 }
