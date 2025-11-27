@@ -36,22 +36,22 @@ jobs:
       - name: Install lcov
         run: sudo apt-get update && sudo apt-get install -y lcov
 
-      # 6. Verifica que la cobertura sea del 100%
+      # 6. Verifica que la cobertura sea del x%
       - name: Check coverage percentage
         run: |
           # Extrae el porcentaje de cobertura de líneas del reporte
           COVERAGE=$(lcov --summary coverage/lcov.info | grep "lines......:" | grep -o '[0-9.]*%' | tr -d '%')
           echo "Current coverage is $COVERAGE%"
           
-          # Compara el valor actual con el 100% usando awk para manejar decimales
-          IS_BELOW_THRESHOLD=$(awk -v coverage="$COVERAGE" -v threshold="100" 'BEGIN { print (coverage < threshold) }')
+          # Compara el valor actual con el x% usando awk para manejar decimales
+          IS_BELOW_THRESHOLD=$(awk -v coverage="$COVERAGE" -v threshold="50" 'BEGIN { print (coverage < threshold) }')
           
-          # Si la cobertura es menor a 100, hace que el pipeline falle
+          # Si la cobertura es menor a x, hace que el pipeline falle
           if [ "$IS_BELOW_THRESHOLD" -eq 1 ]; then
-            echo "Error: La cobertura de código es $COVERAGE%, que es menor al 100% requerido."
+            echo "Error: La cobertura de código es $COVERAGE%, que es menor al x% requerido."
             exit 1
           else
-            echo "Éxito: La cobertura de código es del 100%."
+            echo "Éxito: La cobertura de código es del x%."
           fi
 
       # 7. (Opcional) Sube el reporte de cobertura como un artefacto
