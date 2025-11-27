@@ -40,14 +40,6 @@ void main() {
     });
 
     testWidgets('shows validation errors for required fields', (WidgetTester tester) async {
-      final sponsor = Sponsor(
-        uid: '1',
-        name: '',
-        logo: 'http://example.com/logo.png',
-        website: 'http://example.com',
-        type: '',
-        eventUID: '1',
-      );
       await tester.pumpWidget(buildTestableWidget(SponsorFormScreen(eventUID: '1')));
 
 
