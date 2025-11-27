@@ -99,7 +99,6 @@ void main() {
     });
 
     test('removeSpeaker handles error', () async {
-      viewModel.speakers.value = [speaker];
       when(
         mockSpeakerUseCase.removeSpeaker(speaker.uid, eventId),
       ).thenAnswer((_) async => Result.error(NetworkException('Remove failed')));

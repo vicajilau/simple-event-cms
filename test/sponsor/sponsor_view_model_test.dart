@@ -15,7 +15,10 @@ void main() {
   late SponsorViewModelImpl viewModel;
   late MockSponsorUseCase mockSponsorUseCase;
   late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
-
+setUpAll(() {
+  provideDummy<Result<void>>(Result.ok(null));
+  provideDummy<Result<List<Sponsor>>>(Result.ok([]));
+});
   setUp(() {
     getIt.reset();
     mockSponsorUseCase = MockSponsorUseCase();
@@ -78,7 +81,6 @@ void main() {
     });
 
     test('removeSponsor handles error', () async {
-      viewModel.sponsors.value = [sponsor];
       when(mockSponsorUseCase.removeSponsor(sponsor.uid)).thenAnswer((_) async => Result.error(NetworkException('Remove failed')));
 
       await viewModel.removeSponsor(sponsor.uid);

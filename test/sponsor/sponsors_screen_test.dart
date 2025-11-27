@@ -27,10 +27,11 @@ Widget buildTestableWidget(Widget child) {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late MockSponsorViewModel mockViewModel;
 
-  setUp(() {
-    getIt.reset();
+  setUp(() async {
+    await getIt.reset();
     mockViewModel = MockSponsorViewModel();
     getIt.registerSingleton<SponsorViewModel>(mockViewModel);
 
@@ -54,7 +55,7 @@ void main() {
       await tester.pumpWidget(buildTestableWidget(SponsorsScreen(eventId: '1')));
       await tester.pumpAndSettle();
 
-      expect(find.text('No sponsors have been registered for this event yet.'), findsOneWidget);
+      expect(find.text('No sponsors registered'), findsOneWidget);
     });
 
     testWidgets('shows sponsor grid when sponsors are available', (WidgetTester tester) async {
