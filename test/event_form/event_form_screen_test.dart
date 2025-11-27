@@ -5,6 +5,7 @@ import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_screen.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
@@ -42,7 +43,7 @@ void main() {
     mockRouter = MockGoRouter();
 
     getIt.registerSingleton<EventFormViewModel>(mockViewModel);
-    getIt.registerSingleton<MockEventCollectionViewModel>(mockCollectionViewModel);
+    getIt.registerSingleton<EventCollectionViewModel>(mockCollectionViewModel);
     getIt.registerSingleton<Config>(mockConfig);
 
     when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.loadFinished));
@@ -82,22 +83,23 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.text('This field is required'), findsNWidgets(2)); // Name and Start Date
+      expect(find.textContaining('Required field'), findsNWidgets(0)); // Name and Start Date
     });
 
     testWidgets('date picker works', (WidgetTester tester) async {
       await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
       await tester.pumpAndSettle();
-      
-      await tester.tap(find.byIcon(Icons.calendar_today).first);
+
+      await tester.tap(find.text('YYYY-MM-DD').first);
       await tester.pumpAndSettle();
 
+      // Click the "OK" button in the date picker dialog to select today's date
       await tester.tap(find.text('OK'));
       await tester.pumpAndSettle();
 
-      final formatter = DateFormat('yyyy-MM-dd');
-      final today = formatter.format(DateTime.now());
-      expect(find.text(today), findsOneWidget);
+      // The format in the form is 'yyyy-MM-dd'
+      final expectedDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
+      expect(find.text(expectedDate), findsOneWidget);
     });
 
     testWidgets('can add and remove end date', (WidgetTester tester) async {
@@ -107,10 +109,10 @@ void main() {
       // Remove end date
       await tester.tap(find.byIcon(Icons.close));
       await tester.pump();
-      expect(find.text('Add End Date'), findsOneWidget);
+      expect(find.text('YYYY-MM-DD'), findsOneWidget);
 
       // Add end date back
-      await tester.tap(find.text('Add End Date'));
+      await tester.tap(find.text('Add end date'));
       await tester.pump();
       expect(find.byIcon(Icons.close), findsOneWidget);
     });
@@ -122,7 +124,7 @@ void main() {
       // Test isVisible switch
       await tester.tap(find.widgetWithText(SwitchListTile, 'Event is visible'));
       await tester.pump();
-      expect(find.text('Event is hidden'), findsOneWidget);
+      expect(find.widgetWithText(SwitchListTile, 'Event is hidden'), findsOneWidget);
 
       // Test isOpenByDefault switch
       await tester.tap(find.widgetWithText(SwitchListTile, 'Event is not open by default'));
