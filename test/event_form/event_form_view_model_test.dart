@@ -25,6 +25,7 @@ void main() {
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
 
     viewModel = EventFormViewModelImpl();
+    provideDummy<Result<void>>(const Result.ok(null));
   });
 
   group('EventFormViewModelImpl', () {
