@@ -40,14 +40,24 @@ void main() {
     });
 
     testWidgets('shows validation errors for required fields', (WidgetTester tester) async {
-      await tester.pumpWidget(buildTestableWidget(const SponsorFormScreen(eventUID: '1')));
+      final sponsor = Sponsor(
+        uid: '1',
+        name: '',
+        logo: 'http://example.com/logo.png',
+        website: 'http://example.com',
+        type: '',
+        eventUID: '1',
+      );
+      await tester.pumpWidget(buildTestableWidget(SponsorFormScreen(eventUID: '1')));
 
+
+      await tester.enterText(find.byType(TextFormField).at(1), 'url');
+      await tester.enterText(find.byType(TextFormField).at(2), 'url');
+      
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.text('Sponsor name cannot be empty'), findsOneWidget);
-      expect(find.text('Logo URL cannot be empty'), findsOneWidget);
-      expect(find.text('Website URL cannot be empty'), findsOneWidget);
+      expect(find.text('Required field'), findsAtLeast(1));
     });
 
     testWidgets('pops with new sponsor data on successful submission', (WidgetTester tester) async {

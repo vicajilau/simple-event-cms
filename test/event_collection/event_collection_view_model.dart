@@ -44,7 +44,7 @@ void main() {
       .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
         if (methodCall.method == 'read') {
           if (methodCall.arguments['key'] == 'read') {
-            return '{\"token\":\"token_mocked\",\"projectName\":\"simple-event-cms\"}';
+            return '{"token":"token_mocked","projectName":"simple-event-cms"}';
           } else if (methodCall.arguments['key'] == 'github_key') {
             return 'some_github_key';
           }

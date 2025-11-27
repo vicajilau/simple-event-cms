@@ -40,7 +40,7 @@ void main() {
     // The mock will be registered inside each test before the widget is pumped.
   });
 
-  Future<void> _registerMockViewModel() async {
+  Future<void> registerMockViewModel() async {
     when(mockConfigViewModel.viewState).thenReturn(ValueNotifier(ViewState.loadFinished));
     when(mockConfigViewModel.checkToken()).thenAnswer((_) async => false);
     when(mockConfigViewModel.errorMessage).thenReturn('');
@@ -65,7 +65,7 @@ void main() {
   }
 
   testWidgets('ConfigScreen shows fields and save button', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     await tester.pumpWidget(createWidgetUnderTest());
 
     expect(find.byType(FormScreenWrapper), findsOneWidget);
@@ -74,7 +74,7 @@ void main() {
   });
 
   testWidgets('validation fails when fields are empty', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     await tester.pumpWidget(createWidgetUnderTest());
 
     await tester.enterText(find.byType(TextFormField).at(0), '');
@@ -97,7 +97,7 @@ void main() {
   });
 
   testWidgets('form can be filled and submitted', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     await tester.pumpWidget(createWidgetUnderTest());
 
     await tester.enterText(find.byType(TextFormField).at(0), 'test');
@@ -117,7 +117,7 @@ void main() {
   });
 
   testWidgets('shows error dialog when viewState is error', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     when(mockConfigViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
     when(mockConfigViewModel.errorMessage).thenReturn('wrongBranch');
 

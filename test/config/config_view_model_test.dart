@@ -37,7 +37,7 @@ void main() {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
       .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
     if (methodCall.method == 'read') {
-      return '{\"token\":\"token_mocked\",\"projectName\":\"simple-event-cms\"}';
+      return '{"token":"token_mocked","projectName":"simple-event-cms"}';
     }
     return null;
   });

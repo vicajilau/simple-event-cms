@@ -26,7 +26,7 @@ void main() {
     // The mock will be registered inside each test before the widget is pumped.
   });
 
-  Future<void> _registerMockViewModel() async {
+  Future<void> registerMockViewModel() async {
     getIt.registerSingleton<AgendaViewModel>(mockAgendaViewModel);
     when(mockAgendaViewModel.viewState).thenReturn(ValueNotifier(ViewState.isLoading));
     when(mockAgendaViewModel.agendaDays).thenReturn(ValueNotifier([]));
@@ -52,14 +52,14 @@ void main() {
   }
 
   testWidgets('shows loading indicator when view state is loading', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     when(mockAgendaViewModel.viewState).thenReturn(ValueNotifier(ViewState.isLoading));
     await tester.pumpWidget(createWidgetUnderTest());
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
   testWidgets('shows error dialog when view state is error', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     when(mockAgendaViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
     when(mockAgendaViewModel.errorMessage).thenReturn('An error occurred');
 
@@ -70,7 +70,7 @@ void main() {
   });
 
   testWidgets('shows no data screen when there are no agenda days', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     when(mockAgendaViewModel.viewState).thenReturn(ValueNotifier(ViewState.loadFinished));
     when(mockAgendaViewModel.agendaDays).thenReturn(ValueNotifier([]));
 
@@ -81,7 +81,7 @@ void main() {
   });
 
   testWidgets('displays agenda days and sessions', (WidgetTester tester) async {
-    await _registerMockViewModel();
+    await registerMockViewModel();
     final agendaDays = [
       AgendaDay(
         uid: '2024-01-01',

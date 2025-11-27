@@ -92,20 +92,20 @@ void main() {
 
     test('removeTrack succeeds', () async {
       when(
-        mockEventUseCase.removeTrack('track1', 'event1'),
+        mockEventUseCase.removeTrack('track1'),
       ).thenAnswer((_) async => Result.ok(null));
 
-      await viewModel.removeTrack('track1', 'event1');
+      await viewModel.removeTrack('track1');
 
       expect(viewModel.viewState.value, ViewState.loadFinished);
     });
 
     test('removeTrack handles error', () async {
       when(
-        mockEventUseCase.removeTrack('track1', 'event1'),
+        mockEventUseCase.removeTrack('track1'),
       ).thenAnswer((_) async => Result.error(NetworkException('Remove error')));
 
-      await viewModel.removeTrack('track1', 'event1');
+      await viewModel.removeTrack('track1');
 
       expect(viewModel.viewState.value, ViewState.error);
       expect(viewModel.errorMessage, 'Remove error');

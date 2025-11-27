@@ -314,6 +314,17 @@ class MockDataLoader extends _i1.Mock implements _i4.DataLoader {
   }
 
   @override
+  _i13.Future<void> loadAllEventData({bool? forceUpdate = false}) =>
+      (super.noSuchMethod(
+            Invocation.method(#loadAllEventData, [], {
+              #forceUpdate: forceUpdate,
+            }),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
   _i13.Future<List<_i5.Session>> loadAllSessions() =>
       (super.noSuchMethod(
             Invocation.method(#loadAllSessions, []),
@@ -430,9 +441,16 @@ class MockDataUpdateInfo extends _i1.Mock implements _i16.DataUpdateInfo {
           as _i13.Future<void>);
 
   @override
-  _i13.Future<void> updateTracks(List<_i5.Track>? tracks) =>
+  _i13.Future<void> updateTracks(
+    List<_i5.Track>? tracks, {
+    bool? overrideData = false,
+  }) =>
       (super.noSuchMethod(
-            Invocation.method(#updateTracks, [tracks]),
+            Invocation.method(
+              #updateTracks,
+              [tracks],
+              {#overrideData: overrideData},
+            ),
             returnValue: _i13.Future<void>.value(),
             returnValueForMissingStub: _i13.Future<void>.value(),
           )
@@ -509,9 +527,9 @@ class MockDataUpdateInfo extends _i1.Mock implements _i16.DataUpdateInfo {
           as _i13.Future<void>);
 
   @override
-  _i13.Future<void> updateSession(_i5.Session? session) =>
+  _i13.Future<void> updateSession(_i5.Session? session, String? trackUID) =>
       (super.noSuchMethod(
-            Invocation.method(#updateSession, [session]),
+            Invocation.method(#updateSession, [session, trackUID]),
             returnValue: _i13.Future<void>.value(),
             returnValueForMissingStub: _i13.Future<void>.value(),
           )
@@ -581,9 +599,12 @@ class MockDataUpdateInfo extends _i1.Mock implements _i16.DataUpdateInfo {
           as _i13.Future<void>);
 
   @override
-  _i13.Future<void> overwriteItems(List<dynamic>? itemsToKeep) =>
+  _i13.Future<void> overwriteItems(
+    List<dynamic>? itemsToKeep,
+    Type? typeItem,
+  ) =>
       (super.noSuchMethod(
-            Invocation.method(#overwriteItems, [itemsToKeep]),
+            Invocation.method(#overwriteItems, [itemsToKeep, typeItem]),
             returnValue: _i13.Future<void>.value(),
             returnValueForMissingStub: _i13.Future<void>.value(),
           )
@@ -972,6 +993,30 @@ class MockAgendaUseCase extends _i1.Mock implements _i22.AgendaUseCase {
           as _i13.Future<_i20.Result<_i5.Event>>);
 
   @override
+  _i13.Future<_i20.Result<void>> removeTrack(
+    String? trackID, {
+    dynamic overrideTrack = false,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #removeTrack,
+              [trackID],
+              {#overrideTrack: overrideTrack},
+            ),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(
+                  #removeTrack,
+                  [trackID],
+                  {#overrideTrack: overrideTrack},
+                ),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+
+  @override
   _i13.Future<_i20.Result<List<_i5.Speaker>>> getSpeakersForEventId(
     String? eventId,
   ) =>
@@ -1157,16 +1202,13 @@ class MockEventUseCase extends _i1.Mock implements _i25.EventUseCase {
           as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i13.Future<_i20.Result<void>> removeTrack(
-    String? trackUID,
-    String? eventUID,
-  ) =>
+  _i13.Future<_i20.Result<void>> removeTrack(String? trackUID) =>
       (super.noSuchMethod(
-            Invocation.method(#removeTrack, [trackUID, eventUID]),
+            Invocation.method(#removeTrack, [trackUID]),
             returnValue: _i13.Future<_i20.Result<void>>.value(
               _i19.dummyValue<_i20.Result<void>>(
                 this,
-                Invocation.method(#removeTrack, [trackUID, eventUID]),
+                Invocation.method(#removeTrack, [trackUID]),
               ),
             ),
           )
@@ -2138,9 +2180,9 @@ class MockEventFormViewModel extends _i1.Mock
           as _i13.Future<bool>);
 
   @override
-  _i13.Future<void> removeTrack(String? trackUID, String? eventUID) =>
+  _i13.Future<void> removeTrack(String? trackUID) =>
       (super.noSuchMethod(
-            Invocation.method(#removeTrack, [trackUID, eventUID]),
+            Invocation.method(#removeTrack, [trackUID]),
             returnValue: _i13.Future<void>.value(),
             returnValueForMissingStub: _i13.Future<void>.value(),
           )
