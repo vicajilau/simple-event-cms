@@ -28,8 +28,14 @@ void main() {
   late MockSpeakerViewModel mockViewModel;
 
   setUpAll(() {
-    getIt.reset();
+    // If you have other global setup, it can go here.
+    // Avoid getIt.reset() in setUpAll if other test suites depend on registrations.
+  });
+
+  setUp(() {
     mockViewModel = MockSpeakerViewModel();
+
+    // Register the mock ViewModel before each test.
     getIt.registerSingleton<SpeakerViewModel>(mockViewModel);
 
     when(
@@ -39,6 +45,11 @@ void main() {
     when(mockViewModel.errorMessage).thenReturn('');
     when(mockViewModel.checkToken()).thenAnswer((_) async => false);
     when(mockViewModel.setup(any)).thenAnswer((_) async {});
+  });
+
+  tearDown(() {
+    // Unregister the singleton after each test to ensure test isolation.
+    getIt.unregister<SpeakerViewModel>();
   });
 
   group('SpeakersScreen', () {
@@ -65,7 +76,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.text('No speakers have been registered for this event yet.'),
+        find.text('No speakers registered'),
         findsOneWidget,
       );
     });
