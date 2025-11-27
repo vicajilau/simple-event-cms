@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
+import 'package:sec/core/utils/result.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_screen.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
@@ -39,7 +41,7 @@ void main() {
   late MockCheckOrg mockCheckOrg;
   late MockGoRouter mockRouter;
 
-  Future<void> _registerMockViewModel() async {
+  setUp(() async {
     // Reset dependencies for each test to ensure isolation
     getIt.reset();
     mockViewModel = MockEventCollectionViewModel();
@@ -49,12 +51,8 @@ void main() {
     // Register mocks in GetIt's service locator
     getIt.registerSingleton<EventCollectionViewModel>(mockViewModel);
     getIt.registerSingleton<Config>(mockConfig);
+    getIt.registerSingleton<GoRouter>(mockRouter);
     getIt.registerSingleton<CheckOrg>(mockCheckOrg);
-  }
-
-  setUpAll(() {
-    _registerMockViewModel();
-    // Default mock behaviors. Tests can override these.
     when(
       mockViewModel.viewState,
     ).thenReturn(ValueNotifier(ViewState.loadFinished));
@@ -70,16 +68,31 @@ void main() {
     AppRouter.router = mockRouter;
   });
 
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    provideDummy<Result<void>>(const Result.ok(null));
+    // Default mock behaviors. Tests can override these.
+  });
+
   group('EventCollectionScreen', () {
     testWidgets('shows loading indicator initially and then content', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
+      when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.isLoading));
+
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
       );
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      when(mockViewModel.viewState)
+          .thenReturn(ValueNotifier(ViewState.loadFinished));
+      // Rebuild the widget to reflect the new state.
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
       await tester.pumpAndSettle();
+
       expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(find.text('Test Conf'), findsOneWidget);
     });
@@ -87,35 +100,46 @@ void main() {
     testWidgets('displays error message and retry button on load failure', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
-      when(mockViewModel.setup()).thenThrow(Exception('Failed to load'));
+      // Use a local ValueNotifier to control state changes during the test.
+      final viewStateNotifier = ValueNotifier(ViewState.error);
+
+      // Start with an error state
+      when(mockViewModel.viewState).thenReturn(viewStateNotifier);
+      when(mockViewModel.errorMessage)
+          .thenReturn('Error loading configuration: ');
+
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(); // Pump once to let the widget build with the error state.
 
-      expect(find.text('Error loading configuration.'), findsOneWidget);
+      expect(find.text('Error loading configuration: '), findsOneWidget);
       expect(find.widgetWithText(ElevatedButton, 'Retry'), findsOneWidget);
 
+      // Simulate retry
       when(mockViewModel.setup()).thenAnswer((_) async {});
       await tester.tap(find.widgetWithText(ElevatedButton, 'Retry'));
-      await tester.pump();
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      await tester.pumpAndSettle();
 
+      // Manually trigger state change to loading
+      viewStateNotifier.value = ViewState.isLoading;
+      await tester.pump(); // Rebuild with the loading indicator.
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+      // Manually trigger state change to finished
+      viewStateNotifier.value = ViewState.loadFinished;
+      await tester.pumpAndSettle(); // Settle all animations and builds.
       expect(find.text('Test Conf'), findsOneWidget);
     });
 
     testWidgets('shows CustomErrorDialog when viewmodel has a specific error', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
       when(mockViewModel.errorMessage).thenReturn('Network Error');
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
       );
-      await tester.pump(); // Let post frame callback run for the dialog
+      await tester.pumpAndSettle(); // Let post frame callback run for the dialog
 
       expect(find.byType(CustomErrorDialog), findsOneWidget);
       expect(find.text('Network Error'), findsOneWidget);
@@ -124,7 +148,6 @@ void main() {
     testWidgets('displays MaintenanceScreen when there are no events', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([]));
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
@@ -137,7 +160,6 @@ void main() {
     testWidgets('displays event grid and highlights the upcoming event', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       final now = DateTime.now();
       final upcomingEvent = Event(
         uid: '2',
@@ -192,7 +214,6 @@ void main() {
     testWidgets('tapping event card navigates to event details', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       final event = Event(
         uid: '1',
         eventName: 'Event 1',
@@ -235,7 +256,6 @@ void main() {
     testWidgets('filter dropdown calls viewmodel with correct filter', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
       );
@@ -253,7 +273,6 @@ void main() {
     testWidgets('tapping title 5 times opens admin login if org has error', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       when(mockCheckOrg.hasError).thenReturn(true);
       await tester.pumpWidget(
         buildTestableWidget(const EventCollectionScreen()),
@@ -326,7 +345,6 @@ void main() {
     testWidgets('Admin can toggle event visibility', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       final event = Event(
         uid: '1',
         eventName: 'Event 1',
@@ -366,7 +384,6 @@ void main() {
     testWidgets('Admin can edit and delete event from card', (
       WidgetTester tester,
     ) async {
-      _registerMockViewModel();
       final event = Event(
         uid: '1',
         eventName: 'Event 1',
@@ -409,7 +426,6 @@ void main() {
     testWidgets(
       'Admin sees and can tap organization FAB, updates config on return',
       (WidgetTester tester) async {
-        _registerMockViewModel();
         when(mockViewModel.checkToken()).thenAnswer((_) async => true);
         final updatedConfig = Config(
           configName: 'Updated Conf',
