@@ -1,0 +1,442 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:sec/core/di/dependency_injection.dart';
+import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
+import 'package:sec/core/routing/check_org.dart';
+import 'package:sec/l10n/app_localizations.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_screen.dart';
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
+import 'package:sec/presentation/ui/screens/login/admin_login_screen.dart';
+import 'package:sec/presentation/ui/screens/no_events/no_events_screen.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
+import 'package:sec/presentation/ui/widgets/event_filter_button.dart';
+import 'package:sec/presentation/view_model_common.dart';
+
+import '../mocks.mocks.dart';
+
+// Helper to wrap widgets for testing, providing MaterialApp and localizations.
+Widget buildTestableWidget(Widget child) {
+  return MaterialApp(
+    localizationsDelegates: const [
+      AppLocalizations.delegate,
+      GlobalMaterialLocalizations.delegate,
+      GlobalWidgetsLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
+    ],
+    supportedLocales: const [
+      Locale('en', ''), // English, no country code
+    ],
+    home: child,
+  );
+}
+
+void main() {
+  late MockEventCollectionViewModel mockViewModel;
+  late MockConfig mockConfig;
+  late MockCheckOrg mockCheckOrg;
+  late MockGoRouter mockRouter;
+
+  Future<void> _registerMockViewModel() async {
+    // Reset dependencies for each test to ensure isolation
+    getIt.reset();
+    mockViewModel = MockEventCollectionViewModel();
+    mockConfig = MockConfig();
+    mockCheckOrg = MockCheckOrg();
+    mockRouter = MockGoRouter();
+    // Register mocks in GetIt's service locator
+    getIt.registerSingleton<EventCollectionViewModel>(mockViewModel);
+    getIt.registerSingleton<Config>(mockConfig);
+    getIt.registerSingleton<CheckOrg>(mockCheckOrg);
+  }
+
+  setUpAll(() {
+    _registerMockViewModel();
+    // Default mock behaviors. Tests can override these.
+    when(
+      mockViewModel.viewState,
+    ).thenReturn(ValueNotifier(ViewState.loadFinished));
+    when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([]));
+    when(mockViewModel.errorMessage).thenReturn("");
+    when(mockViewModel.checkToken()).thenAnswer((_) async => false);
+    when(mockViewModel.setup()).thenAnswer((_) async {});
+    when(mockViewModel.loadEvents()).thenAnswer((_) async {});
+    when(mockCheckOrg.hasError).thenReturn(false);
+    when(mockConfig.configName).thenReturn('Test Conf');
+
+    // Set the mocked router
+    AppRouter.router = mockRouter;
+  });
+
+  group('EventCollectionScreen', () {
+    testWidgets('shows loading indicator initially and then content', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(CircularProgressIndicator), findsNothing);
+      expect(find.text('Test Conf'), findsOneWidget);
+    });
+
+    testWidgets('displays error message and retry button on load failure', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      when(mockViewModel.setup()).thenThrow(Exception('Failed to load'));
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('Error loading configuration.'), findsOneWidget);
+      expect(find.widgetWithText(ElevatedButton, 'Retry'), findsOneWidget);
+
+      when(mockViewModel.setup()).thenAnswer((_) async {});
+      await tester.tap(find.widgetWithText(ElevatedButton, 'Retry'));
+      await tester.pump();
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Test Conf'), findsOneWidget);
+    });
+
+    testWidgets('shows CustomErrorDialog when viewmodel has a specific error', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
+      when(mockViewModel.errorMessage).thenReturn('Network Error');
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pump(); // Let post frame callback run for the dialog
+
+      expect(find.byType(CustomErrorDialog), findsOneWidget);
+      expect(find.text('Network Error'), findsOneWidget);
+    });
+
+    testWidgets('displays MaintenanceScreen when there are no events', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([]));
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(MaintenanceScreen), findsOneWidget);
+    });
+
+    testWidgets('displays event grid and highlights the upcoming event', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      final now = DateTime.now();
+      final upcomingEvent = Event(
+        uid: '2',
+        eventName: 'Upcoming Event',
+        eventDates: EventDates(
+          uid: "eventDates_UID",
+          startDate: now.add(const Duration(days: 1)).toIso8601String(),
+          endDate: '',
+          timezone: "Europe/Madrid",
+        ),
+        location: '',
+        description: '',
+        isVisible: true,
+        tracks: [],
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+      );
+      final pastEvent = Event(
+        uid: '1',
+        eventName: 'Past Event',
+        eventDates: EventDates(
+          uid: "eventDates_UID",
+          startDate: now.subtract(const Duration(days: 1)).toIso8601String(),
+          endDate: '',
+          timezone: "Europe/Madrid",
+        ),
+        location: '',
+        description: '',
+        isVisible: true,
+        tracks: [],
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+      );
+
+      when(
+        mockViewModel.eventsToShow,
+      ).thenReturn(ValueNotifier([pastEvent, upcomingEvent]));
+
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byType(GridView), findsOneWidget);
+      expect(find.text('Upcoming Event'), findsOneWidget);
+      expect(find.text('Past Event'), findsOneWidget);
+      expect(find.text('Next Event'), findsOneWidget); // Banner for upcoming
+    });
+
+    testWidgets('tapping event card navigates to event details', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      final event = Event(
+        uid: '1',
+        eventName: 'Event 1',
+        eventDates: EventDates(
+          uid: "eventDates_UID",
+          startDate: DateTime.now().toIso8601String(),
+          endDate: '',
+          timezone: "Europe/Madrid",
+        ),
+        location: 'Some location',
+        description: '',
+        isVisible: true,
+        tracks: [],
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+      );
+      when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([event]));
+
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byType(Card));
+      await tester.pumpAndSettle();
+
+      verify(
+        mockRouter.pushNamed(
+          AppRouter.eventDetailName,
+          pathParameters: {
+            'eventId': '1',
+            'location': 'Some location',
+            'onlyOneEvent': 'false',
+          },
+        ),
+      ).called(1);
+    });
+
+    testWidgets('filter dropdown calls viewmodel with correct filter', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Filter Event'));
+      await tester.pumpAndSettle(); // open dropdown
+
+      await tester.tap(find.text('Past Events').last);
+      await tester.pumpAndSettle();
+
+      verify(mockViewModel.onEventFilterChanged(EventFilter.past)).called(1);
+    });
+
+    testWidgets('tapping title 5 times opens admin login if org has error', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      when(mockCheckOrg.hasError).thenReturn(true);
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      final titleGestureDetector = find
+          .descendant(
+            of: find.byType(AppBar),
+            matching: find.byType(GestureDetector),
+          )
+          .first;
+
+      for (int i = 0; i < 5; i++) {
+        await tester.tap(titleGestureDetector);
+      }
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AdminLoginScreen), findsOneWidget);
+    });
+
+    testWidgets(
+      'Admin sees Add Event button, taps it, and new event is added',
+      (WidgetTester tester) async {
+        final newEvent = Event(
+          uid: 'new',
+          eventName: 'New Event',
+          eventDates: EventDates(
+            uid: "eventDates_UID",
+            startDate: DateTime.now().toIso8601String(),
+            endDate: '',
+            timezone: "Europe/Madrid",
+          ),
+          location: '',
+          description: '',
+          isVisible: true,
+          tracks: [],
+          year: '',
+          primaryColor: '',
+          secondaryColor: '',
+        );
+
+        when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+        when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([]));
+        // Simulate the router returning a new event
+        when(
+          mockRouter.push(AppRouter.eventFormPath),
+        ).thenAnswer((_) async => newEvent);
+        when(mockViewModel.addEvent(newEvent)).thenAnswer((_) async {});
+
+        await tester.pumpWidget(
+          buildTestableWidget(const EventCollectionScreen()),
+        );
+        await tester.pumpAndSettle();
+
+        expect(
+          find.widgetWithText(ElevatedButton, 'Add Event'),
+          findsOneWidget,
+        );
+
+        await tester.tap(find.widgetWithText(ElevatedButton, 'Add Event'));
+        await tester.pumpAndSettle();
+
+        verify(mockRouter.push(AppRouter.eventFormPath)).called(1);
+        // The state updates, so we check if the viewmodel methods were called.
+        verify(mockViewModel.addEvent(newEvent)).called(1);
+      },
+    );
+
+    testWidgets('Admin can toggle event visibility', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      final event = Event(
+        uid: '1',
+        eventName: 'Event 1',
+        eventDates: EventDates(
+          uid: "eventDates_UID",
+          startDate: DateTime.now().toIso8601String(),
+          endDate: '',
+          timezone: "Europe/Madrid",
+        ),
+        location: '',
+        description: '',
+        isVisible: true,
+        tracks: [],
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+      );
+      when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([event]));
+      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.visibility));
+      await tester.pumpAndSettle(); // show dialog
+
+      expect(find.text('Change Visibility'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Change Visibility'));
+      await tester.pumpAndSettle();
+
+      final captured = verify(mockViewModel.editEvent(captureAny)).captured;
+      expect((captured.first as Event).isVisible, isFalse);
+    });
+
+    testWidgets('Admin can edit and delete event from card', (
+      WidgetTester tester,
+    ) async {
+      _registerMockViewModel();
+      final event = Event(
+        uid: '1',
+        eventName: 'Event 1',
+        eventDates: EventDates(
+          uid: "eventDates_UID",
+          startDate: DateTime.now().toIso8601String(),
+          endDate: '',
+          timezone: "Europe/Madrid",
+        ),
+        tracks: [],
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+      );
+      when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([event]));
+      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+      when(
+        mockRouter.push(AppRouter.eventFormPath, extra: '1'),
+      ).thenAnswer((_) async => null);
+      when(mockViewModel.deleteEvent(event)).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        buildTestableWidget(const EventCollectionScreen()),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.edit));
+      await tester.pumpAndSettle();
+      verify(mockRouter.push(AppRouter.eventFormPath, extra: '1')).called(1);
+
+      await tester.tap(find.byIcon(Icons.delete));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete Event'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Delete Event'));
+      await tester.pumpAndSettle();
+
+      verify(mockViewModel.deleteEvent(event)).called(1);
+    });
+
+    testWidgets(
+      'Admin sees and can tap organization FAB, updates config on return',
+      (WidgetTester tester) async {
+        _registerMockViewModel();
+        when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+        final updatedConfig = Config(
+          configName: 'Updated Conf',
+          primaryColorOrganization: 'test',
+          secondaryColorOrganization: 'test',
+          githubUser: 'test',
+          projectName: 'test',
+          branch: 'test',
+        );
+        when(
+          mockRouter.push(AppRouter.configFormPath),
+        ).thenAnswer((_) async => updatedConfig);
+
+        await tester.pumpWidget(
+          buildTestableWidget(const EventCollectionScreen()),
+        );
+        await tester.pumpAndSettle();
+
+        final fab = find.byIcon(Icons.business);
+        expect(fab, findsOneWidget);
+
+        await tester.tap(fab);
+        await tester.pumpAndSettle();
+
+        verify(mockRouter.push(AppRouter.configFormPath)).called(1);
+        expect(find.text('Updated Conf'), findsOneWidget);
+      },
+    );
+  });
+}

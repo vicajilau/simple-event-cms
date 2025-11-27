@@ -28,6 +28,27 @@ class Speaker extends GitHubModel {
     super.updateMessage = PathsGithub.eventUpdateMessage,
   });
 
+  Speaker copyWith({
+    String? uid,
+    String? name,
+    String? bio,
+    String? image,
+    Social? social,
+    List<String>? eventUIDS,
+    String? pathUrl,
+    String? updateMessage,
+  }) =>
+      Speaker(
+        uid: uid ?? this.uid,
+        name: name ?? this.name,
+        bio: bio ?? this.bio,
+        image: image ?? this.image,
+        social: social ?? this.social,
+        eventUIDS: eventUIDS ?? this.eventUIDS,
+        pathUrl: pathUrl ?? this.pathUrl,
+        updateMessage: updateMessage ?? this.updateMessage,
+      );
+
   factory Speaker.fromJson(Map<String, dynamic> json) => Speaker(
     uid: json["UID"].toString(),
     name: json["name"],

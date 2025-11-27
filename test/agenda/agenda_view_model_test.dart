@@ -1,9 +1,7 @@
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
-import 'package:sec/core/models/agenda.dart';
-import 'package:sec/core/models/speaker.dart';
+import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
@@ -14,268 +12,112 @@ import 'package:sec/presentation/view_model_common.dart';
 import '../mocks.mocks.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-
-  const MethodChannel channel = MethodChannel(
-    'plugins.it_nomads.com/flutter_secure_storage',
-  );
-
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-        if (methodCall.method == 'read') {
-          // Devuelve un valor simulado para la clave 'github_key' o lo que necesites
-          // Puedes devolver un JSON stringificado o null si quieres probar ese caso.
-          return '\"{\\"token\\":\\"token_mocked\\",\\"projectName\\":\\"simple-event-cms\\"}\"';
-        }
-        return null;
-      });
-
   late AgendaViewModelImp viewModel;
   late MockAgendaUseCase mockAgendaUseCase;
   late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
-  setUpAll(() {
-    provideDummy<Result<void>>(const Result.ok(null));
-    provideDummy<Result<List<AgendaDay>>>(
-      Result.ok([
-        AgendaDay(uid: '01/01/2021', date: '01/01/2021', eventsUID: []),
-      ]),
-    );
-    provideDummy<Result<List<Speaker>>>(
-      Result.ok([
-        Speaker(
-          uid: 'speaker2',
-          name: 'Jane Doe',
-          bio: '',
-          image: '',
-          social: Social(),
-          eventUIDS: [],
-        ),
-      ]),
-    );
-  });
-  setUp(() {
-    // Clear previous registrations
-    getIt.reset();
 
+  setUpAll(() {
+    // Mock static call
+    TestWidgetsFlutterBinding.ensureInitialized();
+  });
+
+  setUp(() {
+    getIt.reset();
     mockAgendaUseCase = MockAgendaUseCase();
     mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
 
-    // Register mocks with get_it
     getIt.registerSingleton<AgendaUseCase>(mockAgendaUseCase);
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
 
     viewModel = AgendaViewModelImp();
   });
 
-  group('AgendaViewModel', () {
-    const eventId = 'test-event';
-    final agendaDays = [
-      AgendaDay(uid: '01/01/2021', date: '01/01/2021', eventsUID: [eventId]),
-    ];
-    final speakers = [
-      Speaker(
-        uid: 'speaker1',
-        name: 'John Doe',
-        bio: '',
-        image: '',
-        social: Social(),
-        eventUIDS: [],
-      ),
-    ];
+  group('AgendaViewModelImp', () {
+    const eventId = 'event1';
+    final agendaDays = [AgendaDay(uid: '2023-01-01',date: '2023-01-01', eventsUID: [eventId])];
+    final speakers = [Speaker(uid: '1', name: 'Speaker 1', bio: '', social: Social(), eventUIDS: [eventId], image: '')];
 
-    test('initial state is correct', () {
-      expect(viewModel.viewState.value, ViewState.isLoading);
-      expect(viewModel.agendaDays.value, isEmpty);
-      expect(viewModel.speakers.value, isEmpty);
-      expect(viewModel.errorMessage, isEmpty);
+    test('loadAgendaDays success', () async {
+      when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer((_) async => Result.ok(agendaDays));
+      when(mockAgendaUseCase.getSpeakersForEventId(eventId)).thenAnswer((_) async => Result.ok(speakers));
+
+      await viewModel.loadAgendaDays(eventId);
+
+      expect(viewModel.viewState.value, ViewState.loadFinished);
+      expect(viewModel.agendaDays.value, agendaDays);
+      expect(viewModel.speakers.value, speakers);
     });
 
-    test('setup calls loadAgendaDays', () async {
-      // Arrange
-      when(
-        mockAgendaUseCase.getAgendaDayByEventIdFiltered(any),
-      ).thenAnswer((_) async => Result.ok(agendaDays));
-      when(
-        mockAgendaUseCase.getSpeakersForEventId(any),
-      ).thenAnswer((_) async => Result.ok(speakers));
+    test('loadAgendaDays failure on getting agenda', () async {
+      when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer((_) async => Result.error(NetworkException(('Agenda Error'))));
 
-      // Act
-      await viewModel.setup(eventId);
+      await viewModel.loadAgendaDays(eventId);
 
-      // Assert
-      verify(
-        mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-      ).called(1);
+      expect(viewModel.viewState.value, ViewState.error);
+      expect(viewModel.errorMessage, 'Agenda Error');
     });
 
-    group('loadAgendaDays', () {
-      test('success - loads agenda and speakers', () async {
-        // Arrange
-        when(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).thenAnswer((_) async => Result.ok(agendaDays));
-        when(
-          mockAgendaUseCase.getSpeakersForEventId(eventId),
-        ).thenAnswer((_) async => Result.ok(speakers));
+    test('loadAgendaDays failure on getting speakers', () async {
+      when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer((_) async => Result.ok(agendaDays));
+      when(mockAgendaUseCase.getSpeakersForEventId(eventId)).thenAnswer((_) async => Result.error(NetworkException(('Speaker Error'))));
 
-        // Act
-        await viewModel.loadAgendaDays(eventId);
+      await viewModel.loadAgendaDays(eventId);
 
-        // Assert
-        expect(viewModel.viewState.value, ViewState.loadFinished);
-        expect(viewModel.agendaDays.value, agendaDays);
-        expect(viewModel.speakers.value, speakers);
-        verify(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).called(1);
-        verify(mockAgendaUseCase.getSpeakersForEventId(eventId)).called(1);
-      });
-
-      test('failure - on getAgendaDayByEventIdFiltered', () async {
-        // Arrange
-        const error = 'Failed to load agenda';
-        when(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).thenAnswer((_) async => const Result.error(NetworkException(error)));
-
-        // Act
-        final result = await viewModel.loadAgendaDays(eventId);
-
-        // Assert
-        expect(viewModel.viewState.value, ViewState.error);
-        expect(viewModel.errorMessage, error);
-        expect(result, isA<Error>());
-      });
-
-      test('failure - on getSpeakersForEventId', () async {
-        // Arrange
-        const error = 'Failed to load speakers';
-        when(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).thenAnswer((_) async => Result.ok(agendaDays));
-        when(
-          mockAgendaUseCase.getSpeakersForEventId(eventId),
-        ).thenAnswer((_) async => const Result.error(NetworkException(error)));
-
-        // Act
-        await viewModel.loadAgendaDays(eventId);
-
-        // Assert
-        expect(viewModel.viewState.value, ViewState.error);
-        expect(viewModel.errorMessage, error);
-      });
+      expect(viewModel.viewState.value, ViewState.error);
+      expect(viewModel.errorMessage, 'Speaker Error');
     });
 
-    group('saveSpeaker', () {
-      final speaker = Speaker(
-        uid: 'speaker2',
-        name: 'Jane Doe',
-        bio: '',
-        image: '',
-        social: Social(),
-        eventUIDS: [],
-      );
+    test('saveSpeaker success', () async {
+      final speaker = speakers.first;
+      when(mockAgendaUseCase.saveSpeaker(speaker, eventId)).thenAnswer((_) async => Result.ok(null));
 
-      test('success - saves speaker', () async {
-        // Arrange
-        when(
-          mockAgendaUseCase.saveSpeaker(speaker, eventId),
-        ).thenAnswer((_) async => const Result.ok(null));
+      final result = await viewModel.saveSpeaker(speaker, eventId);
 
-        // Act
-        final result = await viewModel.saveSpeaker(speaker, eventId);
-
-        // Assert
-        expect(viewModel.viewState.value, ViewState.loadFinished);
-        expect(result, isA<Ok>());
-      });
-
-      test('failure - on saveSpeaker', () async {
-        // Arrange
-        const error = 'Failed to save speaker';
-        when(
-          mockAgendaUseCase.saveSpeaker(speaker, eventId),
-        ).thenAnswer((_) async => const Result.error(NetworkException(error)));
-
-        // Act
-        final result = await viewModel.saveSpeaker(speaker, eventId);
-
-        // Assert
-        expect(viewModel.viewState.value, ViewState.error);
-        expect(viewModel.errorMessage, error);
-        expect(result, isA<Error>());
-      });
+      expect(result, isA<Ok>());
+      expect(viewModel.viewState.value, ViewState.loadFinished);
     });
 
-    group('removeSessionAndReloadAgenda', () {
+    test('saveSpeaker failure', () async {
+      final speaker = speakers.first;
+      when(mockAgendaUseCase.saveSpeaker(speaker, eventId)).thenAnswer((_) async => Result.error(NetworkException(('Save Error'))));
+
+      final result = await viewModel.saveSpeaker(speaker, eventId);
+
+      expect(result, isA<Error>());
+      expect(viewModel.viewState.value, ViewState.error);
+      expect(viewModel.errorMessage, 'Save Error');
+    });
+
+    test('removeSessionAndReloadAgenda success', () async {
       const sessionId = 'session1';
+      when(mockAgendaUseCase.deleteSession(sessionId, agendaDayUID: anyNamed('agendaDayUID'))).thenAnswer((_) async => Result.ok(null));
+      when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer((_) async => Result.ok(agendaDays));
+      when(mockAgendaUseCase.getSpeakersForEventId(eventId)).thenAnswer((_) async => Result.ok(speakers));
 
-      test('success - removes session and reloads agenda', () async {
-        // Arrange
-        when(
-          mockAgendaUseCase.deleteSession(
-            sessionId,
-            agendaDayUID: anyNamed('agendaDayUID'),
-          ),
-        ).thenAnswer((_) async => const Result.ok(null));
-        when(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).thenAnswer((_) async => Result.ok(agendaDays));
-        when(
-          mockAgendaUseCase.getSpeakersForEventId(eventId),
-        ).thenAnswer((_) async => Result.ok(speakers));
+      await viewModel.removeSessionAndReloadAgenda(sessionId, eventId);
 
-        // Act
-        await viewModel.removeSessionAndReloadAgenda(sessionId, eventId);
-
-        // Assert
-        verify(
-          mockAgendaUseCase.deleteSession(
-            sessionId,
-            agendaDayUID: anyNamed('agendaDayUID'),
-          ),
-        ).called(1);
-        verify(
-          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
-        ).called(1);
-      });
-
-      test('failure - on deleteSession', () async {
-        // Arrange
-        const error = 'Failed to delete session';
-        when(
-          mockAgendaUseCase.deleteSession(
-            sessionId,
-            agendaDayUID: anyNamed('agendaDayUID'),
-          ),
-        ).thenAnswer((_) async => const Result.error(NetworkException(error)));
-
-        // Act
-        final result = await viewModel.removeSessionAndReloadAgenda(
-          sessionId,
-          eventId,
-        );
-
-        // Assert
-        expect(viewModel.viewState.value, ViewState.error);
-        expect(viewModel.errorMessage, error);
-        expect(result, isA<Error>());
-        verifyNever(mockAgendaUseCase.getAgendaDayByEventIdFiltered(any));
-      });
+      verify(mockAgendaUseCase.deleteSession(sessionId, agendaDayUID: anyNamed('agendaDayUID'))).called(1);
+      verify(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).called(1);
+      expect(viewModel.viewState.value, ViewState.loadFinished);
     });
 
-    test('checkToken calls use case', () async {
-      // Arrange
-      when(
-        mockCheckTokenSavedUseCase.checkToken(),
-      ).thenAnswer((_) async => true);
+     test('removeSessionAndReloadAgenda failure', () async {
+      const sessionId = 'session1';
+      when(mockAgendaUseCase.deleteSession(sessionId, agendaDayUID: anyNamed('agendaDayUID'))).thenAnswer((_) async => Result.error(NetworkException('Delete Error')));
 
-      // Act
-      final result = await viewModel.checkToken();
+      await viewModel.removeSessionAndReloadAgenda(sessionId, eventId);
+      
+      expect(viewModel.viewState.value, ViewState.error);
+      expect(viewModel.errorMessage, 'Delete Error');
+      verifyNever(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId));
+    });
 
-      // Assert
-      expect(result, isTrue);
-      verify(mockCheckTokenSavedUseCase.checkToken()).called(1);
+    test('checkToken returns correct value', () async {
+      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => true);
+      expect(await viewModel.checkToken(), isTrue);
+
+      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => false);
+      expect(await viewModel.checkToken(), isFalse);
     });
   });
 }

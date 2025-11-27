@@ -24,7 +24,7 @@ class AppRouter {
   static const String sponsorFormName = 'sponsor_form';
   static const String configFormName = 'config_form';
 
-  static final GoRouter router = GoRouter(
+  static GoRouter router = GoRouter(
     initialLocation: homePath,
     routes: [
       GoRoute(

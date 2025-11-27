@@ -3,31 +3,50 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i8;
+import 'dart:async' as _i13;
 
 import 'package:flutter/cupertino.dart' as _i6;
 import 'package:flutter/foundation.dart' as _i7;
+import 'package:go_router/src/configuration.dart' as _i9;
+import 'package:go_router/src/delegate.dart' as _i10;
+import 'package:go_router/src/information_provider.dart' as _i11;
+import 'package:go_router/src/match.dart' as _i30;
+import 'package:go_router/src/parser.dart' as _i12;
+import 'package:go_router/src/router.dart' as _i29;
+import 'package:go_router/src/state.dart' as _i8;
 import 'package:http/http.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:mockito/src/dummies.dart' as _i14;
+import 'package:mockito/src/dummies.dart' as _i19;
+import 'package:sec/core/config/secure_info.dart' as _i31;
 import 'package:sec/core/core.dart' as _i4;
-import 'package:sec/core/models/github/github_model.dart' as _i9;
-import 'package:sec/core/models/github_json_model.dart' as _i10;
+import 'package:sec/core/models/github/github_model.dart' as _i14;
+import 'package:sec/core/models/github_json_model.dart' as _i15;
 import 'package:sec/core/models/models.dart' as _i5;
-import 'package:sec/core/routing/check_org.dart' as _i21;
-import 'package:sec/core/utils/result.dart' as _i15;
-import 'package:sec/data/exceptions/exceptions.dart' as _i16;
+import 'package:sec/core/routing/check_org.dart' as _i26;
+import 'package:sec/core/utils/result.dart' as _i20;
+import 'package:sec/data/exceptions/exceptions.dart' as _i21;
 import 'package:sec/data/remote_data/common/commons_api_services.dart' as _i3;
-import 'package:sec/data/remote_data/update_data/data_update.dart' as _i11;
-import 'package:sec/domain/use_cases/agenda_use_case.dart' as _i17;
-import 'package:sec/domain/use_cases/check_token_saved_use_case.dart' as _i22;
-import 'package:sec/domain/use_cases/config_use_case.dart' as _i19;
-import 'package:sec/domain/use_cases/event_use_case.dart' as _i20;
+import 'package:sec/data/remote_data/update_data/data_update.dart' as _i16;
+import 'package:sec/domain/use_cases/agenda_use_case.dart' as _i22;
+import 'package:sec/domain/use_cases/check_token_saved_use_case.dart' as _i37;
+import 'package:sec/domain/use_cases/config_use_case.dart' as _i24;
+import 'package:sec/domain/use_cases/event_use_case.dart' as _i25;
+import 'package:sec/domain/use_cases/speaker_use_case.dart' as _i32;
+import 'package:sec/domain/use_cases/sponsor_use_case.dart' as _i34;
 import 'package:sec/presentation/ui/screens/agenda/agenda_view_model.dart'
-    as _i12;
+    as _i17;
 import 'package:sec/presentation/ui/screens/config/config_viewmodel.dart'
-    as _i18;
-import 'package:sec/presentation/view_model_common.dart' as _i13;
+    as _i23;
+import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart'
+    as _i27;
+import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart'
+    as _i36;
+import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart'
+    as _i35;
+import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart'
+    as _i33;
+import 'package:sec/presentation/ui/widgets/widgets.dart' as _i28;
+import 'package:sec/presentation/view_model_common.dart' as _i18;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -77,6 +96,41 @@ class _FakeValueListenable_5<T> extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
+class _FakeGoRouterState_6 extends _i1.SmartFake implements _i8.GoRouterState {
+  _FakeGoRouterState_6(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeRouteConfiguration_7 extends _i1.SmartFake
+    implements _i9.RouteConfiguration {
+  _FakeRouteConfiguration_7(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeBackButtonDispatcher_8 extends _i1.SmartFake
+    implements _i6.BackButtonDispatcher {
+  _FakeBackButtonDispatcher_8(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeGoRouterDelegate_9 extends _i1.SmartFake
+    implements _i10.GoRouterDelegate {
+  _FakeGoRouterDelegate_9(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeGoRouteInformationProvider_10 extends _i1.SmartFake
+    implements _i11.GoRouteInformationProvider {
+  _FakeGoRouteInformationProvider_10(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeGoRouteInformationParser_11 extends _i1.SmartFake
+    implements _i12.GoRouteInformationParser {
+  _FakeGoRouteInformationParser_11(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
 /// A class which mocks [CommonsServices].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -86,17 +140,17 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
   }
 
   @override
-  _i8.Future<Map<String, dynamic>> loadData(String? path) =>
+  _i13.Future<Map<String, dynamic>> loadData(String? path) =>
       (super.noSuchMethod(
             Invocation.method(#loadData, [path]),
-            returnValue: _i8.Future<Map<String, dynamic>>.value(
+            returnValue: _i13.Future<Map<String, dynamic>>.value(
               <String, dynamic>{},
             ),
           )
-          as _i8.Future<Map<String, dynamic>>);
+          as _i13.Future<Map<String, dynamic>>);
 
   @override
-  _i8.Future<_i2.Response> updateData<T extends _i9.GitHubModel>(
+  _i13.Future<_i2.Response> updateData<T extends _i14.GitHubModel>(
     List<T>? dataOriginal,
     T? data,
     String? pathUrl,
@@ -109,7 +163,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               pathUrl,
               commitMessage,
             ]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#updateData, [
@@ -121,17 +175,17 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 
   @override
-  _i8.Future<_i2.Response> updateAllData(
-    _i10.GithubJsonModel? data,
+  _i13.Future<_i2.Response> updateAllData(
+    _i15.GithubJsonModel? data,
     String? pathUrl,
     String? commitMessage,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updateAllData, [data, pathUrl, commitMessage]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#updateAllData, [
@@ -142,10 +196,10 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 
   @override
-  _i8.Future<_i2.Response> updateDataList<T extends _i9.GitHubModel>(
+  _i13.Future<_i2.Response> updateDataList<T extends _i14.GitHubModel>(
     List<T>? dataList,
     String? pathUrl,
     String? commitMessage,
@@ -156,7 +210,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               pathUrl,
               commitMessage,
             ]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#updateDataList, [
@@ -167,10 +221,10 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 
   @override
-  _i8.Future<_i2.Response> removeData<T extends _i9.GitHubModel>(
+  _i13.Future<_i2.Response> removeData<T extends _i14.GitHubModel>(
     List<T>? dataOriginal,
     T? dataToRemove,
     String? pathUrl,
@@ -183,7 +237,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               pathUrl,
               commitMessage,
             ]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#removeData, [
@@ -195,10 +249,10 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 
   @override
-  _i8.Future<_i2.Response> removeDataList<T extends _i9.GitHubModel>(
+  _i13.Future<_i2.Response> removeDataList<T extends _i14.GitHubModel>(
     List<T>? dataOriginal,
     List<T>? dataToRemove,
     String? pathUrl,
@@ -211,7 +265,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               pathUrl,
               commitMessage,
             ]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#removeDataList, [
@@ -223,10 +277,10 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 
   @override
-  _i8.Future<_i2.Response> updateSingleData<T extends _i9.GitHubModel>(
+  _i13.Future<_i2.Response> updateSingleData<T extends _i14.GitHubModel>(
     T? data,
     String? pathUrl,
     String? commitMessage,
@@ -237,7 +291,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               pathUrl,
               commitMessage,
             ]),
-            returnValue: _i8.Future<_i2.Response>.value(
+            returnValue: _i13.Future<_i2.Response>.value(
               _FakeResponse_0(
                 this,
                 Invocation.method(#updateSingleData, [
@@ -248,7 +302,7 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
               ),
             ),
           )
-          as _i8.Future<_i2.Response>);
+          as _i13.Future<_i2.Response>);
 }
 
 /// A class which mocks [DataLoader].
@@ -260,60 +314,60 @@ class MockDataLoader extends _i1.Mock implements _i4.DataLoader {
   }
 
   @override
-  _i8.Future<List<_i5.Session>> loadAllSessions() =>
+  _i13.Future<List<_i5.Session>> loadAllSessions() =>
       (super.noSuchMethod(
             Invocation.method(#loadAllSessions, []),
-            returnValue: _i8.Future<List<_i5.Session>>.value(<_i5.Session>[]),
+            returnValue: _i13.Future<List<_i5.Session>>.value(<_i5.Session>[]),
           )
-          as _i8.Future<List<_i5.Session>>);
+          as _i13.Future<List<_i5.Session>>);
 
   @override
-  _i8.Future<List<_i5.Track>> loadAllTracks() =>
+  _i13.Future<List<_i5.Track>> loadAllTracks() =>
       (super.noSuchMethod(
             Invocation.method(#loadAllTracks, []),
-            returnValue: _i8.Future<List<_i5.Track>>.value(<_i5.Track>[]),
+            returnValue: _i13.Future<List<_i5.Track>>.value(<_i5.Track>[]),
           )
-          as _i8.Future<List<_i5.Track>>);
+          as _i13.Future<List<_i5.Track>>);
 
   @override
-  _i8.Future<List<_i5.AgendaDay>> loadAllDays() =>
+  _i13.Future<List<_i5.AgendaDay>> loadAllDays() =>
       (super.noSuchMethod(
             Invocation.method(#loadAllDays, []),
-            returnValue: _i8.Future<List<_i5.AgendaDay>>.value(
+            returnValue: _i13.Future<List<_i5.AgendaDay>>.value(
               <_i5.AgendaDay>[],
             ),
           )
-          as _i8.Future<List<_i5.AgendaDay>>);
+          as _i13.Future<List<_i5.AgendaDay>>);
 
   @override
-  _i8.Future<List<_i5.Speaker>?> loadSpeakers() =>
+  _i13.Future<List<_i5.Speaker>?> loadSpeakers() =>
       (super.noSuchMethod(
             Invocation.method(#loadSpeakers, []),
-            returnValue: _i8.Future<List<_i5.Speaker>?>.value(),
+            returnValue: _i13.Future<List<_i5.Speaker>?>.value(),
           )
-          as _i8.Future<List<_i5.Speaker>?>);
+          as _i13.Future<List<_i5.Speaker>?>);
 
   @override
-  _i8.Future<List<_i5.Sponsor>> loadSponsors() =>
+  _i13.Future<List<_i5.Sponsor>> loadSponsors() =>
       (super.noSuchMethod(
             Invocation.method(#loadSponsors, []),
-            returnValue: _i8.Future<List<_i5.Sponsor>>.value(<_i5.Sponsor>[]),
+            returnValue: _i13.Future<List<_i5.Sponsor>>.value(<_i5.Sponsor>[]),
           )
-          as _i8.Future<List<_i5.Sponsor>>);
+          as _i13.Future<List<_i5.Sponsor>>);
 
   @override
-  _i8.Future<List<_i5.Event>> loadEvents() =>
+  _i13.Future<List<_i5.Event>> loadEvents() =>
       (super.noSuchMethod(
             Invocation.method(#loadEvents, []),
-            returnValue: _i8.Future<List<_i5.Event>>.value(<_i5.Event>[]),
+            returnValue: _i13.Future<List<_i5.Event>>.value(<_i5.Event>[]),
           )
-          as _i8.Future<List<_i5.Event>>);
+          as _i13.Future<List<_i5.Event>>);
 }
 
 /// A class which mocks [DataUpdateInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDataUpdateInfo extends _i1.Mock implements _i11.DataUpdateInfo {
+class MockDataUpdateInfo extends _i1.Mock implements _i16.DataUpdateInfo {
   MockDataUpdateInfo() {
     _i1.throwOnMissingStub(this);
   }
@@ -349,52 +403,52 @@ class MockDataUpdateInfo extends _i1.Mock implements _i11.DataUpdateInfo {
           as _i5.Config);
 
   @override
-  _i8.Future<void> updateSpeaker(_i5.Speaker? speaker) =>
+  _i13.Future<void> updateSpeaker(_i5.Speaker? speaker) =>
       (super.noSuchMethod(
             Invocation.method(#updateSpeaker, [speaker]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateSpeakers(List<_i5.Speaker>? speakers) =>
+  _i13.Future<void> updateSpeakers(List<_i5.Speaker>? speakers) =>
       (super.noSuchMethod(
             Invocation.method(#updateSpeakers, [speakers]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateTrack(_i5.Track? track) =>
+  _i13.Future<void> updateTrack(_i5.Track? track) =>
       (super.noSuchMethod(
             Invocation.method(#updateTrack, [track]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateTracks(List<_i5.Track>? tracks) =>
+  _i13.Future<void> updateTracks(List<_i5.Track>? tracks) =>
       (super.noSuchMethod(
             Invocation.method(#updateTracks, [tracks]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateAgendaDay(_i5.AgendaDay? agendaDay) =>
+  _i13.Future<void> updateAgendaDay(_i5.AgendaDay? agendaDay) =>
       (super.noSuchMethod(
             Invocation.method(#updateAgendaDay, [agendaDay]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateAgendaDays(
+  _i13.Future<void> updateAgendaDays(
     List<_i5.AgendaDay>? agendaDays, {
     bool? overrideData = false,
   }) =>
@@ -404,142 +458,142 @@ class MockDataUpdateInfo extends _i1.Mock implements _i11.DataUpdateInfo {
               [agendaDays],
               {#overrideData: overrideData},
             ),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateSponsors(_i5.Sponsor? sponsor) =>
+  _i13.Future<void> updateSponsors(_i5.Sponsor? sponsor) =>
       (super.noSuchMethod(
             Invocation.method(#updateSponsors, [sponsor]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateSponsorsList(List<_i5.Sponsor>? sponsors) =>
+  _i13.Future<void> updateSponsorsList(List<_i5.Sponsor>? sponsors) =>
       (super.noSuchMethod(
             Invocation.method(#updateSponsorsList, [sponsors]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateOrganization(_i5.Config? config) =>
+  _i13.Future<void> updateOrganization(_i5.Config? config) =>
       (super.noSuchMethod(
             Invocation.method(#updateOrganization, [config]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateEvent(_i5.Event? event) =>
+  _i13.Future<void> updateEvent(_i5.Event? event) =>
       (super.noSuchMethod(
             Invocation.method(#updateEvent, [event]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateEvents(List<_i5.Event>? events) =>
+  _i13.Future<void> updateEvents(List<_i5.Event>? events) =>
       (super.noSuchMethod(
             Invocation.method(#updateEvents, [events]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateSession(_i5.Session? session) =>
+  _i13.Future<void> updateSession(_i5.Session? session) =>
       (super.noSuchMethod(
             Invocation.method(#updateSession, [session]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> updateSessions(List<_i5.Session>? sessions) =>
+  _i13.Future<void> updateSessions(List<_i5.Session>? sessions) =>
       (super.noSuchMethod(
             Invocation.method(#updateSessions, [sessions]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeSpeaker(String? speakerId, String? eventUID) =>
+  _i13.Future<void> removeSpeaker(String? speakerId, String? eventUID) =>
       (super.noSuchMethod(
             Invocation.method(#removeSpeaker, [speakerId, eventUID]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeSponsors(String? sponsorId) =>
+  _i13.Future<void> removeSponsors(String? sponsorId) =>
       (super.noSuchMethod(
             Invocation.method(#removeSponsors, [sponsorId]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeEvent(String? eventId) =>
+  _i13.Future<void> removeEvent(String? eventId) =>
       (super.noSuchMethod(
             Invocation.method(#removeEvent, [eventId]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeAgendaDay(String? agendaDayId) =>
+  _i13.Future<void> removeAgendaDay(String? agendaDayId) =>
       (super.noSuchMethod(
             Invocation.method(#removeAgendaDay, [agendaDayId]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeSession(String? sessionId) =>
+  _i13.Future<void> removeSession(String? sessionId) =>
       (super.noSuchMethod(
             Invocation.method(#removeSession, [sessionId]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> removeTrack(String? trackId) =>
+  _i13.Future<void> removeTrack(String? trackId) =>
       (super.noSuchMethod(
             Invocation.method(#removeTrack, [trackId]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
-  _i8.Future<void> overwriteItems(List<dynamic>? itemsToKeep) =>
+  _i13.Future<void> overwriteItems(List<dynamic>? itemsToKeep) =>
       (super.noSuchMethod(
             Invocation.method(#overwriteItems, [itemsToKeep]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 }
 
 /// A class which mocks [AgendaViewModel].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
+class MockAgendaViewModel extends _i1.Mock implements _i17.AgendaViewModel {
   MockAgendaViewModel() {
     _i1.throwOnMissingStub(this);
   }
@@ -567,21 +621,21 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
           as _i6.ValueNotifier<List<_i5.Speaker>>);
 
   @override
-  _i6.ValueNotifier<_i13.ViewState> get viewState =>
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
       (super.noSuchMethod(
             Invocation.getter(#viewState),
-            returnValue: _FakeValueNotifier_4<_i13.ViewState>(
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
               this,
               Invocation.getter(#viewState),
             ),
           )
-          as _i6.ValueNotifier<_i13.ViewState>);
+          as _i6.ValueNotifier<_i18.ViewState>);
 
   @override
   String get errorMessage =>
       (super.noSuchMethod(
             Invocation.getter(#errorMessage),
-            returnValue: _i14.dummyValue<String>(
+            returnValue: _i19.dummyValue<String>(
               this,
               Invocation.getter(#errorMessage),
             ),
@@ -595,51 +649,51 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
   );
 
   @override
-  _i8.Future<_i15.Result<void>> saveSpeaker(
+  _i13.Future<_i20.Result<void>> saveSpeaker(
     _i5.Speaker? speaker,
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#saveSpeaker, [speaker, eventId]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#saveSpeaker, [speaker, eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.Speaker>>> getSpeakersForEventId(
+  _i13.Future<_i20.Result<List<_i5.Speaker>>> getSpeakersForEventId(
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getSpeakersForEventId, [eventId]),
-            returnValue: _i8.Future<_i15.Result<List<_i5.Speaker>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.Speaker>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.Speaker>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Speaker>>>(
                 this,
                 Invocation.method(#getSpeakersForEventId, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.Speaker>>>);
+          as _i13.Future<_i20.Result<List<_i5.Speaker>>>);
 
   @override
-  _i8.Future<_i15.Result<void>> loadAgendaDays(String? eventId) =>
+  _i13.Future<_i20.Result<void>> loadAgendaDays(String? eventId) =>
       (super.noSuchMethod(
             Invocation.method(#loadAgendaDays, [eventId]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#loadAgendaDays, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> removeSessionAndReloadAgenda(
+  _i13.Future<_i20.Result<void>> removeSessionAndReloadAgenda(
     String? sessionId,
     String? eventId, {
     String? agendaDayUID,
@@ -650,8 +704,8 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
               [sessionId, eventId],
               {#agendaDayUID: agendaDayUID},
             ),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(
                   #removeSessionAndReloadAgenda,
@@ -661,16 +715,16 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<void> setup([Object? argument]) =>
+  _i13.Future<void> setup([Object? argument]) =>
       (super.noSuchMethod(
             Invocation.method(#setup, [argument]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -679,15 +733,15 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
   );
 
   @override
-  _i8.Future<bool> checkToken() =>
+  _i13.Future<bool> checkToken() =>
       (super.noSuchMethod(
             Invocation.method(#checkToken, []),
-            returnValue: _i8.Future<bool>.value(false),
+            returnValue: _i13.Future<bool>.value(false),
           )
-          as _i8.Future<bool>);
+          as _i13.Future<bool>);
 
   @override
-  void setErrorKey(_i16.CustomException? exception) => super.noSuchMethod(
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
     Invocation.method(#setErrorKey, [exception]),
     returnValueForMissingStub: null,
   );
@@ -696,192 +750,192 @@ class MockAgendaViewModel extends _i1.Mock implements _i12.AgendaViewModel {
 /// A class which mocks [AgendaUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockAgendaUseCase extends _i1.Mock implements _i17.AgendaUseCase {
+class MockAgendaUseCase extends _i1.Mock implements _i22.AgendaUseCase {
   MockAgendaUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i15.Result<void>> saveEvent(_i5.Event? event) =>
+  _i13.Future<_i20.Result<void>> saveEvent(_i5.Event? event) =>
       (super.noSuchMethod(
             Invocation.method(#saveEvent, [event]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#saveEvent, [event]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> saveSpeaker(
+  _i13.Future<_i20.Result<void>> saveSpeaker(
     _i5.Speaker? speaker,
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#saveSpeaker, [speaker, eventId]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#saveSpeaker, [speaker, eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<_i5.AgendaDay>> getAgendaDayById(
+  _i13.Future<_i20.Result<_i5.AgendaDay>> getAgendaDayById(
     String? agendaDayId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getAgendaDayById, [agendaDayId]),
-            returnValue: _i8.Future<_i15.Result<_i5.AgendaDay>>.value(
-              _i14.dummyValue<_i15.Result<_i5.AgendaDay>>(
+            returnValue: _i13.Future<_i20.Result<_i5.AgendaDay>>.value(
+              _i19.dummyValue<_i20.Result<_i5.AgendaDay>>(
                 this,
                 Invocation.method(#getAgendaDayById, [agendaDayId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<_i5.AgendaDay>>);
+          as _i13.Future<_i20.Result<_i5.AgendaDay>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.AgendaDay>>> getAgendaDayByEventId(
+  _i13.Future<_i20.Result<List<_i5.AgendaDay>>> getAgendaDayByEventId(
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getAgendaDayByEventId, [eventId]),
-            returnValue: _i8.Future<_i15.Result<List<_i5.AgendaDay>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.AgendaDay>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.AgendaDay>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.AgendaDay>>>(
                 this,
                 Invocation.method(#getAgendaDayByEventId, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.AgendaDay>>>);
+          as _i13.Future<_i20.Result<List<_i5.AgendaDay>>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.AgendaDay>>> getAgendaDayByEventIdFiltered(
+  _i13.Future<_i20.Result<List<_i5.AgendaDay>>> getAgendaDayByEventIdFiltered(
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getAgendaDayByEventIdFiltered, [eventId]),
-            returnValue: _i8.Future<_i15.Result<List<_i5.AgendaDay>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.AgendaDay>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.AgendaDay>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.AgendaDay>>>(
                 this,
                 Invocation.method(#getAgendaDayByEventIdFiltered, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.AgendaDay>>>);
+          as _i13.Future<_i20.Result<List<_i5.AgendaDay>>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.Track>>> getTracks() =>
+  _i13.Future<_i20.Result<List<_i5.Track>>> getTracks() =>
       (super.noSuchMethod(
             Invocation.method(#getTracks, []),
-            returnValue: _i8.Future<_i15.Result<List<_i5.Track>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.Track>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.Track>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Track>>>(
                 this,
                 Invocation.method(#getTracks, []),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.Track>>>);
+          as _i13.Future<_i20.Result<List<_i5.Track>>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.Track>>> getTracksByEventId(
+  _i13.Future<_i20.Result<List<_i5.Track>>> getTracksByEventId(
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getTracksByEventId, [eventId]),
-            returnValue: _i8.Future<_i15.Result<List<_i5.Track>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.Track>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.Track>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Track>>>(
                 this,
                 Invocation.method(#getTracksByEventId, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.Track>>>);
+          as _i13.Future<_i20.Result<List<_i5.Track>>>);
 
   @override
-  _i8.Future<_i15.Result<void>> updateTrack(
+  _i13.Future<_i20.Result<void>> updateTrack(
     _i5.Track? track,
     String? agendaDayId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updateTrack, [track, agendaDayId]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#updateTrack, [track, agendaDayId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> updateAgendaDay(
+  _i13.Future<_i20.Result<void>> updateAgendaDay(
     _i5.AgendaDay? agendaDay,
     String? eventUID,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#updateAgendaDay, [agendaDay, eventUID]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#updateAgendaDay, [agendaDay, eventUID]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<_i5.Track>> getTrackById(String? trackId) =>
+  _i13.Future<_i20.Result<_i5.Track>> getTrackById(String? trackId) =>
       (super.noSuchMethod(
             Invocation.method(#getTrackById, [trackId]),
-            returnValue: _i8.Future<_i15.Result<_i5.Track>>.value(
-              _i14.dummyValue<_i15.Result<_i5.Track>>(
+            returnValue: _i13.Future<_i20.Result<_i5.Track>>.value(
+              _i19.dummyValue<_i20.Result<_i5.Track>>(
                 this,
                 Invocation.method(#getTrackById, [trackId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<_i5.Track>>);
+          as _i13.Future<_i20.Result<_i5.Track>>);
 
   @override
-  _i8.Future<_i15.Result<void>> addSession(
+  _i13.Future<_i20.Result<void>> addSession(
     _i5.Session? session,
     String? trackUID,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#addSession, [session, trackUID]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#addSession, [session, trackUID]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> addSpeaker(
+  _i13.Future<_i20.Result<void>> addSpeaker(
     String? eventId,
     _i5.Speaker? speaker,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#addSpeaker, [eventId, speaker]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#addSpeaker, [eventId, speaker]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> deleteSession(
+  _i13.Future<_i20.Result<void>> deleteSession(
     String? sessionId, {
     String? agendaDayUID,
   }) =>
@@ -891,8 +945,8 @@ class MockAgendaUseCase extends _i1.Mock implements _i17.AgendaUseCase {
               [sessionId],
               {#agendaDayUID: agendaDayUID},
             ),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(
                   #deleteSession,
@@ -902,61 +956,61 @@ class MockAgendaUseCase extends _i1.Mock implements _i17.AgendaUseCase {
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<_i5.Event>> loadEvent(String? eventId) =>
+  _i13.Future<_i20.Result<_i5.Event>> loadEvent(String? eventId) =>
       (super.noSuchMethod(
             Invocation.method(#loadEvent, [eventId]),
-            returnValue: _i8.Future<_i15.Result<_i5.Event>>.value(
-              _i14.dummyValue<_i15.Result<_i5.Event>>(
+            returnValue: _i13.Future<_i20.Result<_i5.Event>>.value(
+              _i19.dummyValue<_i20.Result<_i5.Event>>(
                 this,
                 Invocation.method(#loadEvent, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<_i5.Event>>);
+          as _i13.Future<_i20.Result<_i5.Event>>);
 
   @override
-  _i8.Future<_i15.Result<List<_i5.Speaker>>> getSpeakersForEventId(
+  _i13.Future<_i20.Result<List<_i5.Speaker>>> getSpeakersForEventId(
     String? eventId,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#getSpeakersForEventId, [eventId]),
-            returnValue: _i8.Future<_i15.Result<List<_i5.Speaker>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.Speaker>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.Speaker>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Speaker>>>(
                 this,
                 Invocation.method(#getSpeakersForEventId, [eventId]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.Speaker>>>);
+          as _i13.Future<_i20.Result<List<_i5.Speaker>>>);
 }
 
 /// A class which mocks [ConfigViewModel].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockConfigViewModel extends _i1.Mock implements _i18.ConfigViewModel {
+class MockConfigViewModel extends _i1.Mock implements _i23.ConfigViewModel {
   MockConfigViewModel() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.ValueNotifier<_i13.ViewState> get viewState =>
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
       (super.noSuchMethod(
             Invocation.getter(#viewState),
-            returnValue: _FakeValueNotifier_4<_i13.ViewState>(
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
               this,
               Invocation.getter(#viewState),
             ),
           )
-          as _i6.ValueNotifier<_i13.ViewState>);
+          as _i6.ValueNotifier<_i18.ViewState>);
 
   @override
   String get errorMessage =>
       (super.noSuchMethod(
             Invocation.getter(#errorMessage),
-            returnValue: _i14.dummyValue<String>(
+            returnValue: _i19.dummyValue<String>(
               this,
               Invocation.getter(#errorMessage),
             ),
@@ -970,21 +1024,21 @@ class MockConfigViewModel extends _i1.Mock implements _i18.ConfigViewModel {
   );
 
   @override
-  _i8.Future<bool> updateConfig(_i5.Config? config) =>
+  _i13.Future<bool> updateConfig(_i5.Config? config) =>
       (super.noSuchMethod(
             Invocation.method(#updateConfig, [config]),
-            returnValue: _i8.Future<bool>.value(false),
+            returnValue: _i13.Future<bool>.value(false),
           )
-          as _i8.Future<bool>);
+          as _i13.Future<bool>);
 
   @override
-  _i8.Future<void> setup([Object? argument]) =>
+  _i13.Future<void> setup([Object? argument]) =>
       (super.noSuchMethod(
             Invocation.method(#setup, [argument]),
-            returnValue: _i8.Future<void>.value(),
-            returnValueForMissingStub: _i8.Future<void>.value(),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
           )
-          as _i8.Future<void>);
+          as _i13.Future<void>);
 
   @override
   void dispose() => super.noSuchMethod(
@@ -993,15 +1047,15 @@ class MockConfigViewModel extends _i1.Mock implements _i18.ConfigViewModel {
   );
 
   @override
-  _i8.Future<bool> checkToken() =>
+  _i13.Future<bool> checkToken() =>
       (super.noSuchMethod(
             Invocation.method(#checkToken, []),
-            returnValue: _i8.Future<bool>.value(false),
+            returnValue: _i13.Future<bool>.value(false),
           )
-          as _i8.Future<bool>);
+          as _i13.Future<bool>);
 
   @override
-  void setErrorKey(_i16.CustomException? exception) => super.noSuchMethod(
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
     Invocation.method(#setErrorKey, [exception]),
     returnValueForMissingStub: null,
   );
@@ -1010,132 +1064,132 @@ class MockConfigViewModel extends _i1.Mock implements _i18.ConfigViewModel {
 /// A class which mocks [ConfigUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockConfigUseCase extends _i1.Mock implements _i19.ConfigUseCase {
+class MockConfigUseCase extends _i1.Mock implements _i24.ConfigUseCase {
   MockConfigUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i15.Result<void>> updateConfig(_i5.Config? config) =>
+  _i13.Future<_i20.Result<void>> updateConfig(_i5.Config? config) =>
       (super.noSuchMethod(
             Invocation.method(#updateConfig, [config]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#updateConfig, [config]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 }
 
 /// A class which mocks [EventUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockEventUseCase extends _i1.Mock implements _i20.EventUseCase {
+class MockEventUseCase extends _i1.Mock implements _i25.EventUseCase {
   MockEventUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<_i15.Result<List<_i5.Event>>> getEvents() =>
+  _i13.Future<_i20.Result<List<_i5.Event>>> getEvents() =>
       (super.noSuchMethod(
             Invocation.method(#getEvents, []),
-            returnValue: _i8.Future<_i15.Result<List<_i5.Event>>>.value(
-              _i14.dummyValue<_i15.Result<List<_i5.Event>>>(
+            returnValue: _i13.Future<_i20.Result<List<_i5.Event>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Event>>>(
                 this,
                 Invocation.method(#getEvents, []),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<List<_i5.Event>>>);
+          as _i13.Future<_i20.Result<List<_i5.Event>>>);
 
   @override
-  _i8.Future<_i15.Result<_i5.Event?>> getEventById(String? id) =>
+  _i13.Future<_i20.Result<_i5.Event?>> getEventById(String? id) =>
       (super.noSuchMethod(
             Invocation.method(#getEventById, [id]),
-            returnValue: _i8.Future<_i15.Result<_i5.Event?>>.value(
-              _i14.dummyValue<_i15.Result<_i5.Event?>>(
+            returnValue: _i13.Future<_i20.Result<_i5.Event?>>.value(
+              _i19.dummyValue<_i20.Result<_i5.Event?>>(
                 this,
                 Invocation.method(#getEventById, [id]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<_i5.Event?>>);
+          as _i13.Future<_i20.Result<_i5.Event?>>);
 
   @override
-  _i8.Future<_i15.Result<void>> saveEvent(_i5.Event? event) =>
+  _i13.Future<_i20.Result<void>> saveEvent(_i5.Event? event) =>
       (super.noSuchMethod(
             Invocation.method(#saveEvent, [event]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#saveEvent, [event]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> removeEvent(_i5.Event? event) =>
+  _i13.Future<_i20.Result<void>> removeEvent(_i5.Event? event) =>
       (super.noSuchMethod(
             Invocation.method(#removeEvent, [event]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#removeEvent, [event]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> prepareAgendaDays(_i5.Event? event) =>
+  _i13.Future<_i20.Result<void>> prepareAgendaDays(_i5.Event? event) =>
       (super.noSuchMethod(
             Invocation.method(#prepareAgendaDays, [event]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#prepareAgendaDays, [event]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> removeTrack(
+  _i13.Future<_i20.Result<void>> removeTrack(
     String? trackUID,
     String? eventUID,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#removeTrack, [trackUID, eventUID]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#removeTrack, [trackUID, eventUID]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 
   @override
-  _i8.Future<_i15.Result<void>> updateConfig(_i5.Config? config) =>
+  _i13.Future<_i20.Result<void>> updateConfig(_i5.Config? config) =>
       (super.noSuchMethod(
             Invocation.method(#updateConfig, [config]),
-            returnValue: _i8.Future<_i15.Result<void>>.value(
-              _i14.dummyValue<_i15.Result<void>>(
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
                 this,
                 Invocation.method(#updateConfig, [config]),
               ),
             ),
           )
-          as _i8.Future<_i15.Result<void>>);
+          as _i13.Future<_i20.Result<void>>);
 }
 
 /// A class which mocks [CheckOrg].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockCheckOrg extends _i1.Mock implements _i21.CheckOrg {
+class MockCheckOrg extends _i1.Mock implements _i26.CheckOrg {
   MockCheckOrg() {
     _i1.throwOnMissingStub(this);
   }
@@ -1163,20 +1217,979 @@ class MockCheckOrg extends _i1.Mock implements _i21.CheckOrg {
   );
 }
 
+/// A class which mocks [EventCollectionViewModel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEventCollectionViewModel extends _i1.Mock
+    implements _i27.EventCollectionViewModel {
+  MockEventCollectionViewModel() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.ValueNotifier<List<_i5.Event>> get eventsToShow =>
+      (super.noSuchMethod(
+            Invocation.getter(#eventsToShow),
+            returnValue: _FakeValueNotifier_4<List<_i5.Event>>(
+              this,
+              Invocation.getter(#eventsToShow),
+            ),
+          )
+          as _i6.ValueNotifier<List<_i5.Event>>);
+
+  @override
+  _i28.EventFilter get currentFilter =>
+      (super.noSuchMethod(
+            Invocation.getter(#currentFilter),
+            returnValue: _i28.EventFilter.all,
+          )
+          as _i28.EventFilter);
+
+  @override
+  set currentFilter(_i28.EventFilter? value) => super.noSuchMethod(
+    Invocation.setter(#currentFilter, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
+      (super.noSuchMethod(
+            Invocation.getter(#viewState),
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
+              this,
+              Invocation.getter(#viewState),
+            ),
+          )
+          as _i6.ValueNotifier<_i18.ViewState>);
+
+  @override
+  String get errorMessage =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorMessage),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#errorMessage),
+            ),
+          )
+          as String);
+
+  @override
+  set errorMessage(String? value) => super.noSuchMethod(
+    Invocation.setter(#errorMessage, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void onEventFilterChanged(_i28.EventFilter? value) => super.noSuchMethod(
+    Invocation.method(#onEventFilterChanged, [value]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<void> loadEvents() =>
+      (super.noSuchMethod(
+            Invocation.method(#loadEvents, []),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> addEvent(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#addEvent, [event]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<_i5.Event?> getEventById(String? eventId) =>
+      (super.noSuchMethod(
+            Invocation.method(#getEventById, [eventId]),
+            returnValue: _i13.Future<_i5.Event?>.value(),
+          )
+          as _i13.Future<_i5.Event?>);
+
+  @override
+  _i13.Future<_i20.Result<void>> editEvent(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#editEvent, [event]),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(#editEvent, [event]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+
+  @override
+  _i13.Future<void> deleteEvent(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteEvent, [event]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> updateConfig(_i5.Config? config) =>
+      (super.noSuchMethod(
+            Invocation.method(#updateConfig, [config]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> setup([Object? argument]) =>
+      (super.noSuchMethod(
+            Invocation.method(#setup, [argument]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<bool> checkToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkToken, []),
+            returnValue: _i13.Future<bool>.value(false),
+          )
+          as _i13.Future<bool>);
+
+  @override
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
+    Invocation.method(#setErrorKey, [exception]),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [GoRouter].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGoRouter extends _i1.Mock implements _i29.GoRouter {
+  MockGoRouter() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i8.GoRouterState get state =>
+      (super.noSuchMethod(
+            Invocation.getter(#state),
+            returnValue: _FakeGoRouterState_6(this, Invocation.getter(#state)),
+          )
+          as _i8.GoRouterState);
+
+  @override
+  _i9.RouteConfiguration get configuration =>
+      (super.noSuchMethod(
+            Invocation.getter(#configuration),
+            returnValue: _FakeRouteConfiguration_7(
+              this,
+              Invocation.getter(#configuration),
+            ),
+          )
+          as _i9.RouteConfiguration);
+
+  @override
+  _i6.BackButtonDispatcher get backButtonDispatcher =>
+      (super.noSuchMethod(
+            Invocation.getter(#backButtonDispatcher),
+            returnValue: _FakeBackButtonDispatcher_8(
+              this,
+              Invocation.getter(#backButtonDispatcher),
+            ),
+          )
+          as _i6.BackButtonDispatcher);
+
+  @override
+  _i10.GoRouterDelegate get routerDelegate =>
+      (super.noSuchMethod(
+            Invocation.getter(#routerDelegate),
+            returnValue: _FakeGoRouterDelegate_9(
+              this,
+              Invocation.getter(#routerDelegate),
+            ),
+          )
+          as _i10.GoRouterDelegate);
+
+  @override
+  _i11.GoRouteInformationProvider get routeInformationProvider =>
+      (super.noSuchMethod(
+            Invocation.getter(#routeInformationProvider),
+            returnValue: _FakeGoRouteInformationProvider_10(
+              this,
+              Invocation.getter(#routeInformationProvider),
+            ),
+          )
+          as _i11.GoRouteInformationProvider);
+
+  @override
+  _i12.GoRouteInformationParser get routeInformationParser =>
+      (super.noSuchMethod(
+            Invocation.getter(#routeInformationParser),
+            returnValue: _FakeGoRouteInformationParser_11(
+              this,
+              Invocation.getter(#routeInformationParser),
+            ),
+          )
+          as _i12.GoRouteInformationParser);
+
+  @override
+  bool get overridePlatformDefaultLocation =>
+      (super.noSuchMethod(
+            Invocation.getter(#overridePlatformDefaultLocation),
+            returnValue: false,
+          )
+          as bool);
+
+  @override
+  set configuration(_i9.RouteConfiguration? value) => super.noSuchMethod(
+    Invocation.setter(#configuration, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set routerDelegate(_i10.GoRouterDelegate? value) => super.noSuchMethod(
+    Invocation.setter(#routerDelegate, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set routeInformationProvider(_i11.GoRouteInformationProvider? value) =>
+      super.noSuchMethod(
+        Invocation.setter(#routeInformationProvider, value),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  set routeInformationParser(_i12.GoRouteInformationParser? value) =>
+      super.noSuchMethod(
+        Invocation.setter(#routeInformationParser, value),
+        returnValueForMissingStub: null,
+      );
+
+  @override
+  bool canPop() =>
+      (super.noSuchMethod(Invocation.method(#canPop, []), returnValue: false)
+          as bool);
+
+  @override
+  String namedLocation(
+    String? name, {
+    Map<String, String>? pathParameters = const {},
+    Map<String, dynamic>? queryParameters = const {},
+    String? fragment,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #namedLocation,
+              [name],
+              {
+                #pathParameters: pathParameters,
+                #queryParameters: queryParameters,
+                #fragment: fragment,
+              },
+            ),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.method(
+                #namedLocation,
+                [name],
+                {
+                  #pathParameters: pathParameters,
+                  #queryParameters: queryParameters,
+                  #fragment: fragment,
+                },
+              ),
+            ),
+          )
+          as String);
+
+  @override
+  void go(String? location, {Object? extra}) => super.noSuchMethod(
+    Invocation.method(#go, [location], {#extra: extra}),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void restore(_i30.RouteMatchList? matchList) => super.noSuchMethod(
+    Invocation.method(#restore, [matchList]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void goNamed(
+    String? name, {
+    Map<String, String>? pathParameters = const {},
+    Map<String, dynamic>? queryParameters = const {},
+    Object? extra,
+    String? fragment,
+  }) => super.noSuchMethod(
+    Invocation.method(
+      #goNamed,
+      [name],
+      {
+        #pathParameters: pathParameters,
+        #queryParameters: queryParameters,
+        #extra: extra,
+        #fragment: fragment,
+      },
+    ),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<T?> push<T extends Object?>(String? location, {Object? extra}) =>
+      (super.noSuchMethod(
+            Invocation.method(#push, [location], {#extra: extra}),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  _i13.Future<T?> pushNamed<T extends Object?>(
+    String? name, {
+    Map<String, String>? pathParameters = const {},
+    Map<String, dynamic>? queryParameters = const {},
+    Object? extra,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #pushNamed,
+              [name],
+              {
+                #pathParameters: pathParameters,
+                #queryParameters: queryParameters,
+                #extra: extra,
+              },
+            ),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  _i13.Future<T?> pushReplacement<T extends Object?>(
+    String? location, {
+    Object? extra,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#pushReplacement, [location], {#extra: extra}),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  _i13.Future<T?> pushReplacementNamed<T extends Object?>(
+    String? name, {
+    Map<String, String>? pathParameters = const {},
+    Map<String, dynamic>? queryParameters = const {},
+    Object? extra,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #pushReplacementNamed,
+              [name],
+              {
+                #pathParameters: pathParameters,
+                #queryParameters: queryParameters,
+                #extra: extra,
+              },
+            ),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  _i13.Future<T?> replace<T>(String? location, {Object? extra}) =>
+      (super.noSuchMethod(
+            Invocation.method(#replace, [location], {#extra: extra}),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  _i13.Future<T?> replaceNamed<T>(
+    String? name, {
+    Map<String, String>? pathParameters = const {},
+    Map<String, dynamic>? queryParameters = const {},
+    Object? extra,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(
+              #replaceNamed,
+              [name],
+              {
+                #pathParameters: pathParameters,
+                #queryParameters: queryParameters,
+                #extra: extra,
+              },
+            ),
+            returnValue: _i13.Future<T?>.value(),
+          )
+          as _i13.Future<T?>);
+
+  @override
+  void pop<T extends Object?>([T? result]) => super.noSuchMethod(
+    Invocation.method(#pop, [result]),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void refresh() => super.noSuchMethod(
+    Invocation.method(#refresh, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [Config].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockConfig extends _i1.Mock implements _i5.Config {
+  MockConfig() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get configName =>
+      (super.noSuchMethod(
+            Invocation.getter(#configName),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#configName),
+            ),
+          )
+          as String);
+
+  @override
+  String get primaryColorOrganization =>
+      (super.noSuchMethod(
+            Invocation.getter(#primaryColorOrganization),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#primaryColorOrganization),
+            ),
+          )
+          as String);
+
+  @override
+  String get secondaryColorOrganization =>
+      (super.noSuchMethod(
+            Invocation.getter(#secondaryColorOrganization),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#secondaryColorOrganization),
+            ),
+          )
+          as String);
+
+  @override
+  String get githubUser =>
+      (super.noSuchMethod(
+            Invocation.getter(#githubUser),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#githubUser),
+            ),
+          )
+          as String);
+
+  @override
+  String get projectName =>
+      (super.noSuchMethod(
+            Invocation.getter(#projectName),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#projectName),
+            ),
+          )
+          as String);
+
+  @override
+  String get branch =>
+      (super.noSuchMethod(
+            Invocation.getter(#branch),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#branch),
+            ),
+          )
+          as String);
+
+  @override
+  set eventForcedToViewUID(String? value) => super.noSuchMethod(
+    Invocation.setter(#eventForcedToViewUID, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  String get uid =>
+      (super.noSuchMethod(
+            Invocation.getter(#uid),
+            returnValue: _i19.dummyValue<String>(this, Invocation.getter(#uid)),
+          )
+          as String);
+
+  @override
+  String get pathUrl =>
+      (super.noSuchMethod(
+            Invocation.getter(#pathUrl),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#pathUrl),
+            ),
+          )
+          as String);
+
+  @override
+  String get updateMessage =>
+      (super.noSuchMethod(
+            Invocation.getter(#updateMessage),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#updateMessage),
+            ),
+          )
+          as String);
+
+  @override
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
+}
+
+/// A class which mocks [SecureInfo].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSecureInfo extends _i1.Mock implements _i31.SecureInfo {
+  MockSecureInfo() {
+    _i1.throwOnMissingStub(this);
+  }
+}
+
+/// A class which mocks [SpeakerUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSpeakerUseCase extends _i1.Mock implements _i32.SpeakerUseCase {
+  MockSpeakerUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i13.Future<_i20.Result<List<_i5.Speaker>>> getSpeakersById(
+    String? eventId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getSpeakersById, [eventId]),
+            returnValue: _i13.Future<_i20.Result<List<_i5.Speaker>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Speaker>>>(
+                this,
+                Invocation.method(#getSpeakersById, [eventId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<List<_i5.Speaker>>>);
+
+  @override
+  _i13.Future<_i20.Result<void>> saveSpeaker(
+    _i5.Speaker? speaker,
+    String? parentId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveSpeaker, [speaker, parentId]),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(#saveSpeaker, [speaker, parentId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+
+  @override
+  _i13.Future<_i20.Result<void>> removeSpeaker(
+    String? speakerId,
+    String? eventUID,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeSpeaker, [speakerId, eventUID]),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(#removeSpeaker, [speakerId, eventUID]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+}
+
+/// A class which mocks [SponsorViewModel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSponsorViewModel extends _i1.Mock implements _i33.SponsorViewModel {
+  MockSponsorViewModel() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.ValueNotifier<List<_i5.Sponsor>> get sponsors =>
+      (super.noSuchMethod(
+            Invocation.getter(#sponsors),
+            returnValue: _FakeValueNotifier_4<List<_i5.Sponsor>>(
+              this,
+              Invocation.getter(#sponsors),
+            ),
+          )
+          as _i6.ValueNotifier<List<_i5.Sponsor>>);
+
+  @override
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
+      (super.noSuchMethod(
+            Invocation.getter(#viewState),
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
+              this,
+              Invocation.getter(#viewState),
+            ),
+          )
+          as _i6.ValueNotifier<_i18.ViewState>);
+
+  @override
+  String get errorMessage =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorMessage),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#errorMessage),
+            ),
+          )
+          as String);
+
+  @override
+  set errorMessage(String? value) => super.noSuchMethod(
+    Invocation.setter(#errorMessage, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<void> addSponsor(_i5.Sponsor? sponsor, String? parentId) =>
+      (super.noSuchMethod(
+            Invocation.method(#addSponsor, [sponsor, parentId]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> removeSponsor(String? id) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeSponsor, [id]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> setup([Object? argument]) =>
+      (super.noSuchMethod(
+            Invocation.method(#setup, [argument]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<bool> checkToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkToken, []),
+            returnValue: _i13.Future<bool>.value(false),
+          )
+          as _i13.Future<bool>);
+
+  @override
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
+    Invocation.method(#setErrorKey, [exception]),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [SponsorUseCase].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSponsorUseCase extends _i1.Mock implements _i34.SponsorUseCase {
+  MockSponsorUseCase() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i13.Future<_i20.Result<List<_i5.Sponsor>>> getSponsorByIds(
+    String? eventId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#getSponsorByIds, [eventId]),
+            returnValue: _i13.Future<_i20.Result<List<_i5.Sponsor>>>.value(
+              _i19.dummyValue<_i20.Result<List<_i5.Sponsor>>>(
+                this,
+                Invocation.method(#getSponsorByIds, [eventId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<List<_i5.Sponsor>>>);
+
+  @override
+  _i13.Future<_i20.Result<void>> saveSponsor(
+    _i5.Sponsor? sponsor,
+    String? parentId,
+  ) =>
+      (super.noSuchMethod(
+            Invocation.method(#saveSponsor, [sponsor, parentId]),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(#saveSponsor, [sponsor, parentId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+
+  @override
+  _i13.Future<_i20.Result<void>> removeSponsor(String? sponsorId) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeSponsor, [sponsorId]),
+            returnValue: _i13.Future<_i20.Result<void>>.value(
+              _i19.dummyValue<_i20.Result<void>>(
+                this,
+                Invocation.method(#removeSponsor, [sponsorId]),
+              ),
+            ),
+          )
+          as _i13.Future<_i20.Result<void>>);
+}
+
+/// A class which mocks [SpeakerViewModel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockSpeakerViewModel extends _i1.Mock implements _i35.SpeakerViewModel {
+  MockSpeakerViewModel() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.ValueNotifier<List<_i5.Speaker>> get speakers =>
+      (super.noSuchMethod(
+            Invocation.getter(#speakers),
+            returnValue: _FakeValueNotifier_4<List<_i5.Speaker>>(
+              this,
+              Invocation.getter(#speakers),
+            ),
+          )
+          as _i6.ValueNotifier<List<_i5.Speaker>>);
+
+  @override
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
+      (super.noSuchMethod(
+            Invocation.getter(#viewState),
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
+              this,
+              Invocation.getter(#viewState),
+            ),
+          )
+          as _i6.ValueNotifier<_i18.ViewState>);
+
+  @override
+  String get errorMessage =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorMessage),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#errorMessage),
+            ),
+          )
+          as String);
+
+  @override
+  set errorMessage(String? value) => super.noSuchMethod(
+    Invocation.setter(#errorMessage, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<void> addSpeaker(_i5.Speaker? speaker, String? parentId) =>
+      (super.noSuchMethod(
+            Invocation.method(#addSpeaker, [speaker, parentId]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> editSpeaker(_i5.Speaker? speaker, String? parentId) =>
+      (super.noSuchMethod(
+            Invocation.method(#editSpeaker, [speaker, parentId]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> removeSpeaker(String? id, String? eventUID) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeSpeaker, [id, eventUID]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> setup([Object? argument]) =>
+      (super.noSuchMethod(
+            Invocation.method(#setup, [argument]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<bool> checkToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkToken, []),
+            returnValue: _i13.Future<bool>.value(false),
+          )
+          as _i13.Future<bool>);
+
+  @override
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
+    Invocation.method(#setErrorKey, [exception]),
+    returnValueForMissingStub: null,
+  );
+}
+
+/// A class which mocks [EventFormViewModel].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockEventFormViewModel extends _i1.Mock
+    implements _i36.EventFormViewModel {
+  MockEventFormViewModel() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i6.ValueNotifier<_i18.ViewState> get viewState =>
+      (super.noSuchMethod(
+            Invocation.getter(#viewState),
+            returnValue: _FakeValueNotifier_4<_i18.ViewState>(
+              this,
+              Invocation.getter(#viewState),
+            ),
+          )
+          as _i6.ValueNotifier<_i18.ViewState>);
+
+  @override
+  String get errorMessage =>
+      (super.noSuchMethod(
+            Invocation.getter(#errorMessage),
+            returnValue: _i19.dummyValue<String>(
+              this,
+              Invocation.getter(#errorMessage),
+            ),
+          )
+          as String);
+
+  @override
+  set errorMessage(String? value) => super.noSuchMethod(
+    Invocation.setter(#errorMessage, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<bool> onSubmit(_i5.Event? event) =>
+      (super.noSuchMethod(
+            Invocation.method(#onSubmit, [event]),
+            returnValue: _i13.Future<bool>.value(false),
+          )
+          as _i13.Future<bool>);
+
+  @override
+  _i13.Future<void> removeTrack(String? trackUID, String? eventUID) =>
+      (super.noSuchMethod(
+            Invocation.method(#removeTrack, [trackUID, eventUID]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  _i13.Future<void> setup([Object? argument]) =>
+      (super.noSuchMethod(
+            Invocation.method(#setup, [argument]),
+            returnValue: _i13.Future<void>.value(),
+            returnValueForMissingStub: _i13.Future<void>.value(),
+          )
+          as _i13.Future<void>);
+
+  @override
+  void dispose() => super.noSuchMethod(
+    Invocation.method(#dispose, []),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  _i13.Future<bool> checkToken() =>
+      (super.noSuchMethod(
+            Invocation.method(#checkToken, []),
+            returnValue: _i13.Future<bool>.value(false),
+          )
+          as _i13.Future<bool>);
+
+  @override
+  void setErrorKey(_i21.CustomException? exception) => super.noSuchMethod(
+    Invocation.method(#setErrorKey, [exception]),
+    returnValueForMissingStub: null,
+  );
+}
+
 /// A class which mocks [CheckTokenSavedUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockCheckTokenSavedUseCase extends _i1.Mock
-    implements _i22.CheckTokenSavedUseCase {
+    implements _i37.CheckTokenSavedUseCase {
   MockCheckTokenSavedUseCase() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Future<bool> checkToken() =>
+  _i13.Future<bool> checkToken() =>
       (super.noSuchMethod(
             Invocation.method(#checkToken, []),
-            returnValue: _i8.Future<bool>.value(false),
+            returnValue: _i13.Future<bool>.value(false),
           )
-          as _i8.Future<bool>);
+          as _i13.Future<bool>);
 }
