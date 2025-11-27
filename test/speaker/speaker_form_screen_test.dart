@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mockito/mockito.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/utils/result.dart';
+import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
+import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_form_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import '../mocks.mocks.dart';
 
 Widget buildTestableWidget(Widget child) {
   return MaterialApp(
@@ -21,6 +28,23 @@ Widget buildTestableWidget(Widget child) {
 }
 
 void main() {
+
+  late MockSpeakerUseCase mockSpeakerUseCase;
+  late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    provideDummy<Result<void>>(const Result.ok(null));
+    provideDummy<Result<List<Speaker>>>(const Result.ok([]));
+  });
+  setUp(() {
+    getIt.reset();
+    mockSpeakerUseCase = MockSpeakerUseCase();
+    mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
+
+    getIt.registerSingleton<SpeakerUseCase>(mockSpeakerUseCase);
+    getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
+
+  });
   group('SpeakerFormScreen', () {
     testWidgets('form is pre-filled when a speaker is provided', (WidgetTester tester) async {
       final speaker = Speaker(
@@ -41,13 +65,17 @@ void main() {
     });
 
     testWidgets('shows validation errors for required fields', (WidgetTester tester) async {
+
+
+      when(mockSpeakerUseCase.getSpeakersById(any)).thenAnswer((_) async => Result.ok([]));
+
       await tester.pumpWidget(buildTestableWidget(const SpeakerFormScreen(eventUID: '1')));
       
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.text('Name is required'), findsOneWidget);
-      expect(find.text('Bio is required'), findsOneWidget);
+      expect(find.textContaining('Please enter your name'), findsOneWidget);
+      expect(find.textContaining('Please enter your biography'), findsOneWidget);
     });
 
     testWidgets('pops with new speaker data on successful submission', (WidgetTester tester) async {
