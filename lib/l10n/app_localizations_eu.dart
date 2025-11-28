@@ -411,7 +411,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get sponsorNameHint => 'Sartu babeslearen izena';
 
   @override
-  String get sponsorNameValidation => 'Izena';
+  String get sponsorNameValidation => 'Sartu babeslearen izena';
 
   @override
   String get logoLabel => 'Logoa*';
