@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -8,7 +9,6 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_form_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../mocks.mocks.dart';
 
@@ -20,15 +20,12 @@ Widget buildTestableWidget(Widget child) {
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    supportedLocales: const [
-      Locale('en', ''),
-    ],
+    supportedLocales: const [Locale('en', '')],
     home: Scaffold(body: child),
   );
 }
 
 void main() {
-
   late MockSpeakerUseCase mockSpeakerUseCase;
   late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
   setUpAll(() async {
@@ -43,10 +40,11 @@ void main() {
 
     getIt.registerSingleton<SpeakerUseCase>(mockSpeakerUseCase);
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
-
   });
   group('SpeakerFormScreen', () {
-    testWidgets('form is pre-filled when a speaker is provided', (WidgetTester tester) async {
+    testWidgets('form is pre-filled when a speaker is provided', (
+      WidgetTester tester,
+    ) async {
       final speaker = Speaker(
         uid: '1',
         name: 'Jane Doe',
@@ -56,7 +54,9 @@ void main() {
         eventUIDS: ['1'],
       );
 
-      await tester.pumpWidget(buildTestableWidget(SpeakerFormScreen(speaker: speaker, eventUID: '1')));
+      await tester.pumpWidget(
+        buildTestableWidget(SpeakerFormScreen(speaker: speaker, eventUID: '1')),
+      );
 
       expect(find.text('Jane Doe'), findsOneWidget);
       expect(find.text('A short bio.'), findsOneWidget);
@@ -64,22 +64,33 @@ void main() {
       expect(find.text('@jane'), findsOneWidget);
     });
 
-    testWidgets('shows validation errors for required fields', (WidgetTester tester) async {
+    testWidgets('shows validation errors for required fields', (
+      WidgetTester tester,
+    ) async {
+      when(
+        mockSpeakerUseCase.getSpeakersById(any),
+      ).thenAnswer((_) async => Result.ok([]));
 
+      await tester.pumpWidget(
+        buildTestableWidget(const SpeakerFormScreen(eventUID: '1')),
+      );
 
-      when(mockSpeakerUseCase.getSpeakersById(any)).thenAnswer((_) async => Result.ok([]));
-
-      await tester.pumpWidget(buildTestableWidget(const SpeakerFormScreen(eventUID: '1')));
-      
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
       expect(find.textContaining('Please enter your name'), findsOneWidget);
-      expect(find.textContaining('Please enter your biography'), findsOneWidget);
+      expect(
+        find.textContaining('Please enter your biography'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('pops with new speaker data on successful submission', (WidgetTester tester) async {
-      await tester.pumpWidget(buildTestableWidget(const SpeakerFormScreen(eventUID: '1')));
+    testWidgets('pops with new speaker data on successful submission', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        buildTestableWidget(const SpeakerFormScreen(eventUID: '1')),
+      );
 
       await tester.enterText(find.byType(TextFormField).at(0), 'John Doe');
       await tester.enterText(find.byType(TextFormField).at(2), 'A bio.');

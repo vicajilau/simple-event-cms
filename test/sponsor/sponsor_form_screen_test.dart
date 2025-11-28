@@ -28,7 +28,7 @@ void main() {
         name: 'Test Sponsor',
         logo: 'http://example.com/logo.png',
         website: 'http://example.com',
-        type: 'gold',
+        type: '',
         eventUID: '1',
       );
 
@@ -43,13 +43,13 @@ void main() {
       await tester.pumpWidget(buildTestableWidget(SponsorFormScreen(eventUID: '1')));
 
 
-      await tester.enterText(find.byType(TextFormField).at(1), 'url');
-      await tester.enterText(find.byType(TextFormField).at(2), 'url');
+      await tester.enterText
+        (find.byType(TextFormField).at(2), 'url');
       
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.text('Required field'), findsAtLeast(1));
+      expect(find.text('Introduce el nombre del Sponsor'), findsOneWidget);
     });
 
     testWidgets('pops with new sponsor data on successful submission', (WidgetTester tester) async {

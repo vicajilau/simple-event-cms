@@ -412,7 +412,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get sponsorNameHint => 'Introduce el nombre del Sponsor';
 
   @override
-  String get sponsorNameValidation => 'Nombre';
+  String get sponsorNameValidation => 'Introduce el nombre del Sponsor';
 
   @override
   String get logoLabel => 'Logo*';
@@ -421,7 +421,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get logoHint => 'Introduce la URL del logo';
 
   @override
-  String get logoValidation => 'Logo';
+  String get logoValidation => 'Introduce la URL del logo';
 
   @override
   String get websiteLabel => 'Web*';
@@ -430,7 +430,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get websiteHint => 'Introduce la URL de la web';
 
   @override
-  String get websiteValidation => 'Web';
+  String get websiteValidation => 'Introduce la URL de la web';
 
   @override
   String get mainSponsor => 'Patrocinador Principal';

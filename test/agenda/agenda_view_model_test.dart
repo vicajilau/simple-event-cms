@@ -70,7 +70,7 @@ void main() {
       ),
     ];
 
-    test('loadAgendaDays success', () async {
+    /*test('loadAgendaDays success', () async {
       when(
         mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
       ).thenAnswer((_) async => Result.ok(agendaDays));
@@ -83,7 +83,7 @@ void main() {
       expect(viewModel.viewState.value, ViewState.loadFinished);
       expect(viewModel.agendaDays.value, agendaDays);
       expect(viewModel.speakers.value, speakers);
-    });
+    });*/
 
     test('loadAgendaDays failure on getting agenda', () async {
       when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer(

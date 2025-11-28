@@ -25,7 +25,7 @@ void main() {
       await tester.pumpWidget(buildTestableWidget(const MaintenanceScreen()));
 
       expect(find.byIcon(Icons.event_busy_outlined), findsOneWidget);
-      expect(find.text('There are no events to show at the moment.'), findsOneWidget);
+      expect(find.text('No events to show.'), findsOneWidget);
       expect(find.text('Try again later'), findsOneWidget);
     });
   });
