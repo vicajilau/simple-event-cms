@@ -47,10 +47,10 @@ void main() {
     eventDates: MockEventDates(),
   );
 
-  setUp(() {
+  setUpAll(() async {
+    await getIt.reset(); // ADDED
     mockViewModel = MockAgendaFormViewModel();
-    getIt.reset();
-    getIt.registerFactory<AgendaFormViewModel>(() => mockViewModel);
+    getIt.registerSingleton<AgendaFormViewModel>(mockViewModel);
 
     when(
       mockViewModel.viewState,
@@ -149,12 +149,12 @@ void main() {
     await tester.tap(find.text('Track 1'));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Select start time'));
+    await tester.tap(find.textContaining('Start time:'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('OK').first);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Select end time'));
+    await tester.tap(find.textContaining('End time:'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('OK').first);
     await tester.pumpAndSettle();
