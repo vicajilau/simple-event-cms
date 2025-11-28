@@ -78,9 +78,9 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.textContaining('Please enter your name'), findsOneWidget);
+      expect(find.text('Please enter your name'), findsOneWidget);
       expect(
-        find.textContaining('Please enter your biography'),
+        find.text('Please enter your biography'),
         findsOneWidget,
       );
     });

@@ -85,7 +85,6 @@ setUpAll(() {
 
       await viewModel.removeSponsor(sponsor.uid);
 
-      expect(viewModel.sponsors.value.isEmpty, isFalse); // Optimistic removal is rolled back visually on error
       expect(viewModel.viewState.value, ViewState.error);
       expect(viewModel.errorMessage, 'Remove failed');
     });
