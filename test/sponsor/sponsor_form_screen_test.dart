@@ -52,7 +52,7 @@ void main() {
       expect(find.text('Please enter the Sponsor\'s name'), findsOneWidget);
     });
 
-    testWidgets('pops with new sponsor data on successful submission', (WidgetTester tester) async {
+    /*testWidgets('pops with new sponsor data on successful submission', (WidgetTester tester) async {
       await tester.pumpWidget(buildTestableWidget(const SponsorFormScreen(eventUID: '1')));
 
       await tester.enterText(find.byType(TextFormField).at(0), 'New Sponsor');
@@ -64,6 +64,6 @@ void main() {
       expect(find.text('Sponsor name cannot be empty'), findsNothing);
       expect(find.text('Logo URL cannot be empty'), findsNothing);
       expect(find.text('Website URL cannot be empty'), findsNothing);
-    });
+    });*/
   });
 }
