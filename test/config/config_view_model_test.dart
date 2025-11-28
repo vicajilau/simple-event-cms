@@ -20,7 +20,6 @@ void main() {
   late ConfigViewModelImpl viewModel;
 
   setUp(() {
-    getIt.reset();
     mockConfigUseCase = MockConfigUseCase();
     mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
     getIt.registerSingleton<ConfigUseCase>(mockConfigUseCase);
@@ -29,7 +28,9 @@ void main() {
     provideDummy<Result<void>>(const Result.ok(null));
 
   });
-
+  tearDown(() async { // ADDED
+    await getIt.reset(); // ADDED
+  }); // ADDED
   const MethodChannel channel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
   );
