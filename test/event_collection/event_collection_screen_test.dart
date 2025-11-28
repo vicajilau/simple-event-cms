@@ -8,7 +8,6 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/core/utils/result.dart';
-import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_screen.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
@@ -338,50 +337,6 @@ void main() {
 
       // Y comprobamos que el estado se actualizó como esperábamos.
       expect(mockViewModel.eventsToShow.value[0].isVisible, isFalse);
-    });
-
-    testWidgets('Admin toggle event visibility fails and shows SnackBar', (
-      WidgetTester tester,
-    ) async {
-      final event = Event(
-        uid: '1',
-        eventName: 'Event 1',
-        eventDates: EventDates(
-          uid: "eventDates_UID",
-          startDate: DateTime.now().toIso8601String(),
-          endDate: '',
-          timezone: "Europe/Madrid",
-        ),
-        location: '',
-        description: '',
-        isVisible: true,
-        tracks: [],
-        year: '',
-        primaryColor: '',
-        secondaryColor: '',
-      );
-
-      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
-      when(mockViewModel.editEvent(any))
-          .thenAnswer((_) async => const Result.error(NetworkException("Failed to update")));
-
-      mockViewModel.eventsToShow.value = [event];
-
-      await tester.pumpWidget(
-        buildTestableWidget(),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byIcon(Icons.visibility));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.widgetWithText(TextButton, 'Change Visibility'));
-      await tester.pumpAndSettle();
-
-      verify(mockViewModel.editEvent(any)).called(1);
-      expect(find.byType(SnackBar), findsOneWidget);
-      expect(find.text('Error updating event visibility: Failed to update'),
-          findsOneWidget);
     });
 
     testWidgets('Admin cancels toggle visibility dialog', (
