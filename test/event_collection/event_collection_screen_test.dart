@@ -21,7 +21,7 @@ import 'package:sec/presentation/view_model_common.dart';
 import '../mocks.mocks.dart';
 
 // Helper to wrap widgets for testing, providing MaterialApp and localizations.
-Widget buildTestableWidget(Widget child) {
+Widget buildTestableWidget() {
   return MaterialApp(
     localizationsDelegates: const [
       AppLocalizations.delegate,
@@ -32,7 +32,7 @@ Widget buildTestableWidget(Widget child) {
     supportedLocales: const [
       Locale('en', ''), // English, no country code
     ],
-    home: child,
+    home: EventCollectionScreen(),
   );
 }
 
@@ -82,7 +82,7 @@ void main() {
       when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.isLoading));
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
@@ -90,7 +90,7 @@ void main() {
           .thenReturn(ValueNotifier(ViewState.loadFinished));
       // Rebuild the widget to reflect the new state.
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -110,7 +110,7 @@ void main() {
           .thenReturn('Error loading configuration: ');
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle(); // Pump and settle to allow dialog to show.
 
@@ -125,7 +125,7 @@ void main() {
       when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
       when(mockViewModel.errorMessage).thenReturn('Network Error');
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle(); // Let post frame callback run for the dialog
 
@@ -138,7 +138,7 @@ void main() {
     ) async {
       when(mockViewModel.eventsToShow).thenReturn(ValueNotifier([]));
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -189,7 +189,7 @@ void main() {
       ).thenReturn(ValueNotifier([pastEvent, upcomingEvent]));
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -202,7 +202,7 @@ void main() {
       WidgetTester tester,
     ) async {
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -220,7 +220,7 @@ void main() {
     ) async {
       when(mockCheckOrg.hasError).thenReturn(true);
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -269,7 +269,7 @@ void main() {
         when(mockViewModel.addEvent(newEvent)).thenAnswer((_) async {});
 
         await tester.pumpWidget(
-          buildTestableWidget(const EventCollectionScreen()),
+          buildTestableWidget(),
         );
         await tester.pumpAndSettle();
 
@@ -323,7 +323,7 @@ void main() {
       mockViewModel.eventsToShow.value = [event]; // Estado inicial
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -368,7 +368,7 @@ void main() {
       mockViewModel.eventsToShow.value = [event];
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -392,7 +392,7 @@ void main() {
       when(mockViewModel.checkToken()).thenAnswer((_) async => true);
       mockViewModel.eventsToShow.value = [event];
 
-      await tester.pumpWidget(buildTestableWidget(const EventCollectionScreen()));
+      await tester.pumpWidget(buildTestableWidget());
       await tester.pumpAndSettle();
 
       await tester.tap(find.byIcon(Icons.visibility));
@@ -432,7 +432,7 @@ void main() {
       when(mockViewModel.deleteEvent(event)).thenAnswer((_) async {});
 
       await tester.pumpWidget(
-        buildTestableWidget(const EventCollectionScreen()),
+        buildTestableWidget(),
       );
       await tester.pumpAndSettle();
 
@@ -467,7 +467,7 @@ void main() {
         when(mockConfig.configName).thenReturn('Test Conf');
         
         await tester.pumpWidget(
-          buildTestableWidget(const EventCollectionScreen()),
+          buildTestableWidget(),
         );
         await tester.pumpAndSettle();
         

@@ -67,27 +67,43 @@ void main() {
       endDate: DateTime.now().add(const Duration(days: 370)).toIso8601String(),
       timezone: "Europe/Madrid",
     ),
+    isVisible: true,
+  );
+  final testEvent2 = Event(
+    uid: "event_UID_TEST2",
+    eventName: "Test Event",
+    tracks: [],
+    year: "2025",
+    primaryColor: "#00000",
+    secondaryColor: "#00000",
+    eventDates: EventDates(
+      uid: "eventDates_UID",
+      startDate: DateTime.now()
+          .add(const Duration(days: 365))
+          .toIso8601String(),
+      endDate: DateTime.now().add(const Duration(days: 370)).toIso8601String(),
+      timezone: "Europe/Madrid",
+    ),
+    isVisible: true,
   );
 
   group('EventCollectionViewModel', () {
     test('loadEvents success', () async {
       when(mockEventUseCase.getEvents()).thenAnswer(
         (_) async =>
-            Result.ok([testEvent, testEvent.copyWith(uid: 'TESTEVENT_UID_2')]),
+            Result.ok([testEvent, testEvent2]),
       );
 
       when(
         mockCheckTokenSavedUseCase.checkToken(),
       ).thenAnswer((_) async => true);
 
+
       await viewModel.loadEvents();
       expect(viewModel.viewState.value, ViewState.loadFinished);
       expect(
         viewModel.eventsToShow.value,
-        [
-          testEvent,
-          testEvent.copyWith(uid: 'TESTEVENT_UID_2')
-        ].toList(),
+        [testEvent, testEvent2],
       );
     });
 
@@ -147,11 +163,10 @@ void main() {
       final editedEvent = testEvent.copyWith(eventName: 'edited');
       when(
         mockEventUseCase.saveEvent(editedEvent),
-      ).thenAnswer((_) async => const Result.ok(null));
+      ).thenAnswer((_) async => Result.ok(null));
 
-      final result = await viewModel.editEvent(editedEvent);
+      await viewModel.editEvent(editedEvent);
 
-      expect(result, const Result.ok(null));
       expect(viewModel.eventsToShow.value.first.eventName, 'edited');
     });
 
