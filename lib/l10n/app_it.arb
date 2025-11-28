@@ -143,7 +143,7 @@
   "editingSponsor": "Modifica dello sponsor",
   "creatingSponsor": "Creazione dello sponsor",
   "sponsorNameHint": "Inserisci il nome dello Sponsor",
-  "sponsorNameValidation": "Nome",
+  "sponsorNameValidation": "Inserisci il nome dello Sponsor",
   "logoLabel": "Logo*",
   "logoHint": "Inserisci l'URL del logo",
   "logoValidation": "Logo",

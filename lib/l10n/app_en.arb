@@ -131,7 +131,7 @@
   "editingSponsor": "Editing Sponsor",
   "creatingSponsor": "Creating Sponsor",
   "sponsorNameHint": "Enter the Sponsor's name",
-  "sponsorNameValidation": "Name",
+  "sponsorNameValidation": "Please enter the Sponsor's name",
   "logoLabel": "Logo*",
   "logoHint": "Enter the logo URL",
   "logoValidation": "Logo",

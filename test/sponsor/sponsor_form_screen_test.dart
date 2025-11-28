@@ -49,7 +49,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.text('Introduce el nombre del Sponsor'), findsOneWidget);
+      expect(find.text('Please enter the Sponsor\'s name'), findsOneWidget);
     });
 
     testWidgets('pops with new sponsor data on successful submission', (WidgetTester tester) async {
