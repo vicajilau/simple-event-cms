@@ -1,6 +1,12 @@
 name: Dart Analyze 🚀 Unit Tests 🧪
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   Testing:
@@ -12,7 +18,7 @@ jobs:
         sdk: [stable]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Setup Flutter SDK
         uses: flutter-actions/setup-flutter@v4
