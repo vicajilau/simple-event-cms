@@ -85,12 +85,12 @@ class AgendaViewModelImp extends AgendaViewModel {
         );
         switch (resultSpeakers) {
           case Ok<List<Speaker>>():
+            viewState.value = ViewState.loadFinished;
             speakers.value = resultSpeakers.value;
           case Error():
             viewState.value = ViewState.error;
             setErrorKey(resultSpeakers.error);
         }
-        viewState.value = ViewState.loadFinished;
         return result;
       case Error():
         viewState.value = ViewState.error;

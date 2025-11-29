@@ -98,4 +98,31 @@ class Event extends GitHubModel {
       'tracks': tracks.map((track) => track.toJson()).toList(),
     };
   }
+
+  /// Creates a copy of this event but with the given fields replaced with the new values.
+  Event copyWith({
+    String? uid,
+    String? eventName,
+    String? year,
+    String? primaryColor,
+    String? secondaryColor,
+    EventDates? eventDates,
+    String? description,
+    String? location,
+    List<Track>? tracks,
+    bool? isVisible,
+  }) {
+    return Event(
+      uid: uid ?? this.uid,
+      eventName: eventName ?? this.eventName,
+      year: year ?? this.year,
+      primaryColor: primaryColor ?? this.primaryColor,
+      secondaryColor: secondaryColor ?? this.secondaryColor,
+      eventDates: eventDates ?? this.eventDates,
+      description: description ?? this.description,
+      location: location ?? this.location,
+      tracks: tracks ?? this.tracks,
+      isVisible: isVisible ?? this.isVisible,
+    );
+  }
 }

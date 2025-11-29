@@ -412,7 +412,7 @@ class AppLocalizationsGl extends AppLocalizations {
   String get sponsorNameHint => 'Introduce o nome do patrocinador';
 
   @override
-  String get sponsorNameValidation => 'Nome';
+  String get sponsorNameValidation => 'Introduce o nome do Sponsor';
 
   @override
   String get logoLabel => 'Logo*';

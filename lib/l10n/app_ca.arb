@@ -128,7 +128,7 @@
   "editingSponsor": "Editant el patrocinador",
   "creatingSponsor": "Creant el patrocinador",
   "sponsorNameHint": "Introdueix el nom del patrocinador",
-  "sponsorNameValidation": "Nom",
+  "sponsorNameValidation": "Si us plau, introdueix el nom del patrocinador",
   "logoLabel": "Logo*",
   "logoHint": "Introdueix la URL del logo",
   "logoValidation": "Logo",

@@ -131,7 +131,7 @@
   "editingSponsor": "Babeslea Editatzen",
   "creatingSponsor": "Babeslea Sortzen",
   "sponsorNameHint": "Sartu babeslearen izena",
-  "sponsorNameValidation": "Izena",
+  "sponsorNameValidation": "Sartu babeslearen izena",
   "logoLabel": "Logoa*",
   "logoHint": "Sartu logoaren URLa",
   "logoValidation": "Logoa",

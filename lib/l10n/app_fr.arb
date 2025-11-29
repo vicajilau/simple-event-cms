@@ -140,7 +140,7 @@
   "editingSponsor": "Édition du sponsor",
   "creatingSponsor": "Création du sponsor",
   "sponsorNameHint": "Entrez le nom du sponsor",
-  "sponsorNameValidation": "Nom",
+  "sponsorNameValidation": "Veuillez entrer le nom du sponsor",
   "logoLabel": "Logo*",
   "logoHint": "Entrez l'URL du logo",
   "logoValidation": "Logo",

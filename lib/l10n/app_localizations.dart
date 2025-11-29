@@ -899,7 +899,7 @@ abstract class AppLocalizations {
   /// No description provided for @sponsorNameValidation.
   ///
   /// In en, this message translates to:
-  /// **'Name'**
+  /// **'Please enter the Sponsor\'s name'**
   String get sponsorNameValidation;
 
   /// No description provided for @logoLabel.

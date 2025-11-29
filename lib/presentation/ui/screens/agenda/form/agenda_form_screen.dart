@@ -23,6 +23,20 @@ class AgendaFormData {
     this.agendaDayId,
     required this.eventId,
   });
+
+  AgendaFormData copyWith({
+    Session? session,
+    String? trackId,
+    String? agendaDayId,
+    String? eventId,
+  }) {
+    return AgendaFormData(
+      session: session ?? this.session,
+      trackId: trackId ?? this.trackId,
+      agendaDayId: agendaDayId ?? this.agendaDayId,
+      eventId: eventId ?? this.eventId,
+    );
+  }
 }
 
 class AgendaFormScreen extends StatefulWidget {
