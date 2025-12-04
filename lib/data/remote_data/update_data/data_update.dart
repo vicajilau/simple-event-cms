@@ -8,12 +8,12 @@ import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
 import '../../exceptions/exceptions.dart';
 
-class DataUpdateInfo {
+class DataUpdateManager {
   final CommonsServices dataCommons;
-  final DataLoader dataLoader = getIt<DataLoader>();
+  final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
   final Config config = getIt<Config>();
 
-  DataUpdateInfo({required this.dataCommons});
+  DataUpdateManager({required this.dataCommons});
 
   Future<void> _commitDataUpdate(
     GithubJsonModel allData, {

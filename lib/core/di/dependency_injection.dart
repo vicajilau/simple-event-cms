@@ -35,7 +35,7 @@ Future<void> setupDependencies() async {
   await ConfigLoader.loadOrganization();
 
   // Core services
-  getIt.registerLazySingleton<DataLoader>(() => DataLoader());
+  getIt.registerLazySingleton<DataLoaderManager>(() => DataLoaderManager());
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());
