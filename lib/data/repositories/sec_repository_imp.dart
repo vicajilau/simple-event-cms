@@ -8,7 +8,7 @@ import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 
 class SecRepositoryImp extends SecRepository {
-  final DataLoader dataLoader = getIt<DataLoader>();
+  final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
 
   //load items
   @override
