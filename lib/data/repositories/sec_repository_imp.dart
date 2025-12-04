@@ -312,9 +312,9 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveTrack(Track track, String agendaDayId) async {
     try {
-      final allTracks = (await dataLoader.loadAllTracks()).where(
-        (track) => track.eventUid == track.eventUid,
-      );
+      final allTracks = (await dataLoader.loadAllTracks())
+          .where((newtrack) => newtrack.eventUid == track.eventUid)
+          .toList();
       if (allTracks.any(
         (existingTrack) =>
             existingTrack.name.trim().toLowerCase() ==
