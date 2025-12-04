@@ -10,7 +10,7 @@ import '../../exceptions/exceptions.dart';
 
 class DataUpdateManager {
   final CommonsServices dataCommons;
-  final DataLoader dataLoader = getIt<DataLoader>();
+  final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
   final Config config = getIt<Config>();
 
   DataUpdateManager({required this.dataCommons});
