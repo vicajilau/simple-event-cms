@@ -8,7 +8,7 @@ import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class DataUpdate {
   static DataLoader dataLoader = getIt<DataLoader>();
-  static DataUpdateInfo dataUpdateInfo = DataUpdateInfo(
+  static DataUpdateManager dataUpdateInfo = DataUpdateManager(
     dataCommons: CommonsServicesImp(),
   );
 
@@ -136,7 +136,7 @@ class DataUpdate {
   static Future<void> _addEvent(
     Event event,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
   ) async {
     await addItemListAndAssociations(event.tracks);
     await dataUpdateInfo.updateEvent(event);
@@ -146,7 +146,7 @@ class DataUpdate {
   static Future<void> _deleteEvent(
     String eventId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
   ) async {
     await dataUpdateInfo.removeEvent(eventId);
     debugPrint("Event $eventId deleted.");
@@ -155,7 +155,7 @@ class DataUpdate {
   static Future<void> _addSession(
     Session session,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String? trackUID,
   ) async {
     await dataUpdateInfo.updateSession(session, trackUID);
@@ -165,7 +165,7 @@ class DataUpdate {
   static Future<void> _addSessions(
     List<Session> sessions,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     bool overrideData = false,
   }) async {
     List<Session> allSessions = await dataLoader.loadAllSessions();
@@ -179,7 +179,7 @@ class DataUpdate {
   static Future<void> _deleteSession(
     String sessionId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     String agendaDayUidSelected = "",
   }) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
@@ -222,7 +222,7 @@ class DataUpdate {
   static Future<void> _addTrack(
     Track track,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String? parentId,
   ) async {
     if (parentId != null && parentId.isNotEmpty) {
@@ -241,7 +241,7 @@ class DataUpdate {
   static Future<void> _addTracks(
     List<Track> tracks,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     bool overrideData = false,
   }) async {
     List<Track> allTracks = await dataLoader.loadAllTracks();
@@ -255,7 +255,7 @@ class DataUpdate {
   static Future<void> _deleteTrack(
     String trackId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, [
+    DataUpdateManager dataUpdateInfo, [
     bool override = false,
   ]) async {
     var allTracks = await dataLoader.loadAllTracks();
@@ -287,7 +287,7 @@ class DataUpdate {
   static Future<void> _addAgendaDay(
     AgendaDay day,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String? parentId,
   ) async {
     if (parentId != null && parentId.isNotEmpty) {
@@ -314,7 +314,7 @@ class DataUpdate {
   static Future<void> _addAgendaDays(
     List<AgendaDay> days,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     bool overrideData = false,
   }) async {
     var allDays = await dataLoader.loadAllDays();
@@ -344,7 +344,7 @@ class DataUpdate {
   static Future<void> _deleteAgendaDay(
     String dayId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String eventId,
   ) async {
     var agendaDays = await dataLoader.loadAllDays();
@@ -365,7 +365,7 @@ class DataUpdate {
   static Future<void> _addSpeaker(
     Speaker speaker,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String? parentId,
   ) async {
     if (parentId != null && parentId.isNotEmpty) {
@@ -380,7 +380,7 @@ class DataUpdate {
   static Future<void> _addSpeakers(
     List<Speaker> speakers,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     bool overrideData = false,
   }) async {
     List<Speaker> allSpeakers = await dataLoader.loadSpeakers() ?? [];
@@ -394,7 +394,7 @@ class DataUpdate {
   static Future<void> _deleteSpeaker(
     String speakerId,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     String eventUID,
   ) async {
     // If speakers are linked to events similarly to sessions, that logic would be added here.
@@ -405,7 +405,7 @@ class DataUpdate {
   static Future<void> _addSponsor(
     Sponsor sponsor,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfom,
+    DataUpdateManager dataUpdateInfom,
     String? parentId,
   ) async {
     if (parentId != null && parentId.isNotEmpty) {
@@ -419,7 +419,7 @@ class DataUpdate {
   static Future<void> _addOrganization(
     Config config,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfom,
+    DataUpdateManager dataUpdateInfom,
     String? parentId,
   ) async {
     await dataUpdateInfo.updateOrganization(config);
@@ -429,7 +429,7 @@ class DataUpdate {
   static Future<void> _addSponsors(
     List<Sponsor> sponsors,
     DataLoader dataLoader,
-    DataUpdateInfo dataUpdateInfo, {
+    DataUpdateManager dataUpdateInfo, {
     bool overrideData = false,
   }) async {
     List<Sponsor> allSponsors = await dataLoader.loadSponsors();
@@ -442,7 +442,7 @@ class DataUpdate {
 
   static Future<void> _deleteSponsor(
     String sponsorId,
-    DataUpdateInfo dataUpdateInfo,
+    DataUpdateManager dataUpdateInfo,
     DataLoader dataLoader,
   ) async {
     // If sponsors are linked to events similarly to speakers, that logic would be added here.
@@ -454,7 +454,7 @@ class DataUpdate {
 Future<void> _updateAgendaDaysRemovingTrack(
   List<AgendaDay> days,
   String trackId,
-  DataUpdateInfo dataUpdateInfo, {
+  DataUpdateManager dataUpdateInfo, {
   String sessionId = "",
 }) async {
   if (days.length == 1) {
@@ -485,7 +485,7 @@ Future<void> _updateAgendaDaysRemovingTrack(
 Future<void> _updateAgendaDaysAddingTrack(
   List<AgendaDay> days,
   Track track,
-  DataUpdateInfo dataUpdateInfo,
+  DataUpdateManager dataUpdateInfo,
 ) async {
   if (days.length == 1) {
     await _addTrackFromDay(days.first, track);

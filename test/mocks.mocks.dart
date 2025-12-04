@@ -395,7 +395,7 @@ class MockDataLoader extends _i1.Mock implements _i4.DataLoader {
 /// A class which mocks [DataUpdateInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDataUpdateInfo extends _i1.Mock implements _i17.DataUpdateInfo {
+class MockDataUpdateInfo extends _i1.Mock implements _i17.DataUpdateManager {
   MockDataUpdateInfo() {
     _i1.throwOnMissingStub(this);
   }

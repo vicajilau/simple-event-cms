@@ -31,7 +31,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 @GenerateMocks([
   CommonsServices,
   DataLoader,
-  DataUpdateInfo,
+  DataUpdateManager,
   AgendaViewModel,
   AgendaFormData,
   AgendaUseCase,
