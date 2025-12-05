@@ -64,7 +64,7 @@ void main() {
       expect(find.text('@jane'), findsOneWidget);
     });
 
-    /*testWidgets('shows validation errors for required fields', (
+    testWidgets('shows validation errors for required fields', (
       WidgetTester tester,
     ) async {
       when(
@@ -75,15 +75,16 @@ void main() {
         buildTestableWidget(const SpeakerFormScreen(eventUID: '1')),
       );
 
+      await tester.ensureVisible(find.widgetWithText(FilledButton, 'Save'));
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
-      await tester.pump();
+      await tester.pumpAndSettle();
 
       expect(find.text('Please enter your name'), findsOneWidget);
       expect(
         find.text('Please enter your biography'),
         findsOneWidget,
       );
-    });*/
+    });
 
     testWidgets('pops with new speaker data on successful submission', (
       WidgetTester tester,
