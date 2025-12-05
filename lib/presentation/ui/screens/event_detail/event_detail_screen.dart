@@ -154,33 +154,38 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                   child: LayoutBuilder(
                     builder: (context, constraints) {
                       bool isWideScreen = constraints.maxWidth > 600;
-                      final titleWidget = Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          if (!value)
-                            const BackButton()
-                          else
-                            const SizedBox(
-                              width: 16,
-                            ), // Maintain alignment when no back button
-                          const Padding(
-                            padding: EdgeInsets.only(
-                              left: 0,
-                            ), // Adjusted from 8.0
-                            child: Icon(
-                              Icons.calendar_today,
-                              color: Colors.blue,
-                              size: 20,
+                      final titleWidget = Expanded(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (!value)
+                              const BackButton()
+                            else
+                              const SizedBox(
+                                width: 16,
+                              ), // Maintain alignment when no back button
+                            const Padding(
+                              padding: EdgeInsets.only(
+                                left: 0,
+                              ), // Adjusted from 8.0
+                              child: Icon(
+                                Icons.calendar_today,
+                                color: Colors.blue,
+                                size: 20,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: Text(
-                              location.eventManager,
-                              style: const TextStyle(color: Colors.black),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 16.0),
+                                child: Text(
+                                  location.eventManager,
+                                  style: const TextStyle(color: Colors.black),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       );
                       final tabBarWidget = TabBar(
                         controller: _tabController,
@@ -214,7 +219,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Expanded(flex: 1, child: titleWidget),
+                              titleWidget,
                               Expanded(flex: 3, child: tabBarWidget),
                               const Expanded(
                                 flex: 1,
@@ -232,7 +237,10 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                               padding: const EdgeInsets.symmetric(
                                 vertical: 8.0,
                               ),
-                              child: titleWidget,
+                              child: Row(
+                                // Use a Row to contain the Expanded titleWidget
+                                children: [titleWidget],
+                              ),
                             ),
                             tabBarWidget,
                           ],

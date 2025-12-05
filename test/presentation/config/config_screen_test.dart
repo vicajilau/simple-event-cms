@@ -16,7 +16,7 @@ import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/form_screen_wrapper.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 void main() {
   setUpAll(() async {

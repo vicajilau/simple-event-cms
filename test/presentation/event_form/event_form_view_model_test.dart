@@ -9,7 +9,7 @@ import 'package:sec/domain/use_cases/event_use_case.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 void main() {
   late EventFormViewModelImpl viewModel;

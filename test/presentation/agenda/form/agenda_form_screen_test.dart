@@ -11,7 +11,7 @@ import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart'
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../../mocks.mocks.dart';
+import '../../../mocks.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

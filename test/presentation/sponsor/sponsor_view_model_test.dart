@@ -9,7 +9,7 @@ import 'package:sec/domain/use_cases/sponsor_use_case.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 void main() {
   late SponsorViewModelImpl viewModel;
