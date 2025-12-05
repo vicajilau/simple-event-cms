@@ -10,7 +10,7 @@ import 'package:sec/domain/use_cases/speaker_use_case.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_form_screen.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 Widget buildTestableWidget(Widget child) {
   return MaterialApp(
