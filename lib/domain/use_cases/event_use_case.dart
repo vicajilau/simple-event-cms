@@ -20,7 +20,13 @@ class EventUseCaseImp implements EventUseCase {
 
   @override
   Future<Result<List<Event>>> getEvents() async {
-    return repository.loadEvents();
+    final events = await repository.loadEvents();
+    switch (events) {
+      case Ok<List<Event>>():
+        return Result.ok(events.value);
+      case Error():
+        return Result.error(GithubException("Event not found"));
+    }
   }
 
   @override

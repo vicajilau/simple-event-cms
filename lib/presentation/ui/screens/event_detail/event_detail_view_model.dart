@@ -11,20 +11,22 @@ import 'package:sec/presentation/view_model_common.dart';
 abstract class EventDetailViewModel extends ViewModelCommon {
   ValueNotifier<bool> notShowReturnArrow = ValueNotifier(false);
   ValueNotifier<String> eventTitle = ValueNotifier('');
+  final EventUseCase useCase = getIt<EventUseCase>();
+  final CheckTokenSavedUseCase checkTokenSavedUseCase =
+  getIt<CheckTokenSavedUseCase>();
   Future<void> loadEventData(String eventId);
+  Event? event;
 }
 
 class EventDetailViewModelImp extends EventDetailViewModel {
-  final EventUseCase useCase = getIt<EventUseCase>();
-  final CheckTokenSavedUseCase checkTokenSavedUseCase =
-      getIt<CheckTokenSavedUseCase>();
-  Event? event;
 
   @override
   ValueNotifier<ViewState> viewState = ValueNotifier(ViewState.isLoading);
 
   @override
   String errorMessage = '';
+
+  var config = getIt<Config>();
 
   @override
   void dispose() {}
@@ -41,7 +43,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
     var githubService = await SecureInfo.getGithubKey();
-    var config = getIt<Config>();
+
 
     switch (result) {
       case Ok<List<Event>>():

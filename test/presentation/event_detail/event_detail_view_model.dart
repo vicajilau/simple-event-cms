@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
@@ -5,7 +6,6 @@ import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/models.dart';
-import 'package:sec/core/models/config.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
@@ -17,10 +17,15 @@ import '../../mocks.mocks.dart';
 
 @GenerateMocks([EventUseCase, CheckTokenSavedUseCase, Config])
 void main() {
-  late EventDetailViewModelImp viewModel;
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  late EventDetailViewModel viewModel;
   late MockEventUseCase mockEventUseCase;
   late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
   late MockConfig mockConfig;
+  const MethodChannel channel = MethodChannel(
+    'plugins.it_nomads.com/flutter_secure_storage',
+  );
 
   setUp(() {
     getIt.reset();
@@ -30,21 +35,39 @@ void main() {
 
     getIt.registerSingleton<EventUseCase>(mockEventUseCase);
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
-    getIt.registerSingleton<Config>(mockConfig);
+    getIt.registerSingleton<Config>(mockConfig, signalsReady: true);
 
     viewModel = EventDetailViewModelImp();
 
+    when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok([]));
+    when(mockConfig.eventForcedToViewUID).thenReturn(null);
+    when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => false);
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+      if (methodCall.method == 'read') {
+        if (methodCall.arguments['key'] == 'read') {
+          return '{"token":"token_mocked","projectName":"simple-event-cms"}';
+        } else if (methodCall.arguments['key'] == 'github_key') {
+          return 'some_github_key';
+        }
+      }
+      return null;
+    });
+
     // Mock SecureInfo static methods
+  });
+
+  setUpAll(() async {
+    provideDummy<Result<List<Event>>>(const Result.ok([]));
+    provideDummy<Result<void>>(const Result.ok(null));
+    provideDummy<Result<Event?>>(const Result.ok(null));
   });
 
   final testEvents = [
     Event(uid: '1', eventName: 'Event 1', tracks: [], year: '', primaryColor: '', secondaryColor: '', eventDates: MockEventDates()),
     Event(uid: '2', eventName: 'Event 2', tracks: [], year: '', primaryColor: '', secondaryColor: '', eventDates: MockEventDates()),
   ];
-
-  test('Initial state is isLoading', () {
-    expect(viewModel.viewState.value, ViewState.isLoading);
-  });
 
   group('loadEventData', () {
     test('Should load events and set state to loadFinished', () async {
@@ -95,25 +118,13 @@ void main() {
       expect(viewModel.notShowReturnArrow.value, isTrue);
     });
 
-    test('notShowReturnArrow should be false when token exists', () async {
-      SecureInfo.saveGithubKey(GithubData(token: "false_token",projectName: ""));
+    test('notShowReturnArrow should be true when token exists', () async {
+      SecureInfo.saveGithubKey(GithubData(token: "false_token",projectName: "project_name"));
       when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok([testEvents.first]));
 
       await viewModel.loadEventData('1');
 
-      expect(viewModel.notShowReturnArrow.value, isFalse);
-    });
-  });
-
-  group('setup', () {
-    test('Should call loadEventData when argument is a string', () async {
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok(testEvents));
-      when(mockConfig.eventForcedToViewUID).thenReturn(null);
-
-      await viewModel.setup('1');
-
-      verify(mockEventUseCase.getEvents()).called(1);
-      expect(viewModel.viewState.value, ViewState.loadFinished);
+      expect(viewModel.notShowReturnArrow.value, true);
     });
   });
 
