@@ -10,7 +10,7 @@ abstract class SpeakerUseCase {
 }
 
 class SpeakerUseCaseImp implements SpeakerUseCase {
-  final SecRepository repository = getIt<SecRepository>();
+  SecRepository repository = getIt<SecRepository>();
 
   @override
   Future<Result<List<Speaker>>> getSpeakersById(String eventId) async {
