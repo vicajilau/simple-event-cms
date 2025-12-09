@@ -3,14 +3,11 @@ import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
-import 'package:sec/data/remote_data/common/commons_api_services.dart';
 import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class DataUpdate {
   static DataLoaderManager dataLoader = getIt<DataLoaderManager>();
-  static DataUpdateManager dataUpdateInfo = DataUpdateManager(
-    dataCommons: CommonsServicesImp(),
-  );
+  static DataUpdateManager dataUpdateInfo = DataUpdateManager();
 
   static Future<void> deleteItemAndAssociations(
     String itemId,

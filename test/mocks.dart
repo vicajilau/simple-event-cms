@@ -1,4 +1,5 @@
 
+import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/annotations.dart';
 import 'package:sec/core/config/secure_info.dart';
@@ -30,6 +31,8 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 @GenerateMocks([
   CommonsServices,
+  CommonsServicesImp,
+  GitHub,
   DataLoaderManager,
   DataUpdateManager,
   AgendaViewModel,
