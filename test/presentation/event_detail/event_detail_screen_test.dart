@@ -15,7 +15,14 @@ import 'package:sec/presentation/view_model_common.dart';
 // Importa los mocks generados
 import '../../helpers/test_helpers.dart';
 import '../../mocks.mocks.dart';
-
+// Widget Wrapper para proveer el contexto necesario (MaterialApp, Localizations)
+Widget createTestWidget(Widget child) {
+  return MaterialApp(
+    localizationsDelegates: AppLocalizations.localizationsDelegates,
+    supportedLocales: AppLocalizations.supportedLocales,
+    home: child,
+  );
+}
 void main() {
   // Mocks y Fakes
   // CHANGE 2: Declare mocks for ALL the ViewModels we are going to use.
@@ -98,15 +105,11 @@ void main() {
     });
   });
 
-  setUpAll(() async => {provideDummy<Result<void>>(const Result.ok(null))});
-  // Widget Wrapper para proveer el contexto necesario (MaterialApp, Localizations)
-  Widget createTestWidget(Widget child) {
-    return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      home: child,
-    );
-  }
+  setUpAll(() async {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    provideDummy<Result<void>>(const Result.ok(null));
+  });
+
 
   group('EventDetailScreen Tests', () {
     testWidgets('Initializes correctly and shows the main UI', (
