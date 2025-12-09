@@ -10,7 +10,7 @@ abstract class SponsorUseCase {
 }
 
 class SponsorUseCaseImp implements SponsorUseCase {
-  final SecRepository repository = getIt<SecRepository>();
+  SecRepository repository = getIt<SecRepository>();
 
   @override
   Future<Result<List<Sponsor>>> getSponsorByIds(String eventId) async {
