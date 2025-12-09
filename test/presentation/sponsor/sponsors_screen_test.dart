@@ -9,7 +9,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 Widget buildTestableWidget(Widget child) {
   return MaterialApp(

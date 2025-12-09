@@ -8,7 +8,7 @@ import 'package:sec/presentation/ui/screens/login/admin_login_screen.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 Widget buildTestableWidget(Widget child) {
   return MaterialApp(

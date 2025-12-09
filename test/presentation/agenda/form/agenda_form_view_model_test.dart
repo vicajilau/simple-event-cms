@@ -12,7 +12,7 @@ import 'package:sec/domain/use_cases/check_token_saved_use_case.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../../mocks.mocks.dart';
+import '../../../mocks.mocks.dart';
 
 void main() {
   late AgendaFormViewModelImpl viewModel;

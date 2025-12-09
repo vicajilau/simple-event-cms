@@ -17,7 +17,7 @@ import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
 import 'package:sec/presentation/ui/widgets/event_filter_button.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 // Helper to wrap widgets for testing, providing MaterialApp and localizations.
 Widget buildTestableWidget() {
