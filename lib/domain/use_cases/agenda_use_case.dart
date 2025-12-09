@@ -25,7 +25,7 @@ abstract class AgendaUseCase {
 }
 
 class AgendaUseCaseImpl implements AgendaUseCase {
-  final SecRepository repository = getIt<SecRepository>();
+  SecRepository repository = getIt<SecRepository>();
 
   @override
   Future<Result<void>> saveSpeaker(Speaker speaker, String eventId) async {
