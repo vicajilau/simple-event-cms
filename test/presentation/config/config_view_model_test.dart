@@ -11,7 +11,7 @@ import 'package:sec/domain/use_cases/config_use_case.dart';
 import 'package:sec/presentation/ui/screens/config/config_viewmodel.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
-import '../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

@@ -6,7 +6,7 @@ enum ViewState { error, isLoading, loadFinished }
 enum ErrorType { none, errorLoadingData, unknow }
 
 abstract class ViewModelCommon {
-  abstract final ValueNotifier<ViewState> viewState;
+  abstract ValueNotifier<ViewState> viewState;
   abstract String errorMessage;
 
   Future<void> setup([Object? argument]);
