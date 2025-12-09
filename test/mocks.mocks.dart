@@ -85,8 +85,9 @@ class _FakeCommonsServices_1 extends _i1.SmartFake
     : super(parent, parentInvocation);
 }
 
-class _FakeDataLoader_2 extends _i1.SmartFake implements _i4.DataLoaderManager {
-  _FakeDataLoader_2(Object parent, Invocation parentInvocation)
+class _FakeDataLoaderManager_2 extends _i1.SmartFake
+    implements _i4.DataLoaderManager {
+  _FakeDataLoaderManager_2(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -322,11 +323,11 @@ class MockCommonsServices extends _i1.Mock implements _i3.CommonsServices {
           as _i14.Future<_i2.Response>);
 }
 
-/// A class which mocks [DataLoader].
+/// A class which mocks [DataLoaderManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDataLoader extends _i1.Mock implements _i4.DataLoaderManager {
-  MockDataLoader() {
+class MockDataLoaderManager extends _i1.Mock implements _i4.DataLoaderManager {
+  MockDataLoaderManager() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -392,11 +393,11 @@ class MockDataLoader extends _i1.Mock implements _i4.DataLoaderManager {
           as _i14.Future<List<_i5.Event>>);
 }
 
-/// A class which mocks [DataUpdateInfo].
+/// A class which mocks [DataUpdateManager].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockDataUpdateInfo extends _i1.Mock implements _i17.DataUpdateManager {
-  MockDataUpdateInfo() {
+class MockDataUpdateManager extends _i1.Mock implements _i17.DataUpdateManager {
+  MockDataUpdateManager() {
     _i1.throwOnMissingStub(this);
   }
 
@@ -415,7 +416,7 @@ class MockDataUpdateInfo extends _i1.Mock implements _i17.DataUpdateManager {
   _i4.DataLoaderManager get dataLoader =>
       (super.noSuchMethod(
             Invocation.getter(#dataLoader),
-            returnValue: _FakeDataLoader_2(
+            returnValue: _FakeDataLoaderManager_2(
               this,
               Invocation.getter(#dataLoader),
             ),
