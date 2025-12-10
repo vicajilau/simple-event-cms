@@ -16,7 +16,16 @@ void main() {
 
   setUpAll(() async{
     getIt.reset();
-    getIt.registerSingleton<Config>(MockConfig());
+    getIt.registerSingleton<Config>(
+      Config(
+        configName: 'test_name',
+        primaryColorOrganization: '#0000000',
+        secondaryColorOrganization: '#0000000',
+        githubUser: 'test_user',
+        projectName: 'test_project',
+        branch: 'test_branch',
+      ),
+    );
     mockCommonsServices = MockCommonsServices();
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     mockDataLoaderManager = MockDataLoaderManager();

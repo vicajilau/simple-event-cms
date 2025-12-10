@@ -28,10 +28,16 @@ void main() {
     // Register CommonsServices before instantiating DataLoaderManager
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     dataLoaderManager = DataLoaderManager();
-    var config = getIt.registerSingleton<Config>(MockConfig());
-    when(config.githubUser).thenReturn('test_user');
-    when(config.projectName).thenReturn('test_project');
-    when(config.branch).thenReturn('test_branch');
+    getIt.registerSingleton<Config>(
+      Config(
+        configName: 'test_name',
+        primaryColorOrganization: '#0000000',
+        secondaryColorOrganization: '#0000000',
+        githubUser: 'test_user',
+        projectName: 'test_project',
+        branch: 'test_branch',
+      ),
+    );
 
     final mockSocial = MockSocial();
     when(mockSocial.toJson()).thenReturn({'twitter': 'some_handle'});
@@ -273,8 +279,9 @@ void main() {
       );
 
       // Mockea la llamada para que devuelva los datos de este test.
-      when(mockCommonsServices.loadData(any))
-          .thenAnswer((_) async => testData.toJson());
+      when(
+        mockCommonsServices.loadData(any),
+      ).thenAnswer((_) async => testData.toJson());
 
       // Act
       final agendaDays = await dataLoaderManager.loadAllDays();
@@ -284,8 +291,14 @@ void main() {
       expect(agendaDays.first.resolvedTracks, isNotNull);
       expect(agendaDays.first.resolvedTracks, hasLength(1));
       expect(agendaDays.first.resolvedTracks!.first.uid, testTrack.uid);
-      expect(agendaDays.first.resolvedTracks!.first.resolvedSessions, hasLength(1));
-      expect(agendaDays.first.resolvedTracks!.first.resolvedSessions.first.uid, testSession.uid);
+      expect(
+        agendaDays.first.resolvedTracks!.first.resolvedSessions,
+        hasLength(1),
+      );
+      expect(
+        agendaDays.first.resolvedTracks!.first.resolvedSessions.first.uid,
+        testSession.uid,
+      );
     });
   });
 }
