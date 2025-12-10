@@ -12,7 +12,7 @@ import '../common/commons_api_services.dart';
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoaderManager {
   static final Config config = getIt<Config>();
-  static final CommonsServices commonsServices = CommonsServicesImp();
+  static final CommonsServices commonsServices = getIt<CommonsServices>();
   static GithubJsonModel? _allData;
   static DateTime? _lastFetchTime;
 

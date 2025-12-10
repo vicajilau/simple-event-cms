@@ -1,4 +1,5 @@
 
+import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/annotations.dart';
 import 'package:sec/core/config/secure_info.dart';
@@ -31,14 +32,15 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 @GenerateMocks([
   AgendaFormData,
   AgendaFormViewModel,
-  AgendaUseCase,
   AgendaViewModel,
+  AgendaUseCase,
   CheckOrg,
   CheckTokenSavedUseCase,
   CommonsServices,
+  CommonsServicesImp,
   Config,
-  ConfigUseCase,
   ConfigViewModel,
+  ConfigUseCase,
   DataLoaderManager,
   DataUpdateManager,
   EventCollectionViewModel,
@@ -46,13 +48,14 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   EventDetailViewModel,
   EventFormViewModel,
   EventUseCase,
+  GitHub,
   GoRouter,
   OnLiveViewModel,
   SecRepository,
   SecureInfo,
   Social,
-  SpeakerUseCase,
   SpeakerViewModel,
+  SpeakerUseCase,
   SponsorUseCase,
   SponsorViewModel,
   TokenRepository,

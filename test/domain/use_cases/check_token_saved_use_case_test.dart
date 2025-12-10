@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/domain/repositories/token_repository.dart';
@@ -9,7 +8,6 @@ import '../../helpers/test_helpers.dart';
 import '../../mocks.mocks.dart';
 
 
-@GenerateMocks([TokenRepository])
 void main() {
   late CheckTokenSavedUseCaseImpl useCase;
   late MockTokenRepository mockTokenRepository;

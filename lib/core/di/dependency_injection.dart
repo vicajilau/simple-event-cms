@@ -21,6 +21,7 @@ import 'package:sec/presentation/ui/screens/on_live/on_live_view_model.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
+import '../../data/remote_data/common/commons_api_services.dart';
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
 import '../../presentation/ui/screens/config/config_viewmodel.dart';
 
@@ -56,6 +57,7 @@ Future<void> setupDependencies() async {
     () => EventCollectionViewModelImp(),
   );
   getIt.registerLazySingleton<AgendaViewModel>(() => AgendaViewModelImp());
+  getIt.registerLazySingleton<CommonsServices>(() => CommonsServicesImp());
   getIt.registerLazySingleton<ConfigViewModel>(() => ConfigViewModelImpl());
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());
