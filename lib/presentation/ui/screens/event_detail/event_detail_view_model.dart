@@ -34,7 +34,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
   @override
   Future<void> setup([Object? argument]) async {
     if (argument is String) {
-      loadEventData(argument);
+      await loadEventData(argument);
     }
   }
 

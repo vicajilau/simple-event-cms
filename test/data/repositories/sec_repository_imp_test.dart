@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
@@ -11,14 +10,13 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 import '../../mocks.mocks.dart';
 
 
-@GenerateMocks([DataLoaderManager])
 void main() {
   late SecRepository secRepository;
-  late MockDataLoader mockDataLoaderManager;
+  late MockDataLoaderManager mockDataLoaderManager;
 
   setUp(() {
     getIt.reset();
-    mockDataLoaderManager = MockDataLoader();
+    mockDataLoaderManager = MockDataLoaderManager();
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
     secRepository = SecRepositoryImp();
   });

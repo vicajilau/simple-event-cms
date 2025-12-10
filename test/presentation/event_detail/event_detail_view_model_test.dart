@@ -41,19 +41,21 @@ void main() {
 
     when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok([]));
     when(mockConfig.eventForcedToViewUID).thenReturn(null);
-    when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => false);
+    when(
+      mockCheckTokenSavedUseCase.checkToken(),
+    ).thenAnswer((_) async => false);
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      if (methodCall.method == 'read') {
-        if (methodCall.arguments['key'] == 'read') {
-          return '{"token":"token_mocked","projectName":"simple-event-cms"}';
-        } else if (methodCall.arguments['key'] == 'github_key') {
-          return 'some_github_key';
-        }
-      }
-      return null;
-    });
+          if (methodCall.method == 'read') {
+            if (methodCall.arguments['key'] == 'read') {
+              return '{"token":"token_mocked","projectName":"simple-event-cms"}';
+            } else if (methodCall.arguments['key'] == 'github_key') {
+              return 'some_github_key';
+            }
+          }
+          return null;
+        });
 
     // Mock SecureInfo static methods
   });
@@ -65,13 +67,45 @@ void main() {
   });
 
   final testEvents = [
-    Event(uid: '1', eventName: 'Event 1', tracks: [], year: '', primaryColor: '', secondaryColor: '', eventDates: MockEventDates()),
-    Event(uid: '2', eventName: 'Event 2', tracks: [], year: '', primaryColor: '', secondaryColor: '', eventDates: MockEventDates()),
+    Event(
+      uid: '1',
+      eventName: 'Event 1',
+      tracks: [],
+      year: '',
+      primaryColor: '',
+      secondaryColor: '',
+      eventDates: MockEventDates(),
+    ),
+    Event(
+      uid: '2',
+      eventName: 'Event 2',
+      tracks: [],
+      year: '',
+      primaryColor: '',
+      secondaryColor: '',
+      eventDates: MockEventDates(),
+    ),
   ];
+
+  group('setUp', () {
+    test('Should call and wait for loadEventData ', () async {
+      bool done = false;
+      final future = viewModel.setup('1').then((_) {
+        done = true;
+      });
+
+      expect(done, isFalse, reason: 'The setup should wait for the method loadEventData');
+      await future;
+      expect(done, isTrue, reason: 'The setup should be completed after the await on the loadEventData');
+
+    });
+  });
 
   group('loadEventData', () {
     test('Should load events and set state to loadFinished', () async {
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok(testEvents));
+      when(
+        mockEventUseCase.getEvents(),
+      ).thenAnswer((_) async => Result.ok(testEvents));
       when(mockConfig.eventForcedToViewUID).thenReturn(null);
 
       await viewModel.loadEventData('1');
@@ -84,7 +118,9 @@ void main() {
 
     test('Should set error state when use case returns error', () async {
       final exception = NetworkException('Failed to load');
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.error(exception));
+      when(
+        mockEventUseCase.getEvents(),
+      ).thenAnswer((_) async => Result.error(exception));
 
       await viewModel.loadEventData('1');
 
@@ -98,29 +134,46 @@ void main() {
       await viewModel.loadEventData('1');
 
       expect(viewModel.viewState.value, ViewState.error);
-      expect(viewModel.errorMessage, contains('there aren,t any events to show'));
+      expect(
+        viewModel.errorMessage,
+        contains('there aren,t any events to show'),
+      );
     });
 
-     test('notShowReturnArrow should be true when there is only one event and no token', () async {
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok([testEvents.first]));
+    test(
+      'notShowReturnArrow should be true when there is only one event and no token',
+      () async {
+        when(
+          mockEventUseCase.getEvents(),
+        ).thenAnswer((_) async => Result.ok([testEvents.first]));
 
-      await viewModel.loadEventData('1');
+        await viewModel.loadEventData('1');
 
-      expect(viewModel.notShowReturnArrow.value, isTrue);
-    });
+        expect(viewModel.notShowReturnArrow.value, isTrue);
+      },
+    );
 
-    test('notShowReturnArrow should be true when event is forced and no token', () async {
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok(testEvents));
-      when(mockConfig.eventForcedToViewUID).thenReturn('1');
+    test(
+      'notShowReturnArrow should be true when event is forced and no token',
+      () async {
+        when(
+          mockEventUseCase.getEvents(),
+        ).thenAnswer((_) async => Result.ok(testEvents));
+        when(mockConfig.eventForcedToViewUID).thenReturn('1');
 
-      await viewModel.loadEventData('1');
+        await viewModel.loadEventData('1');
 
-      expect(viewModel.notShowReturnArrow.value, isTrue);
-    });
+        expect(viewModel.notShowReturnArrow.value, isTrue);
+      },
+    );
 
     test('notShowReturnArrow should be true when token exists', () async {
-      SecureInfo.saveGithubKey(GithubData(token: "false_token",projectName: "project_name"));
-      when(mockEventUseCase.getEvents()).thenAnswer((_) async => Result.ok([testEvents.first]));
+      SecureInfo.saveGithubKey(
+        GithubData(token: "false_token", projectName: "project_name"),
+      );
+      when(
+        mockEventUseCase.getEvents(),
+      ).thenAnswer((_) async => Result.ok([testEvents.first]));
 
       await viewModel.loadEventData('1');
 
@@ -130,7 +183,9 @@ void main() {
 
   group('checkToken', () {
     test('Should return true when token is saved', () async {
-      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => true);
+      when(
+        mockCheckTokenSavedUseCase.checkToken(),
+      ).thenAnswer((_) async => true);
 
       final result = await viewModel.checkToken();
 
@@ -138,7 +193,9 @@ void main() {
     });
 
     test('Should return false when token is not saved', () async {
-      when(mockCheckTokenSavedUseCase.checkToken()).thenAnswer((_) async => false);
+      when(
+        mockCheckTokenSavedUseCase.checkToken(),
+      ).thenAnswer((_) async => false);
 
       final result = await viewModel.checkToken();
 
