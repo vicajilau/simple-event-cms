@@ -38,9 +38,7 @@ void main() {
     when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
     when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer(
-          (_) async => Response('{}', 200),
-    );
+
   });
 
   group('DataUpdateManager', () {
