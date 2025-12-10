@@ -16,12 +16,12 @@ void main() {
 
   setUpAll(() async{
     getIt.reset();
-    mockCommonsServices = MockCommonsServices();
-    mockDataLoaderManager = MockDataLoader();
-    mockDataUpdateManager = DataUpdateManager();
     getIt.registerSingleton<Config>(MockConfig());
+    mockCommonsServices = MockCommonsServices();
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
+    mockDataLoaderManager = MockDataLoader();
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
+    mockDataUpdateManager = DataUpdateManager();
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
     when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
@@ -29,7 +29,9 @@ void main() {
     when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
     when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer((_) async => Response("{}", 200));
-
+    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer(
+          (_) async => Response('{}', 200),
+    );
   });
 
   group('DataUpdateManager', () {
@@ -68,9 +70,6 @@ void main() {
       when(
         mockDataLoaderManager.loadSpeakers(),
       ).thenAnswer((_) async => [testSpeaker]);
-      when(
-        mockCommonsServices.updateAllData(any, any, any),
-      ).thenAnswer((_) async => Future.value());
 
       // Act
       await mockDataUpdateManager.updateSpeaker(
