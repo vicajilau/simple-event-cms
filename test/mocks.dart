@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/annotations.dart';
@@ -52,7 +54,10 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   EventUseCase,
   GitHub,
   GoRouter,
+  HttpClient,
   OnLiveViewModel,
+  RepositoriesService,
+  RepositoryContents,
   SecRepository,
   SecureInfo,
   Social,
@@ -61,5 +66,6 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   SponsorUseCase,
   SponsorViewModel,
   TokenRepository,
+
 ])
 void main() {}
