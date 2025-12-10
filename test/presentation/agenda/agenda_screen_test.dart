@@ -17,7 +17,7 @@ void main() {
     provideDummy<Result<void>>(const Result.ok(null));
   });
 
-  late MockAgendaViewModel mockAgendaViewModel;
+  late AgendaViewModel mockAgendaViewModel;
 
   setUp(() {
     // It's good practice to reset GetIt to ensure test isolation.
@@ -32,7 +32,7 @@ void main() {
     when(mockAgendaViewModel.agendaDays).thenReturn(ValueNotifier([]));
     when(mockAgendaViewModel.speakers).thenReturn(ValueNotifier([]));
     when(mockAgendaViewModel.errorMessage).thenReturn('');
-    when(mockAgendaViewModel.loadAgendaDays(any)).thenAnswer((_) async => const Result.ok(null));
+    when(mockAgendaViewModel.loadAgendaDays(any??"")).thenAnswer((_) async => const Result.ok(null));
     when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => false);
   }
 
