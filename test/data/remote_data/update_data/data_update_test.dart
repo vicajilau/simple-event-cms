@@ -12,14 +12,14 @@ import '../../../mocks.mocks.dart';
 void main() {
   late DataUpdateManager mockDataUpdateManager;
   late MockCommonsServices mockCommonsServices;
-  late MockDataLoader mockDataLoaderManager;
+  late MockDataLoaderManager mockDataLoaderManager;
 
   setUpAll(() async{
     getIt.reset();
     getIt.registerSingleton<Config>(MockConfig());
     mockCommonsServices = MockCommonsServices();
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
-    mockDataLoaderManager = MockDataLoader();
+    mockDataLoaderManager = MockDataLoaderManager();
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
     mockDataUpdateManager = DataUpdateManager();
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
