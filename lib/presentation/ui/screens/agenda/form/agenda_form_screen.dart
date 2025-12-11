@@ -307,6 +307,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                               ),
                               IconButton(
                                 icon: Icon(
+                                  key: Key("add_room_button"),
                                   Icons.add,
                                   color: Theme.of(context).primaryColor,
                                 ),
@@ -409,6 +410,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             ),
                             IconButton(
                               icon: Icon(
+                                key: Key("add_speaker_button"),
                                 Icons.add,
                                 color: Theme.of(context).primaryColor,
                               ),
