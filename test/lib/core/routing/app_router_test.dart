@@ -7,7 +7,6 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/core/utils/result.dart';
-import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
 import 'package:sec/domain/repositories/token_repository.dart';
 import 'package:sec/domain/use_cases/agenda_use_case.dart';
@@ -35,21 +34,6 @@ import '../../../mocks.mocks.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  late EventFormViewModel mockViewModel;
-  late EventCollectionViewModel mockCollectionViewModel;
-  late EventDetailViewModel mockEventDetailViewModel;
-  late AgendaFormViewModel agendaFormViewModel;
-  late AgendaViewModel mockAgendaViewModel;
-  late CheckOrg mockCheckOrg;
-  late OnLiveViewModel mockOnLiveViewModel;
-  late ConfigViewModel mockConfigViewModel;
-  late MockEventUseCase mockEventUseCase;
-  late MockAgendaUseCase mockAgendaUseCase;
-  late MockConfigUseCase mockConfigUseCase;
-  late MockSponsorUseCase mockSponsorUseCase;
-  late MockSpeakerUseCase mockSpeakerUseCase;
-  late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
-
   setUp(() async {
     // Dummies and default whens for common scenarios
     provideDummy<Result<void>>(const Result.ok(null));
@@ -62,145 +46,52 @@ void main() {
     provideDummy<Result<List<Speaker>>>(Result.ok([MockSpeaker()]));
     provideDummy<Result<List<Track>>>(Result.ok([MockTrack()]));
 
-    mockEventUseCase = MockEventUseCase();
-    mockAgendaUseCase = MockAgendaUseCase();
-    mockConfigUseCase = MockConfigUseCase();
-    mockSponsorUseCase = MockSponsorUseCase();
-    mockSpeakerUseCase = MockSpeakerUseCase();
-    mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
-
-    getIt.registerSingleton<EventUseCase>(mockEventUseCase);
-    getIt.registerSingleton<AgendaUseCase>(mockAgendaUseCase);
-    getIt.registerSingleton<ConfigUseCase>(mockConfigUseCase);
-    getIt.registerSingleton<SponsorUseCase>(mockSponsorUseCase);
-    getIt.registerSingleton<SpeakerUseCase>(mockSpeakerUseCase);
-    getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
-
-    when(
-      mockEventUseCase.getEvents(),
-    ).thenAnswer((_) async => const Result.ok([])); // Devuelve una lista vacía
-
-    // Para EventDetailScreen
-    when(mockEventUseCase.getEventById(any)).thenAnswer(
-      (_) async => Result.ok(
-        Event(
-          uid: '1',
-          location: '',
-          description: '',
-          tracks: [],
-          eventName: '',
-          year: '',
-          primaryColor: '',
-          secondaryColor: '',
-          eventDates: MockEventDates(),
-        ),
-      ),
-    );
-
-    when(
-      mockAgendaUseCase.deleteSession(any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.updateTrack(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.updateAgendaDay(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.updateTrack(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.addSession(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.addSpeaker(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockAgendaUseCase.getAgendaDayByEventId(any),
-    ).thenAnswer((_) async => const Result.ok([]));
-    when(
-      mockAgendaUseCase.getAgendaDayByEventIdFiltered(any),
-    ).thenAnswer((_) async => const Result.ok([]));
-    when(
-      mockAgendaUseCase.getAgendaDayById(any),
-    ).thenAnswer((_) async => Result.ok(MockAgendaDay()));
-    when(
-      mockAgendaUseCase.getSpeakersForEventId(any),
-    ).thenAnswer((_) async => Result.ok([MockSpeaker()]));
-    when(
-      mockAgendaUseCase.getTrackById(any),
-    ).thenAnswer((_) async => Result.ok(MockTrack()));
-    when(
-      mockAgendaUseCase.getTracks(),
-    ).thenAnswer((_) async => Result.ok([MockTrack()]));
-    when(
-      mockAgendaUseCase.getTracksByEventId(any),
-    ).thenAnswer((_) async => Result.ok([MockTrack()]));
-    when(
-      mockAgendaUseCase.loadEvent(any),
-    ).thenAnswer((_) async => Result.ok(MockEvent()));
-    when(
-      mockAgendaUseCase.removeTrack(any),
-    ).thenAnswer((_) async => Result.ok(null));
-    when(
-      mockAgendaUseCase.saveEvent(any),
-    ).thenAnswer((_) async => Result.ok(null));
-    when(
-      mockAgendaUseCase.saveSpeaker(any,any),
-    ).thenAnswer((_) async => Result.ok(null));
-
-
-    when(
-      mockSpeakerUseCase.saveSpeaker(any, any),
-    ).thenAnswer((_) async => const Result.ok(null));
-    when(
-      mockSpeakerUseCase.getSpeakersById(any),
-    ).thenAnswer((_) async => Result.ok([MockSpeaker()]));
-    when(
-      mockSpeakerUseCase.removeSpeaker(any,any),
-    ).thenAnswer((_) async => const Result.ok(null));
-
-
-    // Register all mocks and necessary instances in getIt
-    getIt.registerSingleton<TokenRepository>(MockTokenRepository());
-    getIt.registerSingleton<DataLoaderManager>(DataLoaderManager());
-    getIt.registerSingleton<SecRepository>(SecRepositoryImp());
-    getIt.registerSingleton<SponsorViewModel>(MockSponsorViewModel());
-    getIt.registerSingleton<SpeakerViewModel>(MockSpeakerViewModel());
     getIt.registerSingleton<Config>(
       Config(
         configName: 'test_name',
-        primaryColorOrganization: '#0000000',
-        secondaryColorOrganization: '#0000000',
+        primaryColorOrganization: '#000000', // Un color hexadecimal válido tiene 6 dígitos
+        secondaryColorOrganization: '#000000',
         githubUser: 'test_user',
         projectName: 'test_project',
         branch: 'test_branch',
       ),
     );
+    // --- CAMBIO 1: Mockea los repositorios de bajo nivel ---
+    // NO HAGAS ESTO: getIt.registerSingleton<SecRepository>(SecRepositoryImp());
+    getIt.registerSingleton<CheckTokenSavedUseCase>(MockCheckTokenSavedUseCase());
+    getIt.registerSingleton<SecRepository>(MockSecRepository()); // <-- USA EL MOCK
+    getIt.registerSingleton<TokenRepository>(MockTokenRepository()); // <-- USA EL MOCK
 
-    mockViewModel = EventFormViewModelImpl();
-    mockCollectionViewModel = EventCollectionViewModelImp();
-    mockEventDetailViewModel = EventDetailViewModelImp();
-    mockCheckOrg = CheckOrg(initial: false);
-    mockAgendaViewModel = AgendaViewModelImp();
-    agendaFormViewModel = AgendaFormViewModelImpl();
-    mockOnLiveViewModel = OnLiveViewModelImpl();
-    mockConfigViewModel = ConfigViewModelImpl();
+    // --- CORRECTO: Registra los mocks de UseCase en getIt ---
+    getIt.registerSingleton<EventUseCase>(MockEventUseCase());
+    getIt.registerSingleton<AgendaUseCase>(MockAgendaUseCase());
+    getIt.registerSingleton<ConfigUseCase>(MockConfigUseCase());
+    getIt.registerSingleton<SponsorUseCase>(MockSponsorUseCase());
+    getIt.registerSingleton<SpeakerUseCase>(MockSpeakerUseCase());
 
-    getIt.registerSingleton<EventFormViewModel>(mockViewModel);
-    getIt.registerSingleton<EventCollectionViewModel>(mockCollectionViewModel);
-    getIt.registerSingleton<EventDetailViewModel>(mockEventDetailViewModel);
-    getIt.registerSingleton<AgendaViewModel>(mockAgendaViewModel);
-    getIt.registerSingleton<AgendaFormViewModel>(agendaFormViewModel);
-    getIt.registerSingleton<OnLiveViewModel>(mockOnLiveViewModel);
-    getIt.registerSingleton<CheckOrg>(mockCheckOrg);
-    getIt.registerSingleton<ConfigViewModel>(mockConfigViewModel);
+    // Registra las implementaciones reales de TODOS tus ViewModels.
+    getIt.registerSingleton<EventFormViewModel>(EventFormViewModelImpl());
+    getIt.registerSingleton<EventCollectionViewModel>(EventCollectionViewModelImp());
+    getIt.registerSingleton<EventDetailViewModel>(EventDetailViewModelImp());
+    getIt.registerSingleton<AgendaViewModel>(AgendaViewModelImp());
+    getIt.registerSingleton<AgendaFormViewModel>(AgendaFormViewModelImpl());
+    getIt.registerSingleton<SponsorViewModel>(SponsorViewModelImpl()); // <-- REAL
+    getIt.registerSingleton<SpeakerViewModel>(SpeakerViewModelImpl()); // <-- REAL
+    getIt.registerSingleton<OnLiveViewModel>(OnLiveViewModelImpl());
+    getIt.registerSingleton<ConfigViewModel>(ConfigViewModelImpl());
+
+    // --- CORRECTO: El resto de tus registros ---
+    getIt.registerSingleton<DataLoaderManager>(DataLoaderManager());
+    getIt.registerSingleton<CheckOrg>(CheckOrg(initial: false));
+
+
+
 
 
   });
 
   tearDown(() async {
-    // Limpia getIt para evitar que el estado se filtre entre tests
+    // Esto ya está perfecto.
     await getIt.reset();
   });
 
