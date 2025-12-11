@@ -27,7 +27,7 @@ void main() {
       final sponsor = Sponsor(
         uid: 'sponsor1',
         name: 'Sponsor Name',
-        type: 'Sponsor Type',
+        type: 'gold',
         logo: 'https://example.com/logo.png',
         website: 'https://example.com',
         eventUID: 'event1',

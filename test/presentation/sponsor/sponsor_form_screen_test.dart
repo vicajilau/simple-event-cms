@@ -28,7 +28,7 @@ void main() {
         name: 'Test Sponsor',
         logo: 'http://example.com/logo.png',
         website: 'http://example.com',
-        type: '',
+        type: 'gold',
         eventUID: '1',
       );
 
