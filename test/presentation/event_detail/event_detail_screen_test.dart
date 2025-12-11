@@ -15,7 +15,7 @@ import 'package:sec/presentation/view_model_common.dart';
 // Importa los mocks generados
 import '../../helpers/test_helpers.dart';
 import '../../mocks.mocks.dart';
-// Widget Wrapper para proveer el contexto necesario (MaterialApp, Localizations)
+// Widget Wrapper to provide the necessary context (MaterialApp, Localizations)
 Widget createTestWidget(Widget child) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -25,7 +25,7 @@ Widget createTestWidget(Widget child) {
 }
 void main() {
   // Mocks y Fakes
-  // CHANGE 2: Declare mocks for ALL the ViewModels we are going to use.
+  // Mocks and Fakes
   late MockEventDetailViewModel mockViewModel;
   late MockEventUseCase mockEventUseCase;
   late MockAgendaViewModel mockAgendaViewModel;
@@ -33,12 +33,13 @@ void main() {
   late MockSponsorViewModel mockSponsorsViewModel;
 
   // Variables de prueba
+  // Test variables
   const String testEventId = 'test-event-id';
   const String testLocation = 'Test Location';
   setUp(() {
     getIt.reset();
 
-    // CHANGE 3: Instantiate and register ALL mocks in the dependency injector (getIt).
+    // Instantiate and register ALL mocks in the dependency injector (getIt).
     // This way, when each screen tries to get its ViewModel, it will receive the corresponding mock.
 
     // Mock for the main ViewModel
@@ -58,7 +59,7 @@ void main() {
     mockSponsorsViewModel = MockSponsorViewModel();
     getIt.registerSingleton<SponsorViewModel>(mockSponsorsViewModel);
 
-    // CHANGE 4: Configure the default behavior of ALL mocks.
+    // Configure the default behavior of ALL mocks.
     // This prevents them from failing when trying to access null properties.
 
     // Configuration for EventDetailViewModel
@@ -115,7 +116,7 @@ void main() {
     testWidgets('Initializes correctly and shows the main UI', (
       WidgetTester tester,
     ) async {
-      // Configuración del mock
+      // mock configuration
       when(mockViewModel.setup(any)).thenAnswer((_) async {});
 
       await tester.pumpWidget(
@@ -124,7 +125,7 @@ void main() {
         ),
       );
       await tester
-          .pumpAndSettle(); // Esperar a que los FutureBuilders se completen
+          .pumpAndSettle(); // Wait for FutureBuilders to complete
 
       expect(find.byType(TabBar), findsOneWidget);
       expect(find.text('Agenda'), findsOneWidget);
@@ -210,7 +211,7 @@ void main() {
       await tester.tap(find.text('Close'));
       await tester.pump();
 
-      // Verificar que el estado ha vuelto a `loadFinished`
+      // Verify that the state has returned to `loadFinished`
       expect(mockViewModel.viewState.value, ViewState.loadFinished);
     });
   });
