@@ -563,4 +563,7 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get onlineNow => 'En línia ara';
+
+  @override
+  String get noLiveStreamAvailable => 'No hi ha directes disponibles';
 }

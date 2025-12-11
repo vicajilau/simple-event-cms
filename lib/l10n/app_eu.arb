@@ -193,6 +193,7 @@
   "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.",
   "onLive": "On Live",
   "selectSpeaker": "Hautatu hizlaria",
-  "onlineNow": "Online Now"
+  "onlineNow": "Online Now",
+  "noLiveStreamAvailable": "Ez dago zuzeneko emankizunik eskuragarri"
 
 }

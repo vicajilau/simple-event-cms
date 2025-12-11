@@ -1177,6 +1177,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Online Now'**
   String get onlineNow;
+
+  /// No description provided for @noLiveStreamAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No live streams available'**
+  String get noLiveStreamAvailable;
 }
 
 class _AppLocalizationsDelegate

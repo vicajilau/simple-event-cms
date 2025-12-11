@@ -1,11 +1,12 @@
-
 import 'dart:io';
 
-import 'package:github/github.dart';
+import 'package:github/github.dart' hide Event;
 import 'package:go_router/go_router.dart';
 import 'package:mockito/annotations.dart';
 import 'package:sec/core/config/secure_info.dart';
+import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/config.dart';
+import 'package:sec/core/models/event.dart';
 import 'package:sec/core/models/event_dates.dart';
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/routing/check_org.dart';
@@ -33,6 +34,7 @@ import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 @GenerateMocks([
+  AgendaDay,
   AgendaFormData,
   AgendaFormViewModel,
   AgendaViewModel,
@@ -47,6 +49,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   DataLoaderManager,
   DataUpdateManager,
   DataUpdate,
+  Event,
   EventCollectionViewModel,
   EventDates,
   EventDetailViewModel,
@@ -61,11 +64,12 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   SecRepository,
   SecureInfo,
   Social,
+  Speaker,
   SpeakerViewModel,
   SpeakerUseCase,
   SponsorUseCase,
   SponsorViewModel,
+  Track,
   TokenRepository,
-
 ])
 void main() {}

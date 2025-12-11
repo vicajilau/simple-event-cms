@@ -562,4 +562,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get onlineNow => 'Online adesso';
+
+  @override
+  String get noLiveStreamAvailable => 'Non ci sono dirette disponibili';
 }

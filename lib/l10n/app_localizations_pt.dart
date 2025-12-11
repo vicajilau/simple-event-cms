@@ -557,4 +557,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get onlineNow => 'Online Agora';
+
+  @override
+  String get noLiveStreamAvailable => 'Não há transmissões ao vivo disponíveis';
 }
