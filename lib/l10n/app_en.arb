@@ -120,7 +120,7 @@
   "loginTitle": "Login",
   "projectNameLabel": "Project Name",
   "projectNameHint": "Please enter the project name",
-  "tokenHintLabel": "Introduce tu client secret para continuar",
+  "tokenHintLabel": "Enter your client secret to continue",
   "tokenHint": "Please enter a valid GitHub token",
   "unknownAuthError": "Unknown authentication failure.",
   "projectNotFoundError": "The project \"{projectName}\" does not exist in your GitHub repositories.",

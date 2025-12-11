@@ -120,7 +120,7 @@
   "loginTitle": "Saioa hasi",
   "projectNameLabel": "Proiektuaren izena",
   "projectNameHint": "Mesedez, sartu proiektuaren izena",
-  "tokenHintLabel": "Introduce tu client secret para continuar",
+  "tokenHintLabel": "Sartu zure bezeroaren sekretua jarraitzeko",
   "tokenHint": "Mesedez, sartu baliozko GitHub token bat",
   "unknownAuthError": "Autentifikazio-errore ezezaguna.",
   "projectNotFoundError": "“{projectName}” proiektua ez da existitzen zure GitHub-eko biltegietan.",
