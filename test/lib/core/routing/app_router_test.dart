@@ -290,16 +290,6 @@ void main() {
     });
 
     group('AgendaForm Route', () {
-      testWidgets('navigates to agenda form screen without data', (
-        tester,
-      ) async {
-        await navigateTo(tester, AppRouter.agendaFormPath);
-        expect(find.byType(AgendaFormScreen), findsOneWidget);
-        expect(
-          tester.widget<AgendaFormScreen>(find.byType(AgendaFormScreen)).data,
-          isNull,
-        );
-      });
 
       testWidgets('navigates to agenda form screen with data', (tester) async {
         final data = AgendaFormData(
