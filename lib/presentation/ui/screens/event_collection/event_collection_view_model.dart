@@ -173,12 +173,6 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   @override
-  void dispose() {
-    eventsToShow.dispose();
-    viewState.dispose();
-  }
-
-  @override
   Future<bool> checkToken() async {
     return await checkTokenSavedUseCase.checkToken();
   }
@@ -258,5 +252,9 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
         setErrorKey(result.error);
         return;
     }
+  }
+
+  @override
+  void dispose() {
   }
 }

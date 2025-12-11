@@ -34,7 +34,7 @@ class Event extends GitHubModel {
   /// The URL of the YouTube live stream
   final String? youtubeUrl;
 
-  /// Indica si el evento está visible o no
+  /// Indicates whether the event is visible or not
   bool isVisible = true;
 
   /// Creates a new event instance

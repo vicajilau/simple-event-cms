@@ -32,7 +32,7 @@ Future<void> setupDependencies() async {
   // Register helper
   getIt.registerSingleton<CheckOrg>(CheckOrg());
 
-  // only charges (ConfigLoader will do setOrganization)
+  // only loads (ConfigLoader will do setOrganization)
   await ConfigLoader.loadOrganization();
 
   // Core services

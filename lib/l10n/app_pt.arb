@@ -210,6 +210,7 @@
   "wrongBranch": "O ramo inserido não existe no repositório. Verifique o nome do ramo e tente novamente.",
   "onlineNow": "Online Agora",
   "onLive": "On Live",
-  "selectSpeaker": "Selecione um palestrante"
+  "selectSpeaker": "Selecione um palestrante",
+  "noLiveStreamAvailable": "Não há transmissões ao vivo disponíveis"
 
 }

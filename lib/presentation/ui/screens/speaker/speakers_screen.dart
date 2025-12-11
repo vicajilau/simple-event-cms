@@ -93,7 +93,7 @@ class _SpeakersScreenState extends State<SpeakersScreen> {
                           itemCount: speakers.length,
                           itemBuilder: (context, index) {
                             final speaker = speakers[index];
-                            // Dentro de itemBuilder(...)
+                            // Inside itemBuilder(...)
                             return Card(
                               // Inside itemBuilder(...)
                               shape: RoundedRectangleBorder(

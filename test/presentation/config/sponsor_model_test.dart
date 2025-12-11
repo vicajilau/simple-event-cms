@@ -27,7 +27,7 @@ void main() {
       final sponsor = Sponsor(
         uid: 'sponsor1',
         name: 'Sponsor Name',
-        type: 'Sponsor Type',
+        type: 'gold',
         logo: 'https://example.com/logo.png',
         website: 'https://example.com',
         eventUID: 'event1',
@@ -37,7 +37,7 @@ void main() {
 
       expect(result['UID'], 'sponsor1');
       expect(result['name'], 'Sponsor Name');
-      expect(result['type'], 'Sponsor Type');
+      expect(result['type'], 'gold');
       expect(result['logo'], 'https://example.com/logo.png');
       expect(result['website'], 'https://example.com');
       expect(result['eventUID'], 'event1');

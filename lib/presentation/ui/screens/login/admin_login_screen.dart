@@ -57,7 +57,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
         // Catch common authentication or network exceptions
         // ignore: use_build_context_synchronously
         _showErrorSnackbar(location.authNetworkError, context);
-        debugPrint('Error de autenticación: $e');
+        debugPrint('Authentication error: $e');
       }
     }
   }
@@ -84,15 +84,15 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 350, // Limita la anchura del Container
+          width: 350, // Limit the width of the Container
           decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.black, // Color del borde
-              width: 1.5, // Ancho del borde
+              color: Colors.black, // Border color
+              width: 1.5, // Border width
             ),
             borderRadius: BorderRadius.circular(
               23.0,
-            ), // Opcional: para bordes redondeados
+            ), // Optional: for rounded borders
           ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -121,7 +121,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(
                                   15.0,
-                                ), // Radio para bordes redondeados
+                                ), // Radius for rounded borders
                                 borderSide: BorderSide(color: Colors.black),
                               ),
                               prefixIcon: IconButton(

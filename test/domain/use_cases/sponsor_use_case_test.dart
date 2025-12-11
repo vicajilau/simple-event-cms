@@ -35,7 +35,7 @@ void main() {
             name: 'Sponsor 1',
             logo: 'logo1',
             eventUID: 'event1',
-            type: '',
+            type: 'gold',
             website: '',
           ),
           Sponsor(
@@ -43,7 +43,7 @@ void main() {
             name: 'Sponsor 2',
             logo: 'logo2',
             eventUID: 'event1',
-            type: '',
+            type: 'gold',
             website: '',
           ),
           Sponsor(
@@ -51,7 +51,7 @@ void main() {
             name: 'Sponsor 3',
             logo: 'logo3',
             eventUID: 'event2',
-            type: '',
+            type: 'gold',
             website: '',
           ),
         ];
@@ -91,7 +91,7 @@ void main() {
           name: 'Sponsor 1',
           logo: 'logo1',
           eventUID: 'event1',
-          type: '',
+          type: 'gold',
           website: '',
         );
         when(
@@ -113,7 +113,7 @@ void main() {
           name: 'Sponsor 1',
           logo: 'logo1',
           eventUID: 'event1',
-          type: '',
+          type: 'gold',
           website: '',
         );
         when(

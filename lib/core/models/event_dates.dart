@@ -80,7 +80,7 @@ class EventDates extends GitHubModel {
 /// Represents venue information for an event_collection
 /// Contains location details where the event_collection will take place
 class Venue {
-  /// The name of the venue (e.g., "Convention Center", "Palacio de Congresos")
+  /// The name of the venue (e.g., "Convention Center", "Congress Palace")
   final String name;
 
   /// The complete address of the venue

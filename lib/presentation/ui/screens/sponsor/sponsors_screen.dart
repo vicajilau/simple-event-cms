@@ -69,28 +69,14 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                 final raw = (constraints.maxWidth / 250).floor();
                 final crossAxisCount = raw.clamp(1, 4).toInt();
 
-                //_normalizeType() converts things like "Main Sponsor", "main", "Principal", etc
-                //into the same canonical key ("main", "gold", "silver", "bronze")
+                final handler = _SponsorsDataHandler(
+                  sponsors: sponsors,
+                  localizations: location,
+                );
 
-                //This prevents duplicating categories due to translations
-                final Map<String, List<Sponsor>> groups = {};
-                for (final sponsor in sponsors) {
-                  final key = _normalizeType(context, sponsor.type);
-                  (groups[key] ??= <Sponsor>[]).add(sponsor);
-                }
-                //If there are sponsors of type main, gold, silver, bronze,
-                //they are displayed in that order
-                //If new/unknown types exist, they are also displayed,
-                //but sorted alphabetically afterward
-                final knownOrder = <String>['main', 'gold', 'silver', 'bronze'];
+                final groups = handler.groupSponsors();
+                final orderedKeys = handler.getOrderedKeys(groups.keys.toList());
 
-                final orderedKeys = <String>[
-                  ...knownOrder.where(groups.containsKey),
-                  ...groups.keys.where((k) => !knownOrder.contains(k)).toList()
-                    ..sort(
-                      (a, b) => a.toLowerCase().compareTo(b.toLowerCase()),
-                    ),
-                ];
 
                 return ListView(
                   padding: const EdgeInsets.all(16),
@@ -111,7 +97,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                               vertical: 16,
                             ),
                             child: Text(
-                              _getCategoryDisplayName(context, type),
+                              handler.getCategoryDisplayName(type),
                               style: const TextStyle(
                                 fontSize: 22,
                                 fontWeight: FontWeight.w700,
@@ -319,35 +305,59 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
       },
     );
   }
+}
 
-  String _normalizeType(BuildContext context, String type) {
-    final location = AppLocalizations.of(context)!;
-    if (type == 'main' || type == location.mainSponsor) return 'main';
-    if (type == 'gold' || type == location.goldSponsor) return 'gold';
-    if (type == 'silver' || type == location.silverSponsor) return 'silver';
-    if (type == 'bronze' || type == location.bronzeSponsor) return 'bronze';
+/// Handles the business logic for grouping and sorting sponsors.
+/// This class is separated to improve testability.
+class _SponsorsDataHandler {
+  final List<Sponsor> sponsors;
+  final AppLocalizations localizations;
+
+  _SponsorsDataHandler({required this.sponsors, required this.localizations});
+
+  static const _knownOrder = <String>['main', 'gold', 'silver', 'bronze'];
+
+  /// Groups sponsors by their normalized type.
+  Map<String, List<Sponsor>> groupSponsors() {
+    final groups = <String, List<Sponsor>>{};
+    for (final sponsor in sponsors) {
+      final key = _normalizeType(sponsor.type);
+      (groups[key] ??= <Sponsor>[]).add(sponsor);
+    }
+    return groups;
+  }
+
+  /// Returns a sorted list of category keys.
+  /// Known categories are placed first, followed by other categories sorted alphabetically.
+  List<String> getOrderedKeys(List<String> keys) {
+    return <String>[
+      ..._knownOrder.where(keys.contains),
+      ...keys.where((k) => !_knownOrder.contains(k)).toList()
+        ..sort((a, b) => a.toLowerCase().compareTo(b.toLowerCase())),
+    ];
+  }
+
+  String _normalizeType(String type) {
+    final normalizedType = type.toLowerCase();
+    if (normalizedType == 'main' || normalizedType == localizations.mainSponsor.toLowerCase()) return 'main';
+    if (normalizedType == 'gold' || normalizedType == localizations.goldSponsor.toLowerCase()) return 'gold';
+    if (normalizedType == 'silver' || normalizedType == localizations.silverSponsor.toLowerCase()) return 'silver';
+    if (normalizedType == 'bronze' || normalizedType == localizations.bronzeSponsor.toLowerCase()) return 'bronze';
     return type;
   }
 
-  String _getCategoryDisplayName(BuildContext context, String type) {
-    final location = AppLocalizations.of(context)!;
-
+  String getCategoryDisplayName(String type) {
     switch (type) {
       case 'main':
-        return location.mainSponsor;
+        return localizations.mainSponsor;
       case 'gold':
-        return location.goldSponsor;
+        return localizations.goldSponsor;
       case 'silver':
-        return location.silverSponsor;
+        return localizations.silverSponsor;
       case 'bronze':
-        return location.bronzeSponsor;
-    }
-
-    if (type == location.mainSponsor) return location.mainSponsor;
-    if (type == location.goldSponsor) return location.goldSponsor;
-    if (type == location.silverSponsor) return location.silverSponsor;
-    if (type == location.bronzeSponsor) return location.bronzeSponsor;
-
+        return localizations.bronzeSponsor;
+      default:
     return type;
+    }
   }
 }
