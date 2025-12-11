@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/core.dart';
@@ -34,7 +35,22 @@ import '../../../mocks.mocks.dart';
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
+  const MethodChannel channel = MethodChannel(
+    'plugins.it_nomads.com/flutter_secure_storage',
+  );
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+        if (methodCall.method == 'read') {
+          if (methodCall.arguments['key'] == 'read') {
+            return '{"token":"token_mocked","projectName":"simple-event-cms"}';
+          } else if (methodCall.arguments['key'] == 'github_key') {
+            return 'some_github_key';
+          }
+        }
+        return null;
+      });
   setUp(() async {
+    await getIt.reset();
     // Dummies and default whens for common scenarios
     provideDummy<Result<void>>(const Result.ok(null));
     provideDummy<Result<List<Event>>>(const Result.ok([]));
@@ -45,49 +61,113 @@ void main() {
     provideDummy<Result<AgendaDay>>(Result.ok(MockAgendaDay()));
     provideDummy<Result<List<Speaker>>>(Result.ok([MockSpeaker()]));
     provideDummy<Result<List<Track>>>(Result.ok([MockTrack()]));
+    provideDummy<Result<List<Sponsor>>>(Result.ok([]));
 
     getIt.registerSingleton<Config>(
       Config(
         configName: 'test_name',
-        primaryColorOrganization: '#000000', // Un color hexadecimal válido tiene 6 dígitos
+        primaryColorOrganization:
+            '#000000', // Un color hexadecimal válido tiene 6 dígitos
         secondaryColorOrganization: '#000000',
         githubUser: 'test_user',
         projectName: 'test_project',
         branch: 'test_branch',
       ),
     );
-    // --- CAMBIO 1: Mockea los repositorios de bajo nivel ---
-    // NO HAGAS ESTO: getIt.registerSingleton<SecRepository>(SecRepositoryImp());
-    getIt.registerSingleton<CheckTokenSavedUseCase>(MockCheckTokenSavedUseCase());
-    getIt.registerSingleton<SecRepository>(MockSecRepository()); // <-- USA EL MOCK
-    getIt.registerSingleton<TokenRepository>(MockTokenRepository()); // <-- USA EL MOCK
+    final mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
+    final mockSecRepository = MockSecRepository();
+    final mockTokenRepository = MockTokenRepository();
+    final mockEventUseCase = MockEventUseCase();
+    final mockAgendaUseCase = MockAgendaUseCase();
+    final mockConfigUseCase = MockConfigUseCase();
+    final mockSponsorUseCase = MockSponsorUseCase();
+    final mockSpeakerUseCase = MockSpeakerUseCase();
 
-    // --- CORRECTO: Registra los mocks de UseCase en getIt ---
-    getIt.registerSingleton<EventUseCase>(MockEventUseCase());
-    getIt.registerSingleton<AgendaUseCase>(MockAgendaUseCase());
-    getIt.registerSingleton<ConfigUseCase>(MockConfigUseCase());
-    getIt.registerSingleton<SponsorUseCase>(MockSponsorUseCase());
-    getIt.registerSingleton<SpeakerUseCase>(MockSpeakerUseCase());
+    getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
+    getIt.registerSingleton<SecRepository>(mockSecRepository);
+    getIt.registerSingleton<TokenRepository>(mockTokenRepository);
+    getIt.registerSingleton<EventUseCase>(mockEventUseCase);
+    getIt.registerSingleton<AgendaUseCase>(mockAgendaUseCase);
+    getIt.registerSingleton<ConfigUseCase>(mockConfigUseCase);
+    getIt.registerSingleton<SponsorUseCase>(mockSponsorUseCase);
+    getIt.registerSingleton<SpeakerUseCase>(mockSpeakerUseCase);
+
+    when(
+      mockCheckTokenSavedUseCase.checkToken(),
+    ).thenAnswer((_) async => Future.value(true));
+    when(
+      mockEventUseCase.getEvents(),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockEventUseCase.saveEvent(any),
+    ).thenAnswer((_) async => Result.ok(null));
+    when(
+      mockEventUseCase.getEventById(
+        any,
+      ), // This was returning null, which is likely the cause of the error.
+    ).thenAnswer(
+      (_) async => Result.ok(
+        Event(
+          uid: 'event-1',
+          tracks: [],
+          eventName: '',
+          year: '',
+          primaryColor: '',
+          secondaryColor: '',
+          eventDates: EventDates(
+            uid: 'testUID',
+            startDate: '2025-01-01T10:00:00Z',
+            endDate: '2025-01-02T18:00:00Z',
+            timezone: 'timezone',
+          ), // Providing categories for the dropdown
+        ),
+      ),
+    );
+    when(
+      mockAgendaUseCase.saveSpeaker(any, any),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockAgendaUseCase.getAgendaDayByEventIdFiltered(any),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockAgendaUseCase.getTracksByEventId(any),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockAgendaUseCase.getAgendaDayByEventId(any),
+    ).thenAnswer((_) async => const Result.ok([]));
+     when(
+      mockAgendaUseCase.loadEvent(any),
+    ).thenAnswer((_) async => Result.ok(MockEvent()));
+    when(
+      mockAgendaUseCase.getSpeakersForEventId(any),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockSpeakerUseCase.removeSpeaker(any, any),
+    ).thenAnswer((_) async => const Result.ok([]));
+    when(
+      mockSponsorUseCase.getSponsorByIds(any),
+    ).thenAnswer((_) async => const Result.ok([]));
 
     // Registra las implementaciones reales de TODOS tus ViewModels.
     getIt.registerSingleton<EventFormViewModel>(EventFormViewModelImpl());
-    getIt.registerSingleton<EventCollectionViewModel>(EventCollectionViewModelImp());
+    getIt.registerSingleton<EventCollectionViewModel>(
+      EventCollectionViewModelImp(),
+    );
     getIt.registerSingleton<EventDetailViewModel>(EventDetailViewModelImp());
     getIt.registerSingleton<AgendaViewModel>(AgendaViewModelImp());
     getIt.registerSingleton<AgendaFormViewModel>(AgendaFormViewModelImpl());
-    getIt.registerSingleton<SponsorViewModel>(SponsorViewModelImpl()); // <-- REAL
-    getIt.registerSingleton<SpeakerViewModel>(SpeakerViewModelImpl()); // <-- REAL
+    getIt.registerSingleton<SponsorViewModel>(
+      SponsorViewModelImpl(),
+    ); // <-- REAL
+    getIt.registerSingleton<SpeakerViewModel>(
+      SpeakerViewModelImpl(),
+    ); // <-- REAL
     getIt.registerSingleton<OnLiveViewModel>(OnLiveViewModelImpl());
     getIt.registerSingleton<ConfigViewModel>(ConfigViewModelImpl());
 
     // --- CORRECTO: El resto de tus registros ---
     getIt.registerSingleton<DataLoaderManager>(DataLoaderManager());
     getIt.registerSingleton<CheckOrg>(CheckOrg(initial: false));
-
-
-
-
-
   });
 
   tearDown(() async {
@@ -101,17 +181,18 @@ void main() {
       String location, {
       Object? extra,
     }) async {
+      final router = AppRouter.createRouter();
       await tester.pumpWidget(
         MaterialApp.router(
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           locale: const Locale('en'),
-          routerConfig: AppRouter.router,
+          routerConfig: router,
         ),
       );
 
       // Use router.go for navigation and then pump and settle
-      AppRouter.router.go(location, extra: extra);
+      router.go(location, extra: extra);
       await tester.pumpAndSettle();
     }
 

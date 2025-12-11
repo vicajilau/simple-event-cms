@@ -361,91 +361,88 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                     ],
                   ),
                   SizedBox(height: _spacing),
-                  Row(
+                  Wrap(
                     spacing: _spacingForRowDropdown,
+                    runSpacing: _spacing,
                     children: [
-                      Expanded(
-                        child: SectionInputForm(
-                          label: location.speakerLabel,
-                          childInput: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: DropdownButtonFormField<Speaker>(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  initialValue: _selectedSpeaker,
-                                  decoration: InputDecoration(
-                                    hintText: speakers.isEmpty
-                                        ? location
-                                              .selectSpeaker
-                                        : location.selectSpeakerHint,
-                                  ),
-                                  items: speakers
-                                      .map(
-                                        (speaker) => DropdownMenuItem<Speaker>(
-                                          value: speaker,
-                                          child: Text(speaker.name),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: speakers.isEmpty
-                                      ? null 
-                                      : (speaker) {
-                                          setState(() {
-                                            _selectedSpeaker = speaker;
-                                          });
-                                        },
-                                  validator: (value) {
-                                    if (speakers.isEmpty) {
-                                      return location.noSpeakersMessage;
-                                    }
-                                    if (value == null) {
-                                      return location.selectSpeakerError;
-                                    }
-                                    return null;
-                                  },
+                      SectionInputForm(
+                        label: location.speakerLabel,
+                        childInput: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<Speaker>(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                initialValue: _selectedSpeaker,
+                                decoration: InputDecoration(
+                                  hintText: speakers.isEmpty
+                                      ? location
+                                            .selectSpeaker
+                                      : location.selectSpeakerHint,
                                 ),
-                              ),
-
-                              IconButton(
-                                icon: Icon(
-                                  Icons.add,
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                onPressed: () async {
-                                  // Allow adding a new speaker
-                                  final newSpeaker =
-                                      await Navigator.push<Speaker>(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              SpeakerFormScreen(
-                                                eventUID: widget.data!.eventId
-                                                    .toString(),
-                                              ),
-                                        ),
-                                      );
-                                  if (newSpeaker != null) {
-                                    await widget.viewmodel.addSpeaker(
-                                      widget.data!.eventId.toString(),
-                                      newSpeaker,
-                                    );
-                                    setState(() {
-                                      speakers.add(newSpeaker);
-                                      _selectedSpeaker = newSpeaker;
-                                    });
+                                items: speakers
+                                    .map(
+                                      (speaker) => DropdownMenuItem<Speaker>(
+                                        value: speaker,
+                                        child: Text(speaker.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: speakers.isEmpty
+                                    ? null
+                                    : (speaker) {
+                                        setState(() {
+                                          _selectedSpeaker = speaker;
+                                        });
+                                      },
+                                validator: (value) {
+                                  if (speakers.isEmpty) {
+                                    return location.noSpeakersMessage;
                                   }
+                                  if (value == null) {
+                                    return location.selectSpeakerError;
+                                  }
+                                  return null;
                                 },
                               ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                Icons.add,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () async {
+                                // Allow adding a new speaker
+                                final newSpeaker =
+                                    await Navigator.push<Speaker>(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => SpeakerFormScreen(
+                                      eventUID:
+                                          widget.data!.eventId.toString(),
+                                    ),
+                                  ),
+                                );
+                                if (newSpeaker != null) {
+                                  await widget.viewmodel.addSpeaker(
+                                    widget.data!.eventId.toString(),
+                                    newSpeaker,
+                                  );
+                                  setState(() {
+                                    speakers.add(newSpeaker);
+                                    _selectedSpeaker = newSpeaker;
+                                  });
+                                }
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                        child: SectionInputForm(
-                          label: location.talkTypeLabel,
-                          childInput: DropdownButtonFormField(
+                      SizedBox(width: _spacingForRowDropdown), // Consistent spacing
+                      SectionInputForm(
+                        label: location.talkTypeLabel,
+                        childInput: DropdownButtonFormField(
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedTalkType.isEmpty
@@ -468,7 +465,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                   ? location.selectTalkTypeError
                                   : null;
                             },
-                          ),
                         ),
                       ),
                     ],

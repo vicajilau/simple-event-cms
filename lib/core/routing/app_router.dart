@@ -28,7 +28,7 @@ class AppRouter {
   static const String sponsorFormName = 'sponsor_form';
   static const String configFormName = 'config_form';
   // 1. Tu router estático puede seguir aquí para usarlo en la app real.
-  static final GoRouter router = createRouter();
+  static GoRouter router = createRouter();
 
 
   static GoRouter createRouter() {
