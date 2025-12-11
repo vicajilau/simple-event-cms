@@ -286,13 +286,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get requiredField => 'Campo requerido';
 
   @override
-  String get startDateLabel => 'Fecha de inicio';
+  String get startDateLabel => 'Fecha inicio';
 
   @override
   String get dateHint => 'AAAA-MM-DD';
 
   @override
-  String get endDateLabel => 'Fecha de fin';
+  String get endDateLabel => 'Fecha fin';
 
   @override
   String get addEndDate => 'Añadir fecha de fin';

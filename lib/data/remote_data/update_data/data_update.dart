@@ -403,7 +403,7 @@ class DataUpdateManager {
 
     sessionListOriginal.removeWhere((session) => session.uid == sessionId);
 
-    // Elimina el UID de la sesión de la lista `sessionUids` en los tracks correspondientes.
+    // Removes the session UID from the `sessionUids` list in the corresponding tracks.
     for (var track in tracksOriginal) {
       track.sessionUids.remove(sessionId);
     }

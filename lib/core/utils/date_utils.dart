@@ -46,7 +46,7 @@ class EventDateUtils {
   ///
   /// [dateString] The date in ISO format (YYYY-MM-DD)
   /// [context] The build context for localization
-  /// Returns the formatted date (e.g., "March 15, 2025", "15 de marzo de 2025")
+  /// Returns the formatted date (e.g., "March 15, 2025", "15 March 2025")
   static String getFormattedDate(String dateString, BuildContext context) {
     try {
       final date = DateTime.parse(dateString);
