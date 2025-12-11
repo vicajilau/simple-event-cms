@@ -27,10 +27,20 @@ class AppRouter {
   static const String speakerFormName = 'speaker_form';
   static const String sponsorFormName = 'sponsor_form';
   static const String configFormName = 'config_form';
+  // 1. Tu router estático puede seguir aquí para usarlo en la app real.
+  static final GoRouter router = createRouter();
 
-  static GoRouter router = GoRouter(
-    initialLocation: homePath,
-    routes: [
+
+  static GoRouter createRouter() {
+    return GoRouter(
+      initialLocation: '/', // O la ruta inicial que uses
+      routes: _routes,
+      // ... cualquier otra configuración como errorBuilder, etc.
+    );
+  }
+
+  // 3. Tus rutas privadas siguen igual.
+  static final List<RouteBase> _routes = [
       GoRoute(
         path: homePath,
         name: homeName,
@@ -104,7 +114,6 @@ class AppRouter {
           final eventId = extras['eventId'] as String;
           return SponsorFormScreen(sponsor: sponsor, eventUID: eventId);
         },
-      ),
-    ],
-  );
+      )
+  ];
 }
