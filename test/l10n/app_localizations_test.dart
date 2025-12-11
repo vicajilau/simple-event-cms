@@ -14,30 +14,16 @@ void main() {
 
   Future<AppLocalizations> getLocalizations(WidgetTester tester, Locale locale) async {
     late AppLocalizations localizations;
-    await tester.pumpWidget(
-      // 1. Envuelve tu MaterialApp en un widget simple que no haga nada.
-      // Esto asegura que podemos reconstruir desde la raíz.
-      SizedBox(
-        child: MaterialApp(
-          // 2. NO establezcas el locale aquí inicialmente.
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Builder(
-            builder: (context) {
-              localizations = AppLocalizations.of(context)!;
-              return const SizedBox.shrink();
-            },
-          ),
-        ),
-      ),
-    );
 
-    // 3. ¡EL PASO CLAVE! Llama a pumpWidget OTRA VEZ, pero ahora
-    //    pasando el Locale. Esto FUERZA una reconstrucción completa con el
-    //    idioma correcto.
+    // ¡EL PASO CLAVE Y MÁS ROBUSTO!
+    // Forzamos el locale a nivel del motor de binding del test.
+    // Esto sobreescribe cualquier configuración regional del sistema (local o CI).
+    await tester.binding.setLocale(locale.languageCode, locale.countryCode ?? "en");
+
     await tester.pumpWidget(
       MaterialApp(
-        locale: locale, // Ahora sí establece el locale deseado.
+        // Ya no es estrictamente necesario pasar el locale aquí, pero no hace daño.
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Builder(
@@ -49,7 +35,7 @@ void main() {
       ),
     );
 
-    // 4. Un último pump para asegurar que todo se asiente.
+    // Un pump para asegurar que el widget tree se construye con el locale forzado.
     await tester.pump();
 
     return localizations;
