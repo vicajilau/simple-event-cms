@@ -4,25 +4,30 @@ import 'package:get_it/get_it.dart';
 import 'package:sec/l10n/app_localizations.dart';
 
 void main() {
-  // 2. Añade un tearDown para limpiar getIt después de cada test.
-  // Esto previene que este fichero contamine a otros y se protege a sí mismo.
+  // 2. Add a tearDown to clean up getIt after each test.
+  // This prevents this file from polluting others and protects itself.
   tearDown(() async {
     await GetIt.instance.reset();
   });
 
-  // Helper para obtener las localizaciones para un `Locale` específico
+  // Helper to get localizations for a specific `Locale`
 
   Future<AppLocalizations> getLocalizations(WidgetTester tester, Locale locale) async {
     late AppLocalizations localizations;
 
-    // ¡EL PASO CLAVE Y MÁS ROBUSTO!
-    // Forzamos el locale a nivel del motor de binding del test.
-    // Esto sobreescribe cualquier configuración regional del sistema (local o CI).
-    await tester.binding.setLocale(locale.languageCode, locale.countryCode ?? "en");
+    // 1. Call setLocale.
+    await tester.binding.setLocale(locale.languageCode, locale.countryCode??"");
 
+    // 2. THE KEY MISSING STEP!
+    //    Add a pump() here. This gives the framework the necessary time
+    //    to process the locale change and mark the widget tree
+    //    as "needs rebuild".
+    await tester.pump();
+
+    // 3. Now, when you call pumpWidget, it's already aware of the new locale.
     await tester.pumpWidget(
       MaterialApp(
-        // Ya no es estrictamente necesario pasar el locale aquí, pero no hace daño.
+        // Passing the locale here now acts as a secondary confirmation.
         locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -34,8 +39,7 @@ void main() {
         ),
       ),
     );
-
-    // Un pump para asegurar que el widget tree se construye con el locale forzado.
+    // A final pump to ensure the Builder runs.
     await tester.pump();
 
     return localizations;
