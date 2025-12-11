@@ -348,6 +348,21 @@ void main() {
         expect(screen.speaker, speaker);
         expect(screen.eventUID, eventId);
       });
+
+      testWidgets('navigates to speaker form with null speaker', (
+        tester,
+      ) async {
+        await navigateTo(
+          tester,
+          AppRouter.speakerFormPath,
+          extra: {'eventId': eventId},
+        );
+        final screen = tester.widget<SpeakerFormScreen>(
+          find.byType(SpeakerFormScreen),
+        );
+        expect(screen.speaker, isNull);
+        expect(screen.eventUID, eventId);
+      });
     });
 
     group('SponsorForm Route', () {
@@ -373,6 +388,21 @@ void main() {
           find.byType(SponsorFormScreen),
         );
         expect(screen.sponsor, sponsor);
+        expect(screen.eventUID, eventId);
+      });
+
+      testWidgets('navigates to sponsor form with null sponsor', (
+        tester,
+      ) async {
+        await navigateTo(
+          tester,
+          AppRouter.sponsorFormPath,
+          extra: {'eventId': eventId},
+        );
+        final screen = tester.widget<SponsorFormScreen>(
+          find.byType(SponsorFormScreen),
+        );
+        expect(screen.sponsor, isNull);
         expect(screen.eventUID, eventId);
       });
     });
