@@ -90,7 +90,7 @@
   "eventNameHint": "Introduce el nombre del evento",
   "requiredField": "Campo requerido",
   "startDateLabel": "Fecha de inicio",
-  "dateHint": "dd/mm/aaaa",
+  "dateHint": "YYYY-MM-DD",
   "endDateLabel": "Fecha de fin",
   "addEndDate": "Añadir fecha de fin",
   "roomsLabel": "Salas",

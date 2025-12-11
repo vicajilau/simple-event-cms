@@ -92,7 +92,7 @@
   "eventNameHint": "Sartu gertaeraren izena",
   "requiredField": "Beharrezko eremua",
   "startDateLabel": "Hasiera data",
-  "dateHint": "UUUU-HH-EE",
+  "dateHint": "YYYY-MM-DD",
   "endDateLabel": "Amaiera data",
   "addEndDate": "Gehitu amaiera data",
   "roomsLabel": "Gelak",
