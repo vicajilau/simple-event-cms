@@ -37,7 +37,7 @@ void main() {
 
       expect(result['UID'], 'sponsor1');
       expect(result['name'], 'Sponsor Name');
-      expect(result['type'], 'Sponsor Type');
+      expect(result['type'], 'gold');
       expect(result['logo'], 'https://example.com/logo.png');
       expect(result['website'], 'https://example.com');
       expect(result['eventUID'], 'event1');
