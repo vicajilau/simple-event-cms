@@ -173,5 +173,10 @@
   "confirmDeleteSponsor": "¿Estás seguro de que quieres eliminar este patrocinador?",
   "wrongBranch": "Rama incorrecta",
   "selectSpeaker": "Seleccionar ponente",
-  "onlineNow": "En directo ahora"
+  "onlineNow": "En directo ahora",
+  "close": "Cerrar",
+  "loadingTitle": "Cargando...",
+  "logout": "Cerrar Sesión",
+  "onLive": "En Vivo",
+  "noLiveStreamAvailable": "No hay transmisión en vivo disponible"
 }
