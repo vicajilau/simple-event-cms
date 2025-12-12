@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/paths_github.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github_json_model.dart';
@@ -26,6 +27,7 @@ void main() {
   setUpAll(() async {
     mockCommonsServices = MockCommonsServices();
     // Register CommonsServices before instantiating DataLoaderManager
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     dataLoaderManager = DataLoaderManager();
     getIt.registerSingleton<Config>(

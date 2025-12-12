@@ -24,9 +24,10 @@ void main() {
     final githubData = GithubData(token: 'token', projectName: 'projectName');
 
     test('removeGithubKey should remove the token', () async {
-      await SecureInfo.saveGithubKey(githubData);
-      await SecureInfo.removeGithubKey();
-      final result = await SecureInfo.getGithubKey();
+      SecureInfo secureInfo = SecureInfo();
+      await secureInfo.saveGithubKey(githubData);
+      await secureInfo.removeGithubKey();
+      final result = await secureInfo.getGithubKey();
 
       expect(result.token, isNull);
       expect(result.projectName, isNull);

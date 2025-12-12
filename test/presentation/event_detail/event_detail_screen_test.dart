@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/l10n/app_localizations.dart';
@@ -44,6 +45,7 @@ void main() {
 
     // Mock for the main ViewModel
     mockViewModel = MockEventDetailViewModel();
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     getIt.registerSingleton<EventDetailViewModel>(mockViewModel);
     provideDummy<Result<List<Event>>>(Result.ok([]));
 
@@ -58,6 +60,7 @@ void main() {
 
     mockSponsorsViewModel = MockSponsorViewModel();
     getIt.registerSingleton<SponsorViewModel>(mockSponsorsViewModel);
+
 
     // Configure the default behavior of ALL mocks.
     // This prevents them from failing when trying to access null properties.
@@ -214,5 +217,6 @@ void main() {
       // Verify that the state has returned to `loadFinished`
       expect(mockViewModel.viewState.value, ViewState.loadFinished);
     });
+
   });
 }

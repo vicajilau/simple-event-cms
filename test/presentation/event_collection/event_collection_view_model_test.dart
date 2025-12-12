@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
@@ -23,6 +24,7 @@ void main() {
     getIt.reset();
     mockEventUseCase = MockEventUseCase();
     mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     getIt.registerSingleton<EventUseCase>(mockEventUseCase);
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
     final configString = await rootBundle.loadString(

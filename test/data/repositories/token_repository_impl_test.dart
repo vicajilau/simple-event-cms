@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sec/core/config/secure_info.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
 import 'package:sec/domain/repositories/token_repository.dart';
@@ -14,7 +16,9 @@ void main() {
   const MethodChannel channel =
       MethodChannel('plugins.it_nomads.com/flutter_secure_storage');
 
-  setUp(() {
+  setUp(() async {
+    await getIt.reset();
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     tokenRepository = TokenRepositoryImpl();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, null);

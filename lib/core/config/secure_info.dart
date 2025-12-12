@@ -7,7 +7,7 @@ import 'package:sec/core/models/github/github_data.dart';
 /// Defines a class named `SecureInfo` to interact with `FlutterSecureStorage`.
 ///
 /// This class provides methods to securely save and retrieve keys.
-abstract class SecureInfo {
+class SecureInfo {
   static final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   /// Constructor that initializes an instance of `FlutterSecureStorage`.
@@ -18,7 +18,7 @@ abstract class SecureInfo {
   /// [githubService]: The GithubService object to save.
   ///
   /// Throws an exception if an error occurs during writing.
-  static Future<void> saveGithubKey(GithubData githubService) async {
+  Future<void> saveGithubKey(GithubData githubService) async {
     try {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
@@ -41,7 +41,7 @@ abstract class SecureInfo {
   /// This is achieved by retrieving the current data, setting the token to null,
   /// and then saving the updated data back to secure storage.
   /// Throws an exception if an error occurs during the process.
-  static Future<void> removeGithubKey() async {
+  Future<void> removeGithubKey() async {
     try {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
@@ -63,7 +63,7 @@ abstract class SecureInfo {
   ///
   /// Returns the value as a `String?` (can be null if the key does not exist).
   /// Throws an exception if an error occurs during reading.
-  static Future<GithubData> getGithubKey() async {
+  Future<GithubData> getGithubKey() async {
     String? githubServiceJson = await _storage.read(key: 'github_service');
     if (githubServiceJson != null) {
       // Convert the JSON string back to a GithubService object

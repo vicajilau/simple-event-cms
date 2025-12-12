@@ -24,6 +24,7 @@ class ConfigLoader {
   }
 
   static Future<Config> loadOrganization() async {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     final health = getIt<CheckOrg>();
     try {
       var localOrganization = await getLocalOrganization();
@@ -40,7 +41,7 @@ class ConfigLoader {
 
       //  try GitHub
       const configUrl = 'events/config/config.json';
-      final githubService = await SecureInfo.getGithubKey();
+      final githubService = await secureInfo.getGithubKey();
       final github = GitHub(
         auth: githubService.token == null
             ? Authentication.anonymous()
@@ -50,7 +51,7 @@ class ConfigLoader {
       final res = await github.repositories.getContents(
         RepositorySlug(
           localOrganization.githubUser,
-          (await SecureInfo.getGithubKey()).projectName ??
+          (await secureInfo.getGithubKey()).projectName ??
               localOrganization.projectName,
         ),
         configUrl,

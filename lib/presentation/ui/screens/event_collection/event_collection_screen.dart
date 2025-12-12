@@ -74,6 +74,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     final location = AppLocalizations.of(context)!;
     final bool hasOrgError =
         getIt<CheckOrg>().hasError ||
@@ -158,7 +159,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                   );
                 }
               } else {
-                var githubService = await SecureInfo.getGithubKey();
+                var githubService = await secureInfo.getGithubKey();
                 if (githubService.token == null) {
                   if (context.mounted) {
                     await showDialog<bool>(
@@ -195,7 +196,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                       (viewmodel as EventCollectionViewModelImp)
                               .lastEventsFetchTime =
                           null;
-                      await SecureInfo.removeGithubKey();
+                      await secureInfo.removeGithubKey();
                       await viewmodel.loadEvents();
                     }
                   }
@@ -287,7 +288,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           ),
           const SizedBox(width: 8),
           FutureBuilder(
-            future: SecureInfo.getGithubKey(),
+            future: secureInfo.getGithubKey(),
             builder: (context, snapshot) {
               if (snapshot.data?.token != null) {
                 return IconButton(
@@ -313,7 +314,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                     );
                     if (confirm == true) {
                       viewmodel.viewState.value = ViewState.isLoading;
-                      await SecureInfo.removeGithubKey();
+                      await secureInfo.removeGithubKey();
                       await _loadConfiguration();
                       viewmodel.viewState.value = ViewState.loadFinished;
                       if (mounted) setState(() {}); // si hace falta redibujar

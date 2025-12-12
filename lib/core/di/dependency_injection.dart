@@ -24,11 +24,14 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 import '../../data/remote_data/common/commons_api_services.dart';
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
 import '../../presentation/ui/screens/config/config_viewmodel.dart';
+import '../config/secure_info.dart';
 
 final GetIt getIt = GetIt.instance;
 
 /// Configures all application dependencies
 Future<void> setupDependencies() async {
+
+  getIt.registerSingleton<SecureInfo>(SecureInfo());
   // Register helper
   getIt.registerSingleton<CheckOrg>(CheckOrg());
 
