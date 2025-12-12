@@ -373,7 +373,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get projectNameHint => 'Please enter the project name';
 
   @override
-  String get tokenHintLabel => 'Introduce tu client secret para continuar';
+  String get tokenHintLabel => 'Enter your client secret to continue';
 
   @override
   String get tokenHint => 'Please enter a valid GitHub token';

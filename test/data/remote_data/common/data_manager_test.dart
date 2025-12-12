@@ -236,7 +236,10 @@ void main() {
           final speaker = Speaker(
             uid: 'speaker1',
             name: 'John Doe',
-            eventUIDS: [], bio: '', image: '', social: MockSocial(),
+            eventUIDS: [],
+            bio: '',
+            image: '',
+            social: MockSocial(),
           );
           const parentId = 'event1';
           when(
@@ -411,6 +414,391 @@ void main() {
         },
       );
     });
+  });
+  // Tests para Track
+  group('Track Tests', () {
+    test('debería llamar a _addTrack cuando el item es un Track', () async {
+      // Arrange
+      final track = Track(
+        uid: 'track1',
+        sessionUids: [],
+        name: 'Track de Test',
+        color: '',
+        eventUid: '',
+      );
+      const parentId = 'day1';
+      // SIMULAMOS EL CASO PROBLEMÁTICO: AgendaDay se carga con trackUids a null.
+      final day = AgendaDay(
+        uid: 'day1',
+        eventsUID: [],
+        date: '',
+        trackUids: null,
+      );
+
+      when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [day]);
+      when(
+        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+      ).thenAnswer((_) async => {});
+      when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
+
+      // Act
+      // Esta llamada fallaría con el error 'Null check operator' si el código no se corrige.
+      await DataUpdate.addItemAndAssociations(track, parentId);
+
+      // Assert
+      verify(mockDataUpdateManager.updateTrack(track)).called(1);
+
+      // Capturamos la lista de días que se pasa a updateAgendaDays para verificar su contenido.
+      final captured = verify(
+        mockDataUpdateManager.updateAgendaDays(captureAny, overrideData: false),
+      ).captured;
+
+      // Verificamos que el día actualizado ahora contiene el trackId en su lista.
+      final updatedDay = captured.first.first as AgendaDay;
+      expect(updatedDay.trackUids, isNotNull);
+      expect(updatedDay.trackUids, contains(track.uid));
+    });
+
+    test(
+      'debería lanzar una CertainException al intentar borrar un Track con sesiones asociadas',
+      () async {
+        // Arrange
+        const trackId = 'trackConSesiones';
+        final track = Track(
+          uid: trackId,
+          sessionUids: ['session1'],
+          name: 'Track Ocupado',
+          color: '',
+          eventUid: '',
+        );
+        when(
+          mockDataLoaderManager.loadAllTracks(),
+        ).thenAnswer((_) async => [track]);
+
+        // Act & Assert
+        expect(
+          () => DataUpdate.deleteItemAndAssociations(trackId, 'Track'),
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
+
+    test('debería llamar a _addTrack cuando el item es un Track', () async {
+      // Arrange
+      final track = Track(
+        uid: 'track1',
+        sessionUids: [],
+        name: 'Track de Test',
+        color: '',
+        eventUid: '',
+      );
+      const parentId = 'day1';
+      final day = AgendaDay(uid: 'day1', eventsUID: [], date: '');
+      when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [day]);
+      when(
+        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+      ).thenAnswer((_) async => {});
+      when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
+
+      // Act
+      await DataUpdate.addItemAndAssociations(track, parentId);
+
+      // Assert
+      verify(mockDataUpdateManager.updateTrack(track)).called(1);
+      // Verifica que se actualice el día de la agenda asociado
+      verify(
+        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+      ).called(1);
+    });
+
+    test(
+      'debería llamar a _addTracks cuando la lista contiene Tracks',
+      () async {
+        // Arrange
+        final tracks = [
+          Track(
+            uid: 't1',
+            name: 'Track 1',
+            sessionUids: [],
+            color: '',
+            eventUid: '',
+          ),
+        ];
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
+        when(
+          mockDataUpdateManager.updateTracks(any),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await DataUpdate.addItemListAndAssociations(tracks);
+
+        // Assert
+        verify(mockDataLoaderManager.loadAllTracks()).called(1);
+        verify(mockDataUpdateManager.updateTracks(any)).called(1);
+      },
+    );
+  });
+
+  // Tests para AgendaDay
+  group('AgendaDay Tests', () {
+    test(
+      'debería llamar a _addAgendaDay cuando el item es un AgendaDay',
+      () async {
+        // Arrange
+        final day = AgendaDay(uid: 'day1', eventsUID: [], date: '');
+        const parentId = 'event1';
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+        when(
+          mockDataUpdateManager.updateAgendaDay(any),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await DataUpdate.addItemAndAssociations(day, parentId);
+
+        // Assert
+        // Comprueba que el ID del evento padre se ha añadido a la lista del día
+        expect(day.eventsUID, contains(parentId));
+        verify(mockDataUpdateManager.updateAgendaDay(day)).called(1);
+      },
+    );
+
+    test(
+      'debería llamar a _addAgendaDays cuando la lista contiene AgendaDays',
+      () async {
+        // Arrange
+        final days = [
+          AgendaDay(uid: 'd1', eventsUID: ['event1'], date: ''),
+        ];
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+        when(
+          mockDataUpdateManager.updateAgendaDays(
+            any,
+            overrideData: anyNamed('overrideData'),
+          ),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await DataUpdate.addItemListAndAssociations(days);
+
+        // Assert
+        verify(mockDataLoaderManager.loadAllDays()).called(1);
+        verify(
+          mockDataUpdateManager.updateAgendaDays(
+            any,
+            overrideData: anyNamed('overrideData'),
+          ),
+        ).called(1);
+      },
+    );
+
+    test(
+      'debería llamar a _deleteAgendaDay cuando el itemType es "AgendaDay"',
+      () async {
+        // Arrange
+        const dayId = 'day123';
+        const eventId = 'event1';
+        final agendaDay = AgendaDay(
+          uid: dayId,
+          eventsUID: [eventId, 'event2'],
+          date: '',
+        );
+        when(
+          mockDataLoaderManager.loadAllDays(),
+        ).thenAnswer((_) async => [agendaDay]);
+        // No esperamos que se llame a removeAgendaDay porque aún tiene otro evento asociado
+        when(
+          mockDataUpdateManager.removeAgendaDay(any),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await DataUpdate.deleteItemAndAssociations(
+          dayId,
+          'AgendaDay',
+          eventUID: eventId,
+        );
+
+        // Assert
+        // Verifica que no se ha borrado el día, solo se ha desasociado del evento
+        verifyNever(mockDataUpdateManager.removeAgendaDay(dayId));
+        // La lógica interna debería llamar a _addAgendaDays para actualizar el día sin el eventId
+        // Esto es un efecto secundario de cómo está implementado _deleteAgendaDay
+        verify(mockDataLoaderManager.loadAllDays()).called(1);
+      },
+    );
+
+    test(
+      'debería llamar a _deleteAgendaDay y eliminarlo si no tiene más eventos asociados',
+      () async {
+        // Arrange
+        const dayId = 'day123';
+        const eventId = 'event1';
+        final agendaDay = AgendaDay(
+          uid: dayId,
+          eventsUID: [eventId],
+          date: '',
+        ); // Solo un evento asociado
+        when(
+          mockDataLoaderManager.loadAllDays(),
+        ).thenAnswer((_) async => [agendaDay]);
+        when(
+          mockDataUpdateManager.removeAgendaDay(any),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await DataUpdate.deleteItemAndAssociations(
+          dayId,
+          'AgendaDay',
+          eventUID: eventId,
+        );
+
+        // Assert
+        verify(mockDataUpdateManager.removeAgendaDay(dayId)).called(1);
+      },
+    );
+  });
+  group('AgendaDay Track Management Tests', () {
+    test(
+      'debería eliminar correctamente un trackId de un AgendaDay usando _removeTrackFromDay',
+      () async {
+        // Arrange
+        const trackIdToRemove = 'track2';
+        final initialTracks = [
+          Track(
+            uid: 'track1',
+            name: 'Track 1',
+            sessionUids: [],
+            color: '',
+            eventUid: '',
+          ),
+          Track(
+            uid: trackIdToRemove,
+            name: 'Track 2',
+            sessionUids: [],
+            color: '',
+            eventUid: '',
+          ),
+        ];
+
+        // El día de la agenda empieza con dos tracks
+        final agendaDay = AgendaDay(
+          uid: 'day1',
+          eventsUID: ['event1'],
+          trackUids: ['track1', trackIdToRemove],
+          date: '',
+        );
+
+        // El evento que contiene el track
+        final event = Event(
+          uid: 'event1',
+          tracks: initialTracks,
+          eventName: 'Test Event',
+          year: '2025',
+          primaryColor: '',
+          secondaryColor: '',
+          eventDates: MockEventDates(),
+        );
+
+        // Mocks
+        when(
+          mockDataLoaderManager.loadAllTracks(),
+        ).thenAnswer((_) async => initialTracks);
+        when(
+          mockDataLoaderManager.loadEvents(),
+        ).thenAnswer((_) async => [event]);
+        when(
+          mockDataLoaderManager.loadAllDays(),
+        ).thenAnswer((_) async => [agendaDay]);
+
+        // No esperamos llamadas a remove, solo a update
+        when(
+          mockDataUpdateManager.removeTrack(any),
+        ).thenAnswer((_) async => {});
+        when(
+          mockDataUpdateManager.updateEvent(any),
+        ).thenAnswer((_) async => {});
+
+        // El mock clave: capturamos el día actualizado
+        when(
+          mockDataUpdateManager.updateAgendaDay(any),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        // Llamamos a la función pública que desencadena la lógica a probar
+        await DataUpdate.deleteItemAndAssociations(trackIdToRemove, 'Track');
+
+        // Assert
+        // Capturamos el objeto AgendaDay que se pasa a updateAgendaDay
+        final captured = verify(
+          mockDataUpdateManager.updateAgendaDay(captureAny),
+        ).captured;
+        final updatedDay = captured.first as AgendaDay;
+
+        // Verificamos que el trackId fue eliminado de la lista
+        expect(updatedDay.trackUids, isNotNull);
+        expect(updatedDay.trackUids, isNot(contains(trackIdToRemove)));
+        expect(
+          updatedDay.trackUids,
+          contains('track1'),
+        ); // El otro track debe permanecer
+      },
+    );
+
+    test(
+      'debería añadir correctamente un trackId a un AgendaDay usando la lógica de _addTrack',
+      () async {
+        // Arrange
+        final trackToAdd = Track(
+          uid: 'newTrack',
+          name: 'New Track',
+          sessionUids: [],
+          color: '',
+          eventUid: '',
+        );
+        const parentDayId = 'day1';
+
+        // El día de la agenda empieza sin el nuevo track
+        final agendaDay = AgendaDay(
+          uid: parentDayId,
+          eventsUID: ['event1'],
+          trackUids: ['existingTrack'],
+          date: '', // podría ser null o tener otros tracks
+        );
+
+        // Mocks
+        when(
+          mockDataLoaderManager.loadAllDays(),
+        ).thenAnswer((_) async => [agendaDay]);
+        when(
+          mockDataUpdateManager.updateTrack(any),
+        ).thenAnswer((_) async => {});
+        // Mock clave para capturar el resultado
+        when(
+          mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+        ).thenAnswer((_) async {});
+
+        // Act
+        await DataUpdate.addItemAndAssociations(trackToAdd, parentDayId);
+
+        // Assert
+        // Verificamos la llamada a updateTrack, que es parte de la función principal
+        verify(mockDataUpdateManager.updateTrack(trackToAdd)).called(1);
+
+        // Capturamos la lista de días que se pasa para la actualización
+        final captured = verify(
+          mockDataUpdateManager.updateAgendaDays(
+            captureAny,
+            overrideData: false,
+          ),
+        ).captured;
+        final updatedDayList = captured.first as List<AgendaDay>;
+        final updatedDay = updatedDayList.first;
+
+        // Verificamos que el nuevo trackId se ha añadido
+        expect(updatedDay.trackUids, isNotNull);
+        expect(updatedDay.trackUids, contains('existingTrack'));
+        expect(updatedDay.trackUids, contains(trackToAdd.uid));
+      },
+    );
   });
 }
 
