@@ -559,4 +559,7 @@ class AppLocalizationsGl extends AppLocalizations {
 
   @override
   String get onlineNow => 'En liña agora';
+
+  @override
+  String get noLiveStreamAvailable => 'No hay directos disponibles';
 }

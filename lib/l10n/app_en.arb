@@ -120,7 +120,7 @@
   "loginTitle": "Login",
   "projectNameLabel": "Project Name",
   "projectNameHint": "Please enter the project name",
-  "tokenHintLabel": "Introduce tu client secret para continuar",
+  "tokenHintLabel": "Enter your client secret to continue",
   "tokenHint": "Please enter a valid GitHub token",
   "unknownAuthError": "Unknown authentication failure.",
   "projectNotFoundError": "The project \"{projectName}\" does not exist in your GitHub repositories.",
@@ -193,5 +193,6 @@
   "wrongBranch": "The entered branch does not exist in the repository. Check the branch name and try again.",
   "onLive": "On Live",
   "selectSpeaker": "Select a speaker",
-  "onlineNow": "Online Now"
+  "onlineNow": "Online Now",
+  "noLiveStreamAvailable": "No live streams available"
 }

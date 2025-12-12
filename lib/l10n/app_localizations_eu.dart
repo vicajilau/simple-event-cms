@@ -557,4 +557,8 @@ class AppLocalizationsEu extends AppLocalizations {
 
   @override
   String get onlineNow => 'Online Now';
+
+  @override
+  String get noLiveStreamAvailable =>
+      'Ez dago zuzeneko emankizunik eskuragarri';
 }

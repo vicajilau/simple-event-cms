@@ -9,6 +9,7 @@ import 'package:sec/core/models/speaker.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_screen.dart';
 import 'package:sec/presentation/ui/screens/agenda/form/agenda_form_view_model.dart';
+import 'package:sec/presentation/ui/screens/speaker/speaker_form_screen.dart';
 import 'package:sec/presentation/view_model_common.dart';
 
 import '../../../mocks.mocks.dart';
@@ -166,157 +167,25 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  // testWidgets('shows error dialog when view state is error', (
-  //   WidgetTester tester,
-  // ) async {
-  //   when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
-  //   when(mockViewModel.errorMessage).thenReturn('An error occurred');
+  testWidgets('should add a new speaker when add button is pressed', (WidgetTester tester) async {
+    when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.loadFinished));
 
-  //   await tester.pumpWidget(
-  //     createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
-  //   );
-  //   await tester.pump();
 
-  //   expect(find.text('An error occurred'), findsOneWidget);
-  //   await tester.tap(find.text('Close'));
-  //   await tester.pump();
-
-  //   verify(mockViewModel.setErrorKey(null)).called(1);
-  // });
-
-  /*testWidgets('create new session and save it', (WidgetTester tester) async {
-    when(
-      mockViewModel.viewState,
-    ).thenReturn(ValueNotifier(ViewState.loadFinished));
+    when(mockViewModel.addSpeaker(any, any)).thenAnswer((_) async {});
 
     await tester.pumpWidget(
       createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
     );
     await tester.pumpAndSettle();
 
-    await tester.enterText(find.byType(TextFormField).first, 'New Session');
-    await tester.tap(find.text('Select a day'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('2024-01-01'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Select a room'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Track 1'));
+    // Find the add speaker button and tap it.
+    final addButton = find.byKey(Key("add_speaker_button"));
+    expect(addButton, findsOneWidget);
+    await tester.tap(addButton);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.textContaining('Start time:'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('OK').first);
-    await tester.pumpAndSettle();
+    // Verify that we have navigated to the SpeakerFormScreen
+    expect(find.byType(SpeakerFormScreen), findsOneWidget);
 
-    await tester.tap(find.textContaining('End time:'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('OK').first);
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Select a speaker'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Speaker 1'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Select a talk type'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('talk'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Save'));
-    await tester.pumpAndSettle();
-
-    verify(
-      mockViewModel.saveSession(
-        any,
-        any,
-        'New Session',
-        any,
-        any,
-        speaker,
-        any,
-        'talk',
-        'event1',
-        'day1',
-        any,
-        'track1',
-        any,
-        any,
-      ),
-    ).called(1);
-  });*/
-
-  /*testWidgets('edit existing session and save it', (WidgetTester tester) async {
-    final session = Session(
-      uid: 'session1',
-      title: 'Session 1',
-      eventUID: 'event1',
-      agendaDayUID: 'day1',
-      speakerUID: 'speaker1',
-      type: 'talk',
-      description: 'description',
-      time: '',
-    );
-    when(
-      mockViewModel.viewState,
-    ).thenReturn(ValueNotifier(ViewState.loadFinished));
-
-    await tester.pumpWidget(
-      createWidgetUnderTest(
-        data: AgendaFormData(
-          session: session,
-          trackId: 'track1',
-          eventId: 'event1',
-          agendaDayId: 'day1',
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextFormField).first, 'Updated Session');
-    await tester.tap(find.text('Save'));
-    await tester.pumpAndSettle();
-
-    verify(
-      mockViewModel.saveSession(
-        any,
-        'session1',
-        'Updated Session',
-        any,
-        any,
-        speaker,
-        'description',
-        'talk',
-        'event1',
-        'day1',
-        any,
-        'track1',
-        'track1',
-        []
-      ),
-    ).called(1);
-  });*/
-
-  /*testWidgets('add new track', (WidgetTester tester) async {
-    when(
-      mockViewModel.viewState,
-    ).thenReturn(ValueNotifier(ViewState.loadFinished));
-    when(mockViewModel.addTrack(any, any)).thenAnswer((_) async => true);
-
-    await tester.pumpWidget(
-      createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
-    );
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.byIcon(Icons.add).first);
-    await tester.pumpAndSettle();
-
-    await tester.enterText(find.byType(TextFormField).last, 'New Track');
-    await tester.tap(find.text('Save'));
-    await tester.pumpAndSettle();
-
-    verify(mockViewModel.addTrack(any, any)).called(1);
-  });*/
+  });
 }

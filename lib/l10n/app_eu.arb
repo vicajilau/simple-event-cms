@@ -92,7 +92,7 @@
   "eventNameHint": "Sartu gertaeraren izena",
   "requiredField": "Beharrezko eremua",
   "startDateLabel": "Hasiera data",
-  "dateHint": "UUUU-HH-EE",
+  "dateHint": "YYYY-MM-DD",
   "endDateLabel": "Amaiera data",
   "addEndDate": "Gehitu amaiera data",
   "roomsLabel": "Gelak",
@@ -120,7 +120,7 @@
   "loginTitle": "Saioa hasi",
   "projectNameLabel": "Proiektuaren izena",
   "projectNameHint": "Mesedez, sartu proiektuaren izena",
-  "tokenHintLabel": "Introduce tu client secret para continuar",
+  "tokenHintLabel": "Sartu zure bezeroaren sekretua jarraitzeko",
   "tokenHint": "Mesedez, sartu baliozko GitHub token bat",
   "unknownAuthError": "Autentifikazio-errore ezezaguna.",
   "projectNotFoundError": "“{projectName}” proiektua ez da existitzen zure GitHub-eko biltegietan.",
@@ -193,6 +193,7 @@
   "wrongBranch": "Sartutako adarra ez da existitzen biltegian. Egiaztatu adarraren izena eta saiatu berriro.",
   "onLive": "On Live",
   "selectSpeaker": "Hautatu hizlaria",
-  "onlineNow": "Online Now"
+  "onlineNow": "Online Now",
+  "noLiveStreamAvailable": "Ez dago zuzeneko emankizunik eskuragarri"
 
 }

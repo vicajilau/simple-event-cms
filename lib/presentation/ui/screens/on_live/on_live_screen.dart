@@ -24,7 +24,7 @@ class OnLiveScreen extends StatefulWidget {
 }
 
 class _OnLiveScreenState extends State<OnLiveScreen> {
-  late final YoutubePlayerController _controller;
+  YoutubePlayerController? _controller;
 
   @override
   void initState() {
@@ -57,34 +57,44 @@ class _OnLiveScreenState extends State<OnLiveScreen> {
           );
         }
 
-        return FormScreenWrapper(
-          pageTitle: location.onLive,
-          widgetFormChild: YoutubePlayerBuilder(
-            player: YoutubePlayer(
-              controller: _controller,
-              showVideoProgressIndicator: true,
-              bottomActions: [
-                FullScreenButton(),
-              ],
+        if(_controller == null){
+          return FormScreenWrapper(
+            pageTitle: location.onLive,
+            widgetFormChild: Center(
+                child: Text(location.noLiveStreamAvailable)
             ),
-            builder: (context, player) {
-              return Column(
-                children: [
-                  // some widgets
-                  player,
-                  //some other widgets
+          );
+        }else{
+          return FormScreenWrapper(
+            pageTitle: location.onLive,
+            widgetFormChild: YoutubePlayerBuilder(
+              player: YoutubePlayer(
+                controller: _controller!,
+                showVideoProgressIndicator: true,
+                bottomActions: [
+                  FullScreenButton(),
                 ],
-              );
-            },
-          ),
-        );
+              ),
+              builder: (context, player) {
+                return Column(
+                  children: [
+                    // some widgets
+                    player,
+                    //some other widgets
+                  ],
+                );
+              },
+            ),
+          );
+        }
+
       },
     );
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 }

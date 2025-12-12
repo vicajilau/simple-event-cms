@@ -33,7 +33,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loading => 'Cargando...';
 
   @override
-  String get errorLoadingImage => 'Error al cargar imagen';
+  String get errorLoadingImage => 'Error al cargar la imagen';
 
   @override
   String get keynote => 'KEYNOTE';
@@ -81,18 +81,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get openByDefaultLabel => 'Abierto por defecto';
 
   @override
-  String get eventIsVisible => 'El evento es visible';
+  String get eventIsVisible => 'El evento está visible';
 
   @override
-  String get changeVisibilityTitle => 'Cambiar visibilidad';
+  String get changeVisibilityTitle => 'Cambiar Visibilidad';
 
   @override
   String get changeVisibilityToHidden =>
-      'Esto hará que el evento no sea visible para los usuarios';
+      'Esto hará que el evento no aparezca a los usuarios';
 
   @override
   String get changeVisibilityToVisible =>
-      'A partir de ahora, el evento será visible para todos';
+      'A partir de ahora el evento será visible para todo el mundo';
 
   @override
   String get eventIsHidden => 'El evento está oculto';
@@ -122,11 +122,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get changeLanguage => 'Cambiar Idioma';
 
   @override
-  String get deleteEventTitle => 'Eliminar evento';
+  String get deleteEventTitle => 'Eliminar Evento';
 
   @override
   String get deleteEventMessage =>
-      '¿Estás seguro de que quieres eliminar este evento? \nEsto borrará las sesiones asociadas al evento.';
+      '¿Estás seguro de que quieres eliminar este evento? \n Esto eliminará las sesiones asociadas al evento.';
 
   @override
   String get speakerForm => 'Formulario de Ponente';
@@ -135,13 +135,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get nameLabel => 'Nombre*';
 
   @override
-  String get nameErrorHint => 'Por favor ingresa tu nombre';
+  String get nameErrorHint => 'Por favor, introduce tu nombre';
 
   @override
   String get bioLabel => 'Biografía*';
 
   @override
-  String get bioErrorHint => 'Por favor ingresa tu biografía';
+  String get bioErrorHint => 'Por favor, introduce tu biografía';
 
   @override
   String get imageUrlLabel => 'URL de la Imagen';
@@ -168,7 +168,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveButton => 'Guardar';
 
   @override
-  String get errorLoadingData => 'Error cargando los datos';
+  String get errorLoadingData => 'Error al cargar los datos';
 
   @override
   String get errorUnknown => 'Error desconocido';
@@ -189,10 +189,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get titleLabel => 'Título*';
 
   @override
-  String get talkTitleHint => 'Introduce título de la charla';
+  String get talkTitleHint => 'Introduce el título de la charla';
 
   @override
-  String get talkTitleError => 'Por favor, introduce un título de la charla';
+  String get talkTitleError => 'Por favor, introduce un título para la charla';
 
   @override
   String get eventDayLabel => 'Día del evento*';
@@ -216,23 +216,22 @@ class AppLocalizationsEs extends AppLocalizations {
   String get startTimeLabel => 'Hora de inicio:';
 
   @override
-  String get endTimeLabel => 'Hora final:';
+  String get endTimeLabel => 'Hora de fin:';
 
   @override
-  String get timeValidationError =>
-      'La hora de inicio debe ser anterior a la hora final.';
+  String get timeValidationError => 'La hora de inicio debe ser anterior a la hora de fin.';
 
   @override
-  String get speakerLabel => 'Speaker*';
+  String get speakerLabel => 'Ponente*';
 
   @override
-  String get noSpeakersMessage => 'No hay speakers. Añade uno.';
+  String get noSpeakersMessage => 'No hay ponentes. Añade uno.';
 
   @override
-  String get selectSpeakerHint => 'Selecciona un speaker';
+  String get selectSpeakerHint => 'Selecciona un ponente';
 
   @override
-  String get selectSpeakerError => 'Por favor, selecciona un speaker';
+  String get selectSpeakerError => 'Por favor, selecciona un ponente';
 
   @override
   String get talkTypeLabel => 'Tipo de charla*';
@@ -247,14 +246,13 @@ class AppLocalizationsEs extends AppLocalizations {
   String get descriptionLabel => 'Descripción';
 
   @override
-  String get talkDescriptionHint => 'Introduce descripción de la charla...';
+  String get talkDescriptionHint => 'Introduce la descripción de la charla...';
 
   @override
   String get cancelButton => 'Cancelar';
 
   @override
-  String get timeSelectionError =>
-      'Por favor, seleccionar ambas horas: inicio y final.';
+  String get timeSelectionError => 'Por favor, selecciona tanto la hora de inicio como la de fin.';
 
   @override
   String get noSessionsFound => 'No se encontraron sesiones';
@@ -267,10 +265,10 @@ class AppLocalizationsEs extends AppLocalizations {
       '¿Estás seguro de que quieres eliminar la sesión?';
 
   @override
-  String get editEventTitle => 'Edición evento';
+  String get editEventTitle => 'Editar evento';
 
   @override
-  String get createEventTitle => 'Creación evento';
+  String get createEventTitle => 'Crear evento';
 
   @override
   String get editingEvent => 'Editando evento';
@@ -291,7 +289,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get startDateLabel => 'Fecha inicio';
 
   @override
-  String get dateHint => 'YYYY-MM-DD';
+  String get dateHint => 'AAAA-MM-DD';
 
   @override
   String get endDateLabel => 'Fecha fin';
@@ -303,16 +301,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get roomsLabel => 'Salas';
 
   @override
-  String get timezoneLabel => 'Timezone';
+  String get timezoneLabel => 'Zona horaria';
 
   @override
-  String get timezoneHint => 'Introduce el timezone';
+  String get timezoneHint => 'Introduce la zona horaria';
 
   @override
-  String get baseUrlLabel => 'Base URL';
+  String get baseUrlLabel => 'URL Base';
 
   @override
-  String get baseUrlHint => 'Introduce la Base URL';
+  String get baseUrlHint => 'Introduce la URL Base';
 
   @override
   String get primaryColorLabel => 'Color Primario';
@@ -324,29 +322,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get secondaryColorLabel => 'Color Secundario';
 
   @override
-  String get secondaryColorHint =>
-      'Introduce el color secundario (ej. #000000)';
+  String get secondaryColorHint => 'Introduce el color secundario (ej. #000000)';
 
   @override
-  String get venueTitle => 'Venue';
+  String get venueTitle => 'Lugar del evento';
 
   @override
-  String get venueNameLabel => 'Nombre del Venue';
+  String get venueNameLabel => 'Nombre del lugar';
 
   @override
-  String get venueNameHint => 'Introduce el nombre del venue';
+  String get venueNameHint => 'Introduce el nombre del lugar';
 
   @override
-  String get venueAddressLabel => 'Dirección del Venue';
+  String get venueAddressLabel => 'Dirección del lugar';
 
   @override
-  String get venueAddressHint => 'Introduce la dirección del venue';
+  String get venueAddressHint => 'Introduce la dirección del lugar';
 
   @override
-  String get venueCityLabel => 'Ciudad del Venue';
+  String get venueCityLabel => 'Ciudad del lugar';
 
   @override
-  String get venueCityHint => 'Introduce la ciudad del venue';
+  String get venueCityHint => 'Introduce la ciudad del lugar';
 
   @override
   String get eventDescriptionHint => 'Introduce la descripción del evento';
@@ -355,7 +352,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorPrefix => 'Error: ';
 
   @override
-  String get errorLoadingConfig => 'Error cargando configuración: ';
+  String get errorLoadingConfig => 'Error al cargar la configuración: ';
 
   @override
   String get configNotAvailable => 'Error: Configuración no disponible';
@@ -367,7 +364,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get eventDeleted => ' eliminado';
 
   @override
-  String get loginTitle => 'Login';
+  String get loginTitle => 'Iniciar Sesión';
 
   @override
   String get projectNameLabel => 'Nombre del Proyecto';
@@ -391,28 +388,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get authNetworkError =>
-      'Error de autenticación o problema de red. Verifica tus credenciales y el nombre del proyecto.';
+      'Error de autenticación o de red. Comprueba tus credenciales y el nombre del proyecto.';
 
   @override
   String get closeButton => 'Cerrar';
 
   @override
-  String get editSponsorTitle => 'Editar Sponsor';
+  String get editSponsorTitle => 'Editar Patrocinador';
 
   @override
-  String get createSponsorTitle => 'Crear Sponsor';
+  String get createSponsorTitle => 'Crear Patrocinador';
 
   @override
-  String get editingSponsor => 'Editando Sponsor';
+  String get editingSponsor => 'Editando Patrocinador';
 
   @override
-  String get creatingSponsor => 'Creando Sponsor';
+  String get creatingSponsor => 'Creando Patrocinador';
 
   @override
-  String get sponsorNameHint => 'Introduce el nombre del Sponsor';
+  String get sponsorNameHint => 'Introduce el nombre del Patrocinador';
 
   @override
-  String get sponsorNameValidation => 'Introduce el nombre del Sponsor';
+  String get sponsorNameValidation => 'Por favor, introduce el nombre del Patrocinador';
 
   @override
   String get logoLabel => 'Logo*';
@@ -421,28 +418,28 @@ class AppLocalizationsEs extends AppLocalizations {
   String get logoHint => 'Introduce la URL del logo';
 
   @override
-  String get logoValidation => 'Introduce la URL del logo';
+  String get logoValidation => 'Logo';
 
   @override
   String get websiteLabel => 'Web*';
 
   @override
-  String get websiteHint => 'Introduce la URL de la web';
+  String get websiteHint => 'Introduce la URL del sitio web';
 
   @override
-  String get websiteValidation => 'Introduce la URL de la web';
+  String get websiteValidation => 'Web';
 
   @override
   String get mainSponsor => 'Patrocinador Principal';
 
   @override
-  String get goldSponsor => 'Patrocinador Gold';
+  String get goldSponsor => 'Patrocinador Oro';
 
   @override
-  String get silverSponsor => 'Patrocinador Silver';
+  String get silverSponsor => 'Patrocinador Plata';
 
   @override
-  String get bronzeSponsor => 'Patrocinador Bronze';
+  String get bronzeSponsor => 'Patrocinador Bronce';
 
   @override
   String get updateButton => 'Actualizar';
@@ -451,36 +448,35 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addButton => 'Añadir';
 
   @override
-  String get addRoomTitle => 'Añadir sala';
+  String get addRoomTitle => 'Añadir Sala';
 
   @override
-  String get roomNameHint => 'Room name';
+  String get roomNameHint => 'Nombre de la sala';
 
   @override
   String get formError => 'Hay errores en el formulario';
 
   @override
-  String get confirmLogout => 'Confirmar cierre de sesión';
+  String get confirmLogout => 'Confirmar Cierre de Sesión';
 
   @override
-  String get confirmLogoutMessage =>
-      '¿Estás seguro de que quieres cerrar sesión?';
+  String get confirmLogoutMessage => '¿Estás seguro de que quieres cerrar sesión?';
 
   @override
   String get cancel => 'Cancelar';
 
   @override
-  String get logout => 'Cerrar sesión';
+  String get logout => 'Cerrar Sesión';
 
   @override
-  String get enterGithubTokenTitle => 'Token de acceso';
+  String get enterGithubTokenTitle => 'Token de Acceso';
 
   @override
   String get availablesEventsTitle => 'Eventos Disponibles';
 
   @override
   String get availablesEventsText =>
-      'Explorar a los próximos eventos y \n encuentra algo que te interese';
+      'Explora los próximos eventos y\nencuentra algo que te interese';
 
   @override
   String get config => 'Organización';
@@ -516,16 +512,16 @@ class AppLocalizationsEs extends AppLocalizations {
   String get addSponsor => 'Añadir Patrocinador';
 
   @override
-  String get retryLater => 'Vuelve a intentarlo más tarde';
+  String get retryLater => 'Por favor, inténtalo de nuevo más tarde';
 
   @override
-  String get commonError => 'Error fetching data, Please retry later';
+  String get commonError => 'Error al obtener los datos. Por favor, reinténtalo más tarde';
 
   @override
   String get addEvent => 'Añadir Evento';
 
   @override
-  String get createSpeaker => 'Create Speaker';
+  String get createSpeaker => 'Crear Ponente';
 
   @override
   String get deleteSpeaker => 'Eliminar ponente';
@@ -539,23 +535,27 @@ class AppLocalizationsEs extends AppLocalizations {
   String get accept => 'Aceptar';
 
   @override
-  String get deleteSponsorTitle => 'Eliminar Sponsor';
+  String get deleteSponsorTitle => 'Eliminar Patrocinador';
 
   @override
   String confirmDeleteSponsor(String sponsorName) {
-    return '¿Estás seguro de que quieres eliminar el sponsor $sponsorName?';
+    return '¿Estás seguro de que quieres eliminar al patrocinador $sponsorName?';
   }
 
   @override
   String get wrongBranch =>
-      'La rama ingresada no existe en el repositorio. Verifica el nombre de la rama y vuelve a intentarlo.';
+      'La rama introducida no existe en el repositorio. Comprueba el nombre de la rama e inténtalo de nuevo.';
 
   @override
-  String get onLive => 'En Directo';
+  String get onLive => 'En directo';
 
   @override
-  String get selectSpeaker => 'Selecciona un speaker';
+  String get selectSpeaker => 'Selecciona un ponente';
 
   @override
-  String get onlineNow => 'En línea ahora';
+  String get onlineNow => 'En Directo Ahora';
+
+  @override
+  String get noLiveStreamAvailable => 'No hay directos disponibles';
 }
+

@@ -260,7 +260,7 @@ void main() {
             uid: 'sponsor1',
             name: 'Company',
             eventUID: '',
-            type: '',
+            type: 'gold',
             logo: '',
             website: '',
           );
@@ -344,7 +344,7 @@ void main() {
             Sponsor(
               uid: 'spons1',
               name: 'Sponsor 1',
-              type: '',
+              type: 'gold',
               logo: '',
               website: '',
               eventUID: '',

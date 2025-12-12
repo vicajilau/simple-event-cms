@@ -554,4 +554,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onlineNow => 'Online Now';
+
+  @override
+  String get noLiveStreamAvailable => 'No live streams available';
 }

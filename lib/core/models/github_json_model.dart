@@ -9,16 +9,16 @@ class GithubJsonModel {
   /// the name of the room where the event_collection will take place
   final List<Track> tracks;
 
-  /// Lista de sesiones del evento
+  /// List of event sessions
   final List<Session> sessions;
 
-  /// Lista de días de la agenda del evento
+  /// List of event agenda days
   final List<AgendaDay> agendadays;
 
-  /// Lista de patrocinadores del evento
+  /// List of event sponsors
   final List<Sponsor> sponsors;
 
-  /// Lista de ponentes del evento
+  /// List of event speakers
   final List<Speaker> speakers;
 
   /// Creates a new event instance
