@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:github/github.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/annotations.dart';
@@ -8,6 +10,7 @@ import 'package:sec/core/models/event_dates.dart';
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
+import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/remote_data/update_data/data_update.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -43,6 +46,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   ConfigUseCase,
   DataLoaderManager,
   DataUpdateManager,
+  DataUpdate,
   EventCollectionViewModel,
   EventDates,
   EventDetailViewModel,
@@ -50,7 +54,10 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   EventUseCase,
   GitHub,
   GoRouter,
+  HttpClient,
   OnLiveViewModel,
+  RepositoriesService,
+  RepositoryContents,
   SecRepository,
   SecureInfo,
   Social,
@@ -59,5 +66,6 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   SponsorUseCase,
   SponsorViewModel,
   TokenRepository,
+
 ])
 void main() {}
