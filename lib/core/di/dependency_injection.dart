@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/routing/check_org.dart';
+import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
@@ -39,7 +40,10 @@ Future<void> setupDependencies() async {
   await ConfigLoader.loadOrganization();
 
   // Core services
+
+  getIt.registerLazySingleton<CommonsServices>(() => CommonsServicesImp());
   getIt.registerLazySingleton<DataLoaderManager>(() => DataLoaderManager());
+  getIt.registerSingleton<DataUpdate>(DataUpdate());
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());
@@ -60,7 +64,6 @@ Future<void> setupDependencies() async {
     () => EventCollectionViewModelImp(),
   );
   getIt.registerLazySingleton<AgendaViewModel>(() => AgendaViewModelImp());
-  getIt.registerLazySingleton<CommonsServices>(() => CommonsServicesImp());
   getIt.registerLazySingleton<ConfigViewModel>(() => ConfigViewModelImpl());
   getIt.registerLazySingleton<SpeakerViewModel>(() => SpeakerViewModelImpl());
   getIt.registerLazySingleton<SponsorViewModel>(() => SponsorViewModelImpl());

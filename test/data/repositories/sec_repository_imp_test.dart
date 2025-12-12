@@ -19,41 +19,110 @@ void main() {
   late MockDataLoaderManager mockDataLoaderManager;
   late MockDataUpdateManager mockDataUpdateManager;
   late MockCommonsServices mockCommonsServices;
+  late DataUpdate dataUpdate;
 
   setUpAll(() async {
-
     mockCommonsServices = MockCommonsServices();
     mockDataLoaderManager = MockDataLoaderManager();
     mockDataUpdateManager = MockDataUpdateManager();
-    when(mockDataLoaderManager.loadSponsors()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllEventData()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllDays()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadEvents()).thenAnswer((_)=> Future.value([]));
-    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer(
-            (_) async => Response('{}', 200),);
+    getIt.registerSingleton<CommonsServices>(mockCommonsServices);
+    getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
+    dataUpdate = DataUpdate();
 
+    // Mock setup for DataUpdate static methods
+    when(
+      dataUpdate.addItemAndAssociations,
+    ).thenReturn((item, parentId) async {});
+    when(
+      dataUpdate.addItemListAndAssociations,
+    ).thenReturn((items, {overrideData = false}) async {});
+    when(dataUpdate.deleteItemAndAssociations).thenReturn(
+      (
+        itemId,
+        itemType, {
+        eventUID,
+        agendaDayUidSelected = "",
+        overrideData = false,
+      }) async {},
+    );
 
-    when(mockDataUpdateManager.updateAgendaDay(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateAgendaDays(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateEvent(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateEvents(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateOrganization(any)).thenAnswer((_)=> Future.value());
-    when(mockDataUpdateManager.updateSession(any, any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSpeaker(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSpeakers(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSponsors(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSponsorsList(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSessions(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateTracks(any)).thenAnswer((_)=> Future.value([]));
+    when(
+      mockDataLoaderManager.loadSponsors(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadSpeakers(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllSessions(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllTracks(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllEventData(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllDays(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadEvents(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockCommonsServices.updateAllData(any, any, any),
+    ).thenAnswer((_) async => Response('{}', 200));
 
-    when(mockCommonsServices.updateData(any,any,any,any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateDataList(any,any,any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateSingleData(any,any,any)).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockDataUpdateManager.updateAgendaDay(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateAgendaDays(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateEvent(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateEvents(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateOrganization(any),
+    ).thenAnswer((_) => Future.value());
+    when(
+      mockDataUpdateManager.updateSession(any, any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSpeaker(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSpeakers(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSponsors(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSponsorsList(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSessions(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateTrack(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateTracks(any),
+    ).thenAnswer((_) => Future.value([]));
+
+    when(
+      mockCommonsServices.updateData(any, any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateAllData(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateDataList(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateSingleData(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
 
     getIt.registerSingleton<Config>(
       Config(
@@ -234,6 +303,177 @@ void main() {
         // Assert
         expect(result, isA<Error>());
         expect((result as Error).error, isA<NetworkException>());
+      });
+    });
+
+    // Add tests for save methods
+    group('saveEvent', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.saveEvent(
+          Event(
+            uid: '1',
+            tracks: [],
+            eventName: '',
+            year: '',
+            primaryColor: '',
+            secondaryColor: '',
+            eventDates: MockEventDates(),
+          ),
+        );
+        expect(result, isA<Ok>());
+      });
+
+      test('should return Error on CertainException', () async {
+        when(dataUpdate.addItemAndAssociations).thenReturn((
+          item,
+          parentId,
+        ) async {
+          throw const CertainException('error');
+        });
+        final result = await secRepository.saveEvent(
+          Event(
+            uid: '1',
+            tracks: [],
+            eventName: '',
+            year: '',
+            primaryColor: '',
+            secondaryColor: '',
+            eventDates: MockEventDates(),
+          ),
+        );
+        expect(result, isA<Error>());
+      });
+
+      test('should return Error on generic Exception', () async {
+        when(dataUpdate.addItemAndAssociations).thenReturn((
+          item,
+          parentId,
+        ) async {
+          throw Exception('error');
+        });
+        final result = await secRepository.saveEvent(
+          Event(
+            uid: '1',
+            tracks: [],
+            eventName: '',
+            year: '',
+            primaryColor: '',
+            secondaryColor: '',
+            eventDates: MockEventDates(),
+          ),
+        );
+        expect(result, isA<Error>());
+      });
+    });
+
+    group('saveSpeaker', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.saveSpeaker(
+          Speaker(
+            uid: '1',
+            name: '',
+            bio: '',
+            image: '',
+            social: MockSocial(),
+            eventUIDS: [],
+          ),
+          'parentId',
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('saveSponsor', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.saveSponsor(
+          Sponsor(
+            uid: '1',
+            name: '',
+            logo: '',
+            type: '',
+            website: '',
+            eventUID: '',
+          ),
+          'parentId',
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('addSession', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.addSession(
+          Session(
+            uid: '1',
+            title: '',
+            time: '',
+            speakerUID: '',
+            eventUID: '',
+            type: '',
+            agendaDayUID: '',
+          ),
+          'trackUID',
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('addSpeaker', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.addSpeaker(
+          'eventId',
+          Speaker(
+            uid: '1',
+            name: '',
+            bio: '',
+            image: '',
+            social: MockSocial(),
+            eventUIDS: [],
+          ),
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    // Add tests for remove methods
+    group('removeEvent', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.removeEvent('eventId');
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('removeAgendaDay', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.removeAgendaDay(
+          'agendaDayId',
+          'eventUID',
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('removeSpeaker', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.removeSpeaker(
+          'speakerId',
+          'eventUID',
+        );
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('removeSponsor', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.removeSponsor('sponsorId');
+        expect(result, isA<Ok>());
+      });
+    });
+
+    group('deleteSession', () {
+      test('should return Ok when successful', () async {
+        final result = await secRepository.deleteSession('sessionId');
+        expect(result, isA<Ok>());
       });
     });
 
@@ -616,17 +856,19 @@ void main() {
         branch: '',
       );
 
-        test('should return Ok when saving is successful', () async {
-
+      test('should return Ok when saving is successful', () async {
         final result = await secRepository.saveConfig(config);
 
         expect(result, isA<Ok<void>>());
       });
 
       test('should return Error on exception', () async {
-        when(
-          DataUpdate.addItemAndAssociations(config, ""),
-        ).thenThrow(Exception('error'));
+        when(dataUpdate.addItemAndAssociations).thenReturn((
+          item,
+          parentId,
+        ) async {
+          throw Exception('error');
+        });
 
         final result = await secRepository.saveConfig(config);
 

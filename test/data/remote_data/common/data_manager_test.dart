@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/data_manager.dart';
 
@@ -10,15 +11,19 @@ void main() {
   // Declare mock instances and the class under test
   late MockDataLoaderManager mockDataLoaderManager;
   late MockDataUpdateManager mockDataUpdateManager;
+  late DataUpdate dataUpdate;
 
   setUp(() {
     // Initialize mocks before each test
     mockDataLoaderManager = MockDataLoaderManager();
     mockDataUpdateManager = MockDataUpdateManager();
+    setupDependencies();
+    dataUpdate = DataUpdate();
+
 
     // Override static instances in the DataUpdate class with our mocks
-    DataUpdate.dataLoader = mockDataLoaderManager;
-    DataUpdate.dataUpdateInfo = mockDataUpdateManager;
+    dataUpdate.dataLoader = mockDataLoaderManager;
+    dataUpdate.dataUpdateInfo = mockDataUpdateManager;
   });
 
   group('DataUpdate Tests', () {
@@ -32,7 +37,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(itemId, 'Event');
+        await dataUpdate.deleteItemAndAssociations(itemId, 'Event');
 
         // Assert
         verify(mockDataUpdateManager.removeEvent(itemId)).called(1);
@@ -53,7 +58,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(sessionId, 'Session');
+        await dataUpdate.deleteItemAndAssociations(sessionId, 'Session');
 
         // Assert
         verify(mockDataLoaderManager.loadAllTracks()).called(1);
@@ -69,7 +74,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.deleteItemAndAssociations(itemId, itemType),
+            () => dataUpdate.deleteItemAndAssociations(itemId, itemType),
             throwsA(isA<Exception>()),
           );
         },
@@ -94,7 +99,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(event, null);
+        await dataUpdate.addItemAndAssociations(event, null);
 
         // Assert
         verify(mockDataUpdateManager.updateEvent(event)).called(1);
@@ -117,7 +122,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(session, parentId);
+        await dataUpdate.addItemAndAssociations(session, parentId);
 
         // Assert
         verify(
@@ -141,7 +146,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(speaker, parentId);
+        await dataUpdate.addItemAndAssociations(speaker, parentId);
 
         // Assert
         expect(speaker.eventUIDS, contains(parentId));
@@ -156,7 +161,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.addItemAndAssociations(unsupportedItem, null),
+            () => dataUpdate.addItemAndAssociations(unsupportedItem, null),
             throwsA(isA<Exception>()),
           );
         },
@@ -188,7 +193,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(sessions);
+          await dataUpdate.addItemListAndAssociations(sessions);
 
           // Assert
           verify(mockDataLoaderManager.loadAllSessions()).called(1);
@@ -201,7 +206,7 @@ void main() {
         final emptyList = [];
 
         // Act
-        await DataUpdate.addItemListAndAssociations(emptyList);
+        await dataUpdate.addItemListAndAssociations(emptyList);
 
         // Assert
         verifyZeroInteractions(mockDataLoaderManager);
@@ -216,7 +221,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.addItemListAndAssociations(unsupportedList),
+            () => dataUpdate.addItemListAndAssociations(unsupportedList),
             throwsA(isA<Exception>()),
           );
         },
@@ -247,7 +252,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(speaker, parentId);
+          await dataUpdate.addItemAndAssociations(speaker, parentId);
 
           // Assert
           expect(speaker.eventUIDS, contains(parentId));
@@ -273,7 +278,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(sponsor, parentId);
+          await dataUpdate.addItemAndAssociations(sponsor, parentId);
 
           // Assert
           expect(sponsor.eventUID, parentId);
@@ -298,7 +303,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(config, null);
+          await dataUpdate.addItemAndAssociations(config, null);
 
           // Assert
           verify(mockDataUpdateManager.updateOrganization(config)).called(1);
@@ -331,7 +336,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(speakers);
+          await dataUpdate.addItemListAndAssociations(speakers);
 
           // Assert
           verify(mockDataLoaderManager.loadSpeakers()).called(1);
@@ -361,7 +366,7 @@ void main() {
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(sponsors);
+          await dataUpdate.addItemListAndAssociations(sponsors);
 
           // Assert
           verify(mockDataLoaderManager.loadSponsors()).called(1);
@@ -384,7 +389,7 @@ void main() {
           ).thenAnswer((_) async {});
 
           // Act
-          await DataUpdate.deleteItemAndAssociations(
+          await dataUpdate.deleteItemAndAssociations(
             speakerId,
             'Speaker',
             eventUID: eventUID,
@@ -407,7 +412,7 @@ void main() {
           ).thenAnswer((_) async {});
 
           // Act
-          await DataUpdate.deleteItemAndAssociations(sponsorId, 'Sponsor');
+          await dataUpdate.deleteItemAndAssociations(sponsorId, 'Sponsor');
 
           // Assert
           verify(mockDataUpdateManager.removeSponsors(sponsorId)).called(1);
@@ -443,7 +448,7 @@ void main() {
 
       // Act
       // Esta llamada fallaría con el error 'Null check operator' si el código no se corrige.
-      await DataUpdate.addItemAndAssociations(track, parentId);
+      await dataUpdate.addItemAndAssociations(track, parentId);
 
       // Assert
       verify(mockDataUpdateManager.updateTrack(track)).called(1);
@@ -477,7 +482,7 @@ void main() {
 
         // Act & Assert
         expect(
-          () => DataUpdate.deleteItemAndAssociations(trackId, 'Track'),
+          () => dataUpdate.deleteItemAndAssociations(trackId, 'Track'),
           throwsA(isA<Exception>()),
         );
       },
@@ -501,7 +506,7 @@ void main() {
       when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
 
       // Act
-      await DataUpdate.addItemAndAssociations(track, parentId);
+      await dataUpdate.addItemAndAssociations(track, parentId);
 
       // Assert
       verify(mockDataUpdateManager.updateTrack(track)).called(1);
@@ -530,7 +535,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemListAndAssociations(tracks);
+        await dataUpdate.addItemListAndAssociations(tracks);
 
         // Assert
         verify(mockDataLoaderManager.loadAllTracks()).called(1);
@@ -553,7 +558,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(day, parentId);
+        await dataUpdate.addItemAndAssociations(day, parentId);
 
         // Assert
         // Comprueba que el ID del evento padre se ha añadido a la lista del día
@@ -578,7 +583,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemListAndAssociations(days);
+        await dataUpdate.addItemListAndAssociations(days);
 
         // Assert
         verify(mockDataLoaderManager.loadAllDays()).called(1);
@@ -611,7 +616,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(
+        await dataUpdate.deleteItemAndAssociations(
           dayId,
           'AgendaDay',
           eventUID: eventId,
@@ -645,7 +650,7 @@ void main() {
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(
+        await dataUpdate.deleteItemAndAssociations(
           dayId,
           'AgendaDay',
           eventUID: eventId,
@@ -724,7 +729,7 @@ void main() {
 
         // Act
         // Llamamos a la función pública que desencadena la lógica a probar
-        await DataUpdate.deleteItemAndAssociations(trackIdToRemove, 'Track');
+        await dataUpdate.deleteItemAndAssociations(trackIdToRemove, 'Track');
 
         // Assert
         // Capturamos el objeto AgendaDay que se pasa a updateAgendaDay
@@ -777,7 +782,7 @@ void main() {
         ).thenAnswer((_) async {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(trackToAdd, parentDayId);
+        await dataUpdate.addItemAndAssociations(trackToAdd, parentDayId);
 
         // Assert
         // Verificamos la llamada a updateTrack, que es parte de la función principal
