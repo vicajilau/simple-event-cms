@@ -270,51 +270,54 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: SectionInputForm(
-                          label: location.roomLabel,
-                          childInput: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: DropdownButtonFormField<String>(
-                                  autovalidateMode:
-                                      AutovalidateMode.onUserInteraction,
-                                  initialValue: _selectedTrackUid.isEmpty
-                                      ? null
-                                      : _selectedTrackUid,
-                                  decoration: InputDecoration(
-                                    hintText: location
-                                        .selectRoomHint, // This is track
-                                  ),
-                                  items: tracks
-                                      .map(
-                                        (track) => DropdownMenuItem(
-                                          value: track.uid,
-                                          child: Text(track.name),
-                                        ),
-                                      )
-                                      .toList(),
-                                  onChanged: (trackUid) => setState(
-                                    () => _selectedTrackUid = trackUid ?? '',
-                                  ),
-                                  validator: (value) {
-                                    return value == null || value.isEmpty
-                                        ? location.selectRoomError
-                                        : null;
-                                  },
+                    ],
+                  ),
+                  SizedBox(height: _spacing),
+                  Column(
+                    children: [
+                      SectionInputForm(
+                        label: location.roomLabel,
+                        childInput: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                initialValue: _selectedTrackUid.isEmpty
+                                    ? null
+                                    : _selectedTrackUid,
+                                decoration: InputDecoration(
+                                  hintText:
+                                      location.selectRoomHint, // This is track
                                 ),
-                              ),
-                              IconButton(
-                                icon: Icon(
-                                  key: Key("add_room_button"),
-                                  Icons.add,
-                                  color: Theme.of(context).primaryColor,
+                                items: tracks
+                                    .map(
+                                      (track) => DropdownMenuItem(
+                                        value: track.uid,
+                                        child: Text(track.name),
+                                      ),
+                                    )
+                                    .toList(),
+                                onChanged: (trackUid) => setState(
+                                  () => _selectedTrackUid = trackUid ?? '',
                                 ),
-                                onPressed: () => _showAddTrackDialog(),
+                                validator: (value) {
+                                  return value == null || value.isEmpty
+                                      ? location.selectRoomError
+                                      : null;
+                                },
                               ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                              icon: Icon(
+                                key: Key("add_room_button"),
+                                Icons.add,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: () => _showAddTrackDialog(),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -378,8 +381,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                 initialValue: _selectedSpeaker,
                                 decoration: InputDecoration(
                                   hintText: speakers.isEmpty
-                                      ? location
-                                            .selectSpeaker
+                                      ? location.selectSpeaker
                                       : location.selectSpeakerHint,
                                 ),
                                 items: speakers
@@ -418,14 +420,14 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                                 // Allow adding a new speaker
                                 final newSpeaker =
                                     await Navigator.push<Speaker>(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => SpeakerFormScreen(
-                                      eventUID:
-                                          widget.data!.eventId.toString(),
-                                    ),
-                                  ),
-                                );
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SpeakerFormScreen(
+                                          eventUID: widget.data!.eventId
+                                              .toString(),
+                                        ),
+                                      ),
+                                    );
                                 if (newSpeaker != null) {
                                   await widget.viewmodel.addSpeaker(
                                     widget.data!.eventId.toString(),
@@ -441,32 +443,33 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                           ],
                         ),
                       ),
-                      SizedBox(width: _spacingForRowDropdown), // Consistent spacing
+                      SizedBox(
+                        width: _spacingForRowDropdown,
+                      ), // Consistent spacing
                       SectionInputForm(
                         label: location.talkTypeLabel,
                         childInput: DropdownButtonFormField(
-                            autovalidateMode:
-                                AutovalidateMode.onUserInteraction,
-                            initialValue: _selectedTalkType.isEmpty
-                                ? null
-                                : _selectedTalkType,
-                            decoration: InputDecoration(
-                              hintText: location.selectTalkTypeHint,
-                            ),
-                            items: sessionTypes
-                                .map(
-                                  (type) => DropdownMenuItem(
-                                    value: type,
-                                    child: Text(type),
-                                  ),
-                                )
-                                .toList(),
-                            onChanged: (type) => _selectedTalkType = type ?? '',
-                            validator: (value) {
-                              return value == null || value.isEmpty
-                                  ? location.selectTalkTypeError
-                                  : null;
-                            },
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          initialValue: _selectedTalkType.isEmpty
+                              ? null
+                              : _selectedTalkType,
+                          decoration: InputDecoration(
+                            hintText: location.selectTalkTypeHint,
+                          ),
+                          items: sessionTypes
+                              .map(
+                                (type) => DropdownMenuItem(
+                                  value: type,
+                                  child: Text(type),
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (type) => _selectedTalkType = type ?? '',
+                          validator: (value) {
+                            return value == null || value.isEmpty
+                                ? location.selectTalkTypeError
+                                : null;
+                          },
                         ),
                       ),
                     ],
@@ -522,7 +525,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                 _selectedTalkType.isNotEmpty;
 
             if (!isFormValid || !areStateFieldsValid) {
-             return;
+              return;
             }
 
             bool isTimeValid = true;
@@ -551,7 +554,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
               _titleController.text,
               _initSessionTime,
               _endSessionTime,
-              _selectedSpeaker!, 
+              _selectedSpeaker!,
               _descriptionController.text,
               _selectedTalkType,
               widget.data!.eventId.toString(),
