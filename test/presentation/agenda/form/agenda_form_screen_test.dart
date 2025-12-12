@@ -17,6 +17,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late MockAgendaFormViewModel mockViewModel;
 
+  final String eventId = 'event1';
   final agendaDay = AgendaDay(
     uid: 'day1',
     date: '2024-01-01',
@@ -46,6 +47,16 @@ void main() {
     primaryColor: '',
     secondaryColor: '',
     eventDates: MockEventDates(),
+  );
+  final session = Session(
+    uid: 'session1',
+    title: 'Session 1',
+    eventUID: eventId,
+    agendaDayUID: 'day1',
+    speakerUID: 'speaker1',
+    type: 'talk',
+    description: 'description',
+    time: '',
   );
 
   setUpAll(() async {
@@ -99,6 +110,50 @@ void main() {
     );
   }
 
+  group('AgendaFormData copyWith', () {
+    test('The copyWith method should update only the provided fields', () {
+      final original = AgendaFormData(
+        session: session,
+        trackId: 'track1',
+        agendaDayId: 'day1',
+        eventId: 'event1',
+      );
+
+      final updated = original.copyWith(trackId: 'track2');
+
+      expect(updated.trackId, equals('track2'));
+      expect(updated.session, equals(original.session));
+      expect(updated.agendaDayId, equals(original.agendaDayId));
+      expect(updated.eventId, equals(original.eventId));
+    });
+
+    test(
+      'The copyWith method should keep original values when no params are passed',
+      () {
+        final original = AgendaFormData(
+          session: session,
+          trackId: 'track1',
+          agendaDayId: 'day1',
+          eventId: 'event1',
+        );
+
+        final copy = original.copyWith();
+
+        expect(copy.session, equals(original.session));
+        expect(copy.trackId, equals(original.trackId));
+        expect(copy.agendaDayId, equals(original.agendaDayId));
+        expect(copy.eventId, equals(original.eventId));
+      },
+    );
+
+    test('The copyWith method should create a new instance', () {
+      final original = AgendaFormData(eventId: eventId, trackId: 'track1');
+      final copy = original.copyWith(trackId: 'track2');
+
+      expect(copy, isNot(same(original)));
+    });
+  });
+
   testWidgets('shows loading indicator when view state is loading', (
     WidgetTester tester,
   ) async {
@@ -111,23 +166,23 @@ void main() {
     expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 
-  /*testWidgets('shows error dialog when view state is error', (
-    WidgetTester tester,
-  ) async {
-    when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
-    when(mockViewModel.errorMessage).thenReturn('An error occurred');
+  // testWidgets('shows error dialog when view state is error', (
+  //   WidgetTester tester,
+  // ) async {
+  //   when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.error));
+  //   when(mockViewModel.errorMessage).thenReturn('An error occurred');
 
-    await tester.pumpWidget(
-      createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
-    );
-    await tester.pump();
+  //   await tester.pumpWidget(
+  //     createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
+  //   );
+  //   await tester.pump();
 
-    expect(find.text('An error occurred'), findsOneWidget);
-    await tester.tap(find.text('Close'));
-    await tester.pump();
+  //   expect(find.text('An error occurred'), findsOneWidget);
+  //   await tester.tap(find.text('Close'));
+  //   await tester.pump();
 
-    verify(mockViewModel.setErrorKey(null)).called(1);
-  });*/
+  //   verify(mockViewModel.setErrorKey(null)).called(1);
+  // });
 
   /*testWidgets('create new session and save it', (WidgetTester tester) async {
     when(

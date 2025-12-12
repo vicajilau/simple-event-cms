@@ -54,23 +54,48 @@ void main() {
     viewModel = AgendaViewModelImp();
   });
 
-  group('AgendaViewModelImp', () {
-    const eventId = 'event1';
-    final agendaDays = [
-      AgendaDay(uid: '2023-01-01', date: '2023-01-01', eventsUID: [eventId]),
-    ];
-    final speakers = [
-      Speaker(
-        uid: '1',
-        name: 'Speaker 1',
-        bio: '',
-        social: Social(),
-        eventUIDS: [eventId],
-        image: '',
-      ),
-    ];
+  const eventId = 'event1';
+  final agendaDays = <AgendaDay>[
+    AgendaDay(
+      uid: '2023-01-01',
+      date: '2023-01-01',
+      eventsUID: const [eventId],
+      resolvedTracks: [
+        Track(
+          uid: 'track-1',
+          name: 'Track 1',
+          color: '',
+          eventUid: eventId,
+          sessionUids: const ['s1'],
+          resolvedSessions: [
+            Session(
+              uid: 's1',
+              title: 'Session 1',
+              time: '10:00',
+              eventUID: eventId, // ← match event
+              agendaDayUID: '2023-01-01', // ← match day uid
+              speakerUID: '1',
+              type: 'talk',
+              description: 'desc',
+            ),
+          ],
+        ),
+      ],
+    ),
+  ];
+  final speakers = [
+    Speaker(
+      uid: '1',
+      name: 'Speaker 1',
+      bio: '',
+      social: Social(),
+      eventUIDS: [eventId],
+      image: '',
+    ),
+  ];
 
-    /*test('loadAgendaDays success', () async {
+  group('AgendaViewModelImp', () {
+    test('loadAgendaDays success', () async {
       when(
         mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
       ).thenAnswer((_) async => Result.ok(agendaDays));
@@ -83,7 +108,7 @@ void main() {
       expect(viewModel.viewState.value, ViewState.loadFinished);
       expect(viewModel.agendaDays.value, agendaDays);
       expect(viewModel.speakers.value, speakers);
-    });*/
+    });
 
     test('loadAgendaDays failure on getting agenda', () async {
       when(mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId)).thenAnswer(
@@ -190,6 +215,92 @@ void main() {
         mockCheckTokenSavedUseCase.checkToken(),
       ).thenAnswer((_) async => false);
       expect(await viewModel.checkToken(), isFalse);
+    });
+  });
+
+  group('dispose', () {
+    test('No excdeption thrown from the dispose', () {
+      final vm = AgendaViewModelImp();
+      expect(() => vm.dispose(), returnsNormally);
+    });
+  });
+
+  group('setup', () {
+    test(
+      ' Call setup with argument String so the method loadAgendaDays is called',
+      () async {
+        when(
+          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
+        ).thenAnswer((_) async => Result.ok(agendaDays));
+        when(
+          mockAgendaUseCase.getSpeakersForEventId(eventId),
+        ).thenAnswer((_) async => Result.ok(speakers));
+
+        await viewModel.setup(eventId);
+        await Future<void>.delayed(Duration.zero);
+
+        verify(
+          mockAgendaUseCase.getAgendaDayByEventIdFiltered(eventId),
+        ).called(1);
+        verify(mockAgendaUseCase.getSpeakersForEventId(eventId)).called(1);
+
+        expect(viewModel.viewState.value, ViewState.loadFinished);
+        expect(viewModel.agendaDays.value, isNotEmpty);
+        expect(viewModel.speakers.value, speakers);
+      },
+    );
+
+    test(
+      'Call the setup method with an argument that is not a String or its a null so the method does nothing',
+      () async {
+        await viewModel.setup(42);
+        verifyNever(mockAgendaUseCase.getAgendaDayByEventIdFiltered(any));
+        verifyNever(mockAgendaUseCase.getSpeakersForEventId(any));
+        expect(viewModel.viewState.value, ViewState.isLoading);
+
+        await viewModel.setup(null);
+        verifyNever(mockAgendaUseCase.getAgendaDayByEventIdFiltered(any));
+        verifyNever(mockAgendaUseCase.getSpeakersForEventId(any));
+        expect(viewModel.viewState.value, ViewState.isLoading);
+      },
+    );
+  });
+
+  group('getSpeakersForEventId', () {
+    test('getSpeakersForEventId returns Result.ok', () async {
+      const eventId = 'event-1';
+      final speakers = <Speaker>[
+        Speaker(
+          uid: 'sp1',
+          name: 'Speaker 1',
+          bio: '',
+          image: '',
+          social: Social(),
+          eventUIDS: const [eventId],
+        ),
+      ];
+
+      when(
+        mockAgendaUseCase.getSpeakersForEventId(eventId),
+      ).thenAnswer((_) async => Result.ok(speakers));
+      final result = await viewModel.getSpeakersForEventId(eventId);
+
+      expect(result, isA<Ok>());
+    });
+
+    test('getSpeakersForEventId returns Result.error', () async {
+      const eventId = 'event-1';
+
+      when(mockAgendaUseCase.getSpeakersForEventId(eventId)).thenAnswer(
+        (_) async => Result.error(
+          NetworkException(
+            'An unexpected error occurred. Please try again later.',
+          ),
+        ),
+      );
+      final result = await viewModel.getSpeakersForEventId(eventId);
+
+      expect(result, isA<Error>());
     });
   });
 }
