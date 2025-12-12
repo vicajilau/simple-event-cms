@@ -12,12 +12,13 @@ import '../common/commons_api_services.dart';
 /// Supports both local asset loading and remote HTTP loading based on configuration
 class DataLoaderManager {
   static final Config config = getIt<Config>();
+  SecureInfo get secureInfo => getIt<SecureInfo>();
   static final CommonsServices commonsServices = getIt<CommonsServices>();
   static GithubJsonModel? _allData;
   static DateTime? _lastFetchTime;
 
   Future<void> loadAllEventData({bool forceUpdate = false}) async {
-    var githubDataSaving = await SecureInfo.getGithubKey();
+    var githubDataSaving = await secureInfo.getGithubKey();
     // Check if data is already loaded and if it's been less than 5 minutes
     if (_allData != null &&
         _lastFetchTime != null &&
@@ -89,7 +90,7 @@ class DataLoaderManager {
   /// Loads event information from the githubItem.json file
   Future<List<Event>> loadEvents() async {
     await loadAllEventData();
-    var githubService = await SecureInfo.getGithubKey();
+    var githubService = await secureInfo.getGithubKey();
 
     List<Event> jsonList = _allData?.events ?? List.empty();
     if (jsonList.isEmpty ||

@@ -40,9 +40,10 @@ class EventDetailViewModelImp extends EventDetailViewModel {
 
   @override
   Future<void> loadEventData(String eventId) async {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     viewState.value = ViewState.isLoading;
     final result = await useCase.getEvents();
-    var githubService = await SecureInfo.getGithubKey();
+    var githubService = await secureInfo.getGithubKey();
 
 
     switch (result) {
