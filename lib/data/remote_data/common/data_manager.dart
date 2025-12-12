@@ -484,15 +484,16 @@ Future<void> _updateAgendaDaysAddingTrack(
   Track track,
   DataUpdateManager dataUpdateInfo,
 ) async {
-  if (days.length == 1) {
-    await _addTrackFromDay(days.first, track);
-    await dataUpdateInfo.updateAgendaDay(days.first);
-  } else {
-    days.map((day) async {
-      await _addTrackFromDay(day, track);
-    });
-    await dataUpdateInfo.updateAgendaDays(days);
+  for (var day in days) {
+    // SOLUCIÓN:
+    // 1. Si trackUids es null, inicialízalo como una lista vacía.
+    day.trackUids ??= [];
+    // 2. Añade el uid del track a la lista (que ahora sabemos que no es null).
+    if (!day.trackUids!.contains(track.uid)) {
+      day.trackUids!.add(track.uid);
+    }
   }
+  await dataUpdateInfo.updateAgendaDays(days, overrideData: false);
 }
 
 Future<AgendaDay> _removeTrackFromDay(AgendaDay day, String trackId) async {
@@ -509,22 +510,5 @@ Future<AgendaDay> _removeTrackFromDay(AgendaDay day, String trackId) async {
       day.resolvedTracks!.removeAt(resolvedTrackIndex);
     }
   }
-  return Future.value(day);
-}
-
-Future<AgendaDay> _addTrackFromDay(AgendaDay day, Track track) async {
-  final trackUidIndex = day.trackUids?.indexOf(track.uid);
-  if (trackUidIndex == null || trackUidIndex == -1) {
-    day.trackUids?.toList().add(track.uid);
-  }
-
-  final resolvedTrackIndex = day.resolvedTracks!.indexWhere(
-    (t) => t.uid == track.uid,
-  );
-  if (resolvedTrackIndex != -1) {
-    day.resolvedTracks!.removeAt(resolvedTrackIndex);
-  }
-  day.resolvedTracks?.toList().add(track);
-
   return Future.value(day);
 }

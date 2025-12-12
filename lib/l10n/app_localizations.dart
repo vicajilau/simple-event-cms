@@ -833,7 +833,7 @@ abstract class AppLocalizations {
   /// No description provided for @tokenHintLabel.
   ///
   /// In en, this message translates to:
-  /// **'Introduce tu client secret para continuar'**
+  /// **'Enter your client secret to continue'**
   String get tokenHintLabel;
 
   /// No description provided for @tokenHint.

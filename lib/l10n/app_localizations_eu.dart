@@ -290,7 +290,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get startDateLabel => 'Hasiera data';
 
   @override
-  String get dateHint => 'UUUU-HH-EE';
+  String get dateHint => 'YYYY-MM-DD';
 
   @override
   String get endDateLabel => 'Amaiera data';
@@ -375,7 +375,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenHintLabel => 'Introduce tu client secret para continuar';
+  String get tokenHintLabel => 'Sartu zure bezeroaren sekretua jarraitzeko';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
