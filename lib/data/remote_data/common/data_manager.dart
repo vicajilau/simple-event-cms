@@ -485,10 +485,7 @@ Future<void> _updateAgendaDaysAddingTrack(
   DataUpdateManager dataUpdateInfo,
 ) async {
   for (var day in days) {
-    // SOLUCIÓN:
-    // 1. Si trackUids es null, inicialízalo como una lista vacía.
     day.trackUids ??= [];
-    // 2. Añade el uid del track a la lista (que ahora sabemos que no es null).
     if (!day.trackUids!.contains(track.uid)) {
       day.trackUids!.add(track.uid);
     }
