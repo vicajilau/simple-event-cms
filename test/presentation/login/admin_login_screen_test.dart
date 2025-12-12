@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/presentation/ui/screens/login/admin_login_screen.dart';
@@ -31,6 +32,7 @@ void main() {
   setUpAll(() {
     // Replace the real Config with a mock for all tests in this file
     mockConfig = MockConfig();
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     getIt.registerSingleton<Config>(mockConfig, signalsReady: true);
     when(mockConfig.projectName).thenReturn('test-project');
   });

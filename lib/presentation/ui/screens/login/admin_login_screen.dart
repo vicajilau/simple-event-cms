@@ -25,6 +25,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   final ValueNotifier<bool> _obscureText = ValueNotifier(true);
 
   Future<void> _submit(BuildContext context) async {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     final location = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
@@ -35,7 +36,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
         // If authentication is successful and there is no exception:
         if (user.login != null) {
-          await SecureInfo.saveGithubKey(
+          await secureInfo.saveGithubKey(
             GithubData(
               token: github.auth.token.toString(),
               projectName: config.projectName,

@@ -23,6 +23,7 @@ void main() {
   late MockEventUseCase mockEventUseCase;
   late MockCheckTokenSavedUseCase mockCheckTokenSavedUseCase;
   late MockConfig mockConfig;
+  late SecureInfo mockSecureInfo;
   const MethodChannel channel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
   );
@@ -32,10 +33,12 @@ void main() {
     mockEventUseCase = MockEventUseCase();
     mockCheckTokenSavedUseCase = MockCheckTokenSavedUseCase();
     mockConfig = MockConfig();
+    mockSecureInfo = SecureInfo();
 
     getIt.registerSingleton<EventUseCase>(mockEventUseCase);
     getIt.registerSingleton<CheckTokenSavedUseCase>(mockCheckTokenSavedUseCase);
     getIt.registerSingleton<Config>(mockConfig, signalsReady: true);
+    getIt.registerSingleton<SecureInfo>(mockSecureInfo);
 
     viewModel = EventDetailViewModelImp();
 
@@ -168,7 +171,7 @@ void main() {
     );
 
     test('notShowReturnArrow should be true when token exists', () async {
-      SecureInfo.saveGithubKey(
+      mockSecureInfo.saveGithubKey(
         GithubData(token: "false_token", projectName: "project_name"),
       );
       when(

@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/core/routing/app_router.dart';
@@ -49,6 +50,7 @@ void main() {
     mockCheckOrg = MockCheckOrg();
     mockRouter = MockGoRouter();
     // Register mocks in GetIt's service locator
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     getIt.registerSingleton<EventCollectionViewModel>(mockViewModel);
     getIt.registerSingleton<Config>(mockConfig);
     getIt.registerSingleton<GoRouter>(mockRouter);
