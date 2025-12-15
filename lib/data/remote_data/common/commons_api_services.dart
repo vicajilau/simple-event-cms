@@ -52,6 +52,8 @@ abstract class CommonsServices {
 class CommonsServicesImp extends CommonsServices {
   late GithubData githubService;
   Config get config => getIt<Config>();
+  SecureInfo get secureInfo => getIt<SecureInfo>();
+
 
   /// Generic method to load data from a specified path
   /// Automatically determines whether to load from local assets or remote URL
@@ -61,7 +63,7 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     final url = 'events/$path';
 
-    final githubService = await SecureInfo.getGithubKey();
+    final githubService = await secureInfo.getGithubKey();
     final github = GitHub(
       auth: githubService.token == null
           ? Authentication.anonymous()
@@ -69,7 +71,7 @@ class CommonsServicesImp extends CommonsServices {
     );
     final repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
 
     late final RepositoryContents res; // <- late
@@ -203,9 +205,9 @@ class CommonsServicesImp extends CommonsServices {
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
@@ -334,10 +336,10 @@ class CommonsServicesImp extends CommonsServices {
     final Config orgToUse = (data is Config) ? data as Config : config;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
     );
     setOrganization(orgToUse);
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
@@ -493,7 +495,7 @@ class CommonsServicesImp extends CommonsServices {
     // GitHub API doesn't have a "remove item from JSON" endpoint.
     // You must read the file, remove the item locally, and write the entire file back.
 
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw GithubException("GitHub token is not available.");
     }
@@ -505,7 +507,7 @@ class CommonsServicesImp extends CommonsServices {
     try {
       RepositorySlug repositorySlug = RepositorySlug(
         config.githubUser,
-        (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+        (await secureInfo.getGithubKey()).projectName ?? config.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,
@@ -550,7 +552,7 @@ class CommonsServicesImp extends CommonsServices {
     };
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
@@ -609,9 +611,9 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
@@ -741,9 +743,9 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }
@@ -874,9 +876,9 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await SecureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
     );
-    githubService = await SecureInfo.getGithubKey();
+    githubService = await secureInfo.getGithubKey();
     if (githubService.token == null) {
       throw Exception("GitHub token is not available.");
     }

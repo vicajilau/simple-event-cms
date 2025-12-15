@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github/github.dart' as gh;
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github/github_model.dart';
@@ -76,6 +77,7 @@ void main() {
     // Set up dependency injection for tests
     await getIt.reset();
     getIt.registerSingleton<Config>(mockConfig);
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     // Register the GitHub mock as a factory so it can be overridden in tests if necessary
     getIt.registerFactory<gh.GitHub>(() => mockGitHub);
 

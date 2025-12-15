@@ -68,6 +68,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     final location = AppLocalizations.of(context)!;
 
     return FutureBuilder(
@@ -89,12 +90,13 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     false, // We handle the back button manually
                 elevation: 0,
                 title: GestureDetector(
+                  key: Key("title_event_detail"),
                   onTap: () async {
                     _titleTapCount++;
 
                     if (_titleTapCount >= 5) {
                       _titleTapCount = 0;
-                      var githubService = await SecureInfo.getGithubKey();
+                      var githubService = await secureInfo.getGithubKey();
                       if (githubService.token == null) {
                         if (context.mounted) {
                           await showDialog<bool>(
@@ -133,7 +135,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                           );
                           if (confirm == true) {
                             setState(() async {
-                              await SecureInfo.removeGithubKey();
+                              await secureInfo.removeGithubKey();
                               await widget.viewmodel.loadEventData(
                                 widget.eventId,
                               );

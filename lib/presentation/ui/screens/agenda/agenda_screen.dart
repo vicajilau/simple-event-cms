@@ -44,6 +44,7 @@ class _AgendaScreenState extends State<AgendaScreen>
     with WidgetsBindingObserver {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
 
+
   @override
   void initState() {
     super.initState();
@@ -350,6 +351,7 @@ class SessionCards extends StatefulWidget {
 class _SessionCardsState extends State<SessionCards> {
   @override
   Widget build(BuildContext context) {
+    final SecureInfo secureInfo = getIt<SecureInfo>();
     final location = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -366,7 +368,7 @@ class _SessionCardsState extends State<SessionCards> {
 
                 return InkWell(
                   onTap: () async {
-                    var githubService = await SecureInfo.getGithubKey();
+                    var githubService = await secureInfo.getGithubKey();
                     if (githubService.token != null &&
                         githubService.token?.isNotEmpty == true) {
                       List<AgendaDay>? agendaDays = await AppRouter.router.push(

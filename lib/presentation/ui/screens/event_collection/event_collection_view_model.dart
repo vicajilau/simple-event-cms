@@ -26,6 +26,7 @@ abstract class EventCollectionViewModel extends ViewModelCommon {
 
 class EventCollectionViewModelImp extends EventCollectionViewModel {
   EventUseCase useCase = getIt<EventUseCase>();
+  SecureInfo secureInfo = getIt<SecureInfo>();
   CheckTokenSavedUseCase checkTokenSavedUseCase =
       getIt<CheckTokenSavedUseCase>();
   final config = getIt<Config>();
@@ -49,7 +50,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
 
   @override
   Future<void> setup([Object? argument]) async {
-    await SecureInfo.saveGithubKey(GithubData(projectName: config.projectName));
+    await secureInfo.saveGithubKey(GithubData(projectName: config.projectName));
     await loadEvents();
   }
 
@@ -199,7 +200,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   Future<bool> _shouldSkipFetch() async {
-    final gitHubService = await SecureInfo.getGithubKey();
+    final gitHubService = await secureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
     final isCacheValid =
         lastEventsFetchTime != null &&
@@ -210,7 +211,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
   }
 
   Future<void> _handleSingleEventNavigation() async {
-    final gitHubService = await SecureInfo.getGithubKey();
+    final gitHubService = await secureInfo.getGithubKey();
     final isTokenNull = gitHubService.token == null;
 
     var positionEventToView = eventsToShow.value.indexWhere(

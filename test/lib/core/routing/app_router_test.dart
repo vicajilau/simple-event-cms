@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/core.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
@@ -52,6 +53,8 @@ void main() {
   setUp(() async {
     await getIt.reset();
     // Dummies and default whens for common scenarios
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
+
     provideDummy<Result<void>>(const Result.ok(null));
     provideDummy<Result<List<Event>>>(const Result.ok([]));
     provideDummy<Result<Event>>(Result.ok(MockEvent()));

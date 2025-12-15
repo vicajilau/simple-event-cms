@@ -2141,7 +2141,7 @@ class MockDataUpdateManager extends _i1.Mock implements _i32.DataUpdateManager {
   @override
   _i13.Future<void> overwriteItems(
     List<dynamic>? itemsToKeep,
-    Type? typeItem,
+    String? typeItem,
   ) =>
       (super.noSuchMethod(
             Invocation.method(#overwriteItems, [itemsToKeep, typeItem]),

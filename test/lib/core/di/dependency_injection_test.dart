@@ -1,5 +1,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -32,6 +33,7 @@ void main() {
       await setupDependencies();
 
       // Assert
+      expect(getIt.isRegistered<SecureInfo>(), isTrue);
       expect(getIt.isRegistered<DataLoaderManager>(), isTrue);
       expect(getIt.isRegistered<SecRepository>(), isTrue);
       expect(getIt.isRegistered<TokenRepository>(), isTrue);
