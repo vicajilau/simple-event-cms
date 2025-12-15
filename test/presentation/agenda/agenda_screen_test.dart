@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/speaker.dart';
@@ -20,9 +21,10 @@ void main() {
 
   late MockAgendaViewModel mockAgendaViewModel;
 
-  setUp(() {
+  setUp(() async {
     // It's good practice to reset GetIt to ensure test isolation.
-    getIt.reset();
+    await getIt.reset();
+    getIt.registerSingleton<SecureInfo>(SecureInfo());
     mockAgendaViewModel = MockAgendaViewModel();
     // The mock will be registered inside each test before the widget is pumped.
   });
