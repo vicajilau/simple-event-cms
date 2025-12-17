@@ -222,6 +222,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   SectionInputForm(
                     label: location.titleLabel,
                     childInput: TextFormField(
+                      key: Key('title_field'),
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                       maxLines: 1,
                       decoration: AppDecorations.textFieldDecoration.copyWith(
@@ -244,6 +245,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         child: SectionInputForm(
                           label: location.eventDayLabel,
                           childInput: DropdownButtonFormField(
+                            key: Key('agenda_day_dropdown'),
                             autovalidateMode:
                                 AutovalidateMode.onUserInteraction,
                             initialValue: _selectedDay.isEmpty
@@ -282,6 +284,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                           children: [
                             Expanded(
                               child: DropdownButtonFormField<String>(
+                                key: Key('room_dropdown'),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 initialValue: _selectedTrackUid.isEmpty
@@ -330,6 +333,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         spacing: _spacingForRowTime,
                         children: [
                           _timeSelector(
+                            key: Key('start_time_picker'),
                             label: '${location.startTimeLabel}\t\t',
                             currentTime: _initSessionTime,
                             onIndexChanged: (value) {
@@ -340,6 +344,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                             isStartTime: true,
                           ),
                           _timeSelector(
+                            key: Key('end_time_picker'),
                             label: '${location.endTimeLabel}\t\t',
                             currentTime: _endSessionTime,
                             onIndexChanged: (value) {
@@ -355,6 +360,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                         Padding(
                           padding: const EdgeInsets.only(top: 8.0),
                           child: Text(
+                            key: const Key('time_error_text'),
                             _timeErrorMessage!,
                             style: TextStyle(
                               color: const Color.fromARGB(255, 194, 67, 58),
@@ -376,6 +382,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                           children: [
                             Expanded(
                               child: DropdownButtonFormField<Speaker>(
+                                key: Key('speaker_dropdown'),
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 initialValue: _selectedSpeaker,
@@ -449,6 +456,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                       SectionInputForm(
                         label: location.talkTypeLabel,
                         childInput: DropdownButtonFormField(
+                          key: Key('talk_type_dropdown'),
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           initialValue: _selectedTalkType.isEmpty
                               ? null
@@ -478,6 +486,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
                   SectionInputForm(
                     label: location.descriptionLabel,
                     childInput: TextFormField(
+                      key: Key('description_field'),
                       maxLines: 4,
                       decoration: AppDecorations.textFieldDecoration.copyWith(
                         hintText: location.talkDescriptionHint,
@@ -512,6 +521,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         ),
         const SizedBox(width: 16),
         FilledButton(
+          key: Key('save_session_button'),
           onPressed: () async {
             setState(() => _timeErrorMessage = null);
 
@@ -578,6 +588,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
   }
 
   Widget _timeSelector({
+    Key? key,
     required String label,
     required TimeOfDay? currentTime,
     required ValueChanged<TimeOfDay> onIndexChanged,
@@ -593,6 +604,7 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
           ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         GestureDetector(
+          key: key,
           onTap: () async {
             final TimeOfDay? pickedTime = await showTimePicker(
               context: context,
