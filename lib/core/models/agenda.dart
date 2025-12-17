@@ -84,6 +84,26 @@ class Track extends GitHubModel {
     );
   }
 
+  Track copyWith({
+    String? uid,
+    String? name,
+    String? color,
+    List<String>? sessionUids,
+    String? eventUid,
+    List<Session>? resolvedSessions,
+  }){
+    return Track(
+      uid: uid ?? this.uid,
+      name: name ?? this.name,
+      color: color ?? this.color,
+      sessionUids: sessionUids ?? this.sessionUids,
+      eventUid: eventUid ?? this.eventUid,
+      resolvedSessions: resolvedSessions ?? this.resolvedSessions,
+      pathUrl: pathUrl,
+      updateMessage: updateMessage,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() => {
     "UID": uid,
