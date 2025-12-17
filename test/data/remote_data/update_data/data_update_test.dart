@@ -12,7 +12,7 @@ import 'package:sec/data/remote_data/update_data/data_update.dart';
 import '../../../mocks.mocks.dart';
 
 void main() {
-  late DataUpdateManager mockDataUpdateManager;
+  late MockDataUpdateManager mockDataUpdateManager;
   late MockCommonsServices mockCommonsServices;
   late MockDataLoaderManager mockDataLoaderManager;
 
@@ -78,7 +78,7 @@ void main() {
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     mockDataLoaderManager = MockDataLoaderManager();
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
-    mockDataUpdateManager = DataUpdateManager();
+    mockDataUpdateManager = MockDataUpdateManager();
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
     when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
