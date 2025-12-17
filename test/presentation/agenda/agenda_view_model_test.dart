@@ -219,7 +219,7 @@ void main() {
   });
 
   group('dispose', () {
-    test('No excdeption thrown from the dispose', () {
+    test('No exception thrown from the dispose', () {
       final vm = AgendaViewModelImp();
       expect(() => vm.dispose(), returnsNormally);
     });
