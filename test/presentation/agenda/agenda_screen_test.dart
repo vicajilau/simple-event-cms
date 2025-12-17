@@ -271,7 +271,7 @@ void main() {
     );
 
     testWidgets(
-      'didChangeDependencies, when the tab is changed, the onIndexChanged and currentIndex are actualized',
+      'didChangeDependencies, when the tab is changed, the onIndexChanged and currentIndex are updated',
       (tester) async {
         await registerMockViewModel();
 
@@ -459,7 +459,7 @@ void main() {
       },
     );
 
-    testWidgets('Shows the dellete button only if checkToken() == true', (
+    testWidgets('Shows the delete button only if checkToken() == true', (
       tester,
     ) async {
       await registerMockViewModel();

@@ -192,7 +192,7 @@ void main() {
     });
 
     testWidgets(
-      'Shows CustomErrorDialog and when you presse on close it is close and the state ys cleaned',
+      'Shows CustomErrorDialog and when you press on close it is close and the state ys cleaned',
       (tester) async {
         // Set the state to error and the error message
         when(
@@ -503,7 +503,6 @@ void main() {
         await tester.enterText(titleField, 'Titulo');
         await tester.enterText(descriptionField, 'Descripción');
 
-        // -------- Día --------
         final dayFinder = find.byKey(const Key('agenda_day_dropdown'));
         expect(dayFinder, findsOneWidget);
         final dayForm = tester.widget<DropdownButtonFormField<String>>(
@@ -514,7 +513,6 @@ void main() {
         dayForm.onChanged?.call('day1');
         await tester.pump();
 
-        // -------- Track --------
         final trackFinder = find.byKey(const Key('room_dropdown'));
         expect(trackFinder, findsOneWidget);
         final trackForm = tester.widget<DropdownButtonFormField<String>>(
@@ -525,7 +523,6 @@ void main() {
         trackForm.onChanged?.call('track1');
         await tester.pump();
 
-        // -------- Speaker --------
         final speakerFinder = find.byKey(const Key('speaker_dropdown'));
         expect(speakerFinder, findsOneWidget);
         final speakerForm = tester.widget<DropdownButtonFormField<Speaker>>(
@@ -538,7 +535,6 @@ void main() {
         speakerForm.onChanged?.call(speaker);
         await tester.pump();
 
-        // -------- Talk type --------
         final talkFinder = find.byKey(const Key('talk_type_dropdown'));
         expect(talkFinder, findsOneWidget);
         final talkForm = tester.widget<DropdownButtonFormField<String>>(
@@ -549,9 +545,7 @@ void main() {
         talkForm.onChanged?.call('talk');
         await tester.pump();
 
-        // -------- Selección de horas con showTimePicker (modo input) --------
-
-        // Helper para pulsar el botón OK/Aceptar en función del locale.
+        // Helper for pressing accept button in the time picker
         Future<void> tapOkButton() async {
           final okEs = find.text('Aceptar');
           final okEn = find.text('OK');
@@ -560,7 +554,6 @@ void main() {
           } else if (okEn.evaluate().isNotEmpty) {
             await tester.tap(okEn);
           } else {
-            // Fallback por si el label cambia (raro)
             throw TestFailure(
               'No se encontró botón OK/Aceptar en el time picker',
             );
@@ -568,24 +561,23 @@ void main() {
           await tester.pumpAndSettle();
         }
 
-        // Abre el picker de INICIO y escribe 10:00
+         // Open the start time picker and set it to 10:00
         final startPicker = find.byKey(const Key('start_time_picker'));
         await tester.ensureVisible(startPicker);
         await tester.tap(startPicker);
         await tester.pumpAndSettle();
 
-        // En modo input, hay dos TextField (hora y minuto)
+        // Check that there are two TextFields 
         final startTextFields = find.byType(TextField);
         expect(startTextFields, findsNWidgets(2));
 
-        // En muchos temas, el primer TextField es "hora" y el segundo "minutos".
-        await tester.enterText(startTextFields.at(0), '10'); // hora
-        await tester.enterText(startTextFields.at(1), '00'); // minuto
+        await tester.enterText(startTextFields.at(0), '10'); // Hours
+        await tester.enterText(startTextFields.at(1), '00'); // Minutes
         await tester.pump();
 
-        await tapOkButton(); // cierra el picker de inicio
+        await tapOkButton(); // Close the start time picker
 
-        // Abre el picker de FIN y escribe 09:30
+        // Open the end time picker and set it to 09:30
         final endPicker = find.byKey(const Key('end_time_picker'));
         await tester.ensureVisible(endPicker);
         await tester.tap(endPicker);
@@ -593,11 +585,11 @@ void main() {
 
         final endTextFields = find.byType(TextField);
         expect(endTextFields, findsNWidgets(2));
-        await tester.enterText(endTextFields.at(0), '09'); // hora
-        await tester.enterText(endTextFields.at(1), '30'); // minuto
+        await tester.enterText(endTextFields.at(0), '09'); // Hours
+        await tester.enterText(endTextFields.at(1), '30'); // Minutes
         await tester.pump();
 
-        await tapOkButton(); // cierra el picker de fin
+        await tapOkButton(); // Close the end time picker
 
         expect(find.byKey(const Key('time_error_text')), findsOneWidget);
         expect(find.text(l10n.timeValidationError), findsOneWidget);
