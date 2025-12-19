@@ -70,6 +70,47 @@ void main() {
       expect(find.byType(GridView), findsOneWidget);
       expect(find.text('Sponsor 1'), findsOneWidget);
     });
+    testWidgets('edit sponsor', (WidgetTester tester) async {
+      final sponsors = [
+        Sponsor(uid: '1', name: 'Sponsor 1', type: 'gold', logo: '', website: '', eventUID: '1'),
+      ];
+      when(mockViewModel.sponsors).thenReturn(ValueNotifier(sponsors));
+      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+
+      await tester.pumpWidget(buildTestableWidget(SponsorsScreen(eventId: '1')));
+      await tester.pumpAndSettle();
+
+
+      var editButton = find.byKey(Key("icon_button_sponsor_edit"));
+      await tester.tap(editButton);
+      await tester.pumpAndSettle();
+      expect(find.byType(GridView), findsOneWidget);
+      expect(find.text('Sponsor 1'), findsOneWidget);
+    });
+    testWidgets('delete sponsor', (WidgetTester tester) async {
+      final sponsors = [
+        Sponsor(uid: '1', name: 'Sponsor 1', type: 'gold', logo: '', website: '', eventUID: '1'),
+        Sponsor(uid: '2', name: 'Sponsor 2', type: 'gold', logo: '', website: '', eventUID: '1'),
+      ];
+      when(mockViewModel.sponsors).thenReturn(ValueNotifier(sponsors));
+      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+
+      await tester.pumpWidget(buildTestableWidget(SponsorsScreen(eventId: '1')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Sponsor 2'), findsOneWidget);
+
+      var removeButton = find.byKey(Key("icon_button_sponsor_delete")).last;
+      await tester.tap(removeButton);
+      await tester.pumpAndSettle();
+      var removeDialogButton = find.byKey(Key("button_delete"));
+      expect(find.byType(AlertDialog), findsOneWidget);
+      await tester.tap(removeDialogButton);
+      await tester.pumpAndSettle();
+
+      verify(mockViewModel.removeSponsor('2')).called(1);
+
+    });
 
     testWidgets('admin can see edit and delete buttons', (WidgetTester tester) async {
       final sponsors = [

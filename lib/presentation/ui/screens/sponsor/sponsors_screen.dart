@@ -193,6 +193,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                         return Row(
                                                           children: [
                                                             IconWidget(
+                                                              key: Key("icon_button_sponsor_edit"),
                                                               icon: Icons
                                                                   .edit_outlined,
                                                               onTap: () =>
@@ -204,6 +205,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                               width: 8,
                                                             ),
                                                             IconWidget(
+                                                              key: Key("icon_button_sponsor_delete"),
                                                               icon: Icons
                                                                   .delete_outlined,
                                                               onTap: () async {
@@ -236,6 +238,7 @@ class _SponsorsScreenState extends State<SponsorsScreen> {
                                                                           ),
                                                                         ),
                                                                         TextButton(
+                                                                          key: Key("button_delete"),
                                                                           onPressed: () =>
                                                                               Navigator.of(
                                                                                 context,
