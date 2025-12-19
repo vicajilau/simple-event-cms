@@ -6,9 +6,13 @@ import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class SecRepositoryImp extends SecRepository {
-  final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
+  final DataLoaderManager dataLoader;
+
+  SecRepositoryImp({DataLoaderManager? dataLoader, DataUpdateManager? dataUpdate})
+      : dataLoader = dataLoader ?? getIt<DataLoaderManager>();
 
   //load items
   @override
