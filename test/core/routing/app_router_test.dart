@@ -31,7 +31,7 @@ import 'package:sec/presentation/ui/screens/screens.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
-import '../../../mocks.mocks.dart';
+import '../../mocks.mocks.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
