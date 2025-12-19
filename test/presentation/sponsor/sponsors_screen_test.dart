@@ -111,7 +111,31 @@ void main() {
       verify(mockViewModel.removeSponsor('2')).called(1);
 
     });
+    testWidgets('cancelling sponsor deletion does not remove sponsor', (WidgetTester tester) async {
+      final sponsors = [
+        Sponsor(uid: '1', name: 'Sponsor 1', type: 'gold', logo: '', website: '', eventUID: '1'),
+      ];
+      when(mockViewModel.sponsors).thenReturn(ValueNotifier(sponsors));
+      when(mockViewModel.checkToken()).thenAnswer((_) async => true);
 
+      await tester.pumpWidget(buildTestableWidget(SponsorsScreen(eventId: '1')));
+      await tester.pumpAndSettle();
+
+      var removeButton = find.byKey(const Key("icon_button_sponsor_delete")).first;
+      await tester.tap(removeButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsOneWidget);
+
+      var cancelButton = find.text('Cancel');
+      await tester.tap(cancelButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+
+      expect(find.text('Sponsor 1'), findsOneWidget);
+      verifyNever(mockViewModel.removeSponsor(any));
+    });
     testWidgets('admin can see edit and delete buttons', (WidgetTester tester) async {
       final sponsors = [
         Sponsor(uid: '1', name: 'Sponsor 1', type: 'gold', logo: '', website: '', eventUID: '1'),
