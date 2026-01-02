@@ -41,7 +41,7 @@ void main() {
     ).thenAnswer((_) => Future.value([]));
     when(
       mockDataLoaderManager.loadAllEventData(),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataLoaderManager.loadAllDays(),
     ).thenAnswer((_) => Future.value([]));
@@ -54,41 +54,41 @@ void main() {
 
     when(
       mockDataUpdateManager.updateAgendaDay(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateAgendaDays(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
 
     when(
       mockDataUpdateManager.updateEvents(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateOrganization(any),
     ).thenAnswer((_) => Future.value());
     when(
       mockDataUpdateManager.updateSession(any, any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateSpeaker(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateSpeakers(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateSponsors(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateSponsorsList(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateSessions(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateTrack(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
     when(
       mockDataUpdateManager.updateTracks(any),
-    ).thenAnswer((_) => Future.value([]));
+    ).thenAnswer((_) async => {});
 
     when(
       mockCommonsServices.updateData(any, any, any, any),
@@ -146,6 +146,23 @@ void main() {
           when(
             mockDataLoaderManager.loadEvents(),
           ).thenThrow(const CertainException('error'));
+
+          // Act
+          final result = await secRepository.loadEvents();
+
+          // Assert
+          expect(result, isA<Error>());
+          expect((result as Error).error, isA<NetworkException>());
+        },
+      );
+
+      test(
+        'should return an exception when data loader throws Error',
+        () async {
+          // Arrange
+          when(
+            mockDataLoaderManager.loadEvents(),
+          ).thenThrow(AssertionError('error'));
 
           // Act
           final result = await secRepository.loadEvents();
@@ -235,6 +252,19 @@ void main() {
         expect(result, isA<Error>());
         expect((result as Error).error, isA<NetworkException>());
       });
+      test('should return an error', () async {
+        // Arrange
+        when(
+          mockDataLoaderManager.loadSpeakers(),
+        ).thenThrow(AssertionError('error'));
+
+        // Act
+        final result = await secRepository.loadESpeakers();
+
+        // Assert
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
     });
 
     group('loadSponsors', () {
@@ -271,12 +301,24 @@ void main() {
           expect((result as Error).error, isA<NetworkException>());
         },
       );
-
       test('should return a network exception for other exceptions', () async {
         // Arrange
         when(
           mockDataLoaderManager.loadSponsors(),
         ).thenThrow(Exception('error'));
+
+        // Act
+        final result = await secRepository.loadSponsors();
+
+        // Assert
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error', () async {
+        // Arrange
+        when(
+          mockDataLoaderManager.loadSponsors(),
+        ).thenThrow(AssertionError('error'));
 
         // Act
         final result = await secRepository.loadSponsors();
@@ -405,13 +447,35 @@ void main() {
 
         expect(result, isA<Ok<void>>());
       });
-      test('should return Error when saving has an error', () async {
+      test('should return CertainException when saving has an error', () async {
         when(
           mockDataLoaderManager.loadEvents(),
         ).thenAnswer((_) async => [event]);
         when(
           mockDataUpdateManager.updateEvent(event),
         ).thenThrow(CertainException('error'));
+        final result = await secRepository.saveEvent(event);
+
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return CertainException when saving has an error', () async {
+        when(
+          mockDataLoaderManager.loadEvents(),
+        ).thenAnswer((_) async => [event]);
+        when(
+          mockDataUpdateManager.updateEvent(event),
+        ).thenThrow(Exception('error'));
+        final result = await secRepository.saveEvent(event);
+
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return Error when saving has an error', () async {
+        when(
+          mockDataLoaderManager.loadEvents(),
+        ).thenAnswer((_) async => [event]);
+        when(
+          mockDataUpdateManager.updateEvent(event),
+        ).thenThrow(AssertionError('error'));
         final result = await secRepository.saveEvent(event);
 
         expect((result as Error).error, isA<NetworkException>());
@@ -978,6 +1042,15 @@ void main() {
         expect(result, isA<Error>());
         expect((result as Error).error, isA<NetworkException>());
       });
+
+      test('should return Error on generic error', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenThrow(AssertionError('error'));
+
+        final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
     });
     group('saveSpeaker', () {
       final speaker = Speaker(
@@ -994,6 +1067,33 @@ void main() {
         final result = await secRepository.saveSpeaker(speaker, parentId);
 
         expect(result, isA<Ok<void>>());
+      });
+      test('should return a certainException when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, parentId)).thenThrow(CertainException('error'));
+
+        final result = await secRepository.saveSpeaker(speaker, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a exception when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, parentId)).thenThrow(Exception('error'));
+
+        final result = await secRepository.saveSpeaker(speaker, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, parentId)).thenThrow(AssertionError('error'));
+
+        final result = await secRepository.saveSpeaker(speaker, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
       });
     });
 
@@ -1012,6 +1112,31 @@ void main() {
         final result = await secRepository.saveSponsor(sponsor, parentId);
 
         expect(result, isA<Ok<void>>());
+      });
+      test('should return a certainException when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(sponsor, parentId)).thenThrow(CertainException('error'));
+
+        final result = await secRepository.saveSponsor(sponsor, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a exception when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(sponsor, parentId)).thenThrow(Exception('error'));
+        final result = await secRepository.saveSponsor(sponsor, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(sponsor, parentId)).thenThrow(AssertionError('error'));
+        final result = await secRepository.saveSponsor(sponsor, parentId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
       });
     });
 
@@ -1032,6 +1157,30 @@ void main() {
 
         expect(result, isA<Ok<void>>());
       });
+      test('should return a certainException when saving is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(session, trackUID)).thenThrow(CertainException('error'));
+        final result = await secRepository.addSession(session, trackUID);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a exception when saving is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(session, trackUID)).thenThrow(Exception('error'));
+        final result = await secRepository.addSession(session, trackUID);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when saving is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(session, trackUID)).thenThrow(AssertionError('error'));
+        final result = await secRepository.addSession(session, trackUID);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
     });
 
     group('addSpeaker', () {
@@ -1050,6 +1199,160 @@ void main() {
 
         expect(result, isA<Ok<void>>());
       });
+      test('should return a exception when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, eventId)).thenThrow(Exception('error'));
+        final result = await secRepository.addSpeaker(eventId, speaker);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a CertainException when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, eventId)).thenThrow(CertainException('error'));
+        final result = await secRepository.addSpeaker(eventId, speaker);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when saving is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
+        when(dataUpdate.addItemAndAssociations(speaker, eventId)).thenThrow(AssertionError('error'));
+        final result = await secRepository.addSpeaker(eventId, speaker);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
     });
+
+
+    group('removeSpeaker', () {
+      final speaker = Speaker(
+        uid: 's1',
+        eventUIDS: ['event1'],
+        name: '',
+        bio: '',
+        image: '',
+        social: MockSocial(),
+      );
+
+      test('should return Ok when removing is successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => [speaker]);
+        when(dataUpdate.deleteItemAndAssociations(speaker.uid, 'Speaker',eventUID:'event1' )).thenAnswer((_) async {});
+        final result = await secRepository.removeSpeaker(speaker.uid, 'event1');
+
+        expect(result, isA<Ok<void>>());
+      });
+      test('should return a exception when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => [speaker]);
+        when(dataUpdate.deleteItemAndAssociations(speaker.uid, 'Speaker',eventUID:'event1' )).thenThrow(Exception('error'));
+        final result = await secRepository.removeSpeaker(speaker.uid, 'event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a CertainException when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => [speaker]);
+        when(dataUpdate.deleteItemAndAssociations(speaker.uid, 'Speaker',eventUID:'event1' )).thenThrow(CertainException('error'));
+        final result = await secRepository.removeSpeaker(speaker.uid, 'event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => [speaker]);
+        when(dataUpdate.deleteItemAndAssociations(speaker.uid, 'Speaker',eventUID:'event1' )).thenThrow(AssertionError('error'));
+        final result = await secRepository.removeSpeaker(speaker.uid, 'event1');
+
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
+
+
+
+    group('removeSponsor', () {
+      final sponsor = Sponsor(
+        uid: 'sponsor-1',
+        name: 'Sponsor 1',
+        type: '',
+        logo: '',
+        website: '',
+        eventUID: '',
+      );
+
+      test('should return Ok when removing is successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => [sponsor]);
+        when(dataUpdate.deleteItemAndAssociations(sponsor.uid, 'Sponsor',eventUID:'event1' )).thenAnswer((_) async {});
+        final result = await secRepository.removeSponsor(sponsor.uid);
+
+        expect(result, isA<Ok<void>>());
+      });
+      test('should return a exception when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => [sponsor]);
+        when(dataUpdate.deleteItemAndAssociations(sponsor.uid, 'Sponsor',eventUID:'event1' )).thenThrow(Exception('error'));
+        final result = await secRepository.removeSponsor(sponsor.uid);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a CertainException when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => [sponsor]);
+        when(dataUpdate.deleteItemAndAssociations(sponsor.uid, 'Sponsor',eventUID:'event1' )).thenThrow(CertainException('error'));
+        final result = await secRepository.removeSponsor(sponsor.uid);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when removing is not successful', () async {
+        when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => [sponsor]);
+        when(dataUpdate.deleteItemAndAssociations(sponsor.uid, 'Sponsor',eventUID:'event1' )).thenThrow(AssertionError('error'));
+        final result = await secRepository.removeSponsor(sponsor.uid);
+
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
+
+    group('removeSession', () {
+      final session = Session(
+        uid: 's1',
+        agendaDayUID: 'day1',
+        title: '',
+        time: '',
+        speakerUID: '',
+        eventUID: '',
+        type: '',
+      );
+
+      test('should return a exception when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => [session]);
+        when(dataUpdate.deleteItemAndAssociations(session.uid, 'Session',agendaDayUidSelected:'day1' )).thenThrow(Exception('error'));
+        final result = await secRepository.deleteSession(session.uid);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return a CertainException when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => [session]);
+        when(dataUpdate.deleteItemAndAssociations(session.uid, 'Session',agendaDayUidSelected:'day1' )).thenThrow(CertainException('error'));
+        final result = await secRepository.deleteSession(session.uid);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+      test('should return an error when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => [session]);
+        when(dataUpdate.deleteItemAndAssociations(session.uid, 'Session',agendaDayUidSelected:'day1' )).thenThrow(AssertionError('error'));
+        final result = await secRepository.deleteSession(session.uid);
+
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
+
   });
 }
