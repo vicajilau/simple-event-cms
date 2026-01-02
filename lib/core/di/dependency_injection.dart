@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -22,6 +23,7 @@ import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 import '../../data/remote_data/common/commons_api_services.dart';
+import '../../data/remote_data/common/data_manager.dart';
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
 import '../../presentation/ui/screens/config/config_viewmodel.dart';
 import '../config/secure_info.dart';
@@ -40,6 +42,8 @@ Future<void> setupDependencies() async {
 
   // Core services
   getIt.registerLazySingleton<DataLoaderManager>(() => DataLoaderManager());
+  getIt.registerLazySingleton<DataUpdateManager>(() => DataUpdateManager());
+  getIt.registerLazySingleton<DataUpdate>(() => DataUpdate());
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());

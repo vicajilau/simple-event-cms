@@ -20,40 +20,86 @@ void main() {
   late MockDataUpdateManager mockDataUpdateManager;
   late MockCommonsServices mockCommonsServices;
 
-  setUpAll(() async {
-
+  setUp(() async {
+    getIt.reset();
     mockCommonsServices = MockCommonsServices();
     mockDataLoaderManager = MockDataLoaderManager();
     mockDataUpdateManager = MockDataUpdateManager();
-    when(mockDataLoaderManager.loadSponsors()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllEventData()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadAllDays()).thenAnswer((_)=> Future.value([]));
-    when(mockDataLoaderManager.loadEvents()).thenAnswer((_)=> Future.value([]));
-    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer(
-            (_) async => Response('{}', 200),);
+    when(
+      mockDataLoaderManager.loadSponsors(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadSpeakers(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllSessions(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllTracks(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllEventData(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadAllDays(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataLoaderManager.loadEvents(),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockCommonsServices.updateAllData(any, any, any),
+    ).thenAnswer((_) async => Response('{}', 200));
 
+    when(
+      mockDataUpdateManager.updateAgendaDay(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateAgendaDays(any),
+    ).thenAnswer((_) => Future.value([]));
 
-    when(mockDataUpdateManager.updateAgendaDay(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateAgendaDays(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateEvent(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateEvents(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateOrganization(any)).thenAnswer((_)=> Future.value());
-    when(mockDataUpdateManager.updateSession(any, any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSpeaker(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSpeakers(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSponsors(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSponsorsList(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateSessions(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_)=> Future.value([]));
-    when(mockDataUpdateManager.updateTracks(any)).thenAnswer((_)=> Future.value([]));
+    when(
+      mockDataUpdateManager.updateEvents(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateOrganization(any),
+    ).thenAnswer((_) => Future.value());
+    when(
+      mockDataUpdateManager.updateSession(any, any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSpeaker(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSpeakers(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSponsors(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSponsorsList(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateSessions(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateTrack(any),
+    ).thenAnswer((_) => Future.value([]));
+    when(
+      mockDataUpdateManager.updateTracks(any),
+    ).thenAnswer((_) => Future.value([]));
 
-    when(mockCommonsServices.updateData(any,any,any,any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateAllData(any, any, any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateDataList(any,any,any)).thenAnswer((_) async => Response("{}", 200));
-    when(mockCommonsServices.updateSingleData(any,any,any)).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateData(any, any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateAllData(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateDataList(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
+    when(
+      mockCommonsServices.updateSingleData(any, any, any),
+    ).thenAnswer((_) async => Response("{}", 200));
 
     getIt.registerSingleton<Config>(
       Config(
@@ -68,6 +114,7 @@ void main() {
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
+    getIt.registerSingleton<DataUpdate>(DataUpdate());
 
     secRepository = SecRepositoryImp();
   });
@@ -270,7 +317,30 @@ void main() {
         );
       });
     });
+    group('saveEvent', () {
+      final event = Event(
+        uid: 'event1',
+        tracks: [],
+        eventName: '',
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+        eventDates: MockEventDates());
+      test('should return Ok when saving is successful', () async {
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[]);
+        when(mockDataUpdateManager.updateEvent(event)).thenAnswer((_) async {});
+        final result = await secRepository.saveEvent(event);
 
+        expect(result, isA<Ok<void>>());
+      });
+      test('should return Error when saving has an error', () async {
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[event]);
+        when(mockDataUpdateManager.updateEvent(event)).thenThrow(CertainException('error'));
+        final result = await secRepository.saveEvent(event);
+
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
     group('saveTrack', () {
       final track = Track(
         uid: 'track1',
@@ -616,22 +686,115 @@ void main() {
         branch: '',
       );
 
-        test('should return Ok when saving is successful', () async {
-
+      test('should return Ok when saving is successful', () async {
         final result = await secRepository.saveConfig(config);
 
         expect(result, isA<Ok<void>>());
       });
+    });
 
-      test('should return Error on exception', () async {
+    group('saveAgendaDays', () {
+      final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: [])];
+      const eventUID = 'event1';
+
+      test('should return Ok when saving is successful', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+
+        final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
+
+        expect(result, isA<Ok<void>>());
+      });
+
+      test('should return Error on CertainException', () async {
         when(
-          DataUpdate.addItemAndAssociations(config, ""),
-        ).thenThrow(Exception('error'));
+          mockDataLoaderManager.loadAllDays(),
+        ).thenThrow(const CertainException('error'));
 
-        final result = await secRepository.saveConfig(config);
+        final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
 
         expect(result, isA<Error>());
         expect((result as Error).error, isA<NetworkException>());
+      });
+
+      test('should return Error on generic exception', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenThrow(Exception('error'));
+
+        final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
+    group('saveSpeaker', () {
+      final speaker = Speaker(
+        uid: 's1',
+        eventUIDS: ['event1'],
+        name: '',
+        bio: '',
+        image: '',
+        social: MockSocial(),
+      );
+      const parentId = 'event1';
+
+      test('should return Ok when saving is successful', () async {
+        final result = await secRepository.saveSpeaker(speaker, parentId);
+
+        expect(result, isA<Ok<void>>());
+      });
+    });
+
+    group('saveSponsor', () {
+      final sponsor = Sponsor(
+        uid: 'sponsor1',
+        name: '',
+        logo: '',
+        type: '',
+        website: '',
+        eventUID: '',
+      );
+      const parentId = 'event1';
+
+      test('should return Ok when saving is successful', () async {
+        final result = await secRepository.saveSponsor(sponsor, parentId);
+
+        expect(result, isA<Ok<void>>());
+      });
+    });
+
+    group('addSession', () {
+      final session = Session(
+        uid: 's1',
+        agendaDayUID: 'day1',
+        title: '',
+        time: '',
+        speakerUID: '',
+        eventUID: '',
+        type: '',
+      );
+      const trackUID = 't1';
+
+      test('should return Ok when adding is successful', () async {
+        final result = await secRepository.addSession(session, trackUID);
+
+        expect(result, isA<Ok<void>>());
+      });
+    });
+
+    group('addSpeaker', () {
+      final speaker = Speaker(
+        uid: 's1',
+        eventUIDS: ['event1'],
+        name: '',
+        bio: '',
+        image: '',
+        social: MockSocial(),
+      );
+      const eventId = 'event1';
+
+      test('should return Ok when adding is successful', () async {
+        final result = await secRepository.addSpeaker(eventId, speaker);
+
+        expect(result, isA<Ok<void>>());
       });
     });
   });

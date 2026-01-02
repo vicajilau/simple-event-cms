@@ -9,7 +9,8 @@ import 'package:sec/domain/repositories/sec_repository.dart';
 
 class SecRepositoryImp extends SecRepository {
   final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
-
+  final DataUpdate dataUpdate = getIt<DataUpdate>();
+  
   //load items
   @override
   Future<Result<List<Event>>> loadEvents() async {
@@ -90,7 +91,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveEvent(Event event) async {
     try {
-      await DataUpdate.addItemAndAssociations(event, event.uid);
+      await dataUpdate.addItemAndAssociations(event, event.uid);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveEvent: $e');
@@ -131,7 +132,7 @@ class SecRepositoryImp extends SecRepository {
           );
         }
       }
-      await DataUpdate.addItemListAndAssociations(tracks);
+      await dataUpdate.addItemListAndAssociations(tracks);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveTracks: $e');
@@ -184,7 +185,7 @@ class SecRepositoryImp extends SecRepository {
         );
       }
 
-      await DataUpdate.addItemListAndAssociations(
+      await dataUpdate.addItemListAndAssociations(
         agendaDays,
         overrideData: overrideAgendaDays,
       );
@@ -212,7 +213,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveSpeaker(Speaker speaker, String? parentId) async {
     try {
-      await DataUpdate.addItemAndAssociations(speaker, parentId);
+      await dataUpdate.addItemAndAssociations(speaker, parentId);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveSpeaker: $e');
@@ -237,7 +238,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveSponsor(Sponsor sponsor, String parentId) async {
     try {
-      await DataUpdate.addItemAndAssociations(sponsor, parentId);
+      await dataUpdate.addItemAndAssociations(sponsor, parentId);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveSponsor: $e');
@@ -262,7 +263,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> addSession(Session session, String trackUID) async {
     try {
-      await DataUpdate.addItemAndAssociations(session, trackUID);
+      await dataUpdate.addItemAndAssociations(session, trackUID);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in addSession: $e');
@@ -287,7 +288,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> addSpeaker(String eventId, Speaker speaker) async {
     try {
-      await DataUpdate.addItemAndAssociations(speaker, eventId);
+      await dataUpdate.addItemAndAssociations(speaker, eventId);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in addSpeaker: $e');
@@ -327,7 +328,7 @@ class SecRepositoryImp extends SecRepository {
         );
       }
 
-      await DataUpdate.addItemAndAssociations(track, agendaDayId);
+      await dataUpdate.addItemAndAssociations(track, agendaDayId);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveTrack: $e');
@@ -353,7 +354,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeEvent(String eventId) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(eventId, "Event");
+      await dataUpdate.deleteItemAndAssociations(eventId, "Event");
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in removeEvent: $e');
@@ -381,7 +382,7 @@ class SecRepositoryImp extends SecRepository {
     String eventUID,
   ) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(
+      await dataUpdate.deleteItemAndAssociations(
         agendaDayId,
         "AgendaDay",
         eventUID: eventUID,
@@ -410,7 +411,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeSpeaker(String speakerId, String eventUID) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(
+      await dataUpdate.deleteItemAndAssociations(
         speakerId,
         "Speaker",
         eventUID: eventUID,
@@ -439,7 +440,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeSponsor(String sponsorId) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(sponsorId, "Sponsor");
+      await dataUpdate.deleteItemAndAssociations(sponsorId, "Sponsor");
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in removeSponsor: $e');
@@ -467,7 +468,7 @@ class SecRepositoryImp extends SecRepository {
     String? agendaDayUID,
   }) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(
+      await dataUpdate.deleteItemAndAssociations(
         sessionId,
         "Session",
         agendaDayUidSelected: agendaDayUID ?? "",
@@ -747,7 +748,7 @@ class SecRepositoryImp extends SecRepository {
     String eventUID,
   ) async {
     try {
-      await DataUpdate.addItemAndAssociations(agendaDay, eventUID);
+      await dataUpdate.addItemAndAssociations(agendaDay, eventUID);
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveAgendaDay: $e');
@@ -772,7 +773,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> removeTrack(String trackUID) async {
     try {
-      await DataUpdate.deleteItemAndAssociations(trackUID, "Track");
+      await dataUpdate.deleteItemAndAssociations(trackUID, "Track");
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in removeTrack: $e');
@@ -797,7 +798,7 @@ class SecRepositoryImp extends SecRepository {
   @override
   Future<Result<void>> saveConfig(Config config) async {
     try {
-      await DataUpdate.addItemAndAssociations(config, "");
+      await dataUpdate.addItemAndAssociations(config, "");
       return Result.ok(null);
     } on CertainException catch (e) {
       debugPrint('Error in saveConfig: $e');

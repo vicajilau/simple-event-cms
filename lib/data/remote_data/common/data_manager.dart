@@ -6,10 +6,10 @@ import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class DataUpdate {
-  static DataLoaderManager dataLoader = getIt<DataLoaderManager>();
-  static DataUpdateManager dataUpdateInfo = DataUpdateManager();
+  DataLoaderManager dataLoader = getIt<DataLoaderManager>();
+  DataUpdateManager dataUpdateInfo = getIt<DataUpdateManager>();
 
-  static Future<void> deleteItemAndAssociations(
+  Future<void> deleteItemAndAssociations(
     String itemId,
     String itemType, {
     String? eventUID,
@@ -60,7 +60,7 @@ class DataUpdate {
     }
   }
 
-  static Future<void> addItemAndAssociations(
+  Future<void> addItemAndAssociations(
     dynamic item, // Can be Session, Track, AgendaDay, Speaker, Sponsor
     String? parentId, // Can be Session, Track, AgendaDay, Speaker, Sponsor
   ) async {
@@ -83,7 +83,7 @@ class DataUpdate {
     }
   }
 
-  static Future<void> addItemListAndAssociations(
+  Future<void> addItemListAndAssociations(
     List<dynamic>
     items, { // Can be a list of Session, Track, AgendaDay, Speaker, Sponsor
     bool overrideData = false,
@@ -130,7 +130,7 @@ class DataUpdate {
     }
   }
 
-  static Future<void> _addEvent(
+  Future<void> _addEvent(
     Event event,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -140,7 +140,8 @@ class DataUpdate {
     debugPrint("Event ${event.uid} added.");
   }
 
-  static Future<void> _deleteEvent(
+  
+  Future<void> _deleteEvent(
     String eventId,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -149,7 +150,7 @@ class DataUpdate {
     debugPrint("Event $eventId deleted.");
   }
 
-  static Future<void> _addSession(
+  Future<void> _addSession(
     Session session,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -159,7 +160,7 @@ class DataUpdate {
     debugPrint("Session ${session.uid} added.");
   }
 
-  static Future<void> _addSessions(
+  Future<void> _addSessions(
     List<Session> sessions,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -173,7 +174,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSessions(sessionMap.values.toList());
   }
 
-  static Future<void> _deleteSession(
+  Future<void> _deleteSession(
     String sessionId,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -216,7 +217,7 @@ class DataUpdate {
     debugPrint("Session $sessionId and its associations removed.");
   }
 
-  static Future<void> _addTrack(
+  Future<void> _addTrack(
     Track track,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -235,7 +236,7 @@ class DataUpdate {
     debugPrint("Track ${track.uid} added.");
   }
 
-  static Future<void> _addTracks(
+  Future<void> _addTracks(
     List<Track> tracks,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -249,7 +250,7 @@ class DataUpdate {
     await dataUpdateInfo.updateTracks(trackMap.values.toList());
   }
 
-  static Future<void> _deleteTrack(
+  Future<void> _deleteTrack(
     String trackId,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, [
@@ -281,7 +282,7 @@ class DataUpdate {
     }
   }
 
-  static Future<void> _addAgendaDay(
+  Future<void> _addAgendaDay(
     AgendaDay day,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -308,7 +309,7 @@ class DataUpdate {
     debugPrint("AgendaDay ${day.uid} added.");
   }
 
-  static Future<void> _addAgendaDays(
+  Future<void> _addAgendaDays(
     List<AgendaDay> days,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -338,7 +339,7 @@ class DataUpdate {
     );
   }
 
-  static Future<void> _deleteAgendaDay(
+  Future<void> _deleteAgendaDay(
     String dayId,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -359,7 +360,7 @@ class DataUpdate {
     }
   }
 
-  static Future<void> _addSpeaker(
+  Future<void> _addSpeaker(
     Speaker speaker,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -374,7 +375,7 @@ class DataUpdate {
     debugPrint("Speaker ${speaker.uid} added.");
   }
 
-  static Future<void> _addSpeakers(
+  Future<void> _addSpeakers(
     List<Speaker> speakers,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -388,7 +389,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSpeakers(speakerMap.values.toList());
   }
 
-  static Future<void> _deleteSpeaker(
+  Future<void> _deleteSpeaker(
     String speakerId,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo,
@@ -399,7 +400,7 @@ class DataUpdate {
     debugPrint("Speaker $speakerId and its associations removed.");
   }
 
-  static Future<void> _addSponsor(
+  Future<void> _addSponsor(
     Sponsor sponsor,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfom,
@@ -413,7 +414,7 @@ class DataUpdate {
     debugPrint("Sponsor ${sponsor.uid} added.");
   }
 
-  static Future<void> _addOrganization(
+  Future<void> _addOrganization(
     Config config,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfom,
@@ -423,7 +424,7 @@ class DataUpdate {
     debugPrint("Organization ${config.configName} added.");
   }
 
-  static Future<void> _addSponsors(
+  Future<void> _addSponsors(
     List<Sponsor> sponsors,
     DataLoaderManager dataLoader,
     DataUpdateManager dataUpdateInfo, {
@@ -437,7 +438,7 @@ class DataUpdate {
     await dataUpdateInfo.updateSponsorsList(sponsorMap.values.toList());
   }
 
-  static Future<void> _deleteSponsor(
+  Future<void> _deleteSponsor(
     String sponsorId,
     DataUpdateManager dataUpdateInfo,
     DataLoaderManager dataLoader,
