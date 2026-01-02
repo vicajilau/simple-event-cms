@@ -7,7 +7,7 @@ import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 class DataUpdate {
   static DataLoaderManager dataLoader = getIt<DataLoaderManager>();
-  static DataUpdateManager dataUpdateInfo = DataUpdateManager();
+  static DataUpdateManager dataUpdateInfo = getIt<DataUpdateManager>();
 
   static Future<void> deleteItemAndAssociations(
     String itemId,

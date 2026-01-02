@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:sec/core/config/config_loader.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
 import 'package:sec/data/repositories/token_repository_impl.dart';
 import 'package:sec/domain/repositories/sec_repository.dart';
@@ -40,6 +41,7 @@ Future<void> setupDependencies() async {
 
   // Core services
   getIt.registerLazySingleton<DataLoaderManager>(() => DataLoaderManager());
+  getIt.registerLazySingleton<DataUpdateManager>(() => DataUpdateManager());
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());
