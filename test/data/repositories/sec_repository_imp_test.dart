@@ -6,6 +6,7 @@ import 'package:sec/core/models/models.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
+import 'package:sec/data/remote_data/common/data_manager.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 import 'package:sec/data/remote_data/update_data/data_update.dart';
 import 'package:sec/data/repositories/sec_repository_imp.dart';
@@ -55,9 +56,7 @@ void main() {
     when(
       mockDataUpdateManager.updateAgendaDays(any),
     ).thenAnswer((_) => Future.value([]));
-    when(
-      mockDataUpdateManager.updateEvent(any),
-    ).thenAnswer((_) => Future.value([]));
+
     when(
       mockDataUpdateManager.updateEvents(any),
     ).thenAnswer((_) => Future.value([]));
@@ -115,11 +114,9 @@ void main() {
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
+    getIt.registerSingleton<DataUpdate>(DataUpdate());
 
-    secRepository = SecRepositoryImp(
-      dataLoader: mockDataLoaderManager,
-      dataUpdate: mockDataUpdateManager,
-    );
+    secRepository = SecRepositoryImp();
   });
 
   group('SecRepositoryImp', () {
@@ -320,7 +317,30 @@ void main() {
         );
       });
     });
+    group('saveEvent', () {
+      final event = Event(
+        uid: 'event1',
+        tracks: [],
+        eventName: '',
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+        eventDates: MockEventDates());
+      test('should return Ok when saving is successful', () async {
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[]);
+        when(mockDataUpdateManager.updateEvent(event)).thenAnswer((_) async {});
+        final result = await secRepository.saveEvent(event);
 
+        expect(result, isA<Ok<void>>());
+      });
+      test('should return Error when saving has an error', () async {
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[event]);
+        when(mockDataUpdateManager.updateEvent(event)).thenThrow(CertainException('error'));
+        final result = await secRepository.saveEvent(event);
+
+        expect((result as Error).error, isA<NetworkException>());
+      });
+    });
     group('saveTrack', () {
       final track = Track(
         uid: 'track1',

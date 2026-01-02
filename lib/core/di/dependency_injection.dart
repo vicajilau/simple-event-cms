@@ -23,6 +23,7 @@ import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
 
 import '../../data/remote_data/common/commons_api_services.dart';
+import '../../data/remote_data/common/data_manager.dart';
 import '../../presentation/ui/screens/agenda/agenda_view_model.dart';
 import '../../presentation/ui/screens/config/config_viewmodel.dart';
 import '../config/secure_info.dart';
@@ -42,6 +43,7 @@ Future<void> setupDependencies() async {
   // Core services
   getIt.registerLazySingleton<DataLoaderManager>(() => DataLoaderManager());
   getIt.registerLazySingleton<DataUpdateManager>(() => DataUpdateManager());
+  getIt.registerLazySingleton<DataUpdate>(() => DataUpdate());
 
   // Repositories
   getIt.registerLazySingleton<SecRepository>(() => SecRepositoryImp());

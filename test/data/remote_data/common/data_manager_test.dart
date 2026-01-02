@@ -1,24 +1,31 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
 import 'package:sec/data/remote_data/common/data_manager.dart';
+import 'package:sec/data/remote_data/load_data/data_loader.dart';
+import 'package:sec/data/remote_data/update_data/data_update.dart';
 
 // Generate mocks with `flutter pub run build_runner build`
 import '../../../mocks.mocks.dart';
 
 void main() {
   // Declare mock instances and the class under test
+  late DataUpdate dataUpdate;
   late MockDataLoaderManager mockDataLoaderManager;
-  late MockDataUpdateManager mockDataUpdateManager;
+  late MockDataUpdateManager dataUpdateManager;
 
-  setUp(() {
+  setUp(() async{
+    getIt.reset();
     // Initialize mocks before each test
     mockDataLoaderManager = MockDataLoaderManager();
-    mockDataUpdateManager = MockDataUpdateManager();
+    dataUpdateManager = MockDataUpdateManager();
 
-    // Override static instances in the DataUpdate class with our mocks
-    DataUpdate.dataLoader = mockDataLoaderManager;
-    DataUpdate.dataUpdateInfo = mockDataUpdateManager;
+    getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
+    getIt.registerSingleton<DataUpdateManager>(dataUpdateManager);
+    dataUpdate = DataUpdate();
+    getIt.registerSingleton<DataUpdate>(dataUpdate);
+
   });
 
   group('DataUpdate Tests', () {
@@ -28,14 +35,14 @@ void main() {
         // Arrange
         const itemId = 'event123';
         when(
-          mockDataUpdateManager.removeEvent(any),
+          dataUpdateManager.removeEvent(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(itemId, 'Event');
+        await dataUpdate.deleteItemAndAssociations(itemId, 'Event');
 
         // Assert
-        verify(mockDataUpdateManager.removeEvent(itemId)).called(1);
+        verify(dataUpdateManager.removeEvent(itemId)).called(1);
       });
 
       test('should call _deleteSession when itemType is "Session"', () async {
@@ -43,21 +50,21 @@ void main() {
         const sessionId = 'session123';
         when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
         when(
-          mockDataUpdateManager.updateTracks(
+          dataUpdateManager.updateTracks(
             any,
             overrideData: anyNamed('overrideData'),
           ),
         ).thenAnswer((_) async => {});
         when(
-          mockDataUpdateManager.removeSession(any),
+          dataUpdateManager.removeSession(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(sessionId, 'Session');
+        await dataUpdate.deleteItemAndAssociations(sessionId, 'Session');
 
         // Assert
         verify(mockDataLoaderManager.loadAllTracks()).called(1);
-        verify(mockDataUpdateManager.removeSession(sessionId)).called(1);
+        verify(dataUpdateManager.removeSession(sessionId)).called(1);
       });
 
       test(
@@ -69,7 +76,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.deleteItemAndAssociations(itemId, itemType),
+            () => dataUpdate.deleteItemAndAssociations(itemId, itemType),
             throwsA(isA<Exception>()),
           );
         },
@@ -90,14 +97,14 @@ void main() {
           eventDates: MockEventDates(),
         );
         when(
-          mockDataUpdateManager.updateEvent(any),
+          dataUpdateManager.updateEvent(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(event, null);
+        await dataUpdate.addItemAndAssociations(event, null);
 
         // Assert
-        verify(mockDataUpdateManager.updateEvent(event)).called(1);
+        verify(dataUpdateManager.updateEvent(event)).called(1);
       });
 
       test('should call _addSession when the item is a Session', () async {
@@ -113,15 +120,15 @@ void main() {
         );
         const parentId = 'track1';
         when(
-          mockDataUpdateManager.updateSession(any, any),
+          dataUpdateManager.updateSession(any, any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(session, parentId);
+        await dataUpdate.addItemAndAssociations(session, parentId);
 
         // Assert
         verify(
-          mockDataUpdateManager.updateSession(session, parentId),
+          dataUpdateManager.updateSession(session, parentId),
         ).called(1);
       });
 
@@ -137,15 +144,15 @@ void main() {
         );
         const parentId = 'event1';
         when(
-          mockDataUpdateManager.updateSpeaker(any),
+          dataUpdateManager.updateSpeaker(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(speaker, parentId);
+        await dataUpdate.addItemAndAssociations(speaker, parentId);
 
         // Assert
         expect(speaker.eventUIDS, contains(parentId));
-        verify(mockDataUpdateManager.updateSpeaker(speaker)).called(1);
+        verify(dataUpdateManager.updateSpeaker(speaker)).called(1);
       });
 
       test(
@@ -156,7 +163,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.addItemAndAssociations(unsupportedItem, null),
+            () => dataUpdate.addItemAndAssociations(unsupportedItem, null),
             throwsA(isA<Exception>()),
           );
         },
@@ -184,15 +191,15 @@ void main() {
             mockDataLoaderManager.loadAllSessions(),
           ).thenAnswer((_) async => []);
           when(
-            mockDataUpdateManager.updateSessions(any),
+            dataUpdateManager.updateSessions(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(sessions);
+          await dataUpdate.addItemListAndAssociations(sessions);
 
           // Assert
           verify(mockDataLoaderManager.loadAllSessions()).called(1);
-          verify(mockDataUpdateManager.updateSessions(any)).called(1);
+          verify(dataUpdateManager.updateSessions(any)).called(1);
         },
       );
 
@@ -201,11 +208,11 @@ void main() {
         final emptyList = [];
 
         // Act
-        await DataUpdate.addItemListAndAssociations(emptyList);
+        await dataUpdate.addItemListAndAssociations(emptyList);
 
         // Assert
         verifyZeroInteractions(mockDataLoaderManager);
-        verifyZeroInteractions(mockDataUpdateManager);
+        verifyZeroInteractions(dataUpdateManager);
       });
 
       test(
@@ -216,7 +223,7 @@ void main() {
 
           // Act & Assert
           expect(
-            () => DataUpdate.addItemListAndAssociations(unsupportedList),
+            () => dataUpdate.addItemListAndAssociations(unsupportedList),
             throwsA(isA<Exception>()),
           );
         },
@@ -243,15 +250,15 @@ void main() {
           );
           const parentId = 'event1';
           when(
-            mockDataUpdateManager.updateSpeaker(any),
+            dataUpdateManager.updateSpeaker(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(speaker, parentId);
+          await dataUpdate.addItemAndAssociations(speaker, parentId);
 
           // Assert
           expect(speaker.eventUIDS, contains(parentId));
-          verify(mockDataUpdateManager.updateSpeaker(speaker)).called(1);
+          verify(dataUpdateManager.updateSpeaker(speaker)).called(1);
         },
       );
 
@@ -269,15 +276,15 @@ void main() {
           );
           const parentId = 'event1';
           when(
-            mockDataUpdateManager.updateSponsors(any),
+            dataUpdateManager.updateSponsors(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(sponsor, parentId);
+          await dataUpdate.addItemAndAssociations(sponsor, parentId);
 
           // Assert
           expect(sponsor.eventUID, parentId);
-          verify(mockDataUpdateManager.updateSponsors(sponsor)).called(1);
+          verify(dataUpdateManager.updateSponsors(sponsor)).called(1);
         },
       );
 
@@ -294,14 +301,14 @@ void main() {
             branch: '',
           );
           when(
-            mockDataUpdateManager.updateOrganization(any),
+            dataUpdateManager.updateOrganization(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemAndAssociations(config, null);
+          await dataUpdate.addItemAndAssociations(config, null);
 
           // Assert
-          verify(mockDataUpdateManager.updateOrganization(config)).called(1);
+          verify(dataUpdateManager.updateOrganization(config)).called(1);
         },
       );
     });
@@ -327,15 +334,15 @@ void main() {
             mockDataLoaderManager.loadSpeakers(),
           ).thenAnswer((_) async => []);
           when(
-            mockDataUpdateManager.updateSpeakers(any),
+            dataUpdateManager.updateSpeakers(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(speakers);
+          await dataUpdate.addItemListAndAssociations(speakers);
 
           // Assert
           verify(mockDataLoaderManager.loadSpeakers()).called(1);
-          verify(mockDataUpdateManager.updateSpeakers(any)).called(1);
+          verify(dataUpdateManager.updateSpeakers(any)).called(1);
         },
       );
 
@@ -357,15 +364,15 @@ void main() {
             mockDataLoaderManager.loadSponsors(),
           ).thenAnswer((_) async => []);
           when(
-            mockDataUpdateManager.updateSponsorsList(any),
+            dataUpdateManager.updateSponsorsList(any),
           ).thenAnswer((_) async => {});
 
           // Act
-          await DataUpdate.addItemListAndAssociations(sponsors);
+          await dataUpdate.addItemListAndAssociations(sponsors);
 
           // Assert
           verify(mockDataLoaderManager.loadSponsors()).called(1);
-          verify(mockDataUpdateManager.updateSponsorsList(any)).called(1);
+          verify(dataUpdateManager.updateSponsorsList(any)).called(1);
         },
       );
     });
@@ -380,11 +387,11 @@ void main() {
           const speakerId = 'speaker123';
           const eventUID = 'event1';
           when(
-            mockDataUpdateManager.removeSpeaker(any, any),
+            dataUpdateManager.removeSpeaker(any, any),
           ).thenAnswer((_) async {});
 
           // Act
-          await DataUpdate.deleteItemAndAssociations(
+          await dataUpdate.deleteItemAndAssociations(
             speakerId,
             'Speaker',
             eventUID: eventUID,
@@ -392,7 +399,7 @@ void main() {
 
           // Assert
           verify(
-            mockDataUpdateManager.removeSpeaker(speakerId, eventUID),
+            dataUpdateManager.removeSpeaker(speakerId, eventUID),
           ).called(1);
         },
       );
@@ -403,14 +410,14 @@ void main() {
           // Arrange
           const sponsorId = 'sponsor123';
           when(
-            mockDataUpdateManager.removeSponsors(any),
+            dataUpdateManager.removeSponsors(any),
           ).thenAnswer((_) async {});
 
           // Act
-          await DataUpdate.deleteItemAndAssociations(sponsorId, 'Sponsor');
+          await dataUpdate.deleteItemAndAssociations(sponsorId, 'Sponsor');
 
           // Assert
-          verify(mockDataUpdateManager.removeSponsors(sponsorId)).called(1);
+          verify(dataUpdateManager.removeSponsors(sponsorId)).called(1);
         },
       );
     });
@@ -437,20 +444,20 @@ void main() {
 
       when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [day]);
       when(
-        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+        dataUpdateManager.updateAgendaDays(any, overrideData: false),
       ).thenAnswer((_) async => {});
-      when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
+      when(dataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
 
       // Act
       // Esta llamada fallaría con el error 'Null check operator' si el código no se corrige.
-      await DataUpdate.addItemAndAssociations(track, parentId);
+      await dataUpdate.addItemAndAssociations(track, parentId);
 
       // Assert
-      verify(mockDataUpdateManager.updateTrack(track)).called(1);
+      verify(dataUpdateManager.updateTrack(track)).called(1);
 
       // Capturamos la lista de días que se pasa a updateAgendaDays para verificar su contenido.
       final captured = verify(
-        mockDataUpdateManager.updateAgendaDays(captureAny, overrideData: false),
+        dataUpdateManager.updateAgendaDays(captureAny, overrideData: false),
       ).captured;
 
       // Verificamos que el día actualizado ahora contiene el trackId en su lista.
@@ -477,7 +484,7 @@ void main() {
 
         // Act & Assert
         expect(
-          () => DataUpdate.deleteItemAndAssociations(trackId, 'Track'),
+          () => dataUpdate.deleteItemAndAssociations(trackId, 'Track'),
           throwsA(isA<Exception>()),
         );
       },
@@ -496,18 +503,18 @@ void main() {
       final day = AgendaDay(uid: 'day1', eventsUID: [], date: '');
       when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [day]);
       when(
-        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+        dataUpdateManager.updateAgendaDays(any, overrideData: false),
       ).thenAnswer((_) async => {});
-      when(mockDataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
+      when(dataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
 
       // Act
-      await DataUpdate.addItemAndAssociations(track, parentId);
+      await dataUpdate.addItemAndAssociations(track, parentId);
 
       // Assert
-      verify(mockDataUpdateManager.updateTrack(track)).called(1);
+      verify(dataUpdateManager.updateTrack(track)).called(1);
       // Verifica que se actualice el día de la agenda asociado
       verify(
-        mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+        dataUpdateManager.updateAgendaDays(any, overrideData: false),
       ).called(1);
     });
 
@@ -526,15 +533,15 @@ void main() {
         ];
         when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
         when(
-          mockDataUpdateManager.updateTracks(any),
+          dataUpdateManager.updateTracks(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemListAndAssociations(tracks);
+        await dataUpdate.addItemListAndAssociations(tracks);
 
         // Assert
         verify(mockDataLoaderManager.loadAllTracks()).called(1);
-        verify(mockDataUpdateManager.updateTracks(any)).called(1);
+        verify(dataUpdateManager.updateTracks(any)).called(1);
       },
     );
   });
@@ -549,16 +556,16 @@ void main() {
         const parentId = 'event1';
         when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
         when(
-          mockDataUpdateManager.updateAgendaDay(any),
+          dataUpdateManager.updateAgendaDay(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(day, parentId);
+        await dataUpdate.addItemAndAssociations(day, parentId);
 
         // Assert
         // Comprueba que el ID del evento padre se ha añadido a la lista del día
         expect(day.eventsUID, contains(parentId));
-        verify(mockDataUpdateManager.updateAgendaDay(day)).called(1);
+        verify(dataUpdateManager.updateAgendaDay(day)).called(1);
       },
     );
 
@@ -571,19 +578,19 @@ void main() {
         ];
         when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
         when(
-          mockDataUpdateManager.updateAgendaDays(
+          dataUpdateManager.updateAgendaDays(
             any,
             overrideData: anyNamed('overrideData'),
           ),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.addItemListAndAssociations(days);
+        await dataUpdate.addItemListAndAssociations(days);
 
         // Assert
         verify(mockDataLoaderManager.loadAllDays()).called(1);
         verify(
-          mockDataUpdateManager.updateAgendaDays(
+          dataUpdateManager.updateAgendaDays(
             any,
             overrideData: anyNamed('overrideData'),
           ),
@@ -607,11 +614,11 @@ void main() {
         ).thenAnswer((_) async => [agendaDay]);
         // No esperamos que se llame a removeAgendaDay porque aún tiene otro evento asociado
         when(
-          mockDataUpdateManager.removeAgendaDay(any),
+          dataUpdateManager.removeAgendaDay(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(
+        await dataUpdate.deleteItemAndAssociations(
           dayId,
           'AgendaDay',
           eventUID: eventId,
@@ -619,7 +626,7 @@ void main() {
 
         // Assert
         // Verifica que no se ha borrado el día, solo se ha desasociado del evento
-        verifyNever(mockDataUpdateManager.removeAgendaDay(dayId));
+        verifyNever(dataUpdateManager.removeAgendaDay(dayId));
         // La lógica interna debería llamar a _addAgendaDays para actualizar el día sin el eventId
         // Esto es un efecto secundario de cómo está implementado _deleteAgendaDay
         verify(mockDataLoaderManager.loadAllDays()).called(1);
@@ -641,18 +648,18 @@ void main() {
           mockDataLoaderManager.loadAllDays(),
         ).thenAnswer((_) async => [agendaDay]);
         when(
-          mockDataUpdateManager.removeAgendaDay(any),
+          dataUpdateManager.removeAgendaDay(any),
         ).thenAnswer((_) async => {});
 
         // Act
-        await DataUpdate.deleteItemAndAssociations(
+        await dataUpdate.deleteItemAndAssociations(
           dayId,
           'AgendaDay',
           eventUID: eventId,
         );
 
         // Assert
-        verify(mockDataUpdateManager.removeAgendaDay(dayId)).called(1);
+        verify(dataUpdateManager.removeAgendaDay(dayId)).called(1);
       },
     );
   });
@@ -711,25 +718,25 @@ void main() {
 
         // No esperamos llamadas a remove, solo a update
         when(
-          mockDataUpdateManager.removeTrack(any),
+          dataUpdateManager.removeTrack(any),
         ).thenAnswer((_) async => {});
         when(
-          mockDataUpdateManager.updateEvent(any),
+          dataUpdateManager.updateEvent(any),
         ).thenAnswer((_) async => {});
 
         // El mock clave: capturamos el día actualizado
         when(
-          mockDataUpdateManager.updateAgendaDay(any),
+          dataUpdateManager.updateAgendaDay(any),
         ).thenAnswer((_) async => {});
 
         // Act
         // Llamamos a la función pública que desencadena la lógica a probar
-        await DataUpdate.deleteItemAndAssociations(trackIdToRemove, 'Track');
+        await dataUpdate.deleteItemAndAssociations(trackIdToRemove, 'Track');
 
         // Assert
         // Capturamos el objeto AgendaDay que se pasa a updateAgendaDay
         final captured = verify(
-          mockDataUpdateManager.updateAgendaDay(captureAny),
+          dataUpdateManager.updateAgendaDay(captureAny),
         ).captured;
         final updatedDay = captured.first as AgendaDay;
 
@@ -769,23 +776,23 @@ void main() {
           mockDataLoaderManager.loadAllDays(),
         ).thenAnswer((_) async => [agendaDay]);
         when(
-          mockDataUpdateManager.updateTrack(any),
+          dataUpdateManager.updateTrack(any),
         ).thenAnswer((_) async => {});
         // Mock clave para capturar el resultado
         when(
-          mockDataUpdateManager.updateAgendaDays(any, overrideData: false),
+          dataUpdateManager.updateAgendaDays(any, overrideData: false),
         ).thenAnswer((_) async {});
 
         // Act
-        await DataUpdate.addItemAndAssociations(trackToAdd, parentDayId);
+        await dataUpdate.addItemAndAssociations(trackToAdd, parentDayId);
 
         // Assert
         // Verificamos la llamada a updateTrack, que es parte de la función principal
-        verify(mockDataUpdateManager.updateTrack(trackToAdd)).called(1);
+        verify(dataUpdateManager.updateTrack(trackToAdd)).called(1);
 
         // Capturamos la lista de días que se pasa para la actualización
         final captured = verify(
-          mockDataUpdateManager.updateAgendaDays(
+          dataUpdateManager.updateAgendaDays(
             captureAny,
             overrideData: false,
           ),
