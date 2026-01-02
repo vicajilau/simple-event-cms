@@ -1,3 +1,4 @@
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
@@ -18,6 +19,7 @@ void main() {
   late SecRepository secRepository;
   late MockDataLoaderManager mockDataLoaderManager;
   late MockDataUpdateManager mockDataUpdateManager;
+  late DataUpdate dataUpdate;
   late MockCommonsServices mockCommonsServices;
 
   setUp(() async {
@@ -114,7 +116,8 @@ void main() {
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     getIt.registerSingleton<DataLoaderManager>(mockDataLoaderManager);
     getIt.registerSingleton<DataUpdateManager>(mockDataUpdateManager);
-    getIt.registerSingleton<DataUpdate>(DataUpdate());
+    dataUpdate = DataUpdate();
+    getIt.registerSingleton<DataUpdate>(dataUpdate);
 
     secRepository = SecRepositoryImp();
   });
@@ -301,6 +304,13 @@ void main() {
         color: '',
         sessionUids: [],
       );
+      final anotherTrack = Track(
+        uid: 't3',
+        name: 'track 3',
+        eventUid: 'event1',
+        color: '',
+        sessionUids: [],
+      );
 
       test('should return Error if track with same name exists', () async {
         when(
@@ -316,6 +326,67 @@ void main() {
           'A track with the name "Track 1" already exists.',
         );
       });
+
+      test('should return CertainException when you try to save tracks', () async {
+
+        when(dataUpdate.addItemListAndAssociations(tracks)).thenThrow(
+          CertainException('error trying to save'),
+        );
+
+        final result = await secRepository.saveTracks(tracks);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'error trying to save',
+        );
+      });
+
+      test('should return Error when you try to save tracks', () async {
+
+        when(dataUpdate.addItemListAndAssociations(tracks)).thenThrow(
+          ArgumentError('error trying to save'),
+        );
+
+        final result = await secRepository.saveTracks(tracks);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'Error in saveTracks, please try again',
+        );
+      });
+
+      test('save tracks successfully', () async {
+
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+          (_) async => [anotherTrack],
+        );
+        when(mockDataUpdateManager.updateTracks(any)).thenAnswer(
+          (_) async => []);
+
+        final result = await secRepository.saveTracks(tracks);
+
+        expect(result, isA<Ok<void>>());
+      });
+
+      test('should return Exception when you try to save tracks', () async {
+
+        when(dataUpdate.addItemListAndAssociations(tracks)).thenThrow(
+          Exception('error trying to save'),
+        );
+
+        final result = await secRepository.saveTracks(tracks);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'Error in saveTracks, please try again',
+        );
+      });
     });
     group('saveEvent', () {
       final event = Event(
@@ -325,17 +396,22 @@ void main() {
         year: '',
         primaryColor: '',
         secondaryColor: '',
-        eventDates: MockEventDates());
+        eventDates: MockEventDates(),
+      );
       test('should return Ok when saving is successful', () async {
-        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[]);
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async => []);
         when(mockDataUpdateManager.updateEvent(event)).thenAnswer((_) async {});
         final result = await secRepository.saveEvent(event);
 
         expect(result, isA<Ok<void>>());
       });
       test('should return Error when saving has an error', () async {
-        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async =>[event]);
-        when(mockDataUpdateManager.updateEvent(event)).thenThrow(CertainException('error'));
+        when(
+          mockDataLoaderManager.loadEvents(),
+        ).thenAnswer((_) async => [event]);
+        when(
+          mockDataUpdateManager.updateEvent(event),
+        ).thenThrow(CertainException('error'));
         final result = await secRepository.saveEvent(event);
 
         expect((result as Error).error, isA<NetworkException>());
@@ -371,6 +447,84 @@ void main() {
         expect(
           (result.error as NetworkException).message,
           'A track with the name "New Track" already exists.',
+        );
+      });
+      test('return Certain exception when you try to save track', () async {
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+          (_) async => [
+            Track(
+              uid: 't2',
+              name: 'new track2',
+              eventUid: 'event1',
+              color: '',
+              sessionUids: [],
+            ),
+          ],
+        );
+
+        when(
+          dataUpdate.addItemAndAssociations(track, 'event1'),
+        ).thenThrow(CertainException('error trying to save'));
+
+        final result = await secRepository.saveTrack(track, agendaDayId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'error trying to save',
+        );
+      });
+      test('return Exception when you try to save track', () async {
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+          (_) async => [
+            Track(
+              uid: 't2',
+              name: 'new track2',
+              eventUid: 'event1',
+              color: '',
+              sessionUids: [],
+            ),
+          ],
+        );
+
+        when(
+          dataUpdate.addItemAndAssociations(track, 'event1'),
+        ).thenThrow(Exception('error trying to save'));
+
+        final result = await secRepository.saveTrack(track, agendaDayId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'An unexpected error occurred. Please try again later.',
+        );
+      });
+      test('return Error when you try to save track', () async {
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+          (_) async => [
+            Track(
+              uid: 't2',
+              name: 'new track2',
+              eventUid: 'event1',
+              color: '',
+              sessionUids: [],
+            ),
+          ],
+        );
+
+        when(
+          dataUpdate.addItemAndAssociations(track, 'event1'),
+        ).thenThrow(ArgumentError('error trying to save'));
+
+        final result = await secRepository.saveTrack(track, agendaDayId);
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+        expect(
+          (result.error as NetworkException).message,
+          'An unexpected error occurred. Please try again later.',
         );
       });
     });
