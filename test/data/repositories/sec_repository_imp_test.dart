@@ -417,6 +417,106 @@ void main() {
         expect((result as Error).error, isA<NetworkException>());
       });
     });
+    group('removeEvent', (){
+      final event1 = Event(
+        uid: 'event1',
+        tracks: [],
+        eventName: '',
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+        eventDates: MockEventDates(),
+      );
+      final event2 = Event(
+        uid: 'event2',
+        tracks: [],
+        eventName: '',
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+        eventDates: MockEventDates(),
+      );
+
+      test('should return Ok when removing is successful', () async {
+        when(mockDataLoaderManager.loadEvents()).thenAnswer((_) async => [event1, event2]);
+        when(mockDataUpdateManager.removeEvent('event1')).thenAnswer((_) async {});
+
+        final result = await secRepository.removeEvent('event1');
+
+        expect(result, isA<Ok<void>>());
+
+      });
+      test('should return Exception when removing is successful', () async {
+        when(dataUpdate.deleteItemAndAssociations('event1', "Event")).thenThrow(Exception('error'));
+
+        final result = await secRepository.removeEvent('event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+      test('should return Error when removing is not successful', () async {
+        when(dataUpdate.deleteItemAndAssociations('event1', "Event")).thenThrow(ArgumentError('error'));
+
+        final result = await secRepository.removeEvent('event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+      test('should return CertainException when removing is not successful', () async {
+        when(dataUpdate.deleteItemAndAssociations('event1', "Event")).thenThrow(CertainException('error'));
+
+        final result = await secRepository.removeEvent('event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+    });
+    group('RemoveAgendaDay', (){
+      final agendaDay1 = AgendaDay(uid: 'day1', date: '', eventsUID: ['event1']);
+      final agendaDay2 = AgendaDay(uid: 'day2', date: '', eventsUID: ['event1']);
+
+
+      test('should return Ok when removing is successful', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [agendaDay1, agendaDay2]);
+        when(mockDataUpdateManager.removeAgendaDay('day1')).thenAnswer((_) async {});
+        final result = await secRepository.removeAgendaDay('day1','event1');
+
+        expect(result, isA<Ok<void>>());
+
+      });
+      test('should return Error when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [agendaDay1, agendaDay2]);
+        when(mockDataUpdateManager.removeAgendaDay('day1')).thenThrow(AssertionError('error'));
+        final result = await secRepository.removeAgendaDay('day1','event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+      test('should return Exception when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [agendaDay1, agendaDay2]);
+        when(mockDataUpdateManager.removeAgendaDay('day1')).thenThrow(Exception('error'));
+
+        final result = await secRepository.removeAgendaDay('day1','event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+      test('should return CertainException when removing is not successful', () async {
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => [agendaDay1, agendaDay2]);
+        when(mockDataUpdateManager.removeAgendaDay('day1')).thenThrow(CertainException('error'));
+
+        final result = await secRepository.removeAgendaDay('day1','event1');
+
+        expect(result, isA<Error>());
+        expect((result as Error).error, isA<NetworkException>());
+
+      });
+    });
     group('saveTrack', () {
       final track = Track(
         uid: 'track1',
