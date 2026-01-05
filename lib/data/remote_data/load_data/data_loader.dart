@@ -14,24 +14,24 @@ class DataLoaderManager {
   static final Config config = getIt<Config>();
   SecureInfo get secureInfo => getIt<SecureInfo>();
   static final CommonsServices commonsServices = getIt<CommonsServices>();
-  static GithubJsonModel? _allData;
-  static DateTime? _lastFetchTime;
+  GithubJsonModel? allData;
+  DateTime? lastFetchTime;
 
   Future<void> loadAllEventData({bool forceUpdate = false}) async {
     var githubDataSaving = await secureInfo.getGithubKey();
     // Check if data is already loaded and if it's been less than 5 minutes
-    if (_allData != null &&
-        _lastFetchTime != null &&
-        DateTime.now().difference(_lastFetchTime!) <
+    if (allData != null &&
+        lastFetchTime != null &&
+        DateTime.now().difference(lastFetchTime!) <
             const Duration(minutes: 5) &&
         githubDataSaving.token == null &&
         !forceUpdate) {
       return; // Do not fetch new data
     }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
-    _allData = GithubJsonModel.fromJson(data);
+    allData = GithubJsonModel.fromJson(data);
     if (githubDataSaving.token == null) {
-      _lastFetchTime = DateTime.now();
+      lastFetchTime = DateTime.now();
     }
   }
 
@@ -39,22 +39,22 @@ class DataLoaderManager {
 
   Future<List<Session>> loadAllSessions() async {
     await loadAllEventData();
-    List<Session> jsonList = _allData?.sessions ?? List.empty();
+    List<Session> jsonList = allData?.sessions ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<Track>> loadAllTracks() async {
     await loadAllEventData();
-    List<Track> jsonList = _allData?.tracks ?? List.empty();
+    List<Track> jsonList = allData?.tracks ?? List.empty();
     return jsonList.toList();
   }
 
   Future<List<AgendaDay>> loadAllDays() async {
     await loadAllEventData();
-    List<AgendaDay> jsonList = _allData?.agendadays ?? List.empty();
+    List<AgendaDay> jsonList = allData?.agendadays ?? List.empty();
 
-    final List<Track> allTracks = _allData?.tracks ?? List.empty();
-    final List<Session> allSessions = _allData?.sessions ?? List.empty();
+    final List<Track> allTracks = allData?.tracks ?? List.empty();
+    final List<Session> allSessions = allData?.sessions ?? List.empty();
 
     for (var track in allTracks) {
       track.resolvedSessions = allSessions
@@ -76,14 +76,14 @@ class DataLoaderManager {
   /// Loads speaker information from the speakers.json file
   Future<List<Speaker>?> loadSpeakers() async {
     await loadAllEventData();
-    List<Speaker> jsonList = _allData?.speakers ?? List.empty();
+    List<Speaker> jsonList = allData?.speakers ?? List.empty();
     return jsonList.toList();
   }
 
   /// Loads sponsor information from the sponsors.json file
   Future<List<Sponsor>> loadSponsors() async {
     await loadAllEventData();
-    List<Sponsor> jsonList = _allData?.sponsors ?? List.empty();
+    List<Sponsor> jsonList = allData?.sponsors ?? List.empty();
     return jsonList.toList();
   }
 
@@ -92,7 +92,7 @@ class DataLoaderManager {
     await loadAllEventData();
     var githubService = await secureInfo.getGithubKey();
 
-    List<Event> jsonList = _allData?.events ?? List.empty();
+    List<Event> jsonList = allData?.events ?? List.empty();
     if (jsonList.isEmpty ||
         (githubService.token == null &&
             jsonList.indexWhere((event) => event.isVisible) == -1)) {

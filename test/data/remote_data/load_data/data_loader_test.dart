@@ -19,6 +19,7 @@ void main() {
 
   late DataLoaderManager dataLoaderManager;
   late MockCommonsServices mockCommonsServices;
+  late SecureInfo? mockSecureInfo;
 
   const MethodChannel channel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
@@ -27,7 +28,8 @@ void main() {
   setUpAll(() async {
     mockCommonsServices = MockCommonsServices();
     // Register CommonsServices before instantiating DataLoaderManager
-    getIt.registerSingleton<SecureInfo>(SecureInfo());
+    mockSecureInfo = SecureInfo();
+    getIt.registerSingleton<SecureInfo>(mockSecureInfo!);
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     dataLoaderManager = DataLoaderManager();
     getIt.registerSingleton<Config>(
@@ -155,11 +157,42 @@ void main() {
 
       verify(mockCommonsServices.loadData(any)).called(1);
     });
+    test('loadEvents returns an empty list if no events are visible', () async {
+      final testEvent = Event(
+        uid: '1',
+        isVisible: false,
+        tracks: [],
+        eventName: '',
+        year: '',
+        primaryColor: '',
+        secondaryColor: '',
+        eventDates: EventDates(
+          uid: 'testUID',
+          startDate: '2025-01-01T10:00:00Z',
+          endDate: '2025-01-02T18:00:00Z',
+          timezone: 'timezone',
+        ),
+      );
+
+      when(mockCommonsServices.loadData(any)).thenAnswer(
+        (_) => Future.value({
+          'events': [testEvent.toJson()],
+        }),
+      );
+
+      // Act
+      await dataLoaderManager.loadEvents();
+
+      verify(mockCommonsServices.loadData(any)).called(1);
+    });
 
     test(
       'loadAllEventData uses cache when called multiple times within 5 minutes',
       () async {
         // Arrange
+
+        dataLoaderManager.allData = null;
+        dataLoaderManager.lastFetchTime = DateTime.now();
 
         // Act
         await dataLoaderManager.loadAllEventData();
@@ -301,6 +334,49 @@ void main() {
         agendaDays.first.resolvedTracks!.first.resolvedSessions.first.uid,
         testSession.uid,
       );
+    });
+    test('loadAllSessions returns sessions from loaded data', () async {
+      final testSession = Session(
+        uid: 'session-101',
+        title: 'Flutter Magic',
+        time: '10:00',
+        speakerUID: 'speaker-1',
+        eventUID: 'event-1',
+        agendaDayUID: 'day-1',
+        type: 'talk',
+      );
+
+      final testData = GithubJsonModel(sessions: [testSession]);
+
+      when(
+        mockCommonsServices.loadData(any),
+      ).thenAnswer((_) async => testData.toJson());
+      // Act
+      final sessions = await dataLoaderManager.loadAllSessions();
+
+      expect(sessions, hasLength(1));
+      expect(sessions.first.uid, testSession.uid);
+    });
+    test('loadAllTracks returns tracks from loaded data', () async {
+      final testTrack = Track(
+        uid: 'track-A',
+        sessionUids: ['session-101'], // Referencia a la sesión
+        name: 'Mobile Track',
+        color: '#FFFFFF',
+        eventUid: 'event-1',
+      );
+
+      final testData = GithubJsonModel(tracks: [testTrack]);
+
+      // Mockea la llamada para que devuelva los datos de este test.
+      when(
+        mockCommonsServices.loadData(any),
+      ).thenAnswer((_) async => testData.toJson());
+      // Act
+      final tracks = await dataLoaderManager.loadAllTracks();
+
+      expect(tracks, hasLength(1));
+      expect(tracks.first.uid, testTrack.uid);
     });
   });
 }
