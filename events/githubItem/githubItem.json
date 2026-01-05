@@ -2,12 +2,12 @@
   "events": [
     {
       "UID": "Event_20260105_160122",
-      "eventName": "gfdgfdgdfg",
+      "eventName": "test_beauif",
       "year": "2026",
       "primaryColor": "",
       "secondaryColor": "",
       "eventDates": {
-        "UID": "EventDate_20260105_160122",
+        "UID": "EventDate_20260105_160234",
         "startDate": "2026-01-25",
         "endDate": "2026-01-31",
         "timezone": "Europe/Madrid"
@@ -19,7 +19,7 @@
       "tracks": [
         {
           "UID": "Track_20260105_160120",
-          "name": "gdfgdf",
+          "name": "roomrere",
           "color": "",
           "sessionUids": [],
           "eventUid": "Event_20260105_160122"
