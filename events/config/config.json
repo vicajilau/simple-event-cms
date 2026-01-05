@@ -4,6 +4,6 @@
   "secondaryColorOrganization": "#4285F4",
   "github_user": "vicajilau",
   "project_name": "simple-event-cms",
-  "branch": "main",
+  "branch": "feature/fix_session_issue",
   "eventForcedToViewUID": null
 }
