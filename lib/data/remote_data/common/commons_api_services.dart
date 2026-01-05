@@ -63,12 +63,7 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     final url = 'events/$path';
 
-    final githubService = await secureInfo.getGithubKey();
-    final github = GitHub(
-      auth: githubService.token == null
-          ? Authentication.anonymous()
-          : Authentication.withToken(githubService.token),
-    );
+    final github = await secureInfo.getGithubItem();
     final repositorySlug = RepositorySlug(
       config.githubUser,
       (await secureInfo.getGithubKey()).projectName ?? config.projectName,
@@ -213,7 +208,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
 
@@ -345,7 +340,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
 
@@ -500,7 +495,7 @@ class CommonsServicesImp extends CommonsServices {
       throw GithubException("GitHub token is not available.");
     }
 
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
@@ -619,7 +614,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
@@ -751,7 +746,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
@@ -884,7 +879,7 @@ class CommonsServicesImp extends CommonsServices {
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
