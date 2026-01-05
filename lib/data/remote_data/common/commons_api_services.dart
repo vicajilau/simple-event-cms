@@ -227,10 +227,11 @@ class CommonsServicesImp extends CommonsServices {
     } else {
       dataOriginal.add(data);
     }
-    final dataInJsonString = json.encode(
+    var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch = config.branch; // Default to 'main' if not specified
     try {
@@ -349,8 +350,11 @@ class CommonsServicesImp extends CommonsServices {
 
     String? currentSha;
 
-    final dataInJsonString = json.encode(data);
     var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
+      data.toJson(),
+    );
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     String branch = orgToUse.branch; // Default to 'main' if not specified
     try {
@@ -536,10 +540,11 @@ class CommonsServicesImp extends CommonsServices {
     dataOriginal.removeWhere((item) => item.uid == dataToRemove.uid);
 
     // 3. CONVERT UPDATED LIST TO BASE64
-    final dataInJsonString = json.encode(
+    var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
       dataOriginal.map((item) => item.toJson()).toList(),
     );
-    var base64Content = "";
     base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     String branch = config.branch; // Default to 'main' if not specified
@@ -625,11 +630,12 @@ class CommonsServicesImp extends CommonsServices {
     String branch = config.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
-    final dataInJsonString = json.encode(
+    var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
       dataList.map((item) => item.toJson()).toList(),
     );
-    var base64Content = base64.encode(utf8.encode(dataInJsonString));
-
+    base64Content = base64.encode(utf8.encode(dataInJsonString));
     try {
       // 2. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
       // This is mandatory for updates.
@@ -760,11 +766,12 @@ class CommonsServicesImp extends CommonsServices {
     dataToMerge.removeWhere((item) => dataToRemove.contains(item));
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
-    final dataInJsonString = json.encode(
-      dataToMerge.map((item) => item.toJson()).toList(),
+    var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
+      dataOriginal.map((item) => item.toJson()).toList(),
     );
-    var base64Content = base64.encode(utf8.encode(dataInJsonString));
-
+    base64Content = base64.encode(utf8.encode(dataInJsonString));
     try {
       // 2. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
       // This is mandatory for updates.
@@ -890,8 +897,12 @@ class CommonsServicesImp extends CommonsServices {
     String branch = config.branch;
 
     // 1. CONVERT THE FINAL CONTENT TO JSON AND THEN TO BASE64
-    final dataInJsonString = json.encode(data.toJson());
-    var base64Content = base64.encode(utf8.encode(dataInJsonString));
+    var base64Content = "";
+    const jsonEncoder = JsonEncoder.withIndent('  ');
+    final dataInJsonString = jsonEncoder.convert(
+      data.toJson(),
+    );
+    base64Content = base64.encode(utf8.encode(dataInJsonString));
 
     try {
       // 2. GET THE CURRENT FILE CONTENT TO OBTAIN ITS SHA
