@@ -28,12 +28,12 @@
     },
     {
       "UID": "Event_20260105_163137",
-      "eventName": "test_002",
+      "eventName": "test_003",
       "year": "2026",
       "primaryColor": "",
       "secondaryColor": "",
       "eventDates": {
-        "UID": "EventDate_20260105_163158",
+        "UID": "EventDate_20260105_163416",
         "startDate": "2026-01-11",
         "endDate": "2026-01-17",
         "timezone": "Europe/Madrid"
