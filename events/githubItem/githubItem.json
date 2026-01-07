@@ -1,0 +1,79 @@
+{
+  "events": [],
+  "tracks": [],
+  "sessions": [],
+  "agendadays": [
+    {
+      "UID": "2026-01-25",
+      "date": "2026-01-25",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-26",
+      "date": "2026-01-26",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-27",
+      "date": "2026-01-27",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-28",
+      "date": "2026-01-28",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-29",
+      "date": "2026-01-29",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-30",
+      "date": "2026-01-30",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-31",
+      "date": "2026-01-31",
+      "eventUID": [
+        {
+          "UID": "Event_20260107_100512"
+        }
+      ],
+      "trackUids": null
+    }
+  ],
+  "sponsors": [],
+  "speakers": []
+}
