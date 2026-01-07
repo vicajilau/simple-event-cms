@@ -34,6 +34,13 @@
       "color": "",
       "sessionUids": [],
       "eventUid": "Event_20260107_121043"
+    },
+    {
+      "UID": "Track_20260107_121106",
+      "name": "room2",
+      "color": "",
+      "sessionUids": [],
+      "eventUid": "Event_20260107_121111"
     }
   ],
   "sessions": [],
@@ -116,7 +123,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-26",
@@ -126,7 +133,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-27",
@@ -136,7 +143,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-28",
@@ -146,7 +153,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-29",
@@ -156,7 +163,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-30",
@@ -166,7 +173,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-31",
@@ -176,7 +183,7 @@
           "UID": "Event_20260107_121111"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     }
   ],
   "sponsors": [],
