@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:mockito/mockito.dart';
@@ -84,6 +86,7 @@ void main() {
     when(mockDataLoaderManager.loadSponsors()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
+    when(mockDataLoaderManager.loadSpeakers()).thenAnswer((_) async => []);
     when(mockDataLoaderManager.loadAllSessions()).thenAnswer((_) async => []);
     when(
       mockCommonsServices.updateAllData(any, any, any),
@@ -891,6 +894,28 @@ void main() {
       },
     );
 
+    test('overwriteItems with empty list should call debugPrint with a warning', () async {
+      final List<String> capturedLogs = [];
+
+      await runZoned(
+            () async {
+          await mockDataUpdateManager.overwriteItems([], "Event");
+        },
+        zoneSpecification: ZoneSpecification(
+          print: (Zone self, ZoneDelegate parent, Zone zone, String line) {
+            capturedLogs.add(line);
+          },
+        ),
+      );
+
+      expect(
+        capturedLogs,
+        contains("Warning: Overwriting with an empty list. This will remove all items of this type."),
+      );
+
+      // Opcional: Si esperas que se llame solo una vez.
+      expect(capturedLogs.length, 1);
+    });
     test('removeEvent should remove event and all its related data', () async {
       // Arrange
       final eventToRemove = 'event-1';
