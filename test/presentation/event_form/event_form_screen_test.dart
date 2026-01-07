@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:mockito/mockito.dart';
+import 'package:osm_nominatim/osm_nominatim.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/event_collection/event_collection_view_model.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_screen.dart';
 import 'package:sec/presentation/ui/screens/event_form/event_form_view_model.dart';
+import 'package:sec/presentation/ui/widgets/custom_error_dialog.dart';
+import 'package:sec/presentation/ui/widgets/section_input_form.dart';
 import 'package:sec/presentation/view_model_common.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:sec/core/routing/app_router.dart';
 
 import '../../mocks.mocks.dart';
 
@@ -22,9 +25,7 @@ Widget buildTestableWidget(Widget child) {
       GlobalWidgetsLocalizations.delegate,
       GlobalCupertinoLocalizations.delegate,
     ],
-    supportedLocales: const [
-      Locale('en', ''),
-    ],
+    supportedLocales: const [Locale('en', '')],
     home: Scaffold(body: child),
   );
 }
@@ -34,6 +35,7 @@ void main() {
   late MockEventCollectionViewModel mockCollectionViewModel;
   late MockConfig mockConfig;
   late MockGoRouter mockRouter;
+  late MockNominatim mockNominatim;
 
   setUp(() {
     getIt.reset();
@@ -41,17 +43,23 @@ void main() {
     mockCollectionViewModel = MockEventCollectionViewModel();
     mockConfig = MockConfig();
     mockRouter = MockGoRouter();
+    mockNominatim = MockNominatim();
 
     getIt.registerSingleton<EventFormViewModel>(mockViewModel);
     getIt.registerSingleton<EventCollectionViewModel>(mockCollectionViewModel);
     getIt.registerSingleton<Config>(mockConfig);
+    getIt.registerSingleton<Nominatim>(mockNominatim);
 
-    when(mockViewModel.viewState).thenReturn(ValueNotifier(ViewState.loadFinished));
+    when(
+      mockViewModel.viewState,
+    ).thenReturn(ValueNotifier(ViewState.loadFinished));
     when(mockViewModel.errorMessage).thenReturn('');
     when(mockViewModel.onSubmit(any)).thenAnswer((_) async => true);
-    when(mockCollectionViewModel.getEventById(any)).thenAnswer((_) async => null);
+    when(
+      mockCollectionViewModel.getEventById(any),
+    ).thenAnswer((_) async => null);
     when(mockConfig.eventForcedToViewUID).thenReturn(null);
-    
+
     AppRouter.router = mockRouter;
   });
 
@@ -60,15 +68,25 @@ void main() {
       final event = Event(
         uid: '1',
         eventName: 'Test Event',
-        eventDates: EventDates(startDate: '2023-01-01', endDate: '2023-01-02', timezone: 'UTC', uid: 'EventDates_uid'),
+        eventDates: EventDates(
+          startDate: '2023-01-01',
+          endDate: '2023-01-02',
+          timezone: 'UTC',
+          uid: 'EventDates_uid',
+        ),
         primaryColor: '#FFFFFF',
         secondaryColor: '#000000',
         isVisible: true,
-        tracks: [], year: '',
+        tracks: [],
+        year: '',
       );
-      when(mockCollectionViewModel.getEventById('1')).thenAnswer((_) async => event);
+      when(
+        mockCollectionViewModel.getEventById('1'),
+      ).thenAnswer((_) async => event);
 
-      await tester.pumpWidget(buildTestableWidget(EventFormScreen(eventId: '1')));
+      await tester.pumpWidget(
+        buildTestableWidget(EventFormScreen(eventId: '1')),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Test Event'), findsOneWidget);
@@ -76,14 +94,19 @@ void main() {
       expect(find.text('2023-01-02'), findsOneWidget);
     });
 
-    testWidgets('shows validation error for required fields', (WidgetTester tester) async {
+    testWidgets('shows validation error for required fields', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
       await tester.pumpAndSettle();
 
       await tester.tap(find.widgetWithText(FilledButton, 'Save'));
       await tester.pump();
 
-      expect(find.textContaining('Required field'), findsNWidgets(0)); // Name and Start Date
+      expect(
+        find.textContaining('Required field'),
+        findsNWidgets(0),
+      ); // Name and Start Date
     });
 
     testWidgets('date picker works', (WidgetTester tester) async {
@@ -134,4 +157,229 @@ void main() {
       expect(find.text('Event is visible'), findsOneWidget);
     });*/
   });
+
+  group('Check event fields', () {
+    testWidgets(
+      'Shows the CustomErrorDialog and focuses the first invalid field',
+      (tester) async {
+        final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+        await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
+        await tester.pumpAndSettle();
+
+        // Press the button that activates the _onSubmit()
+        final submitButton = find.byKey(const Key('submitButton'));
+        await tester.ensureVisible(submitButton);
+        expect(submitButton, findsOneWidget);
+        await tester.tap(submitButton);
+        await tester.pumpAndSettle();
+
+        // Shows the CustomErrorDialog with the localized error message
+        expect(find.byType(CustomErrorDialog), findsOneWidget);
+        expect(
+          find.textContaining(l10n.formError, findRichText: true),
+          findsOneWidget,
+        );
+
+        // Close the dialog (press the button)
+        final closeButton = find.text(l10n.closeButton);
+        expect(closeButton, findsOneWidget);
+        await tester.tap(closeButton);
+        await tester.pumpAndSettle();
+
+        // Localize the first TextFormField of the form
+        final firstTextField = find.byType(TextFormField).first;
+        expect(firstTextField, findsOneWidget);
+
+        // Find its EditableText descendant
+        final editableOfFirstField = find.descendant(
+          of: firstTextField,
+          matching: find.byType(EditableText),
+        );
+        expect(editableOfFirstField, findsOneWidget);
+
+        // Verify that the EditableText has focus
+        final editableWidget = tester.widget<EditableText>(
+          editableOfFirstField,
+        );
+        expect(editableWidget.focusNode.hasFocus, isTrue);
+      },
+    );
+
+    testWidgets(
+      'When all required fields are filled, _onSubmit does not show CustomErrorDialog',
+      (tester) async {
+        await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
+        await tester.pumpAndSettle();
+
+        // Name
+        final nameEditable = find.descendant(
+          of: find.byKey(const Key('SectionInputForm_NameField')),
+          matching: find.byType(EditableText),
+        );
+        expect(nameEditable, findsOneWidget);
+        await tester.enterText(nameEditable, 'FlutterConference BCN');
+        await tester.pump();
+
+        // Location
+        final locationEditable = find.descendant(
+          of: find.byKey(const Key('eventForm_locationField')),
+          matching: find.byType(EditableText),
+        );
+        expect(locationEditable, findsOneWidget);
+        await tester.enterText(locationEditable, 'Barcelona');
+        await tester.pump();
+
+        // Start date
+        final startDateEditable = find.descendant(
+          of: find.byKey(const Key('SectionInputForm_StartDateField')),
+          matching: find.byType(EditableText),
+        );
+        expect(startDateEditable, findsOneWidget);
+        await tester.enterText(startDateEditable, '2026-01-15');
+        await tester.pump();
+
+        // Timezone
+        final tzEditable = find.descendant(
+          of: find.byKey(const Key('SectionInputForm_TimezoneField')),
+          matching: find.byType(EditableText),
+        );
+        expect(tzEditable, findsOneWidget);
+        await tester.enterText(tzEditable, 'Europe/Madrid');
+        await tester.pump();
+
+        // Submit
+        final submitButton = find.byKey(const Key('submitButton'));
+        expect(submitButton, findsOneWidget);
+        await tester.tap(submitButton);
+        await tester.pumpAndSettle();
+
+        // Check that CustomErrorDialog is not shown
+        expect(find.byType(CustomErrorDialog), findsNothing);
+      },
+    );
+  });
+
+  testWidgets(
+    'Shows CustomErrorDialog in ViewState.error and does not close when tapping outside',
+    (tester) async {
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+      final viewState = ValueNotifier<ViewState>(ViewState.loadFinished);
+
+      // Set the correct behavior of the mockViewModel and the mockCollectionViewModel
+      when(mockViewModel.viewState).thenReturn(viewState);
+      when(mockViewModel.errorMessage).thenReturn('Something went wrong');
+      when(mockCollectionViewModel.setErrorKey(null)).thenAnswer((_) {});
+
+      // Mount the screen using getIt (already registered in your setUp)
+      await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
+      await tester.pump(); // primer frame
+
+      // Changes the screen state to error
+      viewState.value = ViewState.error;
+
+      await tester.pump(); // ejecuta el postFrame showDialog
+      await tester.pumpAndSettle(); // anima y muestra el diálogo
+
+      // Verify dialog and content
+      expect(find.byType(CustomErrorDialog), findsOneWidget);
+      expect(
+        find.textContaining('Something went wrong', findRichText: true),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.closeButton), findsOneWidget);
+
+      // Tap outside should not close
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pump();
+      expect(find.byType(CustomErrorDialog), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'Shows CustomErrorDialog in ViewState.error and closes when tapping the close button',
+    (tester) async {
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+
+      final viewState = ValueNotifier<ViewState>(ViewState.loadFinished);
+      when(mockViewModel.viewState).thenReturn(viewState);
+      when(mockViewModel.errorMessage).thenReturn('Something went wrong');
+      when(mockCollectionViewModel.setErrorKey(any)).thenAnswer((_) {});
+
+      await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
+      await tester.pump(); // primer frame
+
+      // Changes the screen state to error
+      viewState.value = ViewState.error;
+
+      await tester.pump();
+      await tester.pumpAndSettle();
+
+      // The dialog is shown with the correct content
+      expect(find.byType(CustomErrorDialog), findsOneWidget);
+      expect(
+        find.textContaining('Something went wrong', findRichText: true),
+        findsOneWidget,
+      );
+      expect(find.text(l10n.closeButton), findsOneWidget);
+
+      // A press outside does not close the dialog
+      await tester.tapAt(const Offset(10, 10));
+      await tester.pump();
+      expect(find.byType(CustomErrorDialog), findsOneWidget);
+
+      // Pressing the close button closes the dialog
+      await tester.tap(find.text(l10n.closeButton));
+      await tester.pumpAndSettle();
+
+      // Verifies with Mockito (without lambda)
+      verify(mockCollectionViewModel.setErrorKey(null)).called(1);
+
+      // The ViewState is reset (effect of onCancel)
+      expect(viewState.value, equals(ViewState.loadFinished));
+
+      // Dialog disappears
+      expect(find.byType(CustomErrorDialog), findsNothing);
+    },
+  );
+
+  testWidgets(
+    'Autocomplete: texto vacío no hace llamada y no muestra sugerencias',
+    (tester) async {
+      await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
+      await tester.pumpAndSettle();
+
+      // Encuentra el TextFormField del SectionInputForm "Location"
+      final locationField = find.descendant(
+        of: find.widgetWithText(SectionInputForm, 'Location'),
+        matching: find.byType(TextFormField),
+      );
+      expect(locationField, findsOneWidget);
+
+      // Escribir y luego limpiar para disparar la rama de texto vacío
+      await tester.enterText(locationField, 'a');
+      await tester.pump();
+
+      // Ahora limpiar → new call a _getSuggestions con texto vacío
+      await tester.enterText(locationField, '');
+      await tester.pump();
+
+      // Avanza tiempo de 1s: como se canceló y texto vacío retorna early, no debería llamar al servicio.
+      await tester.pump(const Duration(seconds: 1));
+
+      // Verifica que NO se llamó a searchByName con texto vacío
+      verifyNever(
+        mockNominatim.searchByName(
+          query: anyNamed('query'),
+          limit: anyNamed('limit'),
+          addressDetails: anyNamed('addressDetails'),
+          extraTags: anyNamed('extraTags'),
+          nameDetails: anyNamed('nameDetails'),
+        ),
+      );
+
+      // No hay sugerencias visibles
+      expect(find.textContaining('Barcelona'), findsNothing);
+    },
+  );
 }
