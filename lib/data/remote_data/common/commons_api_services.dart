@@ -764,7 +764,7 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     const jsonEncoder = JsonEncoder.withIndent('  ');
     final dataInJsonString = jsonEncoder.convert(
-      dataOriginal.map((item) => item.toJson()).toList(),
+      dataToMerge.map((item) => item.toJson()).toList(),
     );
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     try {
