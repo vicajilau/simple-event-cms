@@ -25,6 +25,32 @@
           "eventUid": "Event_20260107_091923"
         }
       ]
+    },
+    {
+      "UID": "Event_20260107_091944",
+      "eventName": "evento2",
+      "year": "2026",
+      "primaryColor": "",
+      "secondaryColor": "",
+      "eventDates": {
+        "UID": "EventDate_20260107_091944",
+        "startDate": "2026-01-25",
+        "endDate": "2026-01-31",
+        "timezone": "Europe/Madrid"
+      },
+      "description": null,
+      "location": "vcvdfvvfdsv",
+      "youtubeUrl": "",
+      "isVisible": true,
+      "tracks": [
+        {
+          "UID": "Track_20260107_091940",
+          "name": "room2",
+          "color": "",
+          "sessionUids": [],
+          "eventUid": "Event_20260107_091944"
+        }
+      ]
     }
   ],
   "tracks": [
