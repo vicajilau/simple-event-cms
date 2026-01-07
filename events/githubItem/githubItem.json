@@ -25,32 +25,6 @@
           "eventUid": "Event_20260107_090931"
         }
       ]
-    },
-    {
-      "UID": "Event_20260107_090952",
-      "eventName": "evento2",
-      "year": "2026",
-      "primaryColor": "",
-      "secondaryColor": "",
-      "eventDates": {
-        "UID": "EventDate_20260107_091018",
-        "startDate": "2026-01-18",
-        "endDate": "2026-01-24",
-        "timezone": "Europe/Madrid"
-      },
-      "description": null,
-      "location": "hfghfghf",
-      "youtubeUrl": "",
-      "isVisible": true,
-      "tracks": [
-        {
-          "UID": "Track_20260107_090948",
-          "name": "room2",
-          "color": "",
-          "sessionUids": [],
-          "eventUid": "Event_20260107_090952"
-        }
-      ]
     }
   ],
   "tracks": [
@@ -60,13 +34,6 @@
       "color": "",
       "sessionUids": [],
       "eventUid": "Event_20260107_090931"
-    },
-    {
-      "UID": "Track_20260107_090948",
-      "name": "room2",
-      "color": "",
-      "sessionUids": [],
-      "eventUid": "Event_20260107_090952"
     }
   ],
   "sessions": [],
@@ -77,9 +44,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -90,9 +54,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -103,9 +64,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -116,9 +74,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -129,9 +84,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -142,9 +94,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
       "trackUids": []
@@ -155,53 +104,8 @@
       "eventUID": [
         {
           "UID": "Event_20260107_090931"
-        },
-        {
-          "UID": "Event_20260107_090952"
         }
       ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-18",
-      "date": "2026-01-18",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-19",
-      "date": "2026-01-19",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-20",
-      "date": "2026-01-20",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-21",
-      "date": "2026-01-21",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-22",
-      "date": "2026-01-22",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-23",
-      "date": "2026-01-23",
-      "eventUID": [],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-24",
-      "date": "2026-01-24",
-      "eventUID": [],
       "trackUids": []
     }
   ],
