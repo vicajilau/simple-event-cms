@@ -597,6 +597,34 @@ void main() {
         ).called(1);
       },
     );
+    test(
+      'debería llamar a _addAgendaDays cuando la lista contiene AgendaDays y overrideData es true',
+      () async {
+        // Arrange
+        final days = [
+          AgendaDay(uid: 'd1', eventsUID: ['event1'], date: ''),
+        ];
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+        when(
+          dataUpdateManager.updateAgendaDays(
+            any,
+            overrideData: true,
+          ),
+        ).thenAnswer((_) async => {});
+
+        // Act
+        await dataUpdate.addItemListAndAssociations(days,overrideData: true);
+
+        // Assert
+        verify(mockDataLoaderManager.loadAllDays()).called(1);
+        verify(
+          dataUpdateManager.updateAgendaDays(
+            any,
+            overrideData: true,
+          ),
+        ).called(1);
+      },
+    );
 
     test(
       'debería llamar a _deleteAgendaDay cuando el itemType es "AgendaDay"',
