@@ -1249,7 +1249,7 @@ void main() {
 
     group('saveAgendaDays', () {
       final oldAgendaDays = [AgendaDay(uid: 'dayOld', date: '', eventsUID: [])];
-      final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: [])];
+      final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: []),AgendaDay(uid: 'dayOld', date: '', eventsUID: [])];
       const eventUID = 'event1';
 
       test('should return Ok when saving is successful', () async {
