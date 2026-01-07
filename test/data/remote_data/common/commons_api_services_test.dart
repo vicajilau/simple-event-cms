@@ -11,15 +11,15 @@ import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 
-// Importa los mocks generados
+// Import the generated mocks
 import '../../../mocks.mocks.dart';
 
-// Clase mock para GitHubModel
+// Mock class for GitHubModel
 class MockGitHubModel extends GitHubModel {
   final String id;
   final String name;
 
-  // Constructor corregido
+  // Corrected constructor
   MockGitHubModel(this.id, {this.name = 'Mock'})
       : super(uid: id, pathUrl: 'mock/path', updateMessage: 'mock update');
 
@@ -40,7 +40,7 @@ class MockGitHubModel extends GitHubModel {
   int get hashCode => id.hashCode;
 }
 
-// Clase mock para GithubJsonModel
+// Mock class for GithubJsonModel
 class MockGithubJsonModel extends GithubJsonModel {
   final Map<String, dynamic> _data;
   MockGithubJsonModel(this._data);
@@ -95,7 +95,7 @@ void main() {
     const testPath = 'data.json';
     final repoSlug = github_sdk.RepositorySlug('test_user', 'test_repo');
 
-    // --- Helpers para Mocks ---
+    // --- Mock Helpers ---
     github_sdk.GitHubFile createMockGitFile(String content, [String? sha]) {
       final file =  github_sdk.GitHubFile();
       file.content = content.replaceAll('\n', '');
@@ -118,7 +118,7 @@ void main() {
       const commitMessage = 'Remove data';
 
 
-      test('debería lanzar GithubException si el fichero no existe', () async {
+      test('should throw GithubException if the file does not exist', () async {
         // Arrange
         when(mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'))
             .thenThrow(github_sdk.NotFound(mockGitHub, 'Not Found'));
@@ -130,19 +130,19 @@ void main() {
             throwsA(isA<GithubException>()));
       });
 
-      test('debería reintentar en un conflicto 409', () async {
-        // Arrange: Simula un fallo 409 en el primer intento y éxito en el segundo
+      test('should retry on a 409 conflict', () async {
+        // Arrange: Simulate a 409 failure on the first attempt and success on the second
         final repoContents = createMockRepoContents('old_content', 'fake_sha');
         when(mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'))
             .thenAnswer((_) async => repoContents);
 
-        // Falla la primera vez
+        // Fails the first time
         when(mockHttpClient.put(any, headers: anyNamed('headers'), body: anyNamed('body')))
             .thenAnswer((_) async => http.Response('conflict', 409));
 
-        // Act & Assert: El método debería llamar a updateDataList internamente,
-        // que también podemos mockear o simplemente verificar el reintento.
-        // Aquí simplificamos esperando la excepción de reintentos máximos.
+        // Act & Assert: The method should call updateDataList internally,
+        // which we can also mock or simply verify the retry.
+        // Here we simplify by expecting the maximum retries exception.
         await expectLater(
             commonsServices.removeData(originalData, dataToRemove, testPath, commitMessage),
             throwsA(isA<NetworkException>().having((e) => e.toString(), 'message', contains('multiple retries')))
@@ -155,7 +155,7 @@ void main() {
       final dataToRemove = [MockGitHubModel('2'), MockGitHubModel('3')];
       const commitMessage = 'Remove data list';
 
-      test('debería eliminar una lista de elementos y actualizar el fichero', () async {
+      test('should remove a list of items and update the file', () async {
         // Arrange
         final repoContents = createMockRepoContents('old_content', 'fake_sha');
         when(mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'))
@@ -172,9 +172,9 @@ void main() {
         final decodedBody = json.decode(capturedBody);
         final content = utf8.decode(base64.decode(decodedBody['content']));
 
-        // El bug en removeDataList hace que esto falle, pero el test es correcto.
-        // Se espera que solo '1' permanezca, pero el bug mantiene '2' y '3'.
-        // Cuando corrijas el bug, este test pasará.
+        // The bug in removeDataList causes this to fail, but the test is correct.
+        // It's expected that only '1' remains, but the bug keeps '2' and '3'.
+        // When you fix the bug, this test will pass.
         expect(content.contains('"id": "1"'), isTrue);
         expect(content.contains('"id": "2"'), isFalse);
         expect(content.contains('"id": "3"'), isFalse);
@@ -182,7 +182,7 @@ void main() {
     });
 
     group('updateAllData', () {
-      test('debería reemplazar todo el contenido del fichero', () async {
+      test('should replace the entire content of the file', () async {
         // Arrange
         final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
         const commitMessage = 'Update all data';

@@ -61,17 +61,17 @@ void main() {
         startDate: '2025-01-01T10:00:00Z',
         endDate: '2025-01-02T18:00:00Z',
         timezone: 'timezone',
-      ), // 4. Usa la instancia del mock ya configurada
+      ), // 4. Use the already configured mock instance
     );
     final testSpeaker = Speaker(
       uid: '1',
       name: '',
       bio: '',
       image: '',
-      social: mockSocial, // Usa la instancia del mock ya configurada
+      social: mockSocial, // Use the already configured mock instance
       eventUIDS: [],
     );
-    // ... (El resto de la creación de testSponsor, testSession, etc. se queda igual)
+    // ... (The rest of the creation for testSponsor, testSession, etc. remains the same)
     final testSponsor = Sponsor(
       uid: '1',
       name: '',
@@ -112,7 +112,7 @@ void main() {
       agendadays: [testAgendaDay],
     );
 
-    // Esta línea ahora funcionará porque todos los `toJson()` anidados están stubeados.
+    // This line will now work because all nested `toJson()` are stubbed.
     when(
       mockCommonsServices.loadData(any),
     ).thenAnswer((_) async => githubJson.toJson());
@@ -122,11 +122,11 @@ void main() {
     // Mock Secure Storage
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-          if (methodCall.method == 'read') {
-            return githubDataJson;
-          }
-          return null;
-        });
+      if (methodCall.method == 'read') {
+        return githubDataJson;
+      }
+      return null;
+    });
   });
 
   group('DataLoaderManager', () {
@@ -147,7 +147,7 @@ void main() {
         ),
       );
       when(mockCommonsServices.loadData(any)).thenAnswer(
-        (_) => Future.value({
+            (_) => Future.value({
           'events': [testEvent.toJson()],
         }),
       );
@@ -175,7 +175,7 @@ void main() {
       );
 
       when(mockCommonsServices.loadData(any)).thenAnswer(
-        (_) => Future.value({
+            (_) => Future.value({
           'events': [testEvent.toJson()],
         }),
       );
@@ -188,7 +188,7 @@ void main() {
 
     test(
       'loadAllEventData uses cache when called multiple times within 5 minutes',
-      () async {
+          () async {
         // Arrange
 
         dataLoaderManager.allData = null;
@@ -224,7 +224,7 @@ void main() {
       );
       // Act
       when(mockCommonsServices.loadData(PathsGithub.eventPath)).thenAnswer(
-        (_) => Future.value({
+            (_) => Future.value({
           'speakers': [
             {
               'UID': '1',
@@ -256,7 +256,7 @@ void main() {
         eventUID: '',
       );
       when(mockCommonsServices.loadData(PathsGithub.eventPath)).thenAnswer(
-        (_) => Future.value({
+            (_) => Future.value({
           'sponsors': [
             {
               'UID': '1',
@@ -280,8 +280,8 @@ void main() {
     });
 
     test('loadAllDays resolves tracks and sessions', () async {
-      // Arrange: Define los datos específicos para este test.
-      // Esto hace que el test sea autocontenido y no dependa del setUpAll.
+      // Arrange: Define the specific data for this test.
+      // This makes the test self-contained and not dependent on setUpAll.
       final testSession = Session(
         uid: 'session-101',
         title: 'Flutter Magic',
@@ -294,7 +294,7 @@ void main() {
 
       final testTrack = Track(
         uid: 'track-A',
-        sessionUids: ['session-101'], // Referencia a la sesión
+        sessionUids: ['session-101'], // Reference to the session
         name: 'Mobile Track',
         color: '#FFFFFF',
         eventUid: 'event-1',
@@ -302,7 +302,7 @@ void main() {
 
       final testAgendaDay = AgendaDay(
         uid: 'day-1',
-        trackUids: ['track-A'], // Referencia al track
+        trackUids: ['track-A'], // Reference to the track
         date: '2024-10-26',
         eventsUID: ['event-1'],
       );
@@ -313,7 +313,7 @@ void main() {
         sessions: [testSession],
       );
 
-      // Mockea la llamada para que devuelva los datos de este test.
+      // Mock the call to return the data for this test.
       when(
         mockCommonsServices.loadData(any),
       ).thenAnswer((_) async => testData.toJson());
@@ -360,7 +360,7 @@ void main() {
     test('loadAllTracks returns tracks from loaded data', () async {
       final testTrack = Track(
         uid: 'track-A',
-        sessionUids: ['session-101'], // Referencia a la sesión
+        sessionUids: ['session-101'], // Reference to the session
         name: 'Mobile Track',
         color: '#FFFFFF',
         eventUid: 'event-1',
@@ -368,7 +368,7 @@ void main() {
 
       final testData = GithubJsonModel(tracks: [testTrack]);
 
-      // Mockea la llamada para que devuelva los datos de este test.
+      // Mock the call to return the data for this test.
       when(
         mockCommonsServices.loadData(any),
       ).thenAnswer((_) async => testData.toJson());
