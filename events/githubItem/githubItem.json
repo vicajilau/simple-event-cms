@@ -261,7 +261,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-19",
@@ -271,7 +271,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-20",
@@ -281,7 +281,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-21",
@@ -291,7 +291,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-22",
@@ -301,7 +301,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-23",
@@ -311,7 +311,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-24",
@@ -321,7 +321,7 @@
           "UID": "Event_20260107_103502"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     }
   ],
   "sponsors": [],
