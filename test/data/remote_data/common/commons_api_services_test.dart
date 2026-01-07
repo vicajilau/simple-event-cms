@@ -50,23 +50,27 @@ class MockGithubJsonModel extends GithubJsonModel {
 }
 
 void main() {
+  // Declare mock variables
   late MockSecureInfo mockSecureInfo;
   late MockConfig mockConfig;
   late MockGithubData mockGithubData;
-  late MockGitHub mockGitHub;
-  late MockRepositoriesService mockRepositoriesService;
+  late MockGitHub mockGitHub = MockGitHub();
   late MockClient mockHttpClient;
+  late MockRepositoriesService mockRepositoriesService;
   late CommonsServicesImp commonsServices;
 
+  // Initial setup for all tests
   setUpAll(() {
+    // Allow reassignments in the dependency injector for testing purposes
     getIt.allowReassignment = true;
   });
 
+  // Setup before each test
   setUp(() {
+    // Instantiate mocks
     mockSecureInfo = MockSecureInfo();
     mockConfig = MockConfig();
     mockGithubData = MockGithubData();
-    mockGitHub = MockGitHub();
     mockRepositoriesService = MockRepositoriesService();
     mockHttpClient = MockClient();
 
@@ -172,9 +176,6 @@ void main() {
         final decodedBody = json.decode(capturedBody);
         final content = utf8.decode(base64.decode(decodedBody['content']));
 
-        // The bug in removeDataList causes this to fail, but the test is correct.
-        // It's expected that only '1' remains, but the bug keeps '2' and '3'.
-        // When you fix the bug, this test will pass.
         expect(content.contains('"id": "1"'), isTrue);
         expect(content.contains('"id": "2"'), isFalse);
         expect(content.contains('"id": "3"'), isFalse);
@@ -204,6 +205,186 @@ void main() {
 
         expect(content, contains('"newData": "is here"'));
       });
+    });
+
+
+    group('CommonsServicesImp - loadData', () {
+      const testPath = 'data.json';
+      const fullPath = 'events/$testPath';
+      final repoSlug = github_sdk.RepositorySlug('test_user', 'test_repo');
+
+      // Helper function to create a mock GitHubFile
+      github_sdk.GitHubFile createMockGitFile(String content) {
+        final file = github_sdk.GitHubFile();
+        // Encode the content to Base64, simulating the GitHub API response
+        file.content = base64.encode(utf8.encode(content));
+        return file;
+      }
+
+      // Helper function to create a mock RepositoryContents
+      github_sdk.RepositoryContents createMockRepoContents(String content) {
+        final contents = github_sdk.RepositoryContents();
+        contents.file = createMockGitFile(content);
+        return contents;
+      }
+
+      test('should return decoded JSON map on successful data fetch', () async {
+        // Arrange: Setup mock to return valid file content
+        final jsonData = {'key': 'value', 'number': 123};
+        final repoContents = createMockRepoContents(json.encode(jsonData));
+
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenAnswer((_) async => repoContents);
+
+        // Act: Call the method under test
+        final result = await commonsServices.loadData(testPath);
+
+        // Assert: Verify the result is the expected decoded map
+        expect(result, equals(jsonData));
+        verify(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main')).called(1);
+      });
+
+      test('should return an empty map when GitHub returns a 404 "Not Found" error', () async {
+        // Arrange: Setup mock to throw a NotFound error
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenThrow(github_sdk.NotFound(mockGitHub, 'Not Found'));
+
+        // Act: Call the method under test
+        final result = await commonsServices.loadData(testPath);
+
+        // Assert: Verify the result is an empty map
+        expect(result, equals(<String, dynamic>{}));
+      });
+
+      test('should throw NetworkException on RateLimitHit', () async {
+        // Arrange: Setup mock to throw a RateLimitHit error
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenThrow(github_sdk.RateLimitHit(mockGitHub));
+
+        // Act & Assert: Verify that the correct exception is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('GitHub API rate limit exceeded'))),
+        );
+      });
+
+      test('should throw NetworkException on InvalidJSON', () async {
+        // Arrange: Setup mock to throw an InvalidJSON error
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenThrow(github_sdk.InvalidJSON(mockGitHub, 'Bad JSON'));
+
+        // Act & Assert: Verify that the correct exception is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('Invalid JSON received from GitHub'))),
+        );
+      });
+
+      test('should throw NetworkException for a generic GitHubError', () async {
+        // Arrange: Setup mock to throw a generic GitHubError
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenThrow(github_sdk.GitHubError(mockGitHub, 'Some other error'));
+
+        // Act & Assert: Verify that the correct exception is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('An unknown GitHub error occurred'))),
+        );
+      });
+
+      // Dynamically create a test for each specific exception type
+      final exceptionMap = {
+        'RepositoryNotFound': github_sdk.RepositoryNotFound(mockGitHub, ''),
+        'UserNotFound': github_sdk.UserNotFound(mockGitHub, ''),
+        'OrganizationNotFound': github_sdk.OrganizationNotFound(mockGitHub, ''),
+        'TeamNotFound': github_sdk.TeamNotFound(mockGitHub, 0),
+        'AccessForbidden': github_sdk.AccessForbidden(mockGitHub),
+        'NotReady': github_sdk.NotReady(mockGitHub,""),
+      };
+
+      exceptionMap.forEach((name, exception) {
+        test('should throw NetworkException for $name', () {
+          // Arrange
+          when(mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')))
+              .thenThrow(exception);
+
+          // Act & Assert
+          expect(() => commonsServices.loadData(testPath), throwsA(isA<NetworkException>()));
+        });
+      });
+
+      test('should throw NetworkException for an unknown generic exception', () async {
+        // Arrange: Setup mock to throw a standard Exception
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenThrow(Exception('A very generic error'));
+
+        // Act & Assert: Verify that the catch-all NetworkException is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('Error fetching data'))),
+        );
+      });
+
+      test('should throw NetworkException if RepositoryContents.file is null', () async {
+        // Arrange: Setup mock to return contents with a null file
+        final repoContents = github_sdk.RepositoryContents(); // file is null by default
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenAnswer((_) async => repoContents);
+
+        // Act & Assert: Verify the correct exception is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('Error fetching data'))),
+        );
+      });
+
+      test('should throw NetworkException if GitHubFile.content is null', () async {
+        // Arrange: Setup mock to return a file with null content
+        final repoContents = github_sdk.RepositoryContents();
+        repoContents.file = github_sdk.GitHubFile(); // content is null by default
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenAnswer((_) async => repoContents);
+
+        // Act & Assert: Verify the correct exception is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<NetworkException>().having(
+                  (e) => e.message, 'message', contains('Error fetching data'))),
+        );
+      });
+
+      test('should throw JsonDecodeException if content is not valid JSON', () async {
+        // Arrange: Setup mock to return a file with invalid JSON content
+        const invalidJsonContent = 'this is not json';
+        final repoContents = createMockRepoContents(invalidJsonContent);
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenAnswer((_) async => repoContents);
+
+        // Act & Assert: Verify that a JsonDecodeException is thrown
+        expect(
+              () => commonsServices.loadData(testPath),
+          throwsA(isA<JsonDecodeException>()),
+        );
+      });
+
+      /*test('should return an empty map if content is empty (results in "No element" error)', () async {
+        // Arrange: Setup mock to return an empty string, which causes json.decode to fail
+        const emptyContent = '';
+        final repoContents = createMockRepoContents(emptyContent);
+        when(mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'))
+            .thenAnswer((_) async => repoContents);
+
+        // Act: Call the method
+        final result = await commonsServices.loadData(testPath);
+
+        // Assert: Verify the result is an empty map
+        expect(result, <String, dynamic>{});
+      });*/
     });
   });
 }
