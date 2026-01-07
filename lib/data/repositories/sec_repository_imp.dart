@@ -189,16 +189,6 @@ class SecRepositoryImp extends SecRepository {
           ),
         );
       }
-      allAgendaDays.map((agendaDay) {
-        var eventIDSToAdd = agendaDays.firstWhere((element) => element.uid == agendaDay.uid).eventsUID;
-        if(agendaDay.eventsUID.contains(eventUID)){
-          agendaDay.eventsUID.remove(eventUID);
-        }
-        if(agendaDays.contains(agendaDay) && agendaDay.eventsUID != eventIDSToAdd){
-          agendaDay.eventsUID.addAll(eventIDSToAdd);
-        }
-        return agendaDay;
-      });
       for (var agendaDay in agendaDays) {
         if(!allAgendaDays.contains(agendaDay)){
           allAgendaDays.add(agendaDay);
