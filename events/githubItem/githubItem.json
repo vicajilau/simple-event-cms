@@ -34,6 +34,13 @@
       "color": "",
       "sessionUids": [],
       "eventUid": "Event_20260107_092826"
+    },
+    {
+      "UID": "Track_20260107_092844",
+      "name": "room2",
+      "color": "",
+      "sessionUids": [],
+      "eventUid": "Event_20260107_092848"
     }
   ],
   "sessions": [],
