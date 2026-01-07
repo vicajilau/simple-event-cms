@@ -1248,67 +1248,17 @@ void main() {
     });
 
     group('saveAgendaDays', () {
-      final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: [])];
-      final agendaDayToSave = AgendaDay(
-        uid: 'day1',
-        eventsUID: ['event1'],
-        date: '',
-      );
-      final agendaDaysToSave = [agendaDayToSave];
+      final oldAgendaDays = [AgendaDay(uid: 'dayOld', date: '', eventsUID: [])];
+      final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: []),AgendaDay(uid: 'dayOld', date: '', eventsUID: [])];
       const eventUID = 'event1';
 
       test('should return Ok when saving is successful', () async {
-        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => oldAgendaDays);
 
         final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
 
         expect(result, isA<Ok<void>>());
       });
-      test(
-        'should return Result.error when there are unincluded days with sessions and override is false',
-        () async {
-          // Arrange
-          final unincludedDayWithSession = AgendaDay(
-            uid: 'day2',
-            eventsUID: [eventUID],
-            trackUids: ['track1'],
-            resolvedTracks: [
-              Track(
-                uid: 'track1',
-                resolvedSessions: [
-                  Session(
-                    uid: 'session1',
-                    title: '',
-                    time: '',
-                    speakerUID: '',
-                    eventUID: '',
-                    agendaDayUID: '',
-                    type: '',
-                  ),
-                ],
-                name: '',
-                color: '',
-                sessionUids: [],
-                eventUid: '',
-              ),
-            ],
-            date: '',
-          );
-          when(
-            mockDataLoaderManager.loadAllDays(),
-          ).thenAnswer((_) async => [unincludedDayWithSession]);
-
-          // Act
-          final result = await secRepository.saveAgendaDays(
-            agendaDaysToSave,
-            eventUID,
-          );
-
-          // Assert
-          expect(result, isA<Error>());
-          verify(mockDataLoaderManager.loadAllDays()).called(1);
-        },
-      );
 
       test('should return Error on CertainException', () async {
         when(

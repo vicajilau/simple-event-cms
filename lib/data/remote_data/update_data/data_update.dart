@@ -13,7 +13,6 @@ class DataUpdateManager {
   final DataLoaderManager dataLoader = getIt<DataLoaderManager>();
   final Config config = getIt<Config>();
 
-
   Future<void> _commitDataUpdate(
     GithubJsonModel allData, {
     List<Event>? events,
@@ -198,11 +197,7 @@ class DataUpdateManager {
   }) async {
     var agendaDaysRepo = await dataLoader.loadAllDays();
     if (overrideData) {
-      if (agendaDays.isNotEmpty) {
-        final eventUID = agendaDays.first.eventsUID.first;
-        agendaDaysRepo.removeWhere((day) => day.eventsUID.contains(eventUID));
-        agendaDaysRepo.addAll(agendaDays);
-      }
+      await _updateAllEventData(agendaDays: agendaDays,overrideData: overrideData);
     } else {
       for (var day in agendaDays) {
         final index = agendaDaysRepo.indexWhere((d) => d.uid == day.uid);
@@ -212,8 +207,9 @@ class DataUpdateManager {
           agendaDaysRepo.add(day);
         }
       }
+      await _updateAllEventData(agendaDays: agendaDaysRepo);
     }
-    await _updateAllEventData(agendaDays: agendaDaysRepo);
+
   }
 
   Future<void> updateSponsors(Sponsor sponsor) async {
@@ -339,7 +335,7 @@ class DataUpdateManager {
         } else {
           speakerToRemove.eventUIDS.remove(eventUID);
         }
-        await overwriteItems(speakersOriginal,"Speaker");
+        await overwriteItems(speakersOriginal, "Speaker");
       }
     }
   }
@@ -347,7 +343,7 @@ class DataUpdateManager {
   Future<void> removeSponsors(String sponsorId) async {
     var sponsorOriginal = await dataLoader.loadSponsors();
     sponsorOriginal.removeWhere((sponsor) => sponsor.uid == sponsorId);
-    await overwriteItems(sponsorOriginal,"Sponsor");
+    await overwriteItems(sponsorOriginal, "Sponsor");
   }
 
   Future<void> removeEvent(String eventId) async {
@@ -394,7 +390,7 @@ class DataUpdateManager {
   Future<void> removeAgendaDay(String agendaDayId) async {
     var agendaDaysListOriginal = await dataLoader.loadAllDays();
     agendaDaysListOriginal.removeWhere((day) => day.uid == agendaDayId);
-    await overwriteItems(agendaDaysListOriginal,"AgendaDay");
+    await overwriteItems(agendaDaysListOriginal, "AgendaDay");
   }
 
   Future<void> removeSession(String sessionId) async {
@@ -418,7 +414,7 @@ class DataUpdateManager {
   Future<void> removeTrack(String trackId) async {
     var tracksOriginal = await dataLoader.loadAllTracks();
     tracksOriginal.removeWhere((track) => track.uid == trackId);
-    await overwriteItems(tracksOriginal,"Track");
+    await overwriteItems(tracksOriginal, "Track");
   }
 
   /// Overwrites a list of items in the remote data source.
@@ -429,7 +425,10 @@ class DataUpdateManager {
   ///
   /// [itemsToKeep] is a `List<dynamic>` containing the objects that will form
   /// the new list. All items in the list must be of the same type.
-  Future<void> overwriteItems(List<dynamic> itemsToKeep, String typeItem) async {
+  Future<void> overwriteItems(
+    List<dynamic> itemsToKeep,
+    String typeItem,
+  ) async {
     if (itemsToKeep.isEmpty) {
       debugPrint(
         "Warning: Overwriting with an empty list. This will remove all items of this type.",

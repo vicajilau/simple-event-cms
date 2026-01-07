@@ -157,10 +157,15 @@ class SecRepositoryImp extends SecRepository {
     bool overrideAgendaDays = false,
   }) async {
     try {
-      var allAgendaDays = (await dataLoader.loadAllDays())
+      var allAgendaDays = await dataLoader.loadAllDays();
+      allAgendaDays = allAgendaDays.map((agendaDay) {
+        agendaDay.eventsUID.remove(eventUID);
+        return agendaDay;
+      }).toList();
+      var agendaDaysByEventId = allAgendaDays
           .where((agendaDay) => agendaDay.eventsUID.contains(eventUID))
           .toList();
-      var thereAreAgendaDaysNotIncluded = allAgendaDays
+      var thereAreAgendaDaysNotIncluded = agendaDaysByEventId
           .where(
             (agendaDay) =>
                 !agendaDays
@@ -184,9 +189,14 @@ class SecRepositoryImp extends SecRepository {
           ),
         );
       }
+      for (var agendaDay in agendaDays) {
+        if(!allAgendaDays.contains(agendaDay)){
+          allAgendaDays.add(agendaDay);
+        }
+      }
 
       await dataUpdate.addItemListAndAssociations(
-        agendaDays,
+        allAgendaDays,
         overrideData: overrideAgendaDays,
       );
       return Result.ok(null);
