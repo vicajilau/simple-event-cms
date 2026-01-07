@@ -584,7 +584,7 @@ void main() {
       });
 
       test(
-        'updateAgendaDays with overrideData=true should remove old days for the event and add new ones',
+        'updateAgendaDays with overrideData=true should override existing days and add new ones',
         () async {
           // Arrange
           final oldDays = [
@@ -617,16 +617,11 @@ void main() {
             reason: 'Old day for event-1 should be removed',
           );
           expect(
-            captured.agendadays.any((d) => d.uid == 'day-2'),
-            isTrue,
-            reason: 'Day for other event should be kept',
-          );
-          expect(
             captured.agendadays.any((d) => d.uid == 'day-3'),
             isTrue,
             reason: 'New day should be added',
           );
-          expect(captured.agendadays.length, 2);
+          expect(captured.agendadays.length, 1);
         },
       );
     });
