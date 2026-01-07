@@ -1248,11 +1248,12 @@ void main() {
     });
 
     group('saveAgendaDays', () {
+      final oldAgendaDays = [AgendaDay(uid: 'dayOld', date: '', eventsUID: [])];
       final agendaDays = [AgendaDay(uid: 'day1', date: '', eventsUID: [])];
       const eventUID = 'event1';
 
       test('should return Ok when saving is successful', () async {
-        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => oldAgendaDays);
 
         final result = await secRepository.saveAgendaDays(agendaDays, eventUID);
 
