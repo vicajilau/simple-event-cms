@@ -33,9 +33,9 @@
       "primaryColor": "",
       "secondaryColor": "",
       "eventDates": {
-        "UID": "EventDate_20260107_084246",
-        "startDate": "2026-01-18",
-        "endDate": "2026-01-24",
+        "UID": "EventDate_20260107_084128",
+        "startDate": "2026-01-25",
+        "endDate": "2026-01-31",
         "timezone": "Europe/Madrid"
       },
       "description": null,
@@ -77,9 +77,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -90,9 +87,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -103,9 +97,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -116,9 +107,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -129,9 +117,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -142,9 +127,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
@@ -155,9 +137,6 @@
       "eventUID": [
         {
           "UID": "Event_20260107_084106"
-        },
-        {
-          "UID": "Event_20260107_084128"
         }
       ],
       "trackUids": []
