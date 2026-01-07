@@ -317,26 +317,28 @@ class DataUpdate {
   }) async {
     var allDays = await dataLoader.loadAllDays();
     if (overrideData == true) {
-      allDays.removeWhere(
-        (day) =>
-            day.eventsUID.contains(days.first.eventsUID.first) &&
-            !days.map((dayModified) => dayModified.uid).contains(day.uid),
+      await dataUpdateInfo.updateAgendaDays(
+        days,
+        overrideData: overrideData,
+      );
+    }else{
+      Map<String, AgendaDay> allDaysMap = {for (var day in allDays) day.uid: day};
+
+      for (var day in days) {
+        if (allDaysMap.containsKey(day.uid)) {
+          allDaysMap[day.uid]?.eventsUID.addAll(day.eventsUID);
+        } else {
+          allDaysMap[day.uid] = day;
+        }
+      }
+      await dataUpdateInfo.updateAgendaDays(
+        allDaysMap.values.toList(),
+        overrideData: overrideData,
       );
     }
-    Map<String, AgendaDay> allDaysMap = {for (var day in allDays) day.uid: day};
 
-    for (var day in days) {
-      if (allDaysMap.containsKey(day.uid)) {
-        allDaysMap[day.uid]?.eventsUID.addAll(day.eventsUID);
-      } else {
-        allDaysMap[day.uid] = day;
-      }
-    }
 
-    await dataUpdateInfo.updateAgendaDays(
-      allDaysMap.values.toList(),
-      overrideData: overrideData,
-    );
+
   }
 
   Future<void> _deleteAgendaDay(
