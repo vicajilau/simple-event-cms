@@ -18,7 +18,7 @@ void main() {
           } else if (methodCall.arguments['key'] == 'github_key') {
             return 'some_github_key';
           }else if (methodCall.arguments['key'] == 'github_service') {
-            return '\"{\\"token\\":"token_mocked",\\"projectName\\":\\"simple-event-cms\\"}\"';
+            return '{"token":"token_mocked","projectName":"simple-event-cms"}';
           }
         }
         return null;
