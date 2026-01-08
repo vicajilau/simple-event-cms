@@ -55,7 +55,7 @@ void main() {
   // Declare mock variables
   late MockSecureInfo mockSecureInfo;
   late MockConfig mockConfig;
-  late MockGithubData mockGithubData;
+  late GithubData mockGithubData;
   late MockGitHub mockGitHub = MockGitHub();
   late MockClient mockHttpClient;
   late MockRepositoriesService mockRepositoriesService;
@@ -87,7 +87,7 @@ void main() {
     // Instantiate mocks
     mockSecureInfo = MockSecureInfo();
     mockConfig = MockConfig();
-    mockGithubData = MockGithubData();
+    mockGithubData = GithubData(token: "fake_token",projectName: "test_repo");
     mockRepositoriesService = MockRepositoriesService();
     mockHttpClient = MockClient();
 
@@ -97,8 +97,6 @@ void main() {
     when(mockConfig.githubUser).thenReturn('test_user');
     when(mockConfig.projectName).thenReturn('test_repo');
     when(mockConfig.branch).thenReturn('main');
-    when(mockGithubData.getProjectName()).thenReturn('test_repo');
-    when(mockGithubData.getToken()).thenReturn('fake_token');
     when(mockGitHub.repositories).thenReturn(mockRepositoriesService);
     when(mockGitHub.client).thenReturn(mockHttpClient);
 
