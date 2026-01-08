@@ -201,7 +201,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
 
   Future<bool> _shouldSkipFetch() async {
     final gitHubService = await secureInfo.getGithubKey();
-    final isTokenNull = gitHubService.token == null;
+    final isTokenNull = gitHubService.getToken() == null;
     final isCacheValid =
         lastEventsFetchTime != null &&
         DateTime.now().difference(lastEventsFetchTime!) <
@@ -212,7 +212,7 @@ class EventCollectionViewModelImp extends EventCollectionViewModel {
 
   Future<void> _handleSingleEventNavigation() async {
     final gitHubService = await secureInfo.getGithubKey();
-    final isTokenNull = gitHubService.token == null;
+    final isTokenNull = gitHubService.getToken() == null;
 
     var positionEventToView = eventsToShow.value.indexWhere(
       (event) => event.uid == config.eventForcedToViewUID,

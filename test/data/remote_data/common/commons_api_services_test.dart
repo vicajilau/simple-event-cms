@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github/github.dart' as github_sdk;
 import 'package:http/http.dart' as http;
@@ -59,7 +60,22 @@ void main() {
   late MockClient mockHttpClient;
   late MockRepositoriesService mockRepositoriesService;
   late CommonsServicesImp commonsServices;
+  TestWidgetsFlutterBinding.ensureInitialized();
+  const MethodChannel channel = MethodChannel(
+    'plugins.it_nomads.com/flutter_secure_storage',
+  );
 
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+    if (methodCall.method == 'read') {
+      if (methodCall.arguments['key'] == 'read') {
+        return '{"token":"token_mocked","projectName":"simple-event-cms"}';
+      } else if (methodCall.arguments['key'] == 'github_key') {
+        return 'some_github_key';
+      }
+    }
+    return null;
+  });
   // Initial setup for all tests
   setUpAll(() {
     // Allow reassignments in the dependency injector for testing purposes
@@ -81,8 +97,8 @@ void main() {
     when(mockConfig.githubUser).thenReturn('test_user');
     when(mockConfig.projectName).thenReturn('test_repo');
     when(mockConfig.branch).thenReturn('main');
-    when(mockGithubData.projectName).thenReturn('test_repo');
-    when(mockGithubData.token).thenReturn('fake_token');
+    when(mockGithubData.getProjectName()).thenReturn('test_repo');
+    when(mockGithubData.getToken()).thenReturn('fake_token');
     when(mockGitHub.repositories).thenReturn(mockRepositoriesService);
     when(mockGitHub.client).thenReturn(mockHttpClient);
 
@@ -308,6 +324,7 @@ void main() {
         expect(content.contains('"id": "3"'), isFalse);
       });
     });
+// [GROUP] getGithubItem
 
     group('updateAllData', () {
       test('should throw an exception when token is null', () async {

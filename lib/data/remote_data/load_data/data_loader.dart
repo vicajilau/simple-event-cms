@@ -24,13 +24,13 @@ class DataLoaderManager {
         lastFetchTime != null &&
         DateTime.now().difference(lastFetchTime!) <
             const Duration(minutes: 5) &&
-        githubDataSaving.token == null &&
+        githubDataSaving.getToken() == null &&
         !forceUpdate) {
       return; // Do not fetch new data
     }
     var data = await commonsServices.loadData(PathsGithub.eventPath);
     allData = GithubJsonModel.fromJson(data);
-    if (githubDataSaving.token == null) {
+    if (githubDataSaving.getToken() == null) {
       lastFetchTime = DateTime.now();
     }
   }
@@ -94,12 +94,12 @@ class DataLoaderManager {
 
     List<Event> jsonList = allData?.events ?? List.empty();
     if (jsonList.isEmpty ||
-        (githubService.token == null &&
+        (githubService.getToken() == null &&
             jsonList.indexWhere((event) => event.isVisible) == -1)) {
       return List.empty();
     }
 
-    if (githubService.token != null) {
+    if (githubService.getToken() != null) {
       return jsonList.toList(growable: true);
     } else {
       return jsonList.where((event) => event.isVisible).toList(growable: true);

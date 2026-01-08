@@ -12,7 +12,7 @@ class TokenRepositoryImpl implements TokenRepository {
     try {
       final GithubData githubData = await secureInfo.getGithubKey();
       // Check if the token exists and is not empty
-      return githubData.token != null && githubData.token!.isNotEmpty;
+      return githubData.getToken() != null && githubData.getToken()!.isNotEmpty;
     } catch (e) {
       // If there's any error reading from secure storage or parsing,
       // assume token is not saved or is invalid.

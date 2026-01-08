@@ -23,8 +23,8 @@ class SecureInfo {
     try {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
-        token: githubService.token ?? githubDataSaving.token,
-        projectName: githubService.projectName ?? githubDataSaving.projectName,
+        token: githubService.getToken() ?? githubDataSaving.getToken(),
+        projectName: githubService.getProjectName() ?? githubDataSaving.getProjectName(),
       );
       // Convert the GithubService object to a JSON string
       String githubServiceJson = jsonEncode(githubDataUpdated.toJson());
@@ -47,7 +47,7 @@ class SecureInfo {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
         token: null,
-        projectName: githubDataSaving.projectName,
+        projectName: githubDataSaving.getProjectName(),
       );
       // Convert the GithubService object to a JSON string
       String githubServiceJson = jsonEncode(githubDataUpdated.toJson());
@@ -74,7 +74,8 @@ class SecureInfo {
   }
 
   Future<GitHub> getGithubItem() async {
-    var token = (await getGithubKey()).token;
+    var githubKey = (await getGithubKey());
+    var token = githubKey.getToken();
     return GitHub(
       auth: token == null
           ? Authentication.anonymous()

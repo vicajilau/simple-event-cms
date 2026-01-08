@@ -46,7 +46,7 @@ class ConfigLoader {
       final res = await github.repositories.getContents(
         RepositorySlug(
           localOrganization.githubUser,
-          (await secureInfo.getGithubKey()).projectName ??
+          (await secureInfo.getGithubKey()).getProjectName() ??
               localOrganization.projectName,
         ),
         configUrl,

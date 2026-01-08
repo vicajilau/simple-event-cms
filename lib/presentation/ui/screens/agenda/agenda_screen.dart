@@ -369,8 +369,8 @@ class _SessionCardsState extends State<SessionCards> {
                 return InkWell(
                   onTap: () async {
                     var githubService = await secureInfo.getGithubKey();
-                    if (githubService.token != null &&
-                        githubService.token?.isNotEmpty == true) {
+                    if (githubService.getToken() != null &&
+                        githubService.getToken()?.isNotEmpty == true) {
                       List<AgendaDay>? agendaDays = await AppRouter.router.push(
                         AppRouter.agendaFormPath,
                         extra: AgendaFormData(
