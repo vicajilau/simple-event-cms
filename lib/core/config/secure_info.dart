@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:github/github.dart';
 import 'package:sec/core/models/github/github_data.dart';
 
 /// Defines a class named `SecureInfo` to interact with `FlutterSecureStorage`.
@@ -22,8 +23,8 @@ class SecureInfo {
     try {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
-        token: githubService.token ?? githubDataSaving.token,
-        projectName: githubService.projectName ?? githubDataSaving.projectName,
+        token: githubService.getToken() ?? githubDataSaving.getToken(),
+        projectName: githubService.getProjectName() ?? githubDataSaving.getProjectName(),
       );
       // Convert the GithubService object to a JSON string
       String githubServiceJson = jsonEncode(githubDataUpdated.toJson());
@@ -46,7 +47,7 @@ class SecureInfo {
       var githubDataSaving = await getGithubKey();
       var githubDataUpdated = GithubData(
         token: null,
-        projectName: githubDataSaving.projectName,
+        projectName: githubDataSaving.getProjectName(),
       );
       // Convert the GithubService object to a JSON string
       String githubServiceJson = jsonEncode(githubDataUpdated.toJson());
@@ -70,5 +71,15 @@ class SecureInfo {
       return GithubData.fromJson(jsonDecode(githubServiceJson));
     }
     return GithubData();
+  }
+
+  Future<GitHub> getGithubItem() async {
+    var githubKey = (await getGithubKey());
+    var token = githubKey.getToken();
+    return GitHub(
+      auth: token == null
+          ? Authentication.anonymous()
+          : Authentication.withToken(token),
+    );
   }
 }

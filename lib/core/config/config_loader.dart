@@ -41,17 +41,12 @@ class ConfigLoader {
 
       //  try GitHub
       const configUrl = 'events/config/config.json';
-      final githubService = await secureInfo.getGithubKey();
-      final github = GitHub(
-        auth: githubService.token == null
-            ? Authentication.anonymous()
-            : Authentication.withToken(githubService.token),
-      );
+      final github = await secureInfo.getGithubItem();
 
       final res = await github.repositories.getContents(
         RepositorySlug(
           localOrganization.githubUser,
-          (await secureInfo.getGithubKey()).projectName ??
+          (await secureInfo.getGithubKey()).getProjectName() ??
               localOrganization.projectName,
         ),
         configUrl,

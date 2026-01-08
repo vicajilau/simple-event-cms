@@ -63,15 +63,10 @@ class CommonsServicesImp extends CommonsServices {
     String content = "";
     final url = 'events/$path';
 
-    final githubService = await secureInfo.getGithubKey();
-    final github = GitHub(
-      auth: githubService.token == null
-          ? Authentication.anonymous()
-          : Authentication.withToken(githubService.token),
-    );
+    final github = await secureInfo.getGithubItem();
     final repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
 
     late final RepositoryContents res; // <- late
@@ -205,15 +200,15 @@ class CommonsServicesImp extends CommonsServices {
   ) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
 
@@ -299,7 +294,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -337,16 +332,16 @@ class CommonsServicesImp extends CommonsServices {
     final Config orgToUse = (data is Config) ? data as Config : config;
     RepositorySlug repositorySlug = RepositorySlug(
       orgToUse.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? orgToUse.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? orgToUse.projectName,
     );
     setOrganization(orgToUse);
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
 
@@ -422,7 +417,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -500,18 +495,18 @@ class CommonsServicesImp extends CommonsServices {
     // You must read the file, remove the item locally, and write the entire file back.
 
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw GithubException("GitHub token is not available.");
     }
 
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     // 1. GET SHA - This is mandatory for updates.
     String? currentSha;
     try {
       RepositorySlug repositorySlug = RepositorySlug(
         config.githubUser,
-        (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+        (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
       );
       final contents = await github.repositories.getContents(
         repositorySlug,
@@ -557,7 +552,7 @@ class CommonsServicesImp extends CommonsServices {
     };
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
     // 5. BUILD THE API URL AND MAKE THE PUT REQUEST
 
@@ -567,7 +562,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -616,15 +611,15 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
@@ -700,7 +695,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -749,15 +744,15 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
@@ -769,7 +764,7 @@ class CommonsServicesImp extends CommonsServices {
     var base64Content = "";
     const jsonEncoder = JsonEncoder.withIndent('  ');
     final dataInJsonString = jsonEncoder.convert(
-      dataOriginal.map((item) => item.toJson()).toList(),
+      dataToMerge.map((item) => item.toJson()).toList(),
     );
     base64Content = base64.encode(utf8.encode(dataInJsonString));
     try {
@@ -836,7 +831,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),
@@ -883,15 +878,15 @@ class CommonsServicesImp extends CommonsServices {
   }) async {
     RepositorySlug repositorySlug = RepositorySlug(
       config.githubUser,
-      (await secureInfo.getGithubKey()).projectName ?? config.projectName,
+      (await secureInfo.getGithubKey()).getProjectName() ?? config.projectName,
     );
     githubService = await secureInfo.getGithubKey();
-    if (githubService.token == null) {
+    if (githubService.getToken() == null) {
       throw Exception("GitHub token is not available.");
     }
 
     // Initialize GitHub client
-    var github = GitHub(auth: Authentication.withToken(githubService.token));
+    var github = await secureInfo.getGithubItem();
 
     String? currentSha;
     String branch = config.branch;
@@ -968,7 +963,7 @@ class CommonsServicesImp extends CommonsServices {
     final response = await github.client.put(
       Uri.parse(apiUrl),
       headers: {
-        "Authorization": 'Bearer ${githubService.token}',
+        "Authorization": 'Bearer ${githubService.getToken()}',
         "Accept": "application/vnd.github.v3+json",
       },
       body: json.encode(requestBody),

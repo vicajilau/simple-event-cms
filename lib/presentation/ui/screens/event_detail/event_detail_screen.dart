@@ -97,7 +97,7 @@ class _EventDetailScreenState extends State<EventDetailScreen>
                     if (_titleTapCount >= 5) {
                       _titleTapCount = 0;
                       var githubService = await secureInfo.getGithubKey();
-                      if (githubService.token == null) {
+                      if (githubService.getToken() == null) {
                         if (context.mounted) {
                           await showDialog<bool>(
                             context: context,

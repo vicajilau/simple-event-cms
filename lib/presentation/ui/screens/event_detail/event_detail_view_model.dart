@@ -55,7 +55,7 @@ class EventDetailViewModelImp extends EventDetailViewModel {
                           eventItem.uid == config.eventForcedToViewUID,
                     ) !=
                     -1) &&
-            githubService.token == null;
+            githubService.getToken() == null;
         if (result.value.isEmpty) {
           setErrorKey(NetworkException("there aren,t any events to show"));
           viewState.value = ViewState.error;

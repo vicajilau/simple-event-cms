@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:github/github.dart' hide Event;
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart';
 import 'package:mockito/annotations.dart';
 import 'package:osm_nominatim/osm_nominatim.dart';
 import 'package:sec/core/config/secure_info.dart';
@@ -9,6 +10,7 @@ import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/config.dart';
 import 'package:sec/core/models/event.dart';
 import 'package:sec/core/models/event_dates.dart';
+import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/speaker.dart';
 import 'package:sec/core/routing/check_org.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
@@ -42,6 +44,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   AgendaUseCase,
   CheckOrg,
   CheckTokenSavedUseCase,
+  Client,
   CommonsServices,
   CommonsServicesImp,
   Config,
@@ -57,6 +60,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   EventFormViewModel,
   EventUseCase,
   GitHub,
+  GithubData,
   GoRouter,
   HttpClient,
   OnLiveViewModel,

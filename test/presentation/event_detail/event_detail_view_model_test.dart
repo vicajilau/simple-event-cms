@@ -171,6 +171,7 @@ void main() {
     );
 
     test('notShowReturnArrow should be true when token exists', () async {
+      mockSecureInfo.removeGithubKey();
       mockSecureInfo.saveGithubKey(
         GithubData(token: "false_token", projectName: "project_name"),
       );

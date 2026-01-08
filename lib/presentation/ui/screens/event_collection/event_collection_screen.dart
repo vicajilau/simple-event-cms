@@ -160,7 +160,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
                 }
               } else {
                 var githubService = await secureInfo.getGithubKey();
-                if (githubService.token == null) {
+                if (githubService.getToken() == null) {
                   if (context.mounted) {
                     await showDialog<bool>(
                       context: context,
@@ -290,7 +290,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
           FutureBuilder(
             future: secureInfo.getGithubKey(),
             builder: (context, snapshot) {
-              if (snapshot.data?.token != null) {
+              if (snapshot.data?.getToken() != null) {
                 return IconButton(
                   onPressed: () async {
                     final bool? confirm = await showDialog<bool>(
