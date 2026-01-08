@@ -138,7 +138,7 @@ void main() {
     when(
       mockAgendaUseCase.getAgendaDayByEventId(any),
     ).thenAnswer((_) async => const Result.ok([]));
-     when(
+    when(
       mockAgendaUseCase.loadEvent(any),
     ).thenAnswer((_) async => Result.ok(MockEvent()));
     when(
@@ -293,7 +293,6 @@ void main() {
     });
 
     group('AgendaForm Route', () {
-
       testWidgets('navigates to agenda form screen with data', (tester) async {
         final data = AgendaFormData(
           session: Session(
