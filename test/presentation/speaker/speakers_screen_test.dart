@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/speaker/speaker_view_model.dart';
 import 'package:sec/presentation/ui/screens/speaker/speakers_screen.dart';
@@ -26,6 +27,7 @@ Widget buildTestableWidget(Widget child) {
 
 void main() {
   late MockSpeakerViewModel mockViewModel;
+  late MockGoRouter mockRouter;
 
   setUpAll(() {
     // If you have other global setup, it can go here.
@@ -45,6 +47,7 @@ void main() {
     when(mockViewModel.errorMessage).thenReturn('');
     when(mockViewModel.checkToken()).thenAnswer((_) async => false);
     when(mockViewModel.setup(any)).thenAnswer((_) async {});
+    mockRouter = MockGoRouter();
   });
 
   tearDown(() {
@@ -75,10 +78,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(
-        find.text('No speakers registered'),
-        findsOneWidget,
-      );
+      expect(find.text('No speakers registered'), findsOneWidget);
     });
 
     testWidgets('shows speaker grid when speakers are available', (
@@ -129,5 +129,82 @@ void main() {
       expect(find.byIcon(Icons.edit_outlined), findsOneWidget);
       expect(find.byIcon(Icons.delete_outlined), findsOneWidget);
     });
+    testWidgets('admin clicks edit button and navigates with correct arguments',
+            (WidgetTester tester) async {
+
+          final speaker = Speaker(
+            uid: '1',
+            name: 'John Doe',
+            bio: 'Bio',
+            social: Social(),
+            eventUIDS: ['1'],
+            image: '',
+          );
+          const eventId = '1';
+
+          AppRouter.router = mockRouter;
+
+          // Configure the ViewModel
+          when(mockViewModel.speakers).thenReturn(ValueNotifier([speaker]));
+          when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+          when(
+            mockRouter.push(any, extra: anyNamed('extra')),
+          ).thenAnswer((_) async => speaker);
+
+
+          // --- 2. ACT ---
+          await tester.pumpWidget(
+            buildTestableWidget(SpeakersScreen(eventId: eventId)),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byIcon(Icons.edit_outlined));
+          await tester.pumpAndSettle();
+          verify(mockRouter.push(any, extra: anyNamed('extra'))).called(1);
+
+        });
+
+    testWidgets('admin clicks delete button and navigates with correct arguments',
+            (WidgetTester tester) async {
+
+          final speaker = Speaker(
+            uid: '1',
+            name: 'John Doe',
+            bio: 'Bio',
+            social: Social(),
+            eventUIDS: ['1'],
+            image: '',
+          );
+          const eventId = '1';
+
+          AppRouter.router = mockRouter;
+
+          // Configure the ViewModel
+          when(mockViewModel.speakers).thenReturn(ValueNotifier([speaker]));
+          when(mockViewModel.checkToken()).thenAnswer((_) async => true);
+          when(
+            mockRouter.push(any, extra: anyNamed('extra')),
+          ).thenAnswer((_) async => speaker);
+
+
+          // --- 2. ACT ---
+          await tester.pumpWidget(
+            buildTestableWidget(SpeakersScreen(eventId: eventId)),
+          );
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byIcon(Icons.delete_outlined));
+          await tester.pumpAndSettle();
+
+          AlertDialog? dialog = tester.widget<AlertDialog>(find.byType(AlertDialog));
+          expect(dialog, isNotNull);
+          expect(dialog.content.toString(), contains('John Doe'));
+
+          await tester.tap(find.text('Accept'));
+          await tester.pumpAndSettle();
+          verify(mockViewModel.removeSpeaker(any, any)).called(1);
+
+        });
+
   });
 }
