@@ -344,30 +344,30 @@ void main() {
   );
 
   testWidgets(
-    'Autocomplete: texto vacío no hace llamada y no muestra sugerencias',
+    'Autocomplete: empty text does not make a call and does not show suggestions',
     (tester) async {
       await tester.pumpWidget(buildTestableWidget(EventFormScreen()));
       await tester.pumpAndSettle();
 
-      // Encuentra el TextFormField del SectionInputForm "Location"
+      // Find the location TextFormField
       final locationField = find.descendant(
         of: find.widgetWithText(SectionInputForm, 'Location'),
         matching: find.byType(TextFormField),
       );
       expect(locationField, findsOneWidget);
 
-      // Escribir y luego limpiar para disparar la rama de texto vacío
+      // Write and then clear to trigger the empty text branch
       await tester.enterText(locationField, 'a');
       await tester.pump();
 
-      // Ahora limpiar → new call a _getSuggestions con texto vacío
+      // Clear the textformfield so we make anew call to _getSuggestions with empty text
       await tester.enterText(locationField, '');
       await tester.pump();
 
-      // Avanza tiempo de 1s: como se canceló y texto vacío retorna early, no debería llamar al servicio.
+      // Wait 1 second
       await tester.pump(const Duration(seconds: 1));
 
-      // Verifica que NO se llamó a searchByName con texto vacío
+      // Verify that searchByName was NOT called with empty text
       verifyNever(
         mockNominatim.searchByName(
           query: anyNamed('query'),
@@ -378,7 +378,7 @@ void main() {
         ),
       );
 
-      // No hay sugerencias visibles
+      // There are no visible suggestions
       expect(find.textContaining('Barcelona'), findsNothing);
     },
   );
