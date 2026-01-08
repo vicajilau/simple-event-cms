@@ -223,6 +223,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
         // This prevents race conditions when typing quickly.
         if (textEditingValue.text != _locationController.text) {
           completer.complete(Iterable<String>.empty());
+          return;
         }
 
         completer.complete(searchResult.map((s) => s.displayName.toString()));
@@ -282,6 +283,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   style: AppFonts.titleHeadingForm.copyWith(color: Colors.blue),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_NameField'),
                   label: localizations.eventNameLabel,
                   childInput: TextFormField(
                     key: _nameFieldKey,
@@ -297,6 +299,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_LocationField'),
                   label:
                       "Location", // Consider adding this to your AppLocalizations
                   childInput: Autocomplete<String>(
@@ -322,26 +325,31 @@ class _EventFormScreenState extends State<EventFormScreen> {
 
                           // The Autocomplete widget manages its own controller and focus node.
                           // We must use the ones provided by the fieldViewBuilder.
-                          return TextFormField(
-                            controller: fieldTextEditingController,
-                            focusNode: fieldFocusNode,
-                            decoration: AppDecorations.textFieldDecoration.copyWith(
-                              hintText:
-                                  "Enter event location", // Consider localizing
+                          return Container(
+                            key: const Key('eventForm_locationField'),
+                            child: TextFormField(
+                              controller: fieldTextEditingController,
+                              focusNode: fieldFocusNode,
+                              decoration: AppDecorations.textFieldDecoration
+                                  .copyWith(
+                                    hintText:
+                                        "Enter event location", // Consider localizing
+                                  ),
+                              onChanged: (text) {
+                                // Sync our controller with the field's controller
+                                _locationController.text = text;
+                              },
+                              validator: (value) =>
+                                  (value == null || value.isEmpty)
+                                  ? localizations.requiredField
+                                  : null,
                             ),
-                            onChanged: (text) {
-                              // Sync our controller with the field's controller
-                              _locationController.text = text;
-                            },
-                            validator: (value) =>
-                                (value == null || value.isEmpty)
-                                ? localizations.requiredField
-                                : null,
                           );
                         },
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_StartDateField'),
                   label: localizations.startDateLabel,
                   childInput: Row(
                     children: [
@@ -365,6 +373,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                 ),
                 if (_hasEndDate)
                   SectionInputForm(
+                    key: Key('SectionInputForm_EndDateField'),
                     label: localizations.endDateLabel,
                     childInput: Row(
                       children: [
@@ -427,6 +436,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_TimezoneField'),
                   label: localizations.timezoneLabel,
                   childInput: TextFormField(
                     key: _timezoneFieldKey,
@@ -438,6 +448,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_PrimaryColorField'),
                   label: localizations.primaryColorLabel,
                   childInput: TextFormField(
                     key: _primaryColorFieldKey,
@@ -449,6 +460,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_SecondaryColorField'),
                   label: localizations.secondaryColorLabel,
                   childInput: TextFormField(
                     key: _secondaryColorFieldKey,
@@ -460,6 +472,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                   ),
                 ),
                 SectionInputForm(
+                  key: Key('SectionInputForm_YouTubeUrlField'),
                   label: "YouTube URL", // Consider localizing
                   childInput: TextFormField(
                     key: _youtubeUrlFieldKey,
@@ -467,7 +480,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                     controller: _youtubeUrlController,
                     decoration: AppDecorations.textFieldDecoration.copyWith(
                       hintText:
-                      "https://www.youtube.com/watch?v=...", // Consider localizing
+                          "https://www.youtube.com/watch?v=...", // Consider localizing
                     ),
                     // Optional: Add a validator for the URL format
                   ),
@@ -521,6 +534,7 @@ class _EventFormScreenState extends State<EventFormScreen> {
                       child: Text(localizations.cancelButton),
                     ),
                     FilledButton(
+                      key: const Key('submitButton'),
                       onPressed: _onSubmit,
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.blue,

@@ -4,6 +4,7 @@ import 'package:github/github.dart' hide Event;
 import 'package:go_router/go_router.dart';
 import 'package:http/http.dart';
 import 'package:mockito/annotations.dart';
+import 'package:osm_nominatim/osm_nominatim.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/config.dart';
@@ -75,5 +76,6 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   SponsorViewModel,
   Track,
   TokenRepository,
+  Nominatim,
 ])
 void main() {}
