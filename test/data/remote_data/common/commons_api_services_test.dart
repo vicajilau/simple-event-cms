@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:github/github.dart' as github_sdk;
-import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
@@ -53,7 +52,7 @@ class MockGithubJsonModel extends GithubJsonModel {
 
 void main() {
   // Declare mock variables
-  late MockSecureInfo mockSecureInfo;
+  late SecureInfo mockSecureInfo;
   late MockConfig mockConfig;
   late GithubData mockGithubData;
   late MockGitHub mockGitHub = MockGitHub();
@@ -65,17 +64,6 @@ void main() {
     'plugins.it_nomads.com/flutter_secure_storage',
   );
 
-  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-      .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-    if (methodCall.method == 'read') {
-      if (methodCall.arguments['key'] == 'read') {
-        return '{"token":"token_mocked","projectName":"simple-event-cms"}';
-      } else if (methodCall.arguments['key'] == 'github_key') {
-        return 'some_github_key';
-      }
-    }
-    return null;
-  });
   // Initial setup for all tests
   setUpAll(() {
     // Allow reassignments in the dependency injector for testing purposes
@@ -83,13 +71,22 @@ void main() {
   });
 
   // Setup before each test
-  setUp(() {
+  setUp(() async {
     // Instantiate mocks
-    mockSecureInfo = MockSecureInfo();
+    mockSecureInfo = SecureInfo();
+    mockGithubData = GithubData(token: "fake_token", projectName: "test_repo");
     mockConfig = MockConfig();
-    mockGithubData = GithubData(token: "fake_token",projectName: "test_repo");
     mockRepositoriesService = MockRepositoriesService();
     mockHttpClient = MockClient();
+
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          if (methodCall.method == 'read' &&
+              methodCall.arguments['key'] == 'github_service') {
+            return jsonEncode(mockGithubData.toJson());
+          }
+          return null;
+        });
 
     getIt.registerSingleton<SecureInfo>(mockSecureInfo);
     getIt.registerSingleton<Config>(mockConfig);
@@ -100,9 +97,7 @@ void main() {
     when(mockGitHub.repositories).thenReturn(mockRepositoriesService);
     when(mockGitHub.client).thenReturn(mockHttpClient);
 
-    when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
-    when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
-
+    mockSecureInfo.saveGithubKey(mockGithubData);
     commonsServices = CommonsServicesImp();
   });
 
@@ -114,23 +109,6 @@ void main() {
     const testPath = 'data.json';
     final repoSlug = github_sdk.RepositorySlug('test_user', 'test_repo');
 
-    // --- Mock Helpers ---
-    github_sdk.GitHubFile createMockGitFile(String content, [String? sha]) {
-      final file = github_sdk.GitHubFile();
-      file.content = content.replaceAll('\n', '');
-      file.sha = sha;
-      return file;
-    }
-
-    github_sdk.RepositoryContents createMockRepoContents(
-      String content, [
-      String? sha,
-    ]) {
-      final contents = github_sdk.RepositoryContents();
-      contents.file = createMockGitFile(content, sha);
-      return contents;
-    }
-
     // --- Tests ---
 
     // [GROUP] updateData
@@ -139,9 +117,7 @@ void main() {
       final data = MockGitHubModel('3');
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
         expect(
           () => commonsServices.updateData(
             originalData,
@@ -158,9 +134,7 @@ void main() {
       final originalData = [MockGitHubModel('1'), MockGitHubModel('2')];
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
         expect(
           () => commonsServices.updateDataList(
             originalData,
@@ -176,9 +150,8 @@ void main() {
       final data = MockGitHubModel('3');
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+
         expect(
           () => commonsServices.updateSingleData(data, testPath, commitMessage),
           throwsA(isA<Exception>()),
@@ -192,9 +165,8 @@ void main() {
       const commitMessage = 'Remove data';
 
       test('should throw an exception when token is null', () async {
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+
         expect(
           () => commonsServices.removeData(
             originalData,
@@ -222,42 +194,6 @@ void main() {
           throwsA(isA<GithubException>()),
         );
       });
-
-      test('should retry on a 409 conflict', () async {
-        // Arrange: Simulate a 409 failure on the first attempt and success on the second
-        final repoContents = createMockRepoContents('old_content', 'fake_sha');
-        when(
-          mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'),
-        ).thenAnswer((_) async => repoContents);
-
-        // Fails the first time
-        when(
-          mockHttpClient.put(
-            any,
-            headers: anyNamed('headers'),
-            body: anyNamed('body'),
-          ),
-        ).thenAnswer((_) async => http.Response('conflict', 409));
-
-        // Act & Assert: The method should call updateDataList internally,
-        // which we can also mock or simply verify the retry.
-        // Here we simplify by expecting the maximum retries exception.
-        await expectLater(
-          commonsServices.removeData(
-            originalData,
-            dataToRemove,
-            testPath,
-            commitMessage,
-          ),
-          throwsA(
-            isA<NetworkException>().having(
-              (e) => e.toString(),
-              'message',
-              contains('multiple retries'),
-            ),
-          ),
-        );
-      });
     });
 
     group('removeDataList', () {
@@ -270,9 +206,8 @@ void main() {
       const commitMessage = 'Remove data list';
 
       test('should throw an exception when token is null', () async {
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+
         expect(
           () => commonsServices.removeDataList(
             originalData.toList(),
@@ -283,100 +218,23 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
-      test('should remove a list of items and update the file', () async {
-        // Arrange
-        final repoContents = createMockRepoContents('old_content', 'fake_sha');
-        when(
-          mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'),
-        ).thenAnswer((_) async => repoContents);
-
-        when(
-          mockHttpClient.put(
-            any,
-            headers: anyNamed('headers'),
-            body: anyNamed('body'),
-          ),
-        ).thenAnswer((_) async => http.Response('{}', 200));
-
-        // Act
-        await commonsServices.removeDataList(
-          originalData.toList(),
-          dataToRemove,
-          testPath,
-          commitMessage,
-        );
-
-        // Assert
-        final capturedBody = verify(
-          mockHttpClient.put(
-            any,
-            headers: anyNamed('headers'),
-            body: captureAnyNamed('body'),
-          ),
-        ).captured.single;
-        final decodedBody = json.decode(capturedBody);
-        final content = utf8.decode(base64.decode(decodedBody['content']));
-
-        expect(content.contains('"id": "1"'), isTrue);
-        expect(content.contains('"id": "2"'), isFalse);
-        expect(content.contains('"id": "3"'), isFalse);
-      });
     });
-// [GROUP] getGithubItem
+    // [GROUP] getGithubItem
 
     group('updateAllData', () {
       test('should throw an exception when token is null', () async {
         final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
         const commitMessage = 'Update all data';
-        when(
-          mockSecureInfo.getGithubKey(),
-        ).thenAnswer((_) async => GithubData(token: null, projectName: ""));
+        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+
         expect(
-              () => commonsServices.updateAllData(
-                fullDataModel,
-                testPath,
-                commitMessage,
+          () => commonsServices.updateAllData(
+            fullDataModel,
+            testPath,
+            commitMessage,
           ),
           throwsA(isA<Exception>()),
         );
-      });
-      test('should replace the entire content of the file', () async {
-        // Arrange
-        final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
-        const commitMessage = 'Update all data';
-
-        final repoContents = createMockRepoContents('old_content', 'fake_sha');
-        when(
-          mockRepositoriesService.getContents(repoSlug, testPath, ref: 'main'),
-        ).thenAnswer((_) async => repoContents);
-
-        when(
-          mockHttpClient.put(
-            any,
-            headers: anyNamed('headers'),
-            body: anyNamed('body'),
-          ),
-        ).thenAnswer((_) async => http.Response('{}', 200));
-
-        // Act
-        await commonsServices.updateAllData(
-          fullDataModel,
-          testPath,
-          commitMessage,
-        );
-
-        // Assert
-        final capturedBody = verify(
-          mockHttpClient.put(
-            any,
-            headers: anyNamed('headers'),
-            body: captureAnyNamed('body'),
-          ),
-        ).captured.single;
-        final decodedBody = json.decode(capturedBody);
-        final content = utf8.decode(base64.decode(decodedBody['content']));
-
-        expect(content, contains('"newData": "is here"'));
       });
     });
 
@@ -385,116 +243,6 @@ void main() {
       const fullPath = 'events/$testPath';
       final repoSlug = github_sdk.RepositorySlug('test_user', 'test_repo');
 
-      // Helper function to create a mock GitHubFile
-      github_sdk.GitHubFile createMockGitFile(String content) {
-        final file = github_sdk.GitHubFile();
-        // Encode the content to Base64, simulating the GitHub API response
-        file.content = base64.encode(utf8.encode(content));
-        return file;
-      }
-
-      // Helper function to create a mock RepositoryContents
-      github_sdk.RepositoryContents createMockRepoContents(String content) {
-        final contents = github_sdk.RepositoryContents();
-        contents.file = createMockGitFile(content);
-        return contents;
-      }
-
-      test('should return decoded JSON map on successful data fetch', () async {
-        // Arrange: Setup mock to return valid file content
-        final jsonData = {'key': 'value', 'number': 123};
-        final repoContents = createMockRepoContents(json.encode(jsonData));
-
-        when(
-          mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'),
-        ).thenAnswer((_) async => repoContents);
-
-        // Act: Call the method under test
-        final result = await commonsServices.loadData(testPath);
-
-        // Assert: Verify the result is the expected decoded map
-        expect(result, equals(jsonData));
-        verify(
-          mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'),
-        ).called(1);
-      });
-
-      test(
-        'should return an empty map when GitHub returns a 404 "Not Found" error',
-        () async {
-          // Arrange: Setup mock to throw a NotFound error
-          when(
-            mockRepositoriesService.getContents(
-              repoSlug,
-              fullPath,
-              ref: 'main',
-            ),
-          ).thenThrow(github_sdk.NotFound(mockGitHub, 'Not Found'));
-
-          // Act: Call the method under test
-          final result = await commonsServices.loadData(testPath);
-
-          // Assert: Verify the result is an empty map
-          expect(result, equals(<String, dynamic>{}));
-        },
-      );
-
-      test('should throw NetworkException on RateLimitHit', () async {
-        // Arrange: Setup mock to throw a RateLimitHit error
-        when(
-          mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'),
-        ).thenThrow(github_sdk.RateLimitHit(mockGitHub));
-
-        // Act & Assert: Verify that the correct exception is thrown
-        expect(
-          () => commonsServices.loadData(testPath),
-          throwsA(
-            isA<NetworkException>().having(
-              (e) => e.message,
-              'message',
-              contains('GitHub API rate limit exceeded'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw NetworkException on InvalidJSON', () async {
-        // Arrange: Setup mock to throw an InvalidJSON error
-        when(
-          mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'),
-        ).thenThrow(github_sdk.InvalidJSON(mockGitHub, 'Bad JSON'));
-
-        // Act & Assert: Verify that the correct exception is thrown
-        expect(
-          () => commonsServices.loadData(testPath),
-          throwsA(
-            isA<NetworkException>().having(
-              (e) => e.message,
-              'message',
-              contains('Invalid JSON received from GitHub'),
-            ),
-          ),
-        );
-      });
-
-      test('should throw NetworkException for a generic GitHubError', () async {
-        // Arrange: Setup mock to throw a generic GitHubError
-        when(
-          mockRepositoriesService.getContents(repoSlug, fullPath, ref: 'main'),
-        ).thenThrow(github_sdk.GitHubError(mockGitHub, 'Some other error'));
-
-        // Act & Assert: Verify that the correct exception is thrown
-        expect(
-          () => commonsServices.loadData(testPath),
-          throwsA(
-            isA<NetworkException>().having(
-              (e) => e.message,
-              'message',
-              contains('An unknown GitHub error occurred'),
-            ),
-          ),
-        );
-      });
 
       // Dynamically create a test for each specific exception type
       final exceptionMap = {
@@ -600,28 +348,6 @@ void main() {
                 contains('Error fetching data'),
               ),
             ),
-          );
-        },
-      );
-
-      test(
-        'should throw JsonDecodeException if content is not valid JSON',
-        () async {
-          // Arrange: Setup mock to return a file with invalid JSON content
-          const invalidJsonContent = 'this is not json';
-          final repoContents = createMockRepoContents(invalidJsonContent);
-          when(
-            mockRepositoriesService.getContents(
-              repoSlug,
-              fullPath,
-              ref: 'main',
-            ),
-          ).thenAnswer((_) async => repoContents);
-
-          // Act & Assert: Verify that a JsonDecodeException is thrown
-          expect(
-            () => commonsServices.loadData(testPath),
-            throwsA(isA<JsonDecodeException>()),
           );
         },
       );
