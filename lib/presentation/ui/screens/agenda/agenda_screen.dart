@@ -44,7 +44,6 @@ class _AgendaScreenState extends State<AgendaScreen>
     with WidgetsBindingObserver {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
 
-
   @override
   void initState() {
     super.initState();
@@ -135,7 +134,7 @@ class _AgendaScreenState extends State<AgendaScreen>
                         setState(() {
                           final tabBarIndex =
                               _expansionTilesStates[agendaDayId]?.tabBarIndex ??
-                                  0;
+                              0;
                           _updateTileState(
                             key: agendaDayId,
                             value: ExpansionTileState(
@@ -149,14 +148,14 @@ class _AgendaScreenState extends State<AgendaScreen>
                       children: <Widget>[
                         _buildExpansionTileBody(
                           widget
-                              .viewmodel
-                              .agendaDays
-                              .value[index]
-                              .resolvedTracks
-                              ?.where(
-                                (track) => track.sessionUids.isNotEmpty,
-                          )
-                              .toList() ??
+                                  .viewmodel
+                                  .agendaDays
+                                  .value[index]
+                                  .resolvedTracks
+                                  ?.where(
+                                    (track) => track.sessionUids.isNotEmpty,
+                                  )
+                                  .toList() ??
                               [],
                           tabBarIndex,
                           agendaDayId,
@@ -208,11 +207,11 @@ class _AgendaScreenState extends State<AgendaScreen>
   }
 
   Widget _buildExpansionTileBody(
-      List<Track> tracks,
-      int tabBarIndex,
-      String agendaDayId,
-      String eventId,
-      ) {
+    List<Track> tracks,
+    int tabBarIndex,
+    String agendaDayId,
+    String eventId,
+  ) {
     if (tabBarIndex >= tracks.length) {
       tabBarIndex = 0;
       if (tracks.isEmpty) {
@@ -297,9 +296,9 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
         sessions: widget.tracks[index].resolvedSessions
             .where(
               (session) =>
-          session.eventUID == widget.eventId &&
-              session.agendaDayUID == widget.agendaDayId,
-        )
+                  session.eventUID == widget.eventId &&
+                  session.agendaDayUID == widget.agendaDayId,
+            )
             .toList(),
         trackId: widget.tracks[index].uid,
         agendaDayId: widget.agendaDayId,
@@ -358,84 +357,84 @@ class _SessionCardsState extends State<SessionCards> {
       child: Column(
         children: widget.sessions.isEmpty
             ? [
-          SizedBox(
-            height: 150,
-            child: Center(child: Text(location.noSessionsFound)),
-          ),
-        ]
+                SizedBox(
+                  height: 150,
+                  child: Center(child: Text(location.noSessionsFound)),
+                ),
+              ]
             : List.generate(widget.sessions.length, (index) {
-          final session = widget.sessions[index];
+                final session = widget.sessions[index];
 
-          return InkWell(
-            onTap: () async {
-              var githubService = await secureInfo.getGithubKey();
-              if (githubService.getToken() != null &&
-                  githubService.getToken()?.isNotEmpty == true) {
-                List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                  AppRouter.agendaFormPath,
-                  extra: AgendaFormData(
-                    eventId: widget.eventId,
-                    session: session,
-                    agendaDayId: widget.agendaDayId,
-                    trackId: widget.trackId,
+                return InkWell(
+                  onTap: () async {
+                    var githubService = await secureInfo.getGithubKey();
+                    if (githubService.getToken() != null &&
+                        githubService.getToken()?.isNotEmpty == true) {
+                      List<AgendaDay>? agendaDays = await AppRouter.router.push(
+                        AppRouter.agendaFormPath,
+                        extra: AgendaFormData(
+                          eventId: widget.eventId,
+                          session: session,
+                          agendaDayId: widget.agendaDayId,
+                          trackId: widget.trackId,
+                        ),
+                      );
+                      if (agendaDays != null) {
+                        widget.viewModel.loadAgendaDays(widget.eventId);
+                      }
+                    }
+                  },
+                  child: _buildSessionCard(
+                    context,
+                    Session(
+                      title: session.title,
+                      time: session.time,
+                      speakerUID: session.speakerUID,
+                      description: session.description,
+                      type: session.type,
+                      uid: session.uid,
+                      eventUID: session.eventUID,
+                      agendaDayUID: session.agendaDayUID,
+                    ),
+                    widget.viewModel.speakers.value
+                            .where(
+                              (element) => element.uid == session.speakerUID,
+                            )
+                            .firstOrNull
+                            ?.name ??
+                        "",
+                    onDeleteTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return DeleteDialog(
+                            title: location.deleteSessionTitle,
+                            message: location.deleteSessionMessage,
+                            onDeletePressed: () async {
+                              await widget.viewModel
+                                  .removeSessionAndReloadAgenda(
+                                    session.uid,
+                                    widget.eventId,
+                                    agendaDayUID: session.agendaDayUID,
+                                  );
+                            },
+                          );
+                        },
+                      );
+                    },
                   ),
                 );
-                if (agendaDays != null) {
-                  widget.viewModel.loadAgendaDays(widget.eventId);
-                }
-              }
-            },
-            child: _buildSessionCard(
-              context,
-              Session(
-                title: session.title,
-                time: session.time,
-                speakerUID: session.speakerUID,
-                description: session.description,
-                type: session.type,
-                uid: session.uid,
-                eventUID: session.eventUID,
-                agendaDayUID: session.agendaDayUID,
-              ),
-              widget.viewModel.speakers.value
-                  .where(
-                    (element) => element.uid == session.speakerUID,
-              )
-                  .firstOrNull
-                  ?.name ??
-                  "",
-              onDeleteTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return DeleteDialog(
-                      title: location.deleteSessionTitle,
-                      message: location.deleteSessionMessage,
-                      onDeletePressed: () async {
-                        await widget.viewModel
-                            .removeSessionAndReloadAgenda(
-                          session.uid,
-                          widget.eventId,
-                          agendaDayUID: session.agendaDayUID,
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        }),
+              }),
       ),
     );
   }
 
   Widget _buildSessionCard(
-      BuildContext context,
-      Session session,
-      String speakerName, {
-        required Function() onDeleteTap,
-      }) {
+    BuildContext context,
+    Session session,
+    String speakerName, {
+    required Function() onDeleteTap,
+  }) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -519,9 +518,9 @@ class _SessionCardsState extends State<SessionCards> {
                           speakerName,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                                color: Theme.of(context).colorScheme.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ),
