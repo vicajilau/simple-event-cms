@@ -123,17 +123,53 @@ void main() {
             name: 'Track 1',
             resolvedSessions: [
               Session(
-                uid: 'session1',
-                title: 'Session 1',
+                uid: 'session-101',
+                title: 'Flutter Magic',
                 time: '10:00',
-                eventUID: 'test-event-id',
-                agendaDayUID: 'day1',
-                speakerUID: 'SpeakerUID',
+                speakerUID: 'speaker-1',
+                eventUID: 'event-1',
+                agendaDayUID: 'day-1',
                 type: 'talk',
+              ),
+              Session(
+                uid: 'session-102',
+                title: 'Flutter Magic',
+                time: '10:00',
+                speakerUID: 'speaker-1',
+                eventUID: 'event-1',
+                agendaDayUID: 'day-1',
+                type: 'keynote',
+              ),
+              Session(
+                uid: 'session-103',
+                title: 'Flutter Magic',
+                time: '10:00',
+                speakerUID: 'speaker-1',
+                eventUID: 'event-1',
+                agendaDayUID: 'day-1',
+                type: 'workshop',
+              ),
+              Session(
+                uid: 'session-104',
+                title: 'Flutter Magic',
+                time: '10:00',
+                speakerUID: 'speaker-1',
+                eventUID: 'event-1',
+                agendaDayUID: 'day-1',
+                type: 'sessionBreak',
+              ),
+              Session(
+                uid: 'session-105',
+                title: 'Flutter Magic',
+                time: '10:00',
+                speakerUID: 'speaker-1',
+                eventUID: 'event-1',
+                agendaDayUID: 'day-1',
+                type: 'panel',
               ),
             ],
             color: '',
-            sessionUids: ["session1"],
+            sessionUids: ["session-101", "session-102", "session-103", "session-104", "session-105"],
             eventUid: 'eventUID',
           ),
         ],
@@ -429,14 +465,49 @@ void main() {
 
         final sessions = [
           Session(
-            uid: 's1',
-            title: 'Title 1',
+            uid: 'session-101',
+            title: 'session-101',
             time: '10:00',
+            speakerUID: 'speaker-1',
             eventUID: 'event-1',
             agendaDayUID: 'day-1',
-            speakerUID: 'sp1',
             type: 'talk',
-            description: 'Description for the session.',
+          ),
+          Session(
+            uid: 'session-102',
+            title: 'session-102',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'keynote',
+          ),
+          Session(
+            uid: 'session-103',
+            title: 'session-103',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'workshop',
+          ),
+          Session(
+            uid: 'session-104',
+            title: 'session-104',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'sessionBreak',
+          ),
+          Session(
+            uid: 'session-105',
+            title: 'session-105',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'panel',
           ),
         ];
 
@@ -453,9 +524,11 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text('10:00'), findsOneWidget);
-        expect(find.text('Title 1'), findsOneWidget);
-        expect(find.text('Description for the session.'), findsOneWidget);
+        expect(find.text('session-101'), findsOneWidget);
+        expect(find.text('session-102'), findsOneWidget);
+        expect(find.text('session-103'), findsOneWidget);
+        expect(find.text('session-104'), findsOneWidget);
+        expect(find.text('session-105'), findsOneWidget);
       },
     );
 
@@ -490,7 +563,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.delete), findsNothing);
+      expect(find.byIcon(Icons.delete_outline), findsNothing);
 
       when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => true);
 
@@ -506,7 +579,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.delete), findsOneWidget);
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
     });
 
     testWidgets(
@@ -550,7 +623,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Tap on the delete button so the dialog shows
-        await tester.tap(find.byIcon(Icons.delete));
+        await tester.tap(find.byIcon(Icons.delete_outline));
         await tester.pump();
 
         // Check the dialog texts with the translations (l10)
