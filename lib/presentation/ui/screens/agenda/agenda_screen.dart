@@ -328,8 +328,6 @@ class _CustomTabBarViewState extends State<CustomTabBarView> {
   }
 }
 
-// ... (Previous imports and AgendaScreen / CustomTabBarView remain the same)
-
 class SessionCards extends StatefulWidget {
   final AgendaViewModel viewModel = getIt<AgendaViewModel>();
   final String agendaDayId, trackId, eventId, location;
