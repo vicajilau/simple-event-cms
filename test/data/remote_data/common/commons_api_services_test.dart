@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart';
 import 'package:github/github.dart' as github_sdk;
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/secure_info.dart';
@@ -52,13 +53,16 @@ class MockGithubJsonModel extends GithubJsonModel {
 
 void main() {
   // Declare mock variables
-  late SecureInfo mockSecureInfo;
+  late SecureInfo secureInfo;
   late MockConfig mockConfig;
   late GithubData mockGithubData;
   late MockGitHub mockGitHub = MockGitHub();
   late MockClient mockHttpClient;
   late MockRepositoriesService mockRepositoriesService;
   late CommonsServicesImp commonsServices;
+  late github_sdk.GitHubFile repoContentsFile;
+  late github_sdk.RepositoryContents repoContent;
+
   TestWidgetsFlutterBinding.ensureInitialized();
   const MethodChannel channel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
@@ -73,10 +77,14 @@ void main() {
   // Setup before each test
   setUp(() async {
     // Instantiate mocks
-    mockSecureInfo = SecureInfo();
+    secureInfo = SecureInfo();
     mockGithubData = GithubData(token: "fake_token", projectName: "test_repo");
     mockConfig = MockConfig();
     mockRepositoriesService = MockRepositoriesService();
+    repoContent = MockRepositoryContents();
+    repoContentsFile = MockGitHubFile();
+    when(repoContentsFile.content).thenReturn("");
+
     mockHttpClient = MockClient();
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -88,7 +96,7 @@ void main() {
           return null;
         });
 
-    getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+    getIt.registerSingleton<SecureInfo>(secureInfo);
     getIt.registerSingleton<Config>(mockConfig);
 
     when(mockConfig.githubUser).thenReturn('test_user');
@@ -96,9 +104,36 @@ void main() {
     when(mockConfig.branch).thenReturn('main');
     when(mockGitHub.repositories).thenReturn(mockRepositoriesService);
     when(mockGitHub.client).thenReturn(mockHttpClient);
+    when(repoContentsFile.sha).thenReturn("fake_sha");
+    when(repoContent.file).thenReturn(repoContentsFile);
 
-    mockSecureInfo.saveGithubKey(mockGithubData);
+    final localJson = json.encode({
+      'configName': 'Random Organization',
+      'primaryColorOrganization': '#4285F4',
+      'secondaryColorOrganization': '#4285F4',
+      'github_user': 'remote_user',
+      'project_name': 'remote_proj',
+      'branch': 'prod',
+      'eventForcedToViewUID': null,
+    });
+    final base64Content = base64.encode(utf8.encode(localJson));
+
+    final mockContent = repoContentsFile..content = base64Content;
+    final mockContents = repoContent..file = mockContent;
+    when(
+      mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+    ).thenAnswer((_) async => mockContents);
+    when(
+      mockHttpClient.put(
+        any,
+        headers: anyNamed('headers'),
+        body: anyNamed('body'),
+      ),
+    ).thenAnswer((_) async => Response("{}", 200));
+
+    secureInfo.saveGithubKey(mockGithubData);
     commonsServices = CommonsServicesImp();
+    getIt.registerSingleton<github_sdk.GitHub>(mockGitHub);
   });
 
   tearDown(() {
@@ -117,7 +152,7 @@ void main() {
       final data = MockGitHubModel('3');
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
         expect(
           () => commonsServices.updateData(
             originalData,
@@ -128,13 +163,34 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('updateData works successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.updateData(
+            originalData,
+            data,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
+        );
+      });
     });
     // [GROUP] updateDataList
     group('updateDataList', () {
       final originalData = [MockGitHubModel('1'), MockGitHubModel('2')];
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
         expect(
           () => commonsServices.updateDataList(
             originalData,
@@ -144,17 +200,52 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should updateDataList successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+        expect(
+          () async => await commonsServices.updateDataList(
+            originalData,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
+        );
+      });
     });
     // [GROUP] updateSingleData
     group('updateSingleData', () {
       final data = MockGitHubModel('3');
       const commitMessage = 'Update data';
       test('should throw an exception when token is null', () async {
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
 
         expect(
           () => commonsServices.updateSingleData(data, testPath, commitMessage),
           throwsA(isA<Exception>()),
+        );
+      });
+      test('should updateSingleData works successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.updateSingleData(data, testPath, commitMessage),
+          returnsNormally,
         );
       });
     });
@@ -165,7 +256,7 @@ void main() {
       const commitMessage = 'Remove data';
 
       test('should throw an exception when token is null', () async {
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
 
         expect(
           () => commonsServices.removeData(
@@ -175,6 +266,27 @@ void main() {
             commitMessage,
           ),
           throwsA(isA<Exception>()),
+        );
+      });
+      test('should removeData successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.removeData(
+            originalData,
+            dataToRemove,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
         );
       });
       test('should throw GithubException if the file does not exist', () async {
@@ -206,7 +318,7 @@ void main() {
       const commitMessage = 'Remove data list';
 
       test('should throw an exception when token is null', () async {
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
 
         expect(
           () => commonsServices.removeDataList(
@@ -218,6 +330,27 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should removeDataList successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.removeDataList(
+            originalData.toList(),
+            dataToRemove,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
+        );
+      });
     });
     // [GROUP] getGithubItem
 
@@ -225,7 +358,7 @@ void main() {
       test('should throw an exception when token is null', () async {
         final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
         const commitMessage = 'Update all data';
-        mockSecureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
+        secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
 
         expect(
           () => commonsServices.updateAllData(
@@ -236,13 +369,36 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should run updateAllData successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+
+        final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
+        const commitMessage = 'Update all data';
+
+        expect(
+          () => commonsServices.updateAllData(
+            fullDataModel,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
+        );
+      });
     });
 
     group('CommonsServicesImp - loadData', () {
       const testPath = 'data.json';
       const fullPath = 'events/$testPath';
       final repoSlug = github_sdk.RepositorySlug('test_user', 'test_repo');
-
 
       // Dynamically create a test for each specific exception type
       final exceptionMap = {
