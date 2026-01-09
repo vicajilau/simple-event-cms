@@ -34,6 +34,13 @@
       "color": "",
       "sessionUids": [],
       "eventUid": "Event_20260109_110030"
+    },
+    {
+      "UID": "Track_20260109_110200",
+      "name": "vdfvdf",
+      "color": "",
+      "sessionUids": [],
+      "eventUid": "Event_20260109_110202"
     }
   ],
   "sessions": [],
@@ -116,7 +123,7 @@
           "UID": "Event_20260109_110202"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-19",
@@ -126,7 +133,7 @@
           "UID": "Event_20260109_110202"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-20",
@@ -136,7 +143,7 @@
           "UID": "Event_20260109_110202"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-21",
@@ -146,7 +153,7 @@
           "UID": "Event_20260109_110202"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     },
     {
       "UID": "2026-01-22",
@@ -156,7 +163,7 @@
           "UID": "Event_20260109_110202"
         }
       ],
-      "trackUids": null
+      "trackUids": []
     }
   ],
   "sponsors": [],
