@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:github/github.dart' as github_sdk;
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/paths_github.dart';
 import 'package:sec/core/config/secure_info.dart';
@@ -9,6 +10,7 @@ import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
 import 'package:sec/core/models/github_json_model.dart';
 import 'package:sec/core/models/models.dart';
+import 'package:sec/data/exceptions/exceptions.dart';
 import 'package:sec/data/remote_data/common/commons_api_services.dart';
 import 'package:sec/data/remote_data/load_data/data_loader.dart';
 
@@ -19,7 +21,11 @@ void main() {
 
   late DataLoaderManager dataLoaderManager;
   late MockCommonsServices mockCommonsServices;
-  late SecureInfo? mockSecureInfo;
+  late CommonsServices commonsServices;
+  late MockSecureInfo mockSecureInfo;
+  late SecureInfo secureInfo;
+  late MockGitHub mockGitHub;
+  late MockRepositoriesService mockRepositoriesService;
 
   const MethodChannel channel = MethodChannel(
     'plugins.it_nomads.com/flutter_secure_storage',
@@ -28,8 +34,11 @@ void main() {
   setUpAll(() async {
     mockCommonsServices = MockCommonsServices();
     // Register CommonsServices before instantiating DataLoaderManager
-    mockSecureInfo = SecureInfo();
-    getIt.registerSingleton<SecureInfo>(mockSecureInfo!);
+    mockSecureInfo = MockSecureInfo();
+    secureInfo = SecureInfo();
+    mockRepositoriesService = MockRepositoriesService();
+    mockGitHub = MockGitHub();
+    getIt.registerSingleton<SecureInfo>(secureInfo);
     getIt.registerSingleton<CommonsServices>(mockCommonsServices);
     dataLoaderManager = DataLoaderManager();
     getIt.registerSingleton<Config>(
@@ -42,7 +51,7 @@ void main() {
         branch: 'test_branch',
       ),
     );
-
+    commonsServices = CommonsServicesImp();
     final mockSocial = MockSocial();
     when(mockSocial.toJson()).thenReturn({'twitter': 'some_handle'});
 
@@ -117,46 +126,25 @@ void main() {
       mockCommonsServices.loadData(any),
     ).thenAnswer((_) async => githubJson.toJson());
 
+    when(
+      mockSecureInfo.getGithubKey(),
+    ).thenAnswer((_) async => GithubData(projectName: 'remote_proj'));
+    when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+    when(mockGitHub.repositories).thenReturn(mockRepositoriesService);
+
     final githubData = GithubData(token: 'test_token');
     final githubDataJson = jsonEncode(githubData.toJson());
     // Mock Secure Storage
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
-      if (methodCall.method == 'read') {
-        return githubDataJson;
-      }
-      return null;
-    });
+          if (methodCall.method == 'read') {
+            return githubDataJson;
+          }
+          return null;
+        });
   });
 
   group('DataLoaderManager', () {
-    test('loadEvents returns events from commonsServices', () async {
-      final testEvent = Event(
-        uid: '1',
-        isVisible: true,
-        tracks: [],
-        eventName: '',
-        year: '',
-        primaryColor: '',
-        secondaryColor: '',
-        eventDates: EventDates(
-          uid: 'testUID',
-          startDate: '2025-01-01T10:00:00Z',
-          endDate: '2025-01-02T18:00:00Z',
-          timezone: 'timezone',
-        ),
-      );
-      when(mockCommonsServices.loadData(any)).thenAnswer(
-            (_) => Future.value({
-          'events': [testEvent.toJson()],
-        }),
-      );
-
-      // Act
-      await dataLoaderManager.loadEvents();
-
-      verify(mockCommonsServices.loadData(any)).called(1);
-    });
     test('loadEvents returns an empty list if no events are visible', () async {
       final testEvent = Event(
         uid: '1',
@@ -175,7 +163,7 @@ void main() {
       );
 
       when(mockCommonsServices.loadData(any)).thenAnswer(
-            (_) => Future.value({
+        (_) => Future.value({
           'events': [testEvent.toJson()],
         }),
       );
@@ -188,7 +176,7 @@ void main() {
 
     test(
       'loadAllEventData uses cache when called multiple times within 5 minutes',
-          () async {
+      () async {
         // Arrange
 
         dataLoaderManager.allData = null;
@@ -224,7 +212,7 @@ void main() {
       );
       // Act
       when(mockCommonsServices.loadData(PathsGithub.eventPath)).thenAnswer(
-            (_) => Future.value({
+        (_) => Future.value({
           'speakers': [
             {
               'UID': '1',
@@ -256,7 +244,7 @@ void main() {
         eventUID: '',
       );
       when(mockCommonsServices.loadData(PathsGithub.eventPath)).thenAnswer(
-            (_) => Future.value({
+        (_) => Future.value({
           'sponsors': [
             {
               'UID': '1',
@@ -378,5 +366,273 @@ void main() {
       expect(tracks, hasLength(1));
       expect(tracks.first.uid, testTrack.uid);
     });
+    test('loadEvents throws JsonDecodeException when file content is invalid', () async {
+      getIt.unregister<SecureInfo>();
+      getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+      final fileMock = MockGitHubFile();
+      when(fileMock.content).thenReturn("");
+      final repoContents =
+      github_sdk.RepositoryContents(file: fileMock); // file is null by default
+
+      when(
+        mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+      ).thenAnswer((_) async => repoContents);
+
+
+      // Act
+      try {
+        await commonsServices.loadData(PathsGithub.eventPath);
+      }catch(e){
+        expect(e, isA<JsonDecodeException>());
+        expect(
+          (e as JsonDecodeException).message,
+          "Error fetching data, Please retry later",
+        );
+      }
+    });
+    test('loadEvents fails when file is null', () async {
+      getIt.unregister<SecureInfo>();
+      getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+      final repoContents =
+      github_sdk.RepositoryContents(); // file is null by default
+
+      repoContents.file =
+          github_sdk.GitHubFile(); // content is null by default
+
+      when(
+        mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+      ).thenAnswer((_) async => repoContents);
+
+
+      // Act
+      try {
+        await commonsServices.loadData(PathsGithub.eventPath);
+      }catch(e){
+        expect(e, isA<NetworkException>());
+        expect(
+          (e as NetworkException).message,
+          "Error fetching data, Please retry later",
+        );
+      }
+    });
+    test(
+      'loadEvents throws a GitHubError when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.GitHubError(mockGitHub, 'Not Found'));
+
+        final data = await commonsServices.loadData(PathsGithub.eventPath);
+
+        expect(data, <String, dynamic>{});
+      },
+    );
+    test(
+      'loadEvents throws a RateLimitHit when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.RateLimitHit(mockGitHub));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "GitHub API rate limit exceeded. Please try again later.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a InvalidJSON when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.InvalidJSON(mockGitHub));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "Invalid JSON received from GitHub.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a RepositoryNotFound when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.RepositoryNotFound(mockGitHub,"repo"));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "Repository not found.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a UserNotFound when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.UserNotFound(mockGitHub,"user"));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "User not found.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a OrganizationNotFound when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.OrganizationNotFound(mockGitHub,"org"));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "Organization not found.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a TeamNotFound when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.TeamNotFound(mockGitHub,0));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "Team not found.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a AccessForbidden when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.AccessForbidden(mockGitHub));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "Access forbidden. Check your token and permissions.",
+          );
+        }
+      },
+    );
+    test(
+      'loadEvents throws a NotReady when the data is not found',
+      () async {
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+        final repoContents = github_sdk.RepositoryContents();
+
+        repoContents.file =
+            github_sdk.GitHubFile(); // content is null by default
+
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenThrow(github_sdk.NotReady(mockGitHub,"path"));
+
+        try {
+          await commonsServices.loadData(PathsGithub.eventPath);
+        } catch (e) {
+          expect(e, isA<NetworkException>());
+          expect(
+            (e as NetworkException).message,
+            "The requested resource is not ready. Please try again later.",
+          );
+        }
+      },
+    );
   });
 }

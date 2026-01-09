@@ -82,6 +82,7 @@ class CommonsServicesImp extends CommonsServices {
         if (e.message == "Not Found") {
           return <String, dynamic>{};
         }
+      }
         if (e is RateLimitHit) {
           throw NetworkException(
             "GitHub API rate limit exceeded. Please try again later.",
@@ -98,13 +99,6 @@ class CommonsServicesImp extends CommonsServices {
             url: url,
           );
         }
-        throw NetworkException(
-          "An unknown GitHub error occurred, please retry later",
-          cause: e,
-          stackTrace: st,
-          url: url,
-        );
-      }
 
       if (e is RepositoryNotFound) {
         throw NetworkException(

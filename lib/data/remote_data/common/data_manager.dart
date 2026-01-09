@@ -454,31 +454,10 @@ class DataUpdate {
 Future<void> _updateAgendaDaysRemovingTrack(
   List<AgendaDay> days,
   String trackId,
-  DataUpdateManager dataUpdateInfo, {
-  String sessionId = "",
-}) async {
+  DataUpdateManager dataUpdateInfo) async {
   if (days.length == 1) {
     var daysUpdated = await _removeTrackFromDay(days.first, trackId);
     await dataUpdateInfo.updateAgendaDay(daysUpdated);
-  } else {
-    List<AgendaDay> modifiedDays = [];
-    for (var day in days) {
-      if (sessionId.isNotEmpty &&
-          day.resolvedTracks
-                  ?.expand((track) => track.sessionUids)
-                  .toList()
-                  .contains(sessionId) ==
-              true) {
-        modifiedDays.add(await _removeTrackFromDay(day, trackId));
-      } else {
-        if (sessionId.isEmpty) {
-          modifiedDays.add(await _removeTrackFromDay(day, trackId));
-        } else {
-          modifiedDays.add(day);
-        }
-      }
-    }
-    await dataUpdateInfo.updateAgendaDays(modifiedDays);
   }
 }
 
