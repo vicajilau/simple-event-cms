@@ -107,6 +107,56 @@
         }
       ],
       "trackUids": []
+    },
+    {
+      "UID": "2026-01-18",
+      "date": "2026-01-18",
+      "eventUID": [
+        {
+          "UID": "Event_20260109_110202"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-19",
+      "date": "2026-01-19",
+      "eventUID": [
+        {
+          "UID": "Event_20260109_110202"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-20",
+      "date": "2026-01-20",
+      "eventUID": [
+        {
+          "UID": "Event_20260109_110202"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-21",
+      "date": "2026-01-21",
+      "eventUID": [
+        {
+          "UID": "Event_20260109_110202"
+        }
+      ],
+      "trackUids": null
+    },
+    {
+      "UID": "2026-01-22",
+      "date": "2026-01-22",
+      "eventUID": [
+        {
+          "UID": "Event_20260109_110202"
+        }
+      ],
+      "trackUids": null
     }
   ],
   "sponsors": [],
