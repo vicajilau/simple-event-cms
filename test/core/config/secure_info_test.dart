@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/github/github_data.dart';
+import 'package:sec/core/routing/check_org.dart';
 
 
 void main() {
@@ -21,6 +22,7 @@ void main() {
 
     getIt.reset();
     getIt.registerSingleton<SecureInfo>(secureInfo);
+    getIt.registerSingleton<CheckOrg>(CheckOrg());
   });
 
   // Group of tests for the getGithubItem method
