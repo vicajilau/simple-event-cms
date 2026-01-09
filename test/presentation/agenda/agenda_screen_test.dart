@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/speaker.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/agenda_screen.dart';
@@ -20,12 +22,14 @@ void main() {
   });
 
   late MockAgendaViewModel mockAgendaViewModel;
+  late MockGoRouter mockRouter;
 
   setUp(() async {
     // It's good practice to reset GetIt to ensure test isolation.
     await getIt.reset();
     getIt.registerSingleton<SecureInfo>(SecureInfo());
     mockAgendaViewModel = MockAgendaViewModel();
+    mockRouter = MockGoRouter();
     // The mock will be registered inside each test before the widget is pumped.
   });
 
@@ -41,6 +45,7 @@ void main() {
       mockAgendaViewModel.loadAgendaDays(any),
     ).thenAnswer((_) async => const Result.ok(null));
     when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => false);
+    AppRouter.router = mockRouter;
   }
 
   Widget createWidgetUnderTest() {
@@ -493,6 +498,78 @@ void main() {
         expect(find.text('session-103'), findsOneWidget);
         expect(find.text('session-104'), findsOneWidget);
         expect(find.text('session-105'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Renders the session correctly and tap on that session shows the agenda days',
+      (tester) async {
+        await registerMockViewModel();
+
+        // 1. Setup mocks
+        final mockSecureInfo = MockSecureInfo();
+        final mockGithubData = MockGithubData();
+        // Ensure mockRouter is a MockGoRouter() instance defined globally or in setup
+
+        when(mockGithubData.getToken()).thenReturn('token');
+        when(
+          mockSecureInfo.getGithubKey(),
+        ).thenAnswer((_) async => mockGithubData);
+        when(
+          mockSecureInfo.getGithubItem(),
+        ).thenAnswer((_) async => MockGitHub());
+
+        when(
+          mockRouter.push<List<AgendaDay>?>(any, extra: anyNamed('extra')),
+        ).thenAnswer(
+          (_) async => Future<List<AgendaDay>?>.value([MockAgendaDay()]),
+        );
+        when(
+          mockAgendaViewModel.loadAgendaDays(any),
+        ).thenAnswer(
+          (_) async => const Result.ok(null),
+        );
+
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        final sessions = [
+          Session(
+            uid: 'session-101',
+            title: 'session-101',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'talk',
+          ),
+        ];
+
+        // 2. Wrap with InheritedGoRouter so the widget uses your mock
+        await tester.pumpWidget(
+          wrapWithMaterial(
+            InheritedGoRouter(
+              goRouter: mockRouter,
+              child: SessionCards(
+                sessions: sessions,
+                agendaDayId: 'day-1',
+                trackId: 'track-1',
+                eventId: 'event-1',
+                location: 'location',
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // 3. Trigger the action
+        await tester.tap(find.text('session-101'));
+        await tester.pumpAndSettle();
+
+        // 4. Verify on the mock object
+        verify(mockAgendaViewModel.loadAgendaDays(any), // Nota los paréntesis en any()
+        ).called(1);
       },
     );
 
