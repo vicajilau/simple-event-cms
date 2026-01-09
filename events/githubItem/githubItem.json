@@ -1,32 +1,6 @@
 {
   "events": [
     {
-      "UID": "Event_20260109_110030",
-      "eventName": "fsdfdsfsdf",
-      "year": "2026",
-      "primaryColor": "",
-      "secondaryColor": "",
-      "eventDates": {
-        "UID": "EventDate_20260109_110030",
-        "startDate": "2026-01-25",
-        "endDate": "2026-01-31",
-        "timezone": "Europe/Madrid"
-      },
-      "description": null,
-      "location": "sdffdsfds",
-      "youtubeUrl": "",
-      "isVisible": true,
-      "tracks": [
-        {
-          "UID": "Track_20260109_110025",
-          "name": "test1",
-          "color": "",
-          "sessionUids": [],
-          "eventUid": "Event_20260109_110030"
-        }
-      ]
-    },
-    {
       "UID": "Event_20260109_110202",
       "eventName": "vfdvdfvdfv",
       "year": "2026",
@@ -55,13 +29,6 @@
   ],
   "tracks": [
     {
-      "UID": "Track_20260109_110025",
-      "name": "test1",
-      "color": "",
-      "sessionUids": [],
-      "eventUid": "Event_20260109_110030"
-    },
-    {
       "UID": "Track_20260109_110200",
       "name": "vdfvdf",
       "color": "",
@@ -71,76 +38,6 @@
   ],
   "sessions": [],
   "agendadays": [
-    {
-      "UID": "2026-01-25",
-      "date": "2026-01-25",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-26",
-      "date": "2026-01-26",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-27",
-      "date": "2026-01-27",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-28",
-      "date": "2026-01-28",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-29",
-      "date": "2026-01-29",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-30",
-      "date": "2026-01-30",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
-    {
-      "UID": "2026-01-31",
-      "date": "2026-01-31",
-      "eventUID": [
-        {
-          "UID": "Event_20260109_110030"
-        }
-      ],
-      "trackUids": []
-    },
     {
       "UID": "2026-01-18",
       "date": "2026-01-18",
