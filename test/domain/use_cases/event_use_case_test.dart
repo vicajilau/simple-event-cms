@@ -41,6 +41,36 @@ void main() {
       tracks: [],
       year: '',
     );
+    final eventWithoutStartDate = Event(
+      uid: '1',
+      eventName: 'Event 1',
+      eventDates: EventDates(
+        startDate: '',
+        endDate: '2024-01-01',
+        timezone: 'gmt',
+        uid: 'test_event_date_1',
+      ),
+      primaryColor: 'ff0000',
+      secondaryColor: '00ff00',
+      isVisible: true,
+      tracks: [],
+      year: '',
+    );
+    final eventWithoutEndDate = Event(
+      uid: '1',
+      eventName: 'Event 1',
+      eventDates: EventDates(
+        startDate: '2024-01-01',
+        endDate: '',
+        timezone: 'gmt',
+        uid: 'test_event_date_1',
+      ),
+      primaryColor: 'ff0000',
+      secondaryColor: '00ff00',
+      isVisible: true,
+      tracks: [],
+      year: '',
+    );
     final event2 = Event(
       uid: '2',
       eventName: 'Event 2',
@@ -67,11 +97,28 @@ void main() {
       expect((result as Ok<List<Event>>).value, events);
     });
 
-    test('getEvents returns an error on failure', () async {
+    test('prepareAgendaDays without end date succeeds', () async {
       when(
-        mockSecRepository.loadEvents(),
-      ).thenAnswer((_) async => Result.error(NetworkException('error')));
-      final result = await useCase.getEvents();
+        mockSecRepository.saveAgendaDays(
+          any,
+          any,
+          overrideAgendaDays: anyNamed('overrideAgendaDays'),
+        ),
+      ).thenAnswer((_) async => Result.ok(null));
+      await useCase.prepareAgendaDays(eventWithoutEndDate);
+      verify(
+        mockSecRepository.saveAgendaDays(any, eventWithoutEndDate.uid, overrideAgendaDays: true),
+      );
+    });
+    test('prepareAgendaDays returns an error on failure', () async {
+      when(
+        mockSecRepository.saveAgendaDays(
+          any,
+          any,
+          overrideAgendaDays: anyNamed('overrideAgendaDays'),
+        ),
+      ).thenAnswer((_) async => Result.ok(null));
+      final result = await useCase.prepareAgendaDays(eventWithoutStartDate);
       expect(result, isA<Error>());
     });
 
@@ -82,6 +129,14 @@ void main() {
       final result = await useCase.getEventById('1');
       expect(result, isA<Ok<Event?>>());
       expect((result as Ok<Event?>).value, event1);
+    });
+    test('getEventById returns an error on failure', () async {
+      when(
+        mockSecRepository.loadEvents(),
+      ).thenAnswer((_) async => Result.error(GithubException('')));
+      final result = await useCase.getEventById('1');
+      expect(result, isA<Error>());
+      expect((result as Error).error, isA<GithubException>());
     });
 
     test('saveEvent calls repository', () async {
