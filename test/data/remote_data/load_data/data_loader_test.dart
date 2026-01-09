@@ -333,8 +333,44 @@ void main() {
         agendaDayUID: 'day-1',
         type: 'talk',
       );
+      final testSessionKeynote = Session(
+        uid: 'session-102',
+        title: 'Flutter Magic',
+        time: '10:00',
+        speakerUID: 'speaker-1',
+        eventUID: 'event-1',
+        agendaDayUID: 'day-1',
+        type: 'keynote',
+      );
+      final testSessionWorkshop = Session(
+        uid: 'session-103',
+        title: 'Flutter Magic',
+        time: '10:00',
+        speakerUID: 'speaker-1',
+        eventUID: 'event-1',
+        agendaDayUID: 'day-1',
+        type: 'workshop',
+      );
+      final testSessionSessionBreak = Session(
+        uid: 'session-104',
+        title: 'Flutter Magic',
+        time: '10:00',
+        speakerUID: 'speaker-1',
+        eventUID: 'event-1',
+        agendaDayUID: 'day-1',
+        type: 'sessionBreak',
+      );
+      final testSessionPanel = Session(
+        uid: 'session-105',
+        title: 'Flutter Magic',
+        time: '10:00',
+        speakerUID: 'speaker-1',
+        eventUID: 'event-1',
+        agendaDayUID: 'day-1',
+        type: 'panel',
+      );
 
-      final testData = GithubJsonModel(sessions: [testSession]);
+      final testData = GithubJsonModel(sessions: [testSession,testSessionKeynote,testSessionWorkshop,testSessionSessionBreak,testSessionPanel]);
 
       when(
         mockCommonsServices.loadData(any),
@@ -342,7 +378,7 @@ void main() {
       // Act
       final sessions = await dataLoaderManager.loadAllSessions();
 
-      expect(sessions, hasLength(1));
+      expect(sessions, hasLength(5));
       expect(sessions.first.uid, testSession.uid);
     });
     test('loadAllTracks returns tracks from loaded data', () async {

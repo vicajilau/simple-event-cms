@@ -70,8 +70,8 @@ void main() {
   }
 
   testWidgets('shows loading indicator when view state is loading', (
-    WidgetTester tester,
-  ) async {
+      WidgetTester tester,
+      ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -81,8 +81,8 @@ void main() {
   });
 
   testWidgets('shows error dialog when view state is error', (
-    WidgetTester tester,
-  ) async {
+      WidgetTester tester,
+      ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -96,8 +96,8 @@ void main() {
   });
 
   testWidgets('shows no data screen when there are no agenda days', (
-    WidgetTester tester,
-  ) async {
+      WidgetTester tester,
+      ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -156,8 +156,8 @@ void main() {
 
   group('CustomTabBar', () {
     testWidgets('When there are no tracks we get SizedBox.shrink()', (
-      tester,
-    ) async {
+        tester,
+        ) async {
       await registerMockViewModel();
 
       final widget = DefaultTabController(
@@ -183,7 +183,7 @@ void main() {
 
     testWidgets(
       'initState builds SessionCards filtered and the build shows the one with the currentIndex',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
 
         final track1 = Track(
@@ -272,7 +272,7 @@ void main() {
 
     testWidgets(
       'didChangeDependencies, when the tab is changed, the onIndexChanged and currentIndex are updated',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
 
         final track1 = Track(
@@ -350,7 +350,7 @@ void main() {
 
     testWidgets(
       'If a track rests without sessions after filtering the SessionCards shows noSessionsFound',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
 
         final emptyTrack = Track(
@@ -401,8 +401,8 @@ void main() {
 
   group('SessionCards', () {
     testWidgets('Shows an empty state when the sessions list is empty', (
-      tester,
-    ) async {
+        tester,
+        ) async {
       await registerMockViewModel();
 
       final widget = SessionCards(
@@ -424,7 +424,7 @@ void main() {
 
     testWidgets(
       'Renders the session correctly, showing the title, time, and description',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
 
         final sessions = [
@@ -460,8 +460,8 @@ void main() {
     );
 
     testWidgets('Shows the delete button only if checkToken() == true', (
-      tester,
-    ) async {
+        tester,
+        ) async {
       await registerMockViewModel();
 
       final sessions = [
@@ -511,7 +511,7 @@ void main() {
 
     testWidgets(
       'When the delete button is pressed shows DeleteDialog and calls removeSessionAndReloadAgenda',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
         when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => true);
 
@@ -581,7 +581,7 @@ void main() {
 
     testWidgets(
       'Shows the speaker when the speakerName != "" and type != break',
-      (tester) async {
+          (tester) async {
         await registerMockViewModel();
 
         when(mockAgendaViewModel.speakers).thenReturn(
@@ -627,8 +627,8 @@ void main() {
     );
 
     testWidgets('Navigate to speakers tab when press on the name', (
-      widgetTester,
-    ) async {
+        widgetTester,
+        ) async {
       await registerMockViewModel();
 
       when(mockAgendaViewModel.speakers).thenReturn(

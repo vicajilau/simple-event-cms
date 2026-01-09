@@ -44,7 +44,6 @@ class _AgendaScreenState extends State<AgendaScreen>
     with WidgetsBindingObserver {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
 
-
   @override
   void initState() {
     super.initState();
