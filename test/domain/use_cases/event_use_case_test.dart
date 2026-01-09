@@ -96,6 +96,14 @@ void main() {
       expect(result, isA<Ok<List<Event>>>());
       expect((result as Ok<List<Event>>).value, events);
     });
+    test('getEvents returns an error on failure', () async {
+      when(
+        mockSecRepository.loadEvents(),
+      ).thenAnswer((_) async => Result.error(GithubException('')));
+      final result = await useCase.getEvents();
+      expect(result, isA<Error>());
+      expect((result as Error).error, isA<GithubException>());
+    });
 
     test('prepareAgendaDays without end date succeeds', () async {
       when(
