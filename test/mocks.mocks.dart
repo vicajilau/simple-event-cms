@@ -3810,6 +3810,106 @@ class MockGithubData extends _i1.Mock implements _i6.GithubData {
           as String);
 }
 
+/// A class which mocks [GitHubFile].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGitHubFile extends _i1.Mock implements _i14.GitHubFile {
+  MockGitHubFile() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get text =>
+      (super.noSuchMethod(
+            Invocation.getter(#text),
+            returnValue: _i23.dummyValue<String>(
+              this,
+              Invocation.getter(#text),
+            ),
+          )
+          as String);
+
+  @override
+  set type(String? value) => super.noSuchMethod(
+    Invocation.setter(#type, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set encoding(String? value) => super.noSuchMethod(
+    Invocation.setter(#encoding, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set size(int? value) => super.noSuchMethod(
+    Invocation.setter(#size, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set name(String? value) => super.noSuchMethod(
+    Invocation.setter(#name, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set path(String? value) => super.noSuchMethod(
+    Invocation.setter(#path, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set content(String? value) => super.noSuchMethod(
+    Invocation.setter(#content, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set sha(String? value) => super.noSuchMethod(
+    Invocation.setter(#sha, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set htmlUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#htmlUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set gitUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#gitUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set downloadUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#downloadUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set links(_i14.Links? value) => super.noSuchMethod(
+    Invocation.setter(#links, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set sourceRepository(_i14.RepositorySlug? value) => super.noSuchMethod(
+    Invocation.setter(#sourceRepository, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
+}
+
 /// A class which mocks [GoRouter].
 ///
 /// See the documentation for Mockito's code generation for more information.

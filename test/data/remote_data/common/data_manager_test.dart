@@ -15,7 +15,7 @@ void main() {
   late MockDataLoaderManager mockDataLoaderManager;
   late MockDataUpdateManager dataUpdateManager;
 
-  setUp(() async{
+  setUp(() async {
     getIt.reset();
     // Initialize mocks before each test
     mockDataLoaderManager = MockDataLoaderManager();
@@ -25,7 +25,6 @@ void main() {
     getIt.registerSingleton<DataUpdateManager>(dataUpdateManager);
     dataUpdate = DataUpdate();
     getIt.registerSingleton<DataUpdate>(dataUpdate);
-
   });
 
   group('DataUpdate Tests', () {
@@ -34,9 +33,7 @@ void main() {
       test('should call _deleteEvent when itemType is "Event"', () async {
         // Arrange
         const itemId = 'event123';
-        when(
-          dataUpdateManager.removeEvent(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.removeEvent(any)).thenAnswer((_) async => {});
 
         // Act
         await dataUpdate.deleteItemAndAssociations(itemId, 'Event');
@@ -45,19 +42,64 @@ void main() {
         verify(dataUpdateManager.removeEvent(itemId)).called(1);
       });
 
+      test(
+        'should call _deleteSession when itemType is "Session without days"',
+        () async {
+          // Arrange
+          const sessionId = 'session123';
+          when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+            (_) async => [
+              Track(
+                uid: 'uid1',
+                name: 'test',
+                color: '',
+                sessionUids: ['session123'],
+                eventUid: 'event1',
+              ),
+            ],
+          );
+          when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
+          when(
+            dataUpdateManager.updateTracks(
+              any,
+              overrideData: anyNamed('overrideData'),
+            ),
+          ).thenAnswer((_) async => {});
+          when(
+            dataUpdateManager.removeSession(any),
+          ).thenAnswer((_) async => {});
+
+          // Act
+          await dataUpdate.deleteItemAndAssociations(sessionId, 'Session');
+
+          // Assert
+          verify(mockDataLoaderManager.loadAllTracks()).called(1);
+          verify(dataUpdateManager.removeSession(sessionId)).called(1);
+        },
+      );
+
       test('should call _deleteSession when itemType is "Session"', () async {
         // Arrange
         const sessionId = 'session123';
-        when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
+        when(mockDataLoaderManager.loadAllTracks()).thenAnswer(
+          (_) async => [
+            Track(
+              uid: 'uid1',
+              name: 'test',
+              color: '',
+              sessionUids: ['session123'],
+              eventUid: 'event1',
+            ),
+          ],
+        );
+        when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
         when(
           dataUpdateManager.updateTracks(
             any,
             overrideData: anyNamed('overrideData'),
           ),
         ).thenAnswer((_) async => {});
-        when(
-          dataUpdateManager.removeSession(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.removeSession(any)).thenAnswer((_) async => {});
 
         // Act
         await dataUpdate.deleteItemAndAssociations(sessionId, 'Session');
@@ -96,9 +138,7 @@ void main() {
           secondaryColor: '',
           eventDates: MockEventDates(),
         );
-        when(
-          dataUpdateManager.updateEvent(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.updateEvent(any)).thenAnswer((_) async => {});
 
         // Act
         await dataUpdate.addItemAndAssociations(event, null);
@@ -127,9 +167,7 @@ void main() {
         await dataUpdate.addItemAndAssociations(session, parentId);
 
         // Assert
-        verify(
-          dataUpdateManager.updateSession(session, parentId),
-        ).called(1);
+        verify(dataUpdateManager.updateSession(session, parentId)).called(1);
       });
 
       test('should call _addSpeaker when the item is a Speaker', () async {
@@ -143,9 +181,7 @@ void main() {
           social: MockSocial(),
         );
         const parentId = 'event1';
-        when(
-          dataUpdateManager.updateSpeaker(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.updateSpeaker(any)).thenAnswer((_) async => {});
 
         // Act
         await dataUpdate.addItemAndAssociations(speaker, parentId);
@@ -409,9 +445,7 @@ void main() {
         () async {
           // Arrange
           const sponsorId = 'sponsor123';
-          when(
-            dataUpdateManager.removeSponsors(any),
-          ).thenAnswer((_) async {});
+          when(dataUpdateManager.removeSponsors(any)).thenAnswer((_) async {});
 
           // Act
           await dataUpdate.deleteItemAndAssociations(sponsorId, 'Sponsor');
@@ -532,9 +566,7 @@ void main() {
           ),
         ];
         when(mockDataLoaderManager.loadAllTracks()).thenAnswer((_) async => []);
-        when(
-          dataUpdateManager.updateTracks(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.updateTracks(any)).thenAnswer((_) async => {});
 
         // Act
         await dataUpdate.addItemListAndAssociations(tracks);
@@ -606,22 +638,16 @@ void main() {
         ];
         when(mockDataLoaderManager.loadAllDays()).thenAnswer((_) async => []);
         when(
-          dataUpdateManager.updateAgendaDays(
-            any,
-            overrideData: true,
-          ),
+          dataUpdateManager.updateAgendaDays(any, overrideData: true),
         ).thenAnswer((_) async => {});
 
         // Act
-        await dataUpdate.addItemListAndAssociations(days,overrideData: true);
+        await dataUpdate.addItemListAndAssociations(days, overrideData: true);
 
         // Assert
         verify(mockDataLoaderManager.loadAllDays()).called(1);
         verify(
-          dataUpdateManager.updateAgendaDays(
-            any,
-            overrideData: true,
-          ),
+          dataUpdateManager.updateAgendaDays(any, overrideData: true),
         ).called(1);
       },
     );
@@ -745,12 +771,8 @@ void main() {
         ).thenAnswer((_) async => [agendaDay]);
 
         // No esperamos llamadas a remove, solo a update
-        when(
-          dataUpdateManager.removeTrack(any),
-        ).thenAnswer((_) async => {});
-        when(
-          dataUpdateManager.updateEvent(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.removeTrack(any)).thenAnswer((_) async => {});
+        when(dataUpdateManager.updateEvent(any)).thenAnswer((_) async => {});
 
         // El mock clave: capturamos el día actualizado
         when(
@@ -803,9 +825,7 @@ void main() {
         when(
           mockDataLoaderManager.loadAllDays(),
         ).thenAnswer((_) async => [agendaDay]);
-        when(
-          dataUpdateManager.updateTrack(any),
-        ).thenAnswer((_) async => {});
+        when(dataUpdateManager.updateTrack(any)).thenAnswer((_) async => {});
         // Mock clave para capturar el resultado
         when(
           dataUpdateManager.updateAgendaDays(any, overrideData: false),
@@ -820,10 +840,7 @@ void main() {
 
         // Capturamos la lista de días que se pasa para la actualización
         final captured = verify(
-          dataUpdateManager.updateAgendaDays(
-            captureAny,
-            overrideData: false,
-          ),
+          dataUpdateManager.updateAgendaDays(captureAny, overrideData: false),
         ).captured;
         final updatedDayList = captured.first as List<AgendaDay>;
         final updatedDay = updatedDayList.first;
