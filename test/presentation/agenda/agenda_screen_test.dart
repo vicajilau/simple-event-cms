@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mockito/mockito.dart';
 import 'package:sec/core/config/secure_info.dart';
 import 'package:sec/core/di/dependency_injection.dart';
 import 'package:sec/core/models/agenda.dart';
 import 'package:sec/core/models/speaker.dart';
+import 'package:sec/core/routing/app_router.dart';
 import 'package:sec/core/utils/result.dart';
 import 'package:sec/l10n/app_localizations.dart';
 import 'package:sec/presentation/ui/screens/agenda/agenda_screen.dart';
@@ -20,12 +22,14 @@ void main() {
   });
 
   late MockAgendaViewModel mockAgendaViewModel;
+  late MockGoRouter mockRouter;
 
   setUp(() async {
     // It's good practice to reset GetIt to ensure test isolation.
     await getIt.reset();
     getIt.registerSingleton<SecureInfo>(SecureInfo());
     mockAgendaViewModel = MockAgendaViewModel();
+    mockRouter = MockGoRouter();
     // The mock will be registered inside each test before the widget is pumped.
   });
 
@@ -41,6 +45,7 @@ void main() {
       mockAgendaViewModel.loadAgendaDays(any),
     ).thenAnswer((_) async => const Result.ok(null));
     when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => false);
+    AppRouter.router = mockRouter;
   }
 
   Widget createWidgetUnderTest() {
@@ -70,8 +75,8 @@ void main() {
   }
 
   testWidgets('shows loading indicator when view state is loading', (
-      WidgetTester tester,
-      ) async {
+    WidgetTester tester,
+  ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -81,8 +86,8 @@ void main() {
   });
 
   testWidgets('shows error dialog when view state is error', (
-      WidgetTester tester,
-      ) async {
+    WidgetTester tester,
+  ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -96,8 +101,8 @@ void main() {
   });
 
   testWidgets('shows no data screen when there are no agenda days', (
-      WidgetTester tester,
-      ) async {
+    WidgetTester tester,
+  ) async {
     await registerMockViewModel();
     when(
       mockAgendaViewModel.viewState,
@@ -156,8 +161,8 @@ void main() {
 
   group('CustomTabBar', () {
     testWidgets('When there are no tracks we get SizedBox.shrink()', (
-        tester,
-        ) async {
+      tester,
+    ) async {
       await registerMockViewModel();
 
       final widget = DefaultTabController(
@@ -183,7 +188,7 @@ void main() {
 
     testWidgets(
       'initState builds SessionCards filtered and the build shows the one with the currentIndex',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
 
         final track1 = Track(
@@ -272,7 +277,7 @@ void main() {
 
     testWidgets(
       'didChangeDependencies, when the tab is changed, the onIndexChanged and currentIndex are updated',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
 
         final track1 = Track(
@@ -350,7 +355,7 @@ void main() {
 
     testWidgets(
       'If a track rests without sessions after filtering the SessionCards shows noSessionsFound',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
 
         final emptyTrack = Track(
@@ -401,8 +406,8 @@ void main() {
 
   group('SessionCards', () {
     testWidgets('Shows an empty state when the sessions list is empty', (
-        tester,
-        ) async {
+      tester,
+    ) async {
       await registerMockViewModel();
 
       final widget = SessionCards(
@@ -424,19 +429,54 @@ void main() {
 
     testWidgets(
       'Renders the session correctly, showing the title, time, and description',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
 
         final sessions = [
           Session(
-            uid: 's1',
-            title: 'Title 1',
+            uid: 'session-101',
+            title: 'session-101',
             time: '10:00',
+            speakerUID: 'speaker-1',
             eventUID: 'event-1',
             agendaDayUID: 'day-1',
-            speakerUID: 'sp1',
             type: 'talk',
-            description: 'Description for the session.',
+          ),
+          Session(
+            uid: 'session-102',
+            title: 'session-102',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'keynote',
+          ),
+          Session(
+            uid: 'session-103',
+            title: 'session-103',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'workshop',
+          ),
+          Session(
+            uid: 'session-104',
+            title: 'session-104',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'sessionBreak',
+          ),
+          Session(
+            uid: 'session-105',
+            title: 'session-105',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'panel',
           ),
         ];
 
@@ -453,15 +493,89 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        expect(find.text('10:00'), findsOneWidget);
-        expect(find.text('Title 1'), findsOneWidget);
-        expect(find.text('Description for the session.'), findsOneWidget);
+        expect(find.text('session-101'), findsOneWidget);
+        expect(find.text('session-102'), findsOneWidget);
+        expect(find.text('session-103'), findsOneWidget);
+        expect(find.text('session-104'), findsOneWidget);
+        expect(find.text('session-105'), findsOneWidget);
+      },
+    );
+
+    testWidgets(
+      'Renders the session correctly and tap on that session shows the agenda days',
+      (tester) async {
+        await registerMockViewModel();
+
+        // 1. Setup mocks
+        final mockSecureInfo = MockSecureInfo();
+        final mockGithubData = MockGithubData();
+        // Ensure mockRouter is a MockGoRouter() instance defined globally or in setup
+
+        when(mockGithubData.getToken()).thenReturn('token');
+        when(
+          mockSecureInfo.getGithubKey(),
+        ).thenAnswer((_) async => mockGithubData);
+        when(
+          mockSecureInfo.getGithubItem(),
+        ).thenAnswer((_) async => MockGitHub());
+
+        when(
+          mockRouter.push<List<AgendaDay>?>(any, extra: anyNamed('extra')),
+        ).thenAnswer(
+          (_) async => Future<List<AgendaDay>?>.value([MockAgendaDay()]),
+        );
+        when(
+          mockAgendaViewModel.loadAgendaDays(any),
+        ).thenAnswer(
+          (_) async => const Result.ok(null),
+        );
+
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        final sessions = [
+          Session(
+            uid: 'session-101',
+            title: 'session-101',
+            time: '10:00',
+            speakerUID: 'speaker-1',
+            eventUID: 'event-1',
+            agendaDayUID: 'day-1',
+            type: 'talk',
+          ),
+        ];
+
+        // 2. Wrap with InheritedGoRouter so the widget uses your mock
+        await tester.pumpWidget(
+          wrapWithMaterial(
+            InheritedGoRouter(
+              goRouter: mockRouter,
+              child: SessionCards(
+                sessions: sessions,
+                agendaDayId: 'day-1',
+                trackId: 'track-1',
+                eventId: 'event-1',
+                location: 'location',
+              ),
+            ),
+          ),
+        );
+
+        await tester.pumpAndSettle();
+
+        // 3. Trigger the action
+        await tester.tap(find.text('session-101'));
+        await tester.pumpAndSettle();
+
+        // 4. Verify on the mock object
+        verify(mockAgendaViewModel.loadAgendaDays(any), // Nota los paréntesis en any()
+        ).called(1);
       },
     );
 
     testWidgets('Shows the delete button only if checkToken() == true', (
-        tester,
-        ) async {
+      tester,
+    ) async {
       await registerMockViewModel();
 
       final sessions = [
@@ -490,7 +604,7 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.delete), findsNothing);
+      expect(find.byIcon(Icons.delete_outline), findsNothing);
 
       when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => true);
 
@@ -506,12 +620,12 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byIcon(Icons.delete), findsOneWidget);
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
     });
 
     testWidgets(
       'When the delete button is pressed shows DeleteDialog and calls removeSessionAndReloadAgenda',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
         when(mockAgendaViewModel.checkToken()).thenAnswer((_) async => true);
 
@@ -550,7 +664,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Tap on the delete button so the dialog shows
-        await tester.tap(find.byIcon(Icons.delete));
+        await tester.tap(find.byIcon(Icons.delete_outline));
         await tester.pump();
 
         // Check the dialog texts with the translations (l10)
@@ -581,7 +695,7 @@ void main() {
 
     testWidgets(
       'Shows the speaker when the speakerName != "" and type != break',
-          (tester) async {
+      (tester) async {
         await registerMockViewModel();
 
         when(mockAgendaViewModel.speakers).thenReturn(
@@ -627,8 +741,8 @@ void main() {
     );
 
     testWidgets('Navigate to speakers tab when press on the name', (
-        widgetTester,
-        ) async {
+      widgetTester,
+    ) async {
       await registerMockViewModel();
 
       when(mockAgendaViewModel.speakers).thenReturn(

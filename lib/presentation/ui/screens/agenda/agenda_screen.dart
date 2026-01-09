@@ -44,6 +44,7 @@ class _AgendaScreenState extends State<AgendaScreen>
     with WidgetsBindingObserver {
   final Map<String, ExpansionTileState> _expansionTilesStates = {};
 
+
   @override
   void initState() {
     super.initState();
@@ -351,91 +352,88 @@ class _SessionCardsState extends State<SessionCards> {
   @override
   Widget build(BuildContext context) {
     final SecureInfo secureInfo = getIt<SecureInfo>();
-    final location = AppLocalizations.of(context)!;
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: widget.sessions.isEmpty
-            ? [
-                SizedBox(
-                  height: 150,
-                  child: Center(child: Text(location.noSessionsFound)),
-                ),
-              ]
-            : List.generate(widget.sessions.length, (index) {
-                final session = widget.sessions[index];
+    final localizations = AppLocalizations.of(context)!;
 
-                return InkWell(
-                  onTap: () async {
-                    var githubService = await secureInfo.getGithubKey();
-                    if (githubService.getToken() != null &&
-                        githubService.getToken()?.isNotEmpty == true) {
-                      List<AgendaDay>? agendaDays = await AppRouter.router.push(
-                        AppRouter.agendaFormPath,
-                        extra: AgendaFormData(
-                          eventId: widget.eventId,
-                          session: session,
-                          agendaDayId: widget.agendaDayId,
-                          trackId: widget.trackId,
-                        ),
-                      );
-                      if (agendaDays != null) {
-                        widget.viewModel.loadAgendaDays(widget.eventId);
-                      }
-                    }
-                  },
-                  child: _buildSessionCard(
-                    context,
-                    Session(
-                      title: session.title,
-                      time: session.time,
-                      speakerUID: session.speakerUID,
-                      description: session.description,
-                      type: session.type,
-                      uid: session.uid,
-                      eventUID: session.eventUID,
-                      agendaDayUID: session.agendaDayUID,
-                    ),
-                    widget.viewModel.speakers.value
-                            .where(
-                              (element) => element.uid == session.speakerUID,
-                            )
-                            .firstOrNull
-                            ?.name ??
-                        "",
-                    onDeleteTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return DeleteDialog(
-                            title: location.deleteSessionTitle,
-                            message: location.deleteSessionMessage,
-                            onDeletePressed: () async {
-                              await widget.viewModel
-                                  .removeSessionAndReloadAgenda(
-                                    session.uid,
-                                    widget.eventId,
-                                    agendaDayUID: session.agendaDayUID,
-                                  );
-                            },
-                          );
-                        },
+    if (widget.sessions.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox(
+          height: 150,
+          child: Center(child: Text(localizations.noSessionsFound)),
+        ),
+      );
+    }
+
+    return ListView.separated(
+      // Important: Use shrinkWrap and NeverScrollableScrollPhysics to work inside SingleChildScrollView
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(16),
+      itemCount: widget.sessions.length,
+      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      itemBuilder: (context, index) {
+        final session = widget.sessions[index];
+
+        return InkWell(
+          onTap: () async {
+            var githubService = await secureInfo.getGithubKey();
+            if (githubService.getToken() != null &&
+                githubService.getToken()?.isNotEmpty == true) {
+              List<AgendaDay>? agendaDays = await AppRouter.router.push(
+                AppRouter.agendaFormPath,
+                extra: AgendaFormData(
+                  eventId: widget.eventId,
+                  session: session,
+                  agendaDayId: widget.agendaDayId,
+                  trackId: widget.trackId,
+                ),
+              );
+              if (agendaDays != null) {
+                widget.viewModel.loadAgendaDays(widget.eventId);
+              }
+            }
+          },
+          child: _buildSessionCard(
+            context,
+            session,
+            widget.viewModel.speakers.value
+                .where((element) => element.uid == session.speakerUID)
+                .firstOrNull
+                ?.name ?? "",
+            onDeleteTap: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return DeleteDialog(
+                    title: localizations.deleteSessionTitle,
+                    message: localizations.deleteSessionMessage,
+                    onDeletePressed: () async {
+                      await widget.viewModel.removeSessionAndReloadAgenda(
+                        session.uid,
+                        widget.eventId,
+                        agendaDayUID: session.agendaDayUID,
                       );
                     },
-                  ),
-                );
-              }),
-      ),
+                  );
+                },
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
   Widget _buildSessionCard(
-    BuildContext context,
-    Session session,
-    String speakerName, {
-    required Function() onDeleteTap,
-  }) {
+      BuildContext context,
+      Session session,
+      String speakerName, {
+        required VoidCallback onDeleteTap,
+      }) {
     return Card(
+      margin: EdgeInsets.zero, // Margin is handled by ListView separator
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -444,24 +442,15 @@ class _SessionCardsState extends State<SessionCards> {
             Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 6,
-                  ),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: SessionTypes.getSessionTypeColor(
-                      context,
-                      session.type,
-                    ),
+                    color: SessionTypes.getSessionTypeColor(context, session.type),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Text(
                     session.time,
                     style: TextStyle(
-                      color: SessionTypes.getSessionTypeTextColor(
-                        context,
-                        session.type,
-                      ),
+                      color: SessionTypes.getSessionTypeTextColor(context, session.type),
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -470,14 +459,9 @@ class _SessionCardsState extends State<SessionCards> {
                 const Spacer(),
                 if (session.type != 'break')
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
-                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
+                      color: Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -494,97 +478,86 @@ class _SessionCardsState extends State<SessionCards> {
             const SizedBox(height: 12),
             Text(
               session.title,
-              style: Theme.of(
-                context,
-              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
             if (speakerName.isNotEmpty && session.type != 'break') ...[
               const SizedBox(height: 8),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      widget.tabController?.animateTo(1);
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.person,
-                          size: 16,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          speakerName,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: Theme.of(context).colorScheme.primary,
-                                fontWeight: FontWeight.w500,
-                              ),
-                        ),
-                      ],
+              GestureDetector(
+                onTap: () => widget.tabController?.animateTo(1),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.person,
+                      size: 16,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
-                  ),
-                ],
+                    const SizedBox(width: 4),
+                    Text(
+                      speakerName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ],
             if (session.description?.isNotEmpty ?? false) ...[
               const SizedBox(height: 8),
               Text(
                 session.description!,
+                maxLines: 3, // Added to prevent massive text blocks
+                overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
               ),
             ],
-            FutureBuilder<bool>(
-              future: widget.viewModel.checkToken(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox.shrink();
-                }
-                if (snapshot.hasData && snapshot.data == true) {
-                  return Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      onPressed: onDeleteTap,
-                      icon: const Icon(Icons.delete),
-                    ),
-                  );
-                }
-                return const SizedBox.shrink();
-              },
-            ),
-            if (widget.location.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Center(
-                  child: InkWell(
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                if (widget.location.isNotEmpty)
+                  InkWell(
                     onTap: () async {
-                      final location = widget.location.toString();
                       final uri = Uri.parse(
-                        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(location)}',
+                        'https://www.google.com/maps/search/?api=1&query=${Uri.encodeComponent(widget.location)}',
                       );
                       if (await canLaunchUrl(uri)) {
                         await launchUrl(uri);
                       }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                          size: 36,
-                        ),
-                      ],
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Colors.blue,
+                      size: 24,
                     ),
-                  ),
+                  )
+                else
+                  const SizedBox.shrink(),
+                FutureBuilder<bool>(
+                  future: widget.viewModel.checkToken(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData && snapshot.data == true) {
+                      return IconButton(
+                        onPressed: onDeleteTap,
+                        icon: const Icon(Icons.delete_outline),
+                        visualDensity: VisualDensity.compact,
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
-              ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+
