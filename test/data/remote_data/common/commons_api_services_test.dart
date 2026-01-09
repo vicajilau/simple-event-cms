@@ -211,7 +211,7 @@ void main() {
         when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
         when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
         expect(
-          () => commonsServices.updateDataList(
+          () async => await commonsServices.updateDataList(
             originalData,
             testPath,
             commitMessage,
@@ -232,6 +232,22 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should updateSingleData works successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.updateSingleData(data, testPath, commitMessage),
+          returnsNormally,
+        );
+      });
     });
     // [GROUP] removeData
     group('removeData', () {
@@ -250,6 +266,27 @@ void main() {
             commitMessage,
           ),
           throwsA(isA<Exception>()),
+        );
+      });
+      test('should removeData successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.removeData(
+            originalData,
+            dataToRemove,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
         );
       });
       test('should throw GithubException if the file does not exist', () async {
@@ -293,6 +330,27 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should removeDataList successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+        expect(
+          () => commonsServices.removeDataList(
+            originalData.toList(),
+            dataToRemove,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
+        );
+      });
     });
     // [GROUP] getGithubItem
 
@@ -309,6 +367,30 @@ void main() {
             commitMessage,
           ),
           throwsA(isA<Exception>()),
+        );
+      });
+      test('should run updateAllData successfully', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(mockSecureInfo.getGithubKey()).thenAnswer((_) async => mockGithubData);
+        when(mockSecureInfo.getGithubItem()).thenAnswer((_) async => mockGitHub);
+
+
+        final fullDataModel = MockGithubJsonModel({'newData': 'is here'});
+        const commitMessage = 'Update all data';
+
+        expect(
+          () => commonsServices.updateAllData(
+            fullDataModel,
+            testPath,
+            commitMessage,
+          ),
+          returnsNormally,
         );
       });
     });
