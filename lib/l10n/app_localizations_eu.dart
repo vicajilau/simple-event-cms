@@ -375,7 +375,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenHintLabel => 'Sartu zure bezeroaren sekretua jarraitzeko';
+  String get tokenHintLabel => 'Sartu votre bezeroaren sekretua jarraitzeko';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
