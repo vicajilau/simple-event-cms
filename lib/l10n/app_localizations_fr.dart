@@ -566,4 +566,19 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noLiveStreamAvailable => 'Aucun direct n\'est disponible';
+
+  @override
+  String get confirm => 'Confirmer';
+
+  @override
+  String get deleteOptionMessage => 'Voulez-vous supprimer cette option ?';
+
+  @override
+  String get delete => 'Supprimer';
+
+  @override
+  String get addOption => 'Ajouter une option';
+
+  @override
+  String get optionHint => 'Option';
 }

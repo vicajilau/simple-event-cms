@@ -190,6 +190,11 @@ void main() {
       expect(localizations.selectSpeaker, 'Hautatu hizlaria');
       expect(localizations.onlineNow, 'Online Now');
       expect(localizations.noLiveStreamAvailable, 'Ez dago zuzeneko emankizunik eskuragarri');
+      expect(localizations.delete, 'Ezabatu');
+      expect(localizations.addOption, 'Aukera gehitu');
+      expect(localizations.optionHint, 'Aukera');
+      expect(localizations.deleteOptionMessage, 'Aukera hau ezabatu nahi duzu?');
+      expect(localizations.confirm, 'Berretsi');
     });
 
     test('should return correct translations for methods with parameters', () {

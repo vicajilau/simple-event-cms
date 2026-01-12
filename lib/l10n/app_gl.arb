@@ -194,6 +194,10 @@
   "noLiveStreamAvailable": "No hay directos disponibles",
   "onLive": "On Live",
   "selectSpeaker": "Selecciona un poñente",
-  "onlineNow": "En liña agora"
-
+  "onlineNow": "En liña agora",
+  "confirm": "Confirmar",
+  "deleteOptionMessage": "Desexas eliminar esta opción?",
+  "delete": "Eliminar",
+  "addOption": "Engadir opción",
+  "optionHint": "Opción"
 }

@@ -188,6 +188,12 @@ import 'package:sec/l10n/app_localizations_fr.dart';void main() {
       expect(localizations.selectSpeaker, 'Sélectionnez un intervenant');
       expect(localizations.onlineNow, 'En ligne maintenant');
       expect(localizations.noLiveStreamAvailable, 'Aucun direct n\'est disponible');
+      expect(localizations.confirm, 'Confirmer');
+      expect(localizations.delete, 'Supprimer');
+      expect(localizations.addOption, 'Ajouter une option');
+      expect(localizations.optionHint, 'Option');
+      expect(localizations.deleteOptionMessage, 'Voulez-vous supprimer cette option ?');
+
     });
 
     test('should return correct translations for methods with parameters', () {

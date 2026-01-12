@@ -189,6 +189,11 @@ void main() {
       expect(localizations.onlineNow, 'Online adesso');
       expect(localizations.selectSpeaker, 'Seleziona un relatore');
       expect(localizations.noLiveStreamAvailable, 'Non ci sono dirette disponibili');
+      expect(localizations.confirm, 'Conferma');
+      expect(localizations.delete, 'Elimina');
+      expect(localizations.addOption, 'Aggiungi opzione');
+      expect(localizations.optionHint, 'Opzione');
+      expect(localizations.deleteOptionMessage, 'Vuoi eliminare questa opzione?');
     });
 
     test('should return correct translations for methods with parameters', () {

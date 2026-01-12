@@ -190,6 +190,11 @@ void main() {
       expect(localizations.selectSpeaker, 'Select a speaker');
       expect(localizations.onlineNow, 'Online Now');
       expect(localizations.noLiveStreamAvailable, 'No live streams available');
+      expect(localizations.confirm, 'Confirm');
+      expect(localizations.deleteOptionMessage, 'Do you want to delete this option?');
+      expect(localizations.delete, 'Delete');
+      expect(localizations.addOption, 'Add option');
+      expect(localizations.optionHint, 'Option');
     });
 
     test('should return correct translations for methods with parameters', () {

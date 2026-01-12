@@ -193,6 +193,11 @@ void main() {
       expect(localizations.selectSpeaker, 'Selecciona un ponent');
       expect(localizations.onlineNow, 'En línia ara');
       expect(localizations.noLiveStreamAvailable, 'No hi ha directes disponibles');
+      expect(localizations.confirm, 'Confirmar');
+      expect(localizations.deleteOptionMessage, 'Vols eliminar aquesta opció?');
+      expect(localizations.delete, 'Eliminar');
+      expect(localizations.addOption, 'Afegir opció');
+      expect(localizations.optionHint, 'Opció');
     });
 
     test('should return correct translations for methods with parameters', () {

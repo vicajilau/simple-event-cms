@@ -194,5 +194,10 @@
   "onLive": "On Live",
   "selectSpeaker": "Select a speaker",
   "onlineNow": "Online Now",
-  "noLiveStreamAvailable": "No live streams available"
+  "noLiveStreamAvailable": "No live streams available",
+  "confirm": "Confirm",
+  "deleteOptionMessage": "Do you want to delete this option?",
+  "delete": "Delete",
+  "addOption": "Add option",
+  "optionHint": "Option"
 }
