@@ -145,6 +145,7 @@ void main() {
           mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
         ).thenAnswer((_) async => mockContents);
 
+        await ConfigLoader.loadOrganization();
         // Assert
         verify(mockCheckOrg.setError(true)).called(1);
       },
