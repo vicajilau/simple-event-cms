@@ -1,5 +1,32 @@
 {
-  "events": [],
+  "events": [
+    {
+      "UID": "Event_20260112_102222",
+      "eventName": "gfdgdfg",
+      "year": "2026",
+      "primaryColor": "",
+      "secondaryColor": "",
+      "eventDates": {
+        "UID": "EventDate_20260112_102222",
+        "startDate": "2026-01-25",
+        "endDate": "2026-01-31",
+        "timezone": "Europe/Madrid"
+      },
+      "description": null,
+      "location": "ggdfgfgd",
+      "youtubeUrl": "",
+      "isVisible": true,
+      "tracks": [
+        {
+          "UID": "Track_20260112_102220",
+          "name": "fgdgdf",
+          "color": "",
+          "sessionUids": [],
+          "eventUid": "Event_20260112_102222"
+        }
+      ]
+    }
+  ],
   "tracks": [
     {
       "UID": "Track_20260112_102220",
