@@ -53,10 +53,4 @@ abstract class SessionTypes {
         return 'other';
     }
   }
-
-  static List<String> allLabels(BuildContext context) {
-    return SessionType.values
-        .map((type) => getSessionTypeLabel(context, type.name))
-        .toList();
-  }
 }

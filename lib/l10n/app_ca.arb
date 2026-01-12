@@ -198,6 +198,10 @@
   "onLive": "On Live",
   "onlineNow": "En línia ara",
   "selectSpeaker": "Selecciona un ponent",
-  "noLiveStreamAvailable": "No hi ha directes disponibles"
-
+  "noLiveStreamAvailable": "No hi ha directes disponibles",
+  "confirm": "Confirmar",
+  "deleteOptionMessage": "Vols eliminar aquesta opció?",
+  "delete": "Eliminar",
+  "addOption": "Afegir opció",
+  "optionHint": "Opció"
 }

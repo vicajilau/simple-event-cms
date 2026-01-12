@@ -120,7 +120,7 @@
   "loginTitle": "Saioa hasi",
   "projectNameLabel": "Proiektuaren izena",
   "projectNameHint": "Mesedez, sartu proiektuaren izena",
-  "tokenHintLabel": "Sartu zure bezeroaren sekretua jarraitzeko",
+  "tokenHintLabel": "Sartu votre bezeroaren sekretua jarraitzeko",
   "tokenHint": "Mesedez, sartu baliozko GitHub token bat",
   "unknownAuthError": "Autentifikazio-errore ezezaguna.",
   "projectNotFoundError": "“{projectName}” proiektua ez da existitzen zure GitHub-eko biltegietan.",
@@ -194,6 +194,10 @@
   "onLive": "On Live",
   "selectSpeaker": "Hautatu hizlaria",
   "onlineNow": "Online Now",
-  "noLiveStreamAvailable": "Ez dago zuzeneko emankizunik eskuragarri"
-
+  "noLiveStreamAvailable": "Ez dago zuzeneko emankizunik eskuragarri",
+  "confirm": "Berretsi",
+  "deleteOptionMessage": "Aukera hau ezabatu nahi duzu?",
+  "delete": "Ezabatu",
+  "addOption": "Aukera gehitu",
+  "optionHint": "Aukera"
 }

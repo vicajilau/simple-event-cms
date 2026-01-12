@@ -556,4 +556,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get noLiveStreamAvailable => 'No hay transmisión en vivo disponible';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get deleteOptionMessage => '¿Deseas eliminar esta opción?';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get addOption => 'Añadir opción';
+
+  @override
+  String get optionHint => 'Opción';
 }

@@ -566,4 +566,19 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get noLiveStreamAvailable => 'No hi ha directes disponibles';
+
+  @override
+  String get confirm => 'Confirmar';
+
+  @override
+  String get deleteOptionMessage => 'Vols eliminar aquesta opció?';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get addOption => 'Afegir opció';
+
+  @override
+  String get optionHint => 'Opció';
 }

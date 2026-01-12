@@ -195,6 +195,10 @@
   "onLive": "On Live",
   "onlineNow": "En ligne maintenant",
   "selectSpeaker": "Sélectionnez un intervenant",
-  "noLiveStreamAvailable": "Aucun direct n'est disponible"
-
+  "noLiveStreamAvailable": "Aucun direct n'est disponible",
+  "confirm": "Confirmer",
+  "deleteOptionMessage": "Voulez-vous supprimer cette option ?",
+  "delete": "Supprimer",
+  "addOption": "Ajouter une option",
+  "optionHint": "Option"
 }

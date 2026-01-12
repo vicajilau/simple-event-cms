@@ -118,6 +118,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
         ),
         centerTitle: false,
         title: GestureDetector(
+          key: const Key('title_key_event_collection'),
           onTap: () async {
             _titleTapCount++;
 
@@ -152,7 +153,7 @@ class _EventCollectionScreenState extends State<EventCollectionScreen> {
 
                           // will do setup again to refresh configName
                           await viewmodel.setup();
-                          await _loadConfiguration(); // esto leerá getIt<Organization>() fresco
+                          await _loadConfiguration();
                         }
                       }),
                     ),

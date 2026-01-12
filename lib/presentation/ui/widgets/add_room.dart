@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sec/core/models/agenda.dart';
 
+import '../../../l10n/app_localizations.dart';
+
 class AddRoom extends StatefulWidget {
   final List<Track> rooms;
   final void Function(List<Track>) editedRooms;
@@ -67,16 +69,18 @@ class _AddRoomState extends State<AddRoom> {
   }
 
   void _confirmRemoveOption(int index) {
+    final location = AppLocalizations.of(context)!;
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Confirmar"),
-          content: const Text("¿Deseas eliminar esta opción?"),
+          title: Text(location.confirm),
+          content: Text(location.deleteOptionMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancelar"),
+              child: Text(location.cancel),
             ),
             TextButton(
               onPressed: () async {
@@ -93,10 +97,7 @@ class _AddRoomState extends State<AddRoom> {
                 }
                 Navigator.pop(context);
               },
-              child: const Text(
-                "Eliminar",
-                style: TextStyle(color: Colors.red),
-              ),
+              child: Text(location.delete, style: TextStyle(color: Colors.red)),
             ),
           ],
         );
@@ -106,6 +107,8 @@ class _AddRoomState extends State<AddRoom> {
 
   @override
   Widget build(BuildContext context) {
+    final location = AppLocalizations.of(context)!;
+
     return ListView.builder(
       itemCount: _tracks.length + 1, // +1 para incluir el botón
       itemBuilder: (context, index) {
@@ -116,8 +119,8 @@ class _AddRoomState extends State<AddRoom> {
             child: TextButton.icon(
               onPressed: _addOption,
               icon: const Icon(Icons.add, color: Colors.purple),
-              label: const Text(
-                "Add Option",
+              label: Text(
+                location.addOption,
                 style: TextStyle(color: Colors.purple),
               ),
             ),

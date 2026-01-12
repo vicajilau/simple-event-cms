@@ -88,9 +88,6 @@ class AppRouter {
         path: agendaFormPath,
         name: agendaFormName,
         builder: (context, state) {
-          if (state.extra == null) {
-            return AgendaFormScreen();
-          }
           final agendaFormData = state.extra as AgendaFormData;
           return AgendaFormScreen(data: agendaFormData);
         },

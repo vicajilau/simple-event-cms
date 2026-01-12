@@ -134,7 +134,7 @@ void main() {
       expect(localizations.loginTitle, 'Saioa hasi');
       expect(localizations.projectNameLabel, 'Proiektuaren izena');
       expect(localizations.projectNameHint, 'Mesedez, sartu proiektuaren izena');
-      expect(localizations.tokenHintLabel, 'Sartu zure bezeroaren sekretua jarraitzeko');
+      expect(localizations.tokenHintLabel, 'Sartu votre bezeroaren sekretua jarraitzeko');
       expect(localizations.tokenHint, 'Mesedez, sartu baliozko GitHub token bat');
       expect(localizations.unknownAuthError, 'Autentifikazio-errore ezezaguna.');
       expect(localizations.authNetworkError, 'Autentifikazio- edo sare-errorea. Egiaztatu zure kredentzialak eta proiektuaren izena.');
@@ -190,6 +190,11 @@ void main() {
       expect(localizations.selectSpeaker, 'Hautatu hizlaria');
       expect(localizations.onlineNow, 'Online Now');
       expect(localizations.noLiveStreamAvailable, 'Ez dago zuzeneko emankizunik eskuragarri');
+      expect(localizations.delete, 'Ezabatu');
+      expect(localizations.addOption, 'Aukera gehitu');
+      expect(localizations.optionHint, 'Aukera');
+      expect(localizations.deleteOptionMessage, 'Aukera hau ezabatu nahi duzu?');
+      expect(localizations.confirm, 'Berretsi');
     });
 
     test('should return correct translations for methods with parameters', () {

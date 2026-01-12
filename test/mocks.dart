@@ -49,7 +49,9 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   CommonsServicesImp,
   Config,
   ConfigViewModel,
+  ContentCreation,
   ConfigUseCase,
+  CurrentUser,
   DataLoaderManager,
   DataUpdateManager,
   DataUpdate,
@@ -77,6 +79,7 @@ import 'package:sec/presentation/ui/screens/sponsor/sponsor_view_model.dart';
   SponsorViewModel,
   Track,
   TokenRepository,
+  UsersService,
   Nominatim,
 ])
 void main() {}

@@ -1183,6 +1183,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No live streams available'**
   String get noLiveStreamAvailable;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @deleteOptionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to delete this option?'**
+  String get deleteOptionMessage;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @addOption.
+  ///
+  /// In en, this message translates to:
+  /// **'Add option'**
+  String get addOption;
+
+  /// No description provided for @optionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Option'**
+  String get optionHint;
 }
 
 class _AppLocalizationsDelegate

@@ -190,6 +190,11 @@ void main() {
       expect(localizations.logout, 'Cerrar Sesión');
       expect(localizations.onLive, 'En Vivo');
       expect(localizations.noLiveStreamAvailable, 'No hay transmisión en vivo disponible');
+      expect(localizations.confirm, 'Confirmar');
+      expect(localizations.delete, 'Eliminar');
+      expect(localizations.addOption, 'Añadir opción');
+      expect(localizations.optionHint, 'Opción');
+      expect(localizations.deleteOptionMessage, '¿Deseas eliminar esta opción?');
     });
 
     test('should return correct translations for methods with parameters', () {

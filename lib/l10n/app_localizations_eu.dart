@@ -375,7 +375,7 @@ class AppLocalizationsEu extends AppLocalizations {
   String get projectNameHint => 'Mesedez, sartu proiektuaren izena';
 
   @override
-  String get tokenHintLabel => 'Sartu zure bezeroaren sekretua jarraitzeko';
+  String get tokenHintLabel => 'Sartu votre bezeroaren sekretua jarraitzeko';
 
   @override
   String get tokenHint => 'Mesedez, sartu baliozko GitHub token bat';
@@ -561,4 +561,19 @@ class AppLocalizationsEu extends AppLocalizations {
   @override
   String get noLiveStreamAvailable =>
       'Ez dago zuzeneko emankizunik eskuragarri';
+
+  @override
+  String get confirm => 'Berretsi';
+
+  @override
+  String get deleteOptionMessage => 'Aukera hau ezabatu nahi duzu?';
+
+  @override
+  String get delete => 'Ezabatu';
+
+  @override
+  String get addOption => 'Aukera gehitu';
+
+  @override
+  String get optionHint => 'Aukera';
 }

@@ -205,6 +205,10 @@
   "onLive": "On Live",
   "onlineNow": "Online adesso",
   "selectSpeaker": "Seleziona un relatore",
-  "noLiveStreamAvailable": "Non ci sono dirette disponibili"
-
+  "noLiveStreamAvailable": "Non ci sono dirette disponibili",
+  "confirm": "Conferma",
+  "deleteOptionMessage": "Vuoi eliminare questa opzione?",
+  "delete": "Elimina",
+  "addOption": "Aggiungi opzione",
+  "optionHint": "Opzione"
 }

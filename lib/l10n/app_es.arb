@@ -178,5 +178,10 @@
   "loadingTitle": "Cargando...",
   "logout": "Cerrar Sesión",
   "onLive": "En Vivo",
-  "noLiveStreamAvailable": "No hay transmisión en vivo disponible"
+  "noLiveStreamAvailable": "No hay transmisión en vivo disponible",
+  "confirm": "Confirmar",
+  "deleteOptionMessage": "¿Deseas eliminar esta opción?",
+  "delete": "Eliminar",
+  "addOption": "Añadir opción",
+  "optionHint": "Opción"
 }

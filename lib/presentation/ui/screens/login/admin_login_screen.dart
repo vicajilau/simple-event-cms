@@ -24,6 +24,10 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
 
   final ValueNotifier<bool> _obscureText = ValueNotifier(true);
 
+  GitHub getGithubUser() {
+    return GitHub(auth: Authentication.withToken(_token.value));
+  }
+
   Future<void> _submit(BuildContext context) async {
     final SecureInfo secureInfo = getIt<SecureInfo>();
     final location = AppLocalizations.of(context)!;
@@ -31,7 +35,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
       _formKey.currentState!.save();
       // Here you can add the authentication logic
       try {
-        var github = GitHub(auth: Authentication.withToken(_token.value));
+        var github = getGithubUser();
         final user = await github.users.getCurrentUser();
 
         // If authentication is successful and there is no exception:
@@ -103,6 +107,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
+                    key: const Key('title_key_event_collection'),
                     location.enterGithubTokenTitle,
                     style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.left,
@@ -114,6 +119,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                         valueListenable: _obscureText,
                         builder: (context, isObscure, child) {
                           return TextFormField(
+                            key: const Key('token_key_github'),
                             obscuringCharacter: '*',
                             obscureText: isObscure,
                             decoration: InputDecoration(
@@ -147,6 +153,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
                   const SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
+                      key: const Key('login_button'),
                       onPressed: () => _submit(context),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

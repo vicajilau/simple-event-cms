@@ -211,6 +211,10 @@
   "onlineNow": "Online Agora",
   "onLive": "On Live",
   "selectSpeaker": "Selecione um palestrante",
-  "noLiveStreamAvailable": "Não há transmissões ao vivo disponíveis"
-
+  "noLiveStreamAvailable": "Não há transmissões ao vivo disponíveis",
+  "confirm": "Confirmar",
+  "deleteOptionMessage": "Deseja eliminar esta opção?",
+  "delete": "Apagar",
+  "addOption": "Adicionar opção",
+  "optionHint": "Opção"
 }
