@@ -2041,6 +2041,23 @@ class MockConfigViewModel extends _i1.Mock implements _i35.ConfigViewModel {
   );
 }
 
+/// A class which mocks [ContentCreation].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockContentCreation extends _i1.Mock implements _i14.ContentCreation {
+  MockContentCreation() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
+}
+
 /// A class which mocks [ConfigUseCase].
 ///
 /// See the documentation for Mockito's code generation for more information.
