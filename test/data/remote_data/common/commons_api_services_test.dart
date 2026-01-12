@@ -339,6 +339,37 @@ void main() {
           );
         },
       );
+      test('updateData returns a different statuscode of 200', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(
+          mockSecureInfo.getGithubKey(),
+        ).thenAnswer((_) async => mockGithubData);
+        when(
+          mockSecureInfo.getGithubItem(),
+        ).thenAnswer((_) async => mockGitHub);
+        when(
+          mockHttpClient.put(
+            any,
+            headers: anyNamed('headers'),
+            body: anyNamed('body'),
+          ),
+        ).thenAnswer((_) async => Response("{}", 400));
+        expect(
+          () => commonsServices.updateData(
+            originalData,
+            data,
+            testPath,
+            commitMessage,
+          ),
+          throwsA(isA<NetworkException>()),
+        );
+      });
       test('updateData works successfully', () async {
         secureInfo.saveGithubKey(
           GithubData(token: "fake_token", projectName: "test_project"),
@@ -405,6 +436,207 @@ void main() {
           throwsA(isA<Exception>()),
         );
       });
+      test('should throw an exception when sha is null', () async {
+        final localJson = json.encode({
+          'configName': 'Random Organization',
+          'primaryColorOrganization': '#4285F4',
+          'secondaryColorOrganization': '#4285F4',
+          'github_user': 'remote_user',
+          'project_name': 'remote_proj',
+          'branch': 'prod',
+          'eventForcedToViewUID': null,
+        });
+        final base64Content = base64.encode(utf8.encode(localJson));
+
+        final mockContent = repoContentsFile..content = base64Content;
+        mockContent.sha = null;
+
+        final mockContents = repoContent..file = mockContent;
+        when(
+          mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+        ).thenAnswer((_) async => mockContents);
+        when(mockContents.file?.sha).thenReturn(null);
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(
+          mockSecureInfo.getGithubKey(),
+        ).thenAnswer((_) async => mockGithubData);
+        when(
+          mockSecureInfo.getGithubItem(),
+        ).thenAnswer((_) async => mockGitHub);
+
+        expect(
+              () => commonsServices.updateDataList(
+            originalData,
+            testPath,
+            commitMessage,
+          ),
+          throwsA(isA<GithubException>()),
+        );
+      });
+      test(
+        'should throw an exception when github.repositories.getContents thows a gitHubError & you cant create the file in github',
+            () async {
+          when(
+            mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+          ).thenThrow(github_sdk.GitHubError(mockGitHub, "Not Found"));
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          expect(
+                () => commonsServices.updateDataList(
+              originalData,
+              testPath,
+              commitMessage,
+            ),
+            throwsA(isA<GithubException>()),
+          );
+        },
+      );
+
+      test(
+        'should throw an exception when github.repositories.getContents thows a gitHubError but you can create the file in github',
+            () async {
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          final mockSecureInfo = MockSecureInfo();
+          getIt.unregister<SecureInfo>();
+          getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+          when(
+            mockSecureInfo.getGithubKey(),
+          ).thenAnswer((_) async => mockGithubData);
+          when(
+            mockSecureInfo.getGithubItem(),
+          ).thenAnswer((_) async => mockGitHub);
+
+          final localJson = json.encode({
+            'configName': 'Random Organization',
+            'primaryColorOrganization': '#4285F4',
+            'secondaryColorOrganization': '#4285F4',
+            'github_user': 'remote_user',
+            'project_name': 'remote_proj',
+            'branch': 'prod',
+            'eventForcedToViewUID': null,
+          });
+          final base64Content = base64.encode(utf8.encode(localJson));
+
+          MockContentCreation contentCreation = MockContentCreation();
+          MockGitHubFile mockGitHubFile = MockGitHubFile();
+          when(mockGitHubFile.content).thenReturn(base64Content);
+          when(contentCreation.content).thenReturn(mockGitHubFile);
+          when(
+            mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+          ).thenThrow(github_sdk.GitHubError(mockGitHub, "Not Found"));
+          when(
+            mockRepositoriesService.createFile(any, any),
+          ).thenAnswer((_) async => contentCreation);
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          expect(
+                () => commonsServices.updateDataList(
+              originalData,
+              testPath,
+              commitMessage,
+            ),
+            returnsNormally,
+          );
+        },
+      );
+
+      test(
+        'should throw an exception when github.repositories.getContents thows a gitHubError & you have a response.content null',
+            () async {
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          final mockSecureInfo = MockSecureInfo();
+          getIt.unregister<SecureInfo>();
+          getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+          when(
+            mockSecureInfo.getGithubKey(),
+          ).thenAnswer((_) async => mockGithubData);
+          when(
+            mockSecureInfo.getGithubItem(),
+          ).thenAnswer((_) async => mockGitHub);
+
+          MockContentCreation contentCreation = MockContentCreation();
+          when(contentCreation.content).thenReturn(null);
+          when(
+            mockRepositoriesService.getContents(any, any, ref: anyNamed('ref')),
+          ).thenThrow(github_sdk.GitHubError(mockGitHub, "Not Found"));
+          when(
+            mockRepositoriesService.createFile(any, any),
+          ).thenAnswer((_) async => contentCreation);
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          expect(
+                () => commonsServices.updateDataList(
+              originalData,
+              testPath,
+              commitMessage,
+            ),
+            throwsA(isA<GithubException>()),
+          );
+        },
+      );
+
+      test(
+        'should throw an exception when repoContentsFile.sha is null',
+            () async {
+          when(repoContentsFile.sha).thenReturn(null);
+          secureInfo.saveGithubKey(
+            GithubData(token: "fake_token", projectName: "test_project"),
+          );
+          expect(
+                () => commonsServices.updateDataList(
+              originalData,
+              testPath,
+              commitMessage,
+            ),
+            throwsA(isA<GithubException>()),
+          );
+        },
+      );
+      test('updateData returns a different statuscode of 200', () async {
+        secureInfo.saveGithubKey(
+          GithubData(token: "fake_token", projectName: "test_project"),
+        );
+        final mockSecureInfo = MockSecureInfo();
+        getIt.unregister<SecureInfo>();
+        getIt.registerSingleton<SecureInfo>(mockSecureInfo);
+
+        when(
+          mockSecureInfo.getGithubKey(),
+        ).thenAnswer((_) async => mockGithubData);
+        when(
+          mockSecureInfo.getGithubItem(),
+        ).thenAnswer((_) async => mockGitHub);
+        when(
+          mockHttpClient.put(
+            any,
+            headers: anyNamed('headers'),
+            body: anyNamed('body'),
+          ),
+        ).thenAnswer((_) async => Response("{}", 400));
+        expect(
+              () => commonsServices.updateDataList(
+            originalData,
+            testPath,
+            commitMessage,
+          ),
+          throwsA(isA<NetworkException>()),
+        );
+      });
       test('should updateDataList successfully', () async {
         secureInfo.saveGithubKey(
           GithubData(token: "fake_token", projectName: "test_project"),
@@ -437,7 +669,7 @@ void main() {
         secureInfo.saveGithubKey(GithubData(token: null, projectName: ""));
 
         expect(
-          () => commonsServices.updateSingleData(data, testPath, commitMessage),
+          () async => await commonsServices.updateSingleData(data, testPath, commitMessage),
           throwsA(isA<Exception>()),
         );
       });
