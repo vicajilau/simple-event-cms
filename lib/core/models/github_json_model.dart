@@ -38,40 +38,34 @@ class GithubJsonModel {
   /// Optional fields (eventDates, venue, description) will be null if not provided
   factory GithubJsonModel.fromJson(Map<String, dynamic> json) {
     List<Event> events = (json['events'] != null)
-        ? (json['events'] as List?)
-                  ?.map((item) => Event.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['events'] as List)
+                  .map((item) => Event.fromJson(item))
+                  .toList()
         : [];
     List<Track> tracks = (json['tracks'] != null)
-        ? (json['tracks'] as List?)
-                  ?.map((item) => Track.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['tracks'] as List)
+                  .map((item) => Track.fromJson(item))
+                  .toList()
         : [];
     List<Session> sessions = (json['sessions'] != null)
-        ? (json['sessions'] as List?)
-                  ?.map((item) => Session.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['sessions'] as List)
+                  .map((item) => Session.fromJson(item))
+                  .toList()
         : [];
     List<AgendaDay> agendadays = (json['agendadays'] != null)
-        ? (json['agendadays'] as List?)
-                  ?.map((item) => AgendaDay.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['agendadays'] as List)
+                  .map((item) => AgendaDay.fromJson(item))
+                  .toList()
         : [];
     List<Sponsor> sponsors = (json['sponsors'] != null)
-        ? (json['sponsors'] as List?)
-                  ?.map((item) => Sponsor.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['sponsors'] as List)
+                  .map((item) => Sponsor.fromJson(item))
+                  .toList()
         : [];
     List<Speaker> speakers = (json['speakers'] != null)
-        ? (json['speakers'] as List?)
-                  ?.map((item) => Speaker.fromJson(item))
-                  .toList() ??
-              []
+        ? (json['speakers'] as List)
+                  .map((item) => Speaker.fromJson(item))
+                  .toList()
         : [];
     return GithubJsonModel(
       events: events,
