@@ -656,10 +656,6 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
     return startMinutes < endMinutes;
   }
 
-  bool isTimeSelected(TimeOfDay? time) {
-    return time != null; // Simpler check
-  }
-
   void _showAddTrackDialog() {
     final location = AppLocalizations.of(context)!;
     final TextEditingController trackNameController = TextEditingController();
