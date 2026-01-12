@@ -69,5 +69,41 @@ void main() {
         );
       },
     );
+
+    test(
+      'should return an error saving a token',
+      () async {
+        final githubData = GithubData(token: 'token_fake');
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          if (methodCall.method == 'read' &&
+              methodCall.arguments['key'] == 'github_service') {
+            throw Exception("");
+          }
+          return null;
+        });
+        expect(
+          () => secureInfo.saveGithubKey(githubData),
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
+    test(
+      'should return an error trying to remove a token',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (MethodCall methodCall) async {
+          if (methodCall.method == 'read' &&
+              methodCall.arguments['key'] == 'github_service') {
+            throw Exception("");
+          }
+          return null;
+        });
+        expect(
+          () => secureInfo.removeGithubKey(),
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
   });
 }
