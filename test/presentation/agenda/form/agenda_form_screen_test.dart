@@ -244,6 +244,92 @@ void main() {
     );
   });
 
+  group('room dialog', () {
+    testWidgets('should add a new dialog when add room button is pressed', (
+      WidgetTester tester,
+    ) async {
+      when(
+        mockViewModel.viewState,
+      ).thenReturn(ValueNotifier(ViewState.loadFinished));
+
+      when(mockViewModel.addSpeaker(any, any)).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
+      );
+      await tester.pumpAndSettle();
+
+      // Find the add speaker button and tap it.
+      final addButton = find.byKey(Key("add_room_button"));
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      // Verify that we have navigated to the SpeakerFormScreen
+      expect(find.byType(AlertDialog), findsOneWidget);
+    });
+    testWidgets('tap cancel button into room dialog, it closes', (
+      WidgetTester tester,
+    ) async {
+      when(
+        mockViewModel.viewState,
+      ).thenReturn(ValueNotifier(ViewState.loadFinished));
+
+      when(mockViewModel.addSpeaker(any, any)).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
+      );
+      await tester.pumpAndSettle();
+
+      // Find the add speaker button and tap it.
+      final addButton = find.byKey(Key("add_room_button"));
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      final cancelButton = find.byKey(Key("cancel_button_room"));
+      expect(cancelButton, findsOneWidget);
+      await tester.tap(cancelButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+    });
+    testWidgets('tap save button into room dialog, it closes and saves new room', (
+      WidgetTester tester,
+    ) async {
+      when(mockViewModel.addTrack(any,any)).thenAnswer((_) async {
+        return true;
+      });
+      when(
+        mockViewModel.viewState,
+      ).thenReturn(ValueNotifier(ViewState.loadFinished));
+
+      when(mockViewModel.addSpeaker(any, any)).thenAnswer((_) async {});
+
+      await tester.pumpWidget(
+        createWidgetUnderTest(data: AgendaFormData(eventId: 'event1')),
+      );
+      await tester.pumpAndSettle();
+
+      // Find the add speaker button and tap it.
+      final addButton = find.byKey(Key("add_room_button"));
+      expect(addButton, findsOneWidget);
+      await tester.tap(addButton);
+      await tester.pumpAndSettle();
+
+      final fieldTextRoom = find.byKey(Key("track_name_field"));
+      await tester.enterText(fieldTextRoom, 'New room');
+
+
+      final cancelButton = find.byKey(Key("save_room_button"));
+      expect(cancelButton, findsOneWidget);
+      await tester.tap(cancelButton);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(AlertDialog), findsNothing);
+    });
+  });
   group('TextInputField validator for the talks', () {
     testWidgets('Shows an error when the TextFormField is empty', (
       tester,
@@ -561,13 +647,13 @@ void main() {
           await tester.pumpAndSettle();
         }
 
-         // Open the start time picker and set it to 10:00
+        // Open the start time picker and set it to 10:00
         final startPicker = find.byKey(const Key('start_time_picker'));
         await tester.ensureVisible(startPicker);
         await tester.tap(startPicker);
         await tester.pumpAndSettle();
 
-        // Check that there are two TextFields 
+        // Check that there are two TextFields
         final startTextFields = find.byType(TextField);
         expect(startTextFields, findsNWidgets(2));
 

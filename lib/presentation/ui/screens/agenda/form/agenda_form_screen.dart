@@ -670,16 +670,19 @@ class _AgendaFormScreenState extends State<AgendaFormScreen> {
         return AlertDialog(
           title: Text(location.addRoomTitle),
           content: TextFormField(
+            key: Key('track_name_field'),
             controller: trackNameController,
             autofocus: true,
             decoration: InputDecoration(hintText: location.roomNameHint),
           ),
           actions: [
             TextButton(
+              key: Key('cancel_button_room'),
               onPressed: () => Navigator.pop(context),
               child: Text(location.cancelButton),
             ),
             FilledButton(
+              key: Key('save_room_button'),
               onPressed: () async {
                 if (trackNameController.text.isNotEmpty) {
                   final String newTrackName = trackNameController.text;
