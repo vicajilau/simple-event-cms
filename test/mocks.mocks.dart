@@ -426,8 +426,18 @@ class _FakeSpeaker_61 extends _i1.SmartFake implements _i7.Speaker {
     : super(parent, parentInvocation);
 }
 
-class _FakePlace_62 extends _i1.SmartFake implements _i22.Place {
-  _FakePlace_62(Object parent, Invocation parentInvocation)
+class _FakeUser_62 extends _i1.SmartFake implements _i14.User {
+  _FakeUser_62(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakeCurrentUser_63 extends _i1.SmartFake implements _i14.CurrentUser {
+  _FakeCurrentUser_63(Object parent, Invocation parentInvocation)
+    : super(parent, parentInvocation);
+}
+
+class _FakePlace_64 extends _i1.SmartFake implements _i22.Place {
+  _FakePlace_64(Object parent, Invocation parentInvocation)
     : super(parent, parentInvocation);
 }
 
@@ -2078,6 +2088,251 @@ class MockConfigUseCase extends _i1.Mock implements _i36.ConfigUseCase {
             ),
           )
           as _i15.Future<_i28.Result<void>>);
+}
+
+/// A class which mocks [CurrentUser].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockCurrentUser extends _i1.Mock implements _i14.CurrentUser {
+  MockCurrentUser() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  set privateReposCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#privateReposCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set ownedPrivateReposCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#ownedPrivateReposCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set diskUsage(int? value) => super.noSuchMethod(
+    Invocation.setter(#diskUsage, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set plan(_i14.UserPlan? value) => super.noSuchMethod(
+    Invocation.setter(#plan, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set json(Map<dynamic, dynamic>? value) => super.noSuchMethod(
+    Invocation.setter(#json, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set login(String? value) => super.noSuchMethod(
+    Invocation.setter(#login, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set id(int? value) => super.noSuchMethod(
+    Invocation.setter(#id, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set avatarUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#avatarUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set htmlUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#htmlUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set siteAdmin(bool? value) => super.noSuchMethod(
+    Invocation.setter(#siteAdmin, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set name(String? value) => super.noSuchMethod(
+    Invocation.setter(#name, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set company(String? value) => super.noSuchMethod(
+    Invocation.setter(#company, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set blog(String? value) => super.noSuchMethod(
+    Invocation.setter(#blog, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set location(String? value) => super.noSuchMethod(
+    Invocation.setter(#location, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set email(String? value) => super.noSuchMethod(
+    Invocation.setter(#email, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set hirable(bool? value) => super.noSuchMethod(
+    Invocation.setter(#hirable, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set bio(String? value) => super.noSuchMethod(
+    Invocation.setter(#bio, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set publicReposCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#publicReposCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set publicGistsCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#publicGistsCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set followersCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#followersCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set followingCount(int? value) => super.noSuchMethod(
+    Invocation.setter(#followingCount, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set createdAt(DateTime? value) => super.noSuchMethod(
+    Invocation.setter(#createdAt, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set updatedAt(DateTime? value) => super.noSuchMethod(
+    Invocation.setter(#updatedAt, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set twitterUsername(String? value) => super.noSuchMethod(
+    Invocation.setter(#twitterUsername, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set eventsUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#eventsUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set followersUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#followersUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set followingUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#followingUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set gistsUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#gistsUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set gravatarId(String? value) => super.noSuchMethod(
+    Invocation.setter(#gravatarId, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set nodeId(String? value) => super.noSuchMethod(
+    Invocation.setter(#nodeId, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set organizationsUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#organizationsUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set receivedEventsUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#receivedEventsUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set reposUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#reposUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set starredAt(DateTime? value) => super.noSuchMethod(
+    Invocation.setter(#starredAt, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set starredUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#starredUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set subscriptionsUrl(String? value) => super.noSuchMethod(
+    Invocation.setter(#subscriptionsUrl, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set type(String? value) => super.noSuchMethod(
+    Invocation.setter(#type, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  set url(String? value) => super.noSuchMethod(
+    Invocation.setter(#url, value),
+    returnValueForMissingStub: null,
+  );
+
+  @override
+  Map<String, dynamic> toJson() =>
+      (super.noSuchMethod(
+            Invocation.method(#toJson, []),
+            returnValue: <String, dynamic>{},
+          )
+          as Map<String, dynamic>);
 }
 
 /// A class which mocks [DataLoaderManager].
@@ -6877,6 +7132,205 @@ class MockTokenRepository extends _i1.Mock implements _i50.TokenRepository {
           as _i15.Future<bool>);
 }
 
+/// A class which mocks [UsersService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockUsersService extends _i1.Mock implements _i14.UsersService {
+  MockUsersService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i14.GitHub get github =>
+      (super.noSuchMethod(
+            Invocation.getter(#github),
+            returnValue: _FakeGitHub_39(this, Invocation.getter(#github)),
+          )
+          as _i14.GitHub);
+
+  @override
+  _i15.Future<_i14.User> getUser(String? name) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUser, [name]),
+            returnValue: _i15.Future<_i14.User>.value(
+              _FakeUser_62(this, Invocation.method(#getUser, [name])),
+            ),
+          )
+          as _i15.Future<_i14.User>);
+
+  @override
+  _i15.Future<_i14.CurrentUser> editCurrentUser({
+    String? name,
+    String? email,
+    String? blog,
+    String? company,
+    String? location,
+    bool? hireable,
+    String? bio,
+  }) =>
+      (super.noSuchMethod(
+            Invocation.method(#editCurrentUser, [], {
+              #name: name,
+              #email: email,
+              #blog: blog,
+              #company: company,
+              #location: location,
+              #hireable: hireable,
+              #bio: bio,
+            }),
+            returnValue: _i15.Future<_i14.CurrentUser>.value(
+              _FakeCurrentUser_63(
+                this,
+                Invocation.method(#editCurrentUser, [], {
+                  #name: name,
+                  #email: email,
+                  #blog: blog,
+                  #company: company,
+                  #location: location,
+                  #hireable: hireable,
+                  #bio: bio,
+                }),
+              ),
+            ),
+          )
+          as _i15.Future<_i14.CurrentUser>);
+
+  @override
+  _i15.Stream<_i14.User> getUsers(List<String>? names, {int? pages}) =>
+      (super.noSuchMethod(
+            Invocation.method(#getUsers, [names], {#pages: pages}),
+            returnValue: _i15.Stream<_i14.User>.empty(),
+          )
+          as _i15.Stream<_i14.User>);
+
+  @override
+  _i15.Future<_i14.CurrentUser> getCurrentUser() =>
+      (super.noSuchMethod(
+            Invocation.method(#getCurrentUser, []),
+            returnValue: _i15.Future<_i14.CurrentUser>.value(
+              _FakeCurrentUser_63(this, Invocation.method(#getCurrentUser, [])),
+            ),
+          )
+          as _i15.Future<_i14.CurrentUser>);
+
+  @override
+  _i15.Future<bool> isUser(String? name) =>
+      (super.noSuchMethod(
+            Invocation.method(#isUser, [name]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Stream<_i14.User> listUsers({int? pages, int? since}) =>
+      (super.noSuchMethod(
+            Invocation.method(#listUsers, [], {#pages: pages, #since: since}),
+            returnValue: _i15.Stream<_i14.User>.empty(),
+          )
+          as _i15.Stream<_i14.User>);
+
+  @override
+  _i15.Stream<_i14.UserEmail> listEmails() =>
+      (super.noSuchMethod(
+            Invocation.method(#listEmails, []),
+            returnValue: _i15.Stream<_i14.UserEmail>.empty(),
+          )
+          as _i15.Stream<_i14.UserEmail>);
+
+  @override
+  _i15.Stream<_i14.UserEmail> addEmails(List<String>? emails) =>
+      (super.noSuchMethod(
+            Invocation.method(#addEmails, [emails]),
+            returnValue: _i15.Stream<_i14.UserEmail>.empty(),
+          )
+          as _i15.Stream<_i14.UserEmail>);
+
+  @override
+  _i15.Future<bool> deleteEmails(List<String>? emails) =>
+      (super.noSuchMethod(
+            Invocation.method(#deleteEmails, [emails]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Stream<_i14.User> listUserFollowers(String? user) =>
+      (super.noSuchMethod(
+            Invocation.method(#listUserFollowers, [user]),
+            returnValue: _i15.Stream<_i14.User>.empty(),
+          )
+          as _i15.Stream<_i14.User>);
+
+  @override
+  _i15.Future<bool> isFollowingUser(String? user) =>
+      (super.noSuchMethod(
+            Invocation.method(#isFollowingUser, [user]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Future<bool> isUserFollowing(String? user, String? target) =>
+      (super.noSuchMethod(
+            Invocation.method(#isUserFollowing, [user, target]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Future<bool> followUser(String? user) =>
+      (super.noSuchMethod(
+            Invocation.method(#followUser, [user]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Future<bool> unfollowUser(String? user) =>
+      (super.noSuchMethod(
+            Invocation.method(#unfollowUser, [user]),
+            returnValue: _i15.Future<bool>.value(false),
+          )
+          as _i15.Future<bool>);
+
+  @override
+  _i15.Stream<_i14.User> listCurrentUserFollowers() =>
+      (super.noSuchMethod(
+            Invocation.method(#listCurrentUserFollowers, []),
+            returnValue: _i15.Stream<_i14.User>.empty(),
+          )
+          as _i15.Stream<_i14.User>);
+
+  @override
+  _i15.Stream<_i14.User> listCurrentUserFollowing() =>
+      (super.noSuchMethod(
+            Invocation.method(#listCurrentUserFollowing, []),
+            returnValue: _i15.Stream<_i14.User>.empty(),
+          )
+          as _i15.Stream<_i14.User>);
+
+  @override
+  _i15.Stream<_i14.PublicKey> listPublicKeys([String? userLogin]) =>
+      (super.noSuchMethod(
+            Invocation.method(#listPublicKeys, [userLogin]),
+            returnValue: _i15.Stream<_i14.PublicKey>.empty(),
+          )
+          as _i15.Stream<_i14.PublicKey>);
+
+  @override
+  _i15.Future<_i14.PublicKey> createPublicKey(_i14.CreatePublicKey? key) =>
+      (super.noSuchMethod(
+            Invocation.method(#createPublicKey, [key]),
+            returnValue: _i15.Future<_i14.PublicKey>.value(
+              _FakePublicKey_51(
+                this,
+                Invocation.method(#createPublicKey, [key]),
+              ),
+            ),
+          )
+          as _i15.Future<_i14.PublicKey>);
+}
+
 /// A class which mocks [Nominatim].
 ///
 /// See the documentation for Mockito's code generation for more information.
@@ -6954,7 +7408,7 @@ class MockNominatim extends _i1.Mock implements _i22.Nominatim {
               #host: host,
             }),
             returnValue: _i15.Future<_i22.Place>.value(
-              _FakePlace_62(
+              _FakePlace_64(
                 this,
                 Invocation.method(#reverseSearch, [], {
                   #lat: lat,
