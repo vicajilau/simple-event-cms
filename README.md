@@ -3,8 +3,8 @@
 </h1>
 
 <p align="center">
-  <img src="https://github.com/vicajilau/simple-event-cms/actions/workflows/flutter_workflow.yml/badge.svg" alt="CI Status">
-  <img src="https://github.com/vicajilau/simple-event-cms/actions/workflows/deploy_web.yml/badge.svg" alt="Web CD Status">
+  <img src="https://github.com/WidgetSuite/simple-event-cms/actions/workflows/flutter_workflow.yml/badge.svg" alt="CI Status">
+  <img src="https://github.com/WidgetSuite/simple-event-cms/actions/workflows/deploy_web.yml/badge.svg" alt="Web CD Status">
   <img src="https://img.shields.io/badge/License-MIT-blue.svg" alt="License: MIT">
 </p>
 
@@ -127,7 +127,7 @@ class Track {
 1. **Clone this repository**
 
    ```bash
-   git clone https://github.com/vicajilau/event_flutter_template.git
+   git clone https://github.com/WidgetSuite/event_flutter_template.git
    cd event_flutter_template
    ```
 
